@@ -20,11 +20,11 @@ struct WatchNotificationsView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Notificari Ceas")
+            .navigationTitle("Watch Notifications")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
+                    Button("Close") { dismiss() }
                         .foregroundColor(Theme.primary)
                 }
             }

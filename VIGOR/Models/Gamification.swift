@@ -32,10 +32,10 @@ enum ItemRarity: String, CaseIterable {
     
     var label: String {
         switch self {
-        case .common: return "Comun"
-        case .rare: return "Rar"
+        case .common: return "Common"
+        case .rare: return "Rare"
         case .epic: return "Epic"
-        case .legendary: return "Legendar"
+        case .legendary: return "Legendary"
         }
     }
 }
@@ -52,10 +52,10 @@ struct VirtualItem: Identifiable {
     var acquiredDate: Date?
     
     enum ItemCategory: String, CaseIterable {
-        case badge = "Insigne"
-        case equipment = "Echipament"
+        case badge = "Badges"
+        case equipment = "Equipment"
         case avatar = "Avatar"
-        case effect = "Efecte"
+        case effect = "Effects"
         
         var icon: String {
             switch self {
@@ -68,14 +68,14 @@ struct VirtualItem: Identifiable {
     }
     
     static let samples: [VirtualItem] = [
-        VirtualItem(id: UUID(), name: "Tricou de Aur", description: "Echipament legendar pentru avatar", icon: "tshirt.fill", rarity: .legendary, category: .equipment, isEquipped: true, acquiredDate: Date().addingTimeInterval(-86400 * 5)),
-        VirtualItem(id: UUID(), name: "Medalia de Maraton", description: "Pentru completarea a 26 antrenamente", icon: "medal.fill", rarity: .epic, category: .badge, isEquipped: false, acquiredDate: Date().addingTimeInterval(-86400 * 10)),
-        VirtualItem(id: UUID(), name: "Ghetele Speed", description: "Echipament rar pentru avatar", icon: "shoe.fill", rarity: .rare, category: .equipment, isEquipped: true, acquiredDate: Date().addingTimeInterval(-86400 * 3)),
-        VirtualItem(id: UUID(), name: "Casca Pro", description: "Echipament audio pentru antrenament", icon: "headphones", rarity: .common, category: .equipment, isEquipped: false, acquiredDate: Date().addingTimeInterval(-86400 * 1)),
-        VirtualItem(id: UUID(), name: "Gantere de Aur", description: "Obiect legendar de colectie", icon: "dumbbell.fill", rarity: .legendary, category: .equipment, isEquipped: false, acquiredDate: Date().addingTimeInterval(-86400 * 2)),
-        VirtualItem(id: UUID(), name: "Insigna Legenda", description: "Pentru cei mai dedicati utilizatori", icon: "star.fill", rarity: .legendary, category: .badge, isEquipped: true, acquiredDate: Date().addingTimeInterval(-86400 * 7)),
-        VirtualItem(id: UUID(), name: "Aura Energetica", description: "Efect vizual epic", icon: "sparkles", rarity: .epic, category: .effect, isEquipped: false, acquiredDate: Date().addingTimeInterval(-86400 * 4)),
-        VirtualItem(id: UUID(), name: "Avatar Razboinic", description: "Cadru de avatar rar", icon: "person.crop.circle.badge.checkmark", rarity: .rare, category: .avatar, isEquipped: true, acquiredDate: Date().addingTimeInterval(-86400 * 6)),
+        VirtualItem(id: UUID(), name: "Golden Shirt", description: "Legendary equipment for avatar", icon: "tshirt.fill", rarity: .legendary, category: .equipment, isEquipped: true, acquiredDate: Date().addingTimeInterval(-86400 * 5)),
+        VirtualItem(id: UUID(), name: "Marathon Medal", description: "For completing 26 workouts", icon: "medal.fill", rarity: .epic, category: .badge, isEquipped: false, acquiredDate: Date().addingTimeInterval(-86400 * 10)),
+        VirtualItem(id: UUID(), name: "Speed Shoes", description: "Rare equipment for avatar", icon: "shoe.fill", rarity: .rare, category: .equipment, isEquipped: true, acquiredDate: Date().addingTimeInterval(-86400 * 3)),
+        VirtualItem(id: UUID(), name: "Pro Headphones", description: "Audio equipment for workouts", icon: "headphones", rarity: .common, category: .equipment, isEquipped: false, acquiredDate: Date().addingTimeInterval(-86400 * 1)),
+        VirtualItem(id: UUID(), name: "Golden Dumbbells", description: "Legendary collectible item", icon: "dumbbell.fill", rarity: .legendary, category: .equipment, isEquipped: false, acquiredDate: Date().addingTimeInterval(-86400 * 2)),
+        VirtualItem(id: UUID(), name: "Legend Badge", description: "For the most dedicated users", icon: "star.fill", rarity: .legendary, category: .badge, isEquipped: true, acquiredDate: Date().addingTimeInterval(-86400 * 7)),
+        VirtualItem(id: UUID(), name: "Energy Aura", description: "Epic visual effect", icon: "sparkles", rarity: .epic, category: .effect, isEquipped: false, acquiredDate: Date().addingTimeInterval(-86400 * 4)),
+        VirtualItem(id: UUID(), name: "Warrior Avatar", description: "Rare avatar frame", icon: "person.crop.circle.badge.checkmark", rarity: .rare, category: .avatar, isEquipped: true, acquiredDate: Date().addingTimeInterval(-86400 * 6)),
     ]
 }
 
@@ -115,9 +115,9 @@ struct SurprisePackage: Identifiable {
     }
     
     static let samples: [SurprisePackage] = [
-        SurprisePackage(id: UUID(), name: "Basic Crate", description: "O varianta accesibila pentru a incepe colectia", icon: "shippingbox.fill", cost: 100, tier: .basic, possibleItems: ["Insigne Common", "Echipament Common", "Efecte Common"]),
-        SurprisePackage(id: UUID(), name: "Elite Chest", description: "Sanse mai mari pentru obiecte rare si epice", icon: "lock.shield.fill", cost: 300, tier: .elite, possibleItems: ["Insigne Rare/Epic", "Echipament Rare/Epic", "Efecte Rare"]),
-        SurprisePackage(id: UUID(), name: "Legendary Vault", description: "Garantat un obiect de elita pentru adevaratii campioni", icon: "crown.fill", cost: 750, tier: .legendary, possibleItems: ["Insigne Legendare", "Echipament Legendar", "Efecte Epic/Legendar"]),
+        SurprisePackage(id: UUID(), name: "Basic Crate", description: "An affordable option to start your collection", icon: "shippingbox.fill", cost: 100, tier: .basic, possibleItems: ["Common Badges", "Common Equipment", "Common Effects"]),
+        SurprisePackage(id: UUID(), name: "Elite Chest", description: "Higher chances for rare and epic items", icon: "lock.shield.fill", cost: 300, tier: .elite, possibleItems: ["Rare/Epic Badges", "Rare/Epic Equipment", "Rare Effects"]),
+        SurprisePackage(id: UUID(), name: "Legendary Vault", description: "Guaranteed elite item for true champions", icon: "crown.fill", cost: 750, tier: .legendary, possibleItems: ["Legendary Badges", "Legendary Equipment", "Epic/Legendary Effects"]),
     ]
 }
 
@@ -136,7 +136,7 @@ struct DailyReward: Identifiable {
             DailyReward(id: UUID(), day: 2, points: 15, bonusItem: nil, isClaimed: currentDay > 2, isToday: currentDay == 2),
             DailyReward(id: UUID(), day: 3, points: 20, bonusItem: nil, isClaimed: currentDay > 3, isToday: currentDay == 3),
             DailyReward(id: UUID(), day: 4, points: 25, bonusItem: nil, isClaimed: currentDay > 4, isToday: currentDay == 4),
-            DailyReward(id: UUID(), day: 5, points: 30, bonusItem: "Insigna Streak", isClaimed: currentDay > 5, isToday: currentDay == 5),
+            DailyReward(id: UUID(), day: 5, points: 30, bonusItem: "Streak Badge", isClaimed: currentDay > 5, isToday: currentDay == 5),
             DailyReward(id: UUID(), day: 6, points: 40, bonusItem: nil, isClaimed: currentDay > 6, isToday: currentDay == 6),
             DailyReward(id: UUID(), day: 7, points: 75, bonusItem: "Basic Crate", isClaimed: false, isToday: currentDay == 7),
         ]
@@ -154,10 +154,10 @@ struct DailyMission: Identifiable {
     var isCompleted: Bool
     
     static let samples: [DailyMission] = [
-        DailyMission(id: UUID(), title: "Antrenament Zilnic", description: "Completeaza un antrenament", icon: "dumbbell.fill", reward: 20, progress: 1.0, isCompleted: true),
-        DailyMission(id: UUID(), title: "Logeaza Mesele", description: "Inregistreaza 3 mese", icon: "fork.knife", reward: 15, progress: 0.66, isCompleted: false),
-        DailyMission(id: UUID(), title: "Hidratare", description: "Bea 3 litri de apa", icon: "drop.fill", reward: 10, progress: 0.5, isCompleted: false),
-        DailyMission(id: UUID(), title: "Social Butterfly", description: "Lasa 3 comentarii", icon: "bubble.left.fill", reward: 10, progress: 0.33, isCompleted: false),
+        DailyMission(id: UUID(), title: "Daily Workout", description: "Complete a workout", icon: "dumbbell.fill", reward: 20, progress: 1.0, isCompleted: true),
+        DailyMission(id: UUID(), title: "Log Meals", description: "Log 3 meals", icon: "fork.knife", reward: 15, progress: 0.66, isCompleted: false),
+        DailyMission(id: UUID(), title: "Hydration", description: "Drink 3 liters of water", icon: "drop.fill", reward: 10, progress: 0.5, isCompleted: false),
+        DailyMission(id: UUID(), title: "Social Butterfly", description: "Leave 3 comments", icon: "bubble.left.fill", reward: 10, progress: 0.33, isCompleted: false),
     ]
 }
 
@@ -171,11 +171,11 @@ struct FitPointsTransaction: Identifiable {
     var icon: String
     
     static let samples: [FitPointsTransaction] = [
-        FitPointsTransaction(id: UUID(), description: "Antrenament completat", amount: 50, isCredit: true, date: Date(), icon: "dumbbell.fill"),
-        FitPointsTransaction(id: UUID(), description: "Bonus zilnic", amount: 25, isCredit: true, date: Date().addingTimeInterval(-86400), icon: "gift.fill"),
-        FitPointsTransaction(id: UUID(), description: "Elite Chest cumparat", amount: 300, isCredit: false, date: Date().addingTimeInterval(-86400 * 2), icon: "shippingbox.fill"),
-        FitPointsTransaction(id: UUID(), description: "Cadou trimis: Medalie", amount: 150, isCredit: false, date: Date().addingTimeInterval(-86400 * 3), icon: "gift.fill"),
-        FitPointsTransaction(id: UUID(), description: "Provocare completata", amount: 100, isCredit: true, date: Date().addingTimeInterval(-86400 * 4), icon: "trophy.fill"),
-        FitPointsTransaction(id: UUID(), description: "Misiune zilnica", amount: 15, isCredit: true, date: Date().addingTimeInterval(-86400 * 5), icon: "checkmark.circle.fill"),
+        FitPointsTransaction(id: UUID(), description: "Workout completed", amount: 50, isCredit: true, date: Date(), icon: "dumbbell.fill"),
+        FitPointsTransaction(id: UUID(), description: "Daily bonus", amount: 25, isCredit: true, date: Date().addingTimeInterval(-86400), icon: "gift.fill"),
+        FitPointsTransaction(id: UUID(), description: "Elite Chest purchased", amount: 300, isCredit: false, date: Date().addingTimeInterval(-86400 * 2), icon: "shippingbox.fill"),
+        FitPointsTransaction(id: UUID(), description: "Gift sent: Medal", amount: 150, isCredit: false, date: Date().addingTimeInterval(-86400 * 3), icon: "gift.fill"),
+        FitPointsTransaction(id: UUID(), description: "Challenge completed", amount: 100, isCredit: true, date: Date().addingTimeInterval(-86400 * 4), icon: "trophy.fill"),
+        FitPointsTransaction(id: UUID(), description: "Daily mission", amount: 15, isCredit: true, date: Date().addingTimeInterval(-86400 * 5), icon: "checkmark.circle.fill"),
     ]
 }

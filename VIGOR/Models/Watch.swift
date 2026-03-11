@@ -11,10 +11,10 @@ struct WatchNotification: Identifiable {
     var isRead: Bool
     
     enum NotificationType: String, CaseIterable {
-        case health = "Sanatate"
-        case workout = "Antrenament"
-        case community = "Comunitate"
-        case achievement = "Realizare"
+        case health = "Health"
+        case workout = "Workout"
+        case community = "Community"
+        case achievement = "Achievement"
         
         var color: Color {
             switch self {
@@ -36,11 +36,11 @@ struct WatchNotification: Identifiable {
     }
     
     static let samples: [WatchNotification] = [
-        WatchNotification(id: UUID(), title: "Alerta Sanatate", message: "Ritmul cardiac a depasit 160 BPM", icon: "heart.fill", type: .health, time: "Acum", isRead: false),
-        WatchNotification(id: UUID(), title: "Reminder Antrenament", message: "E timpul pentru antrenamentul de forta!", icon: "dumbbell.fill", type: .workout, time: "5 min", isRead: false),
-        WatchNotification(id: UUID(), title: "Nou Comentariu", message: "Maria a comentat la postarea ta", icon: "bubble.left.fill", type: .community, time: "15 min", isRead: true),
-        WatchNotification(id: UUID(), title: "Realizare Noua!", message: "Ai deblocat 'Iron Will' badge!", icon: "trophy.fill", type: .achievement, time: "1h", isRead: true),
-        WatchNotification(id: UUID(), title: "Pas Zilnic", message: "Ai atins 8000 din 10000 pasi", icon: "figure.walk", type: .health, time: "2h", isRead: true),
+        WatchNotification(id: UUID(), title: "Health Alert", message: "Heart rate exceeded 160 BPM", icon: "heart.fill", type: .health, time: "Now", isRead: false),
+        WatchNotification(id: UUID(), title: "Workout Reminder", message: "Time for your strength workout!", icon: "dumbbell.fill", type: .workout, time: "5 min", isRead: false),
+        WatchNotification(id: UUID(), title: "New Comment", message: "Maria commented on your post", icon: "bubble.left.fill", type: .community, time: "15 min", isRead: true),
+        WatchNotification(id: UUID(), title: "New Achievement!", message: "You unlocked the 'Iron Will' badge!", icon: "trophy.fill", type: .achievement, time: "1h", isRead: true),
+        WatchNotification(id: UUID(), title: "Daily Steps", message: "You reached 8000 of 10000 steps", icon: "figure.walk", type: .health, time: "2h", isRead: true),
     ]
 }
 

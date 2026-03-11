@@ -21,7 +21,7 @@ struct WorkoutDetailView: View {
                     exerciseList
                     
                     // Start Button
-                    PrimaryButton("Incepe Antrenamentul", icon: "play.fill") {
+                    PrimaryButton("Start Workout", icon: "play.fill") {
                         isStarted = true
                     }
                     .padding(.top, 8)
@@ -33,7 +33,7 @@ struct WorkoutDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
+                    Button("Close") { dismiss() }
                         .foregroundColor(Theme.primary)
                 }
             }
@@ -73,11 +73,11 @@ struct WorkoutDetailView: View {
     
     private var statsRow: some View {
         HStack(spacing: 0) {
-            statItem(title: "Durata", value: "\(workout.duration) min", icon: "clock.fill")
+            statItem(title: "Duration", value: "\(workout.duration) min", icon: "clock.fill")
             Divider().frame(height: 40).background(Theme.textTertiary)
-            statItem(title: "Calorii", value: "\(workout.caloriesBurned)", icon: "flame.fill")
+            statItem(title: "Calories", value: "\(workout.caloriesBurned)", icon: "flame.fill")
             Divider().frame(height: 40).background(Theme.textTertiary)
-            statItem(title: "Exercitii", value: "\(workout.exercises.count)", icon: "list.bullet")
+            statItem(title: "Exercises", value: "\(workout.exercises.count)", icon: "list.bullet")
             Divider().frame(height: 40).background(Theme.textTertiary)
             statItem(title: "Reward", value: "+\(workout.fitPointsReward) FP", icon: "star.fill")
         }
@@ -103,7 +103,7 @@ struct WorkoutDetailView: View {
     
     private var exerciseList: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Exercitii")
+            SectionHeader(title: "Exercises")
             
             ForEach(Array(workout.exercises.enumerated()), id: \.element.id) { index, exercise in
                 CardView(padding: 12) {
@@ -121,7 +121,7 @@ struct WorkoutDetailView: View {
                             Text(exercise.name)
                                 .font(.system(size: 15, weight: .semibold))
                                 .foregroundColor(Theme.textPrimary)
-                            Text("\(exercise.sets) seturi x \(exercise.reps) repetari")
+                            Text("\(exercise.sets) sets x \(exercise.reps) reps")
                                 .font(.system(size: 12))
                                 .foregroundColor(Theme.textSecondary)
                         }
@@ -196,19 +196,19 @@ struct ActiveWorkoutView: View {
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(Theme.textPrimary)
                     
-                    Text("Set \(currentSet) din \(exercise.sets)")
+                    Text("Set \(currentSet) of \(exercise.sets)")
                         .font(.system(size: 18))
                         .foregroundColor(Theme.textSecondary)
                     
-                    Text("\(exercise.reps) repetari")
+                    Text("\(exercise.reps) reps")
                         .font(.system(size: 40, weight: .black))
                         .foregroundColor(Theme.primary)
                     
                     if isResting {
                         VStack(spacing: 8) {
-                            Text("Pauza")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(Theme.accent)
+                                                        Text("Rest")
+                                                            .font(.system(size: 16, weight: .semibold))
+                                                            .foregroundColor(Theme.accent)
                             Text("\(exercise.restSeconds)s")
                                 .font(.system(size: 24, weight: .bold))
                                 .foregroundColor(Theme.textPrimary)
@@ -224,11 +224,11 @@ struct ActiveWorkoutView: View {
             
             // Bottom Controls
             HStack(spacing: 20) {
-                SecondaryButton("Pauza", icon: "pause.fill") {
+                SecondaryButton("Pause", icon: "pause.fill") {
                     timerActive.toggle()
                 }
                 
-                PrimaryButton("Urmatorul", icon: "forward.fill") {
+                PrimaryButton("Next", icon: "forward.fill") {
                     nextStep()
                 }
             }

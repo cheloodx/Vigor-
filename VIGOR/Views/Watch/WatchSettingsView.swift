@@ -27,11 +27,11 @@ struct WatchSettingsView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Setari Ceas")
+            .navigationTitle("Watch Settings")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
+                    Button("Close") { dismiss() }
                         .foregroundColor(Theme.primary)
                 }
             }
@@ -51,10 +51,10 @@ struct WatchSettingsView: View {
                 }
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Apple Watch Conectat")
+                    Text("Apple Watch Connected")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(Theme.textPrimary)
-                    Text("Series 9 • Baterie 78%")
+                    Text("Series 9 • Battery 78%")
                         .font(.system(size: 13))
                         .foregroundColor(Theme.textSecondary)
                 }
@@ -70,17 +70,17 @@ struct WatchSettingsView: View {
     
     private var notificationsSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Notificari")
+            SectionHeader(title: "Notifications")
             
             CardView {
                 VStack(spacing: 16) {
-                    settingToggle(title: "Alerte Ritm Cardiac", icon: "heart.fill", color: .red, isOn: $settings.heartRateAlerts)
+                    settingToggle(title: "Heart Rate Alerts", icon: "heart.fill", color: .red, isOn: $settings.heartRateAlerts)
                     Divider().background(Theme.textTertiary.opacity(0.3))
-                    settingToggle(title: "Remindere Antrenament", icon: "dumbbell.fill", color: Theme.primary, isOn: $settings.workoutReminders)
+                    settingToggle(title: "Workout Reminders", icon: "dumbbell.fill", color: Theme.primary, isOn: $settings.workoutReminders)
                     Divider().background(Theme.textTertiary.opacity(0.3))
-                    settingToggle(title: "Notificari Comunitate", icon: "person.2.fill", color: .blue, isOn: $settings.communityNotifications)
+                    settingToggle(title: "Community Notifications", icon: "person.2.fill", color: .blue, isOn: $settings.communityNotifications)
                     Divider().background(Theme.textTertiary.opacity(0.3))
-                    settingToggle(title: "Alerte Realizari", icon: "trophy.fill", color: Theme.accent, isOn: $settings.achievementAlerts)
+                    settingToggle(title: "Achievement Alerts", icon: "trophy.fill", color: Theme.accent, isOn: $settings.achievementAlerts)
                 }
             }
         }
@@ -88,7 +88,7 @@ struct WatchSettingsView: View {
     
     private var healthSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Sanatate")
+            SectionHeader(title: "Health")
             
             CardView {
                 VStack(spacing: 16) {
@@ -99,10 +99,10 @@ struct WatchSettingsView: View {
                             .frame(width: 30)
                         
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Obiectiv Pasi Zilnici")
+                            Text("Daily Steps Goal")
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundColor(Theme.textPrimary)
-                            Text("\(settings.stepGoal) pasi")
+                            Text("\(settings.stepGoal) steps")
                                 .font(.system(size: 12))
                                 .foregroundColor(Theme.textSecondary)
                         }
@@ -122,7 +122,7 @@ struct WatchSettingsView: View {
                             .frame(width: 30)
                         
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("Prag Ritm Cardiac")
+                            Text("Heart Rate Threshold")
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundColor(Theme.textPrimary)
                             Text("\(settings.heartRateThreshold) BPM")
@@ -142,11 +142,11 @@ struct WatchSettingsView: View {
     
     private var displaySection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Afisaj")
+            SectionHeader(title: "Display")
             
             CardView {
                 VStack(spacing: 16) {
-                    settingToggle(title: "Feedback Haptic", icon: "hand.tap.fill", color: .purple, isOn: $settings.hapticFeedback)
+                    settingToggle(title: "Haptic Feedback", icon: "hand.tap.fill", color: .purple, isOn: $settings.hapticFeedback)
                     Divider().background(Theme.textTertiary.opacity(0.3))
                     settingToggle(title: "Always On Display", icon: "sun.max.fill", color: .yellow, isOn: $settings.alwaysOnDisplay)
                 }
@@ -156,11 +156,11 @@ struct WatchSettingsView: View {
     
     private var workoutSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Antrenament")
+            SectionHeader(title: "Workout")
             
             CardView {
                 VStack(spacing: 16) {
-                    settingToggle(title: "Detectare Automata Antrenament", icon: "figure.run", color: .green, isOn: $settings.autoWorkoutDetection)
+                    settingToggle(title: "Auto Workout Detection", icon: "figure.run", color: .green, isOn: $settings.autoWorkoutDetection)
                     
                     Divider().background(Theme.textTertiary.opacity(0.3))
                     
@@ -170,7 +170,7 @@ struct WatchSettingsView: View {
                             .foregroundColor(Theme.primary)
                             .frame(width: 30)
                         
-                        Text("Ora Reminder")
+                        Text("Reminder Time")
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(Theme.textPrimary)
                         

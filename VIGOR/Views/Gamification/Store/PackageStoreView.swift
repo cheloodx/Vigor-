@@ -29,23 +29,23 @@ struct PackageStoreView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Pachete Surpriza")
+            .navigationTitle("Surprise Packages")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
-                        .foregroundColor(Theme.primary)
-                }
-            }
-            .fullScreenCover(isPresented: $showUnboxing) {
+                                Button("Close") { dismiss() }
+                                    .foregroundColor(Theme.primary)
+                            }
+                        }
+                        .fullScreenCover(isPresented: $showUnboxing) {
                 if let package = selectedPackage {
                     UnboxingView(package: package)
                 }
             }
-            .alert("FitPoints Insuficiente", isPresented: $showInsufficientFunds) {
-                Button("OK", role: .cancel) {}
-            } message: {
-                Text("Nu ai suficiente FitPoints pentru acest pachet. Castiga mai multe prin antrenamente si misiuni zilnice!")
+                        .alert("Insufficient FitPoints", isPresented: $showInsufficientFunds) {
+                            Button("OK", role: .cancel) {}
+                        } message: {
+                            Text("You don't have enough FitPoints for this package. Earn more through workouts and daily missions!")
             }
         }
     }
@@ -56,11 +56,11 @@ struct PackageStoreView: View {
                 .font(.system(size: 40))
                 .foregroundColor(Theme.accent)
             
-            Text("Pachete Surpriza")
-                .font(.system(size: 24, weight: .bold))
-                .foregroundColor(Theme.textPrimary)
+                        Text("Surprise Packages")
+                            .font(.system(size: 24, weight: .bold))
+                            .foregroundColor(Theme.textPrimary)
             
-            Text("Deschide pachete pentru a obtine obiecte rare si legendare!")
+                        Text("Open packages to get rare and legendary items!")
                 .font(.system(size: 14))
                 .foregroundColor(Theme.textSecondary)
                 .multilineTextAlignment(.center)
@@ -97,7 +97,7 @@ struct PackageStoreView: View {
                 
                 // Possible Items
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("Continut posibil:")
+                    Text("Possible contents:")
                         .font(.system(size: 11, weight: .semibold))
                         .foregroundColor(Theme.textTertiary)
                     ForEach(package.possibleItems, id: \.self) { item in
@@ -151,12 +151,12 @@ struct PackageStoreView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "info.circle.fill")
                         .foregroundColor(Theme.info)
-                    Text("Cum functioneaza?")
+                    Text("How does it work?")
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(Theme.textPrimary)
                 }
                 
-                Text("Fiecare pachet contine un obiect aleatoriu. Pachetele mai scumpe au sanse mai mari de a contine obiecte rare, epice sau legendare. Obiectele pot fi echipate pe profil sau colectionate in inventar.")
+                Text("Each package contains a random item. More expensive packages have higher chances of containing rare, epic, or legendary items. Items can be equipped on your profile or collected in your inventory.")
                     .font(.system(size: 12))
                     .foregroundColor(Theme.textSecondary)
                     .lineSpacing(4)

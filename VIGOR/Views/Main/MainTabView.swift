@@ -8,35 +8,35 @@ struct MainTabView: View {
             DashboardView()
                 .tabItem {
                     Image(systemName: "house.fill")
-                    Text("Acasa")
+                    Text("Home")
                 }
                 .tag(AppState.Tab.home)
             
             TrainingView()
                 .tabItem {
                     Image(systemName: "dumbbell.fill")
-                    Text("Antrenament")
+                    Text("Training")
                 }
                 .tag(AppState.Tab.training)
             
             CommunityView()
                 .tabItem {
                     Image(systemName: "person.2.fill")
-                    Text("Comunitate")
+                    Text("Community")
                 }
                 .tag(AppState.Tab.community)
             
             NutritionView()
                 .tabItem {
                     Image(systemName: "fork.knife")
-                    Text("Nutritie")
+                    Text("Nutrition")
                 }
                 .tag(AppState.Tab.nutrition)
             
             ProfileView()
                 .tabItem {
                     Image(systemName: "person.circle.fill")
-                    Text("Profil")
+                    Text("Profile")
                 }
                 .tag(AppState.Tab.profile)
         }

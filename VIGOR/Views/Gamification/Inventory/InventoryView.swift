@@ -38,15 +38,15 @@ struct InventoryView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Inventar Obiecte")
+            .navigationTitle("Item Inventory")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
-                        .foregroundColor(Theme.primary)
-                }
-            }
-            .sheet(isPresented: $showItemDetail) {
+                                Button("Close") { dismiss() }
+                                    .foregroundColor(Theme.primary)
+                            }
+                        }
+                        .sheet(isPresented: $showItemDetail) {
                 if let item = selectedItem {
                     ItemDetailView(item: item)
                 }
@@ -58,9 +58,9 @@ struct InventoryView: View {
     private var statsSection: some View {
         HStack(spacing: 12) {
             inventoryStat(title: "Total", value: "\(items.count)", color: Theme.primary)
-            inventoryStat(title: "Legendar", value: "\(items.filter { $0.rarity == .legendary }.count)", color: Theme.rarityLegendary)
+            inventoryStat(title: "Legendary", value: "\(items.filter { $0.rarity == .legendary }.count)", color: Theme.rarityLegendary)
             inventoryStat(title: "Epic", value: "\(items.filter { $0.rarity == .epic }.count)", color: Theme.rarityEpic)
-            inventoryStat(title: "Echipate", value: "\(items.filter { $0.isEquipped }.count)", color: Theme.success)
+            inventoryStat(title: "Equipped", value: "\(items.filter { $0.isEquipped }.count)", color: Theme.success)
         }
     }
     
@@ -83,7 +83,7 @@ struct InventoryView: View {
     private var categoryFilter: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                filterChip(title: "Toate", isSelected: selectedCategory == nil) {
+                filterChip(title: "All", isSelected: selectedCategory == nil) {
                     selectedCategory = nil
                 }
                 ForEach(VirtualItem.ItemCategory.allCases, id: \.self) { category in
@@ -99,7 +99,7 @@ struct InventoryView: View {
     private var rarityFilter: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                rarityChip(title: "Toate", color: Theme.textSecondary, isSelected: selectedRarity == nil) {
+                rarityChip(title: "All", color: Theme.textSecondary, isSelected: selectedRarity == nil) {
                     selectedRarity = nil
                 }
                 ForEach(ItemRarity.allCases, id: \.self) { rarity in
@@ -265,7 +265,7 @@ struct ItemDetailView: View {
                 if let date = item.acquiredDate {
                     HStack(spacing: 20) {
                         VStack(spacing: 2) {
-                            Text("Obtinut")
+                            Text("Acquired")
                                 .font(.system(size: 11))
                                 .foregroundColor(Theme.textTertiary)
                             Text(formatDate(date))
@@ -276,7 +276,7 @@ struct ItemDetailView: View {
                         Divider().frame(height: 30)
                         
                         VStack(spacing: 2) {
-                            Text("Raritate")
+                            Text("Rarity")
                                 .font(.system(size: 11))
                                 .foregroundColor(Theme.textTertiary)
                             Text(item.rarity.label)
@@ -290,7 +290,7 @@ struct ItemDetailView: View {
                             Text("Status")
                                 .font(.system(size: 11))
                                 .foregroundColor(Theme.textTertiary)
-                            Text(isEquipped ? "Echipat" : "In inventar")
+                            Text(isEquipped ? "Equipped" : "In inventory")
                                 .font(.system(size: 13, weight: .semibold))
                                 .foregroundColor(isEquipped ? Theme.success : Theme.textSecondary)
                         }
@@ -304,11 +304,11 @@ struct ItemDetailView: View {
                 
                 // Actions
                 VStack(spacing: 10) {
-                    PrimaryButton(isEquipped ? "Dezechipeaza" : "Echipeaza", icon: isEquipped ? "xmark" : "checkmark") {
+                    PrimaryButton(isEquipped ? "Unequip" : "Equip", icon: isEquipped ? "xmark" : "checkmark") {
                         withAnimation { isEquipped.toggle() }
                     }
                     
-                    SecondaryButton("Partajeaza cu Prietenii", icon: "square.and.arrow.up") {}
+                    SecondaryButton("Share with Friends", icon: "square.and.arrow.up") {}
                 }
                 .padding(.horizontal)
                 .padding(.bottom)
@@ -317,16 +317,16 @@ struct ItemDetailView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
-                        .foregroundColor(Theme.primary)
+                        Button("Close") { dismiss() }
+                            .foregroundColor(Theme.primary)
+                    }
                 }
             }
         }
-    }
     
-    private func formatDate(_ date: Date) -> String {
+        private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ro_RO")
+        formatter.locale = Locale(identifier: "en_US")
         formatter.dateStyle = .medium
         return formatter.string(from: date)
     }

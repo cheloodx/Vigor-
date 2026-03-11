@@ -2,6 +2,7 @@ import SwiftUI
 
 struct UnboxingView: View {
     let package: SurprisePackage
+    @EnvironmentObject var appState: AppState
     @Environment(\.dismiss) var dismiss
     @State private var phase: UnboxingPhase = .intro
     @State private var shakeAmount: CGFloat = 0
@@ -10,9 +11,11 @@ struct UnboxingView: View {
     @State private var revealOpacity: Double = 0
     @State private var particleOpacity: Double = 0
     @State private var rotationAngle: Double = 0
+    @State private var rewardItem: VirtualItem
+    @State private var showInsufficientFunds = false
     
-    // Randomly select a reward item
-    private var rewardItem: VirtualItem {
+    init(package: SurprisePackage) {
+        self.package = package
         let possibleItems: [VirtualItem] = {
             switch package.tier {
             case .legendary:
@@ -23,7 +26,7 @@ struct UnboxingView: View {
                 return VirtualItem.samples.filter { $0.rarity == .rare || $0.rarity == .common }
             }
         }()
-        return possibleItems.randomElement() ?? VirtualItem.samples[0]
+        _rewardItem = State(initialValue: possibleItems.randomElement() ?? VirtualItem.samples[0])
     }
     
     enum UnboxingPhase {
@@ -80,6 +83,11 @@ struct UnboxingView: View {
         .onAppear {
             startGlowAnimation()
         }
+        .alert("Insufficient FitPoints", isPresented: $showInsufficientFunds) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("You don't have enough FitPoints for this package. Earn more through workouts and daily missions!")
+        }
     }
     
     // MARK: - Package Display
@@ -116,7 +124,7 @@ struct UnboxingView: View {
                 .rotationEffect(.degrees(Double(shakeAmount) * 0.5))
             }
             
-            Text("Apasa pentru a deschide!")
+            Text("Tap to open!")
                 .font(.system(size: 16, weight: .medium))
                 .foregroundColor(Theme.textSecondary)
                 .opacity(phase == .intro ? 1 : 0)
@@ -233,7 +241,7 @@ struct UnboxingView: View {
             Button(action: startShaking) {
                 HStack(spacing: 8) {
                     Image(systemName: "hand.tap.fill")
-                    Text("Deschide Pachetul")
+                    Text("Open Package")
                         .font(.system(size: 18, weight: .bold))
                 }
                 .foregroundColor(.black)
@@ -245,7 +253,7 @@ struct UnboxingView: View {
             }
             
         case .shaking:
-            Text("Se deschide...")
+            Text("Opening...")
                 .font(.system(size: 16, weight: .semibold))
                 .foregroundColor(Theme.textSecondary)
             
@@ -257,12 +265,17 @@ struct UnboxingView: View {
             
         case .complete:
             VStack(spacing: 12) {
-                PrimaryButton("Revendica", icon: "checkmark.circle.fill") {
+                PrimaryButton("Claim", icon: "checkmark.circle.fill") {
                     dismiss()
                 }
                 
-                SecondaryButton("Deschide Alt Pachet", icon: "arrow.counterclockwise") {
-                    resetAnimation()
+                SecondaryButton("Open Another Package", icon: "arrow.counterclockwise") {
+                    if appState.spendFitPoints(package.cost) {
+                        reRandomizeReward()
+                        resetAnimation()
+                    } else {
+                        showInsufficientFunds = true
+                    }
                 }
             }
         }
@@ -330,5 +343,19 @@ struct UnboxingView: View {
         particleOpacity = 0
         rotationAngle = 0
         startGlowAnimation()
+    }
+    
+    private func reRandomizeReward() {
+        let possibleItems: [VirtualItem] = {
+            switch package.tier {
+            case .legendary:
+                return VirtualItem.samples.filter { $0.rarity == .legendary || $0.rarity == .epic }
+            case .elite:
+                return VirtualItem.samples.filter { $0.rarity == .epic || $0.rarity == .rare }
+            case .basic:
+                return VirtualItem.samples.filter { $0.rarity == .rare || $0.rarity == .common }
+            }
+        }()
+        rewardItem = possibleItems.randomElement() ?? VirtualItem.samples[0]
     }
 }

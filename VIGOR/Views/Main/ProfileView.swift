@@ -32,7 +32,7 @@ struct ProfileView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Profil")
+            .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.large)
             .sheet(isPresented: $showWatchSettings) {
                 WatchSettingsView()
@@ -69,7 +69,7 @@ struct ProfileView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "flame.fill")
                         .foregroundColor(.orange)
-                    Text("\(appState.dailyStreak) zile streak")
+                    Text("\(appState.dailyStreak) day streak")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(Theme.textPrimary)
                 }
@@ -82,7 +82,7 @@ struct ProfileView: View {
         CardView {
             VStack(spacing: 8) {
                 HStack {
-                    Text("Nivel \(appState.currentUser.level)")
+                    Text("Level \(appState.currentUser.level)")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(Theme.primary)
                     Spacer()
@@ -98,25 +98,25 @@ struct ProfileView: View {
     
     private var statsGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            StatCard(title: "Antrenamente", value: "\(appState.currentUser.totalWorkouts)", icon: "dumbbell.fill", color: Theme.primary)
-            StatCard(title: "Calorii Arse", value: "\(appState.currentUser.totalCaloriesBurned / 1000)K", icon: "flame.fill", color: .red)
-            StatCard(title: "Streak Maxim", value: "\(appState.dailyStreak)", icon: "flame.fill", color: .orange)
-            StatCard(title: "Insigne", value: "\(appState.currentUser.badges.count)", icon: "star.fill", color: Theme.accent)
+                        StatCard(title: "Workouts", value: "\(appState.currentUser.totalWorkouts)", icon: "dumbbell.fill", color: Theme.primary)
+                        StatCard(title: "Calories Burned", value: "\(appState.currentUser.totalCaloriesBurned / 1000)K", icon: "flame.fill", color: .red)
+                        StatCard(title: "Max Streak", value: "\(appState.dailyStreak)", icon: "flame.fill", color: .orange)
+                        StatCard(title: "Badges", value: "\(appState.currentUser.badges.count)", icon: "star.fill", color: Theme.accent)
         }
     }
     
     private var quickActions: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Actiuni Rapide")
+            SectionHeader(title: "Quick Actions")
             
             HStack(spacing: 12) {
-                quickActionButton(title: "Inventar", icon: "bag.fill", color: Theme.primary) {
+                quickActionButton(title: "Inventory", icon: "bag.fill", color: Theme.primary) {
                     showInventory = true
                 }
-                quickActionButton(title: "Ceas", icon: "applewatch", color: .blue) {
+                quickActionButton(title: "Watch", icon: "applewatch", color: .blue) {
                     showWatchSettings = true
                 }
-                quickActionButton(title: "Setari", icon: "gearshape.fill", color: .gray) {
+                quickActionButton(title: "Settings", icon: "gearshape.fill", color: .gray) {
                     showSettings = true
                 }
             }
@@ -147,7 +147,7 @@ struct ProfileView: View {
     
     private var badgesSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Insigne Obtinute")
+            SectionHeader(title: "Badges Earned")
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
@@ -175,7 +175,7 @@ struct ProfileView: View {
     
     private var settingsSection: some View {
         VStack(spacing: 8) {
-            SectionHeader(title: "Setari")
+            SectionHeader(title: "Settings")
             
             ForEach(settingsItems, id: \.title) { item in
                 CardView(padding: 12) {
@@ -206,10 +206,10 @@ struct ProfileView: View {
     
     private var settingsItems: [(title: String, icon: String, color: Color)] {
         [
-            ("Notificari", "bell.fill", .blue),
-            ("Confidentialitate", "lock.fill", .green),
-            ("Limba", "globe", .purple),
-            ("Despre VIGOR", "info.circle.fill", Theme.primary),
+            ("Notifications", "bell.fill", .blue),
+            ("Privacy", "lock.fill", .green),
+            ("Language", "globe", .purple),
+            ("About VIGOR", "info.circle.fill", Theme.primary),
         ]
     }
 }

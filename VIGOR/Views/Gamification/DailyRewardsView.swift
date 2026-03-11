@@ -23,7 +23,7 @@ struct DailyRewardsView: View {
                     
                     // Claim Button
                     if !claimedToday {
-                        PrimaryButton("Revendica Bonusul Zilnic", icon: "gift.fill") {
+                        PrimaryButton("Claim Daily Bonus", icon: "gift.fill") {
                             withAnimation(.spring(response: 0.5, dampingFraction: 0.6)) {
                                 claimedToday = true
                                 showClaimAnimation = true
@@ -34,7 +34,7 @@ struct DailyRewardsView: View {
                         HStack(spacing: 8) {
                             Image(systemName: "checkmark.circle.fill")
                                 .foregroundColor(Theme.success)
-                            Text("Bonus revendicat astazi!")
+                            Text("Bonus claimed today!")
                                 .font(.system(size: 16, weight: .semibold))
                                 .foregroundColor(Theme.success)
                         }
@@ -48,16 +48,16 @@ struct DailyRewardsView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Recompense Zilnice")
+            .navigationTitle("Daily Rewards")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
-                        .foregroundColor(Theme.primary)
+                        Button("Close") { dismiss() }
+                            .foregroundColor(Theme.primary)
+                    }
                 }
             }
         }
-    }
     
     // MARK: - Streak Header
     private var streakHeader: some View {
@@ -81,7 +81,7 @@ struct DailyRewardsView: View {
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(Theme.textPrimary)
                 
-                Text("Continua seria pentru recompense mai mari!")
+                Text("Keep your streak going for bigger rewards!")
                     .font(.system(size: 13))
                     .foregroundColor(Theme.textSecondary)
                     .multilineTextAlignment(.center)
@@ -92,7 +92,7 @@ struct DailyRewardsView: View {
     // MARK: - Weekly Rewards Grid
     private var weeklyRewardsGrid: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Recompense Saptamanale")
+            SectionHeader(title: "Weekly Rewards")
             
             LazyVGrid(columns: [
                 GridItem(.flexible()),
@@ -109,7 +109,7 @@ struct DailyRewardsView: View {
     
     private func rewardDayCard(_ reward: DailyReward) -> some View {
         VStack(spacing: 6) {
-            Text("Ziua \(reward.day)")
+            Text("Day \(reward.day)")
                 .font(.system(size: 10, weight: .semibold))
                 .foregroundColor(reward.isToday ? .black : Theme.textSecondary)
             
@@ -146,7 +146,7 @@ struct DailyRewardsView: View {
     // MARK: - Daily Missions
     private var dailyMissionsSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Misiuni Zilnice")
+            SectionHeader(title: "Daily Missions")
             
             ForEach(DailyMission.samples) { mission in
                 CardView(padding: 12) {

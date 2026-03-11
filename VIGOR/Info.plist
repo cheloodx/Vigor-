@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>ro</string>
+	<string>en</string>
 	<key>CFBundleDisplayName</key>
 	<string>VIGOR</string>
 	<key>CFBundleExecutable</key>
@@ -23,13 +23,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>VIGOR necesita acces la camera pentru apelurile video de grup.</string>
+	<string>VIGOR needs camera access for group video calls.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>VIGOR necesita acces la microfon pentru apelurile video de grup.</string>
+	<string>VIGOR needs microphone access for group video calls.</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>VIGOR necesita acces la datele de sanatate pentru a urmari progresul antrenamentelor.</string>
+	<string>VIGOR needs access to health data to track your workout progress.</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>VIGOR doreste sa salveze datele antrenamentelor in Apple Health.</string>
+	<string>VIGOR wants to save workout data to Apple Health.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

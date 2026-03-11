@@ -27,15 +27,15 @@ struct FitPointsWalletView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Portofel FitPoints")
+            .navigationTitle("FitPoints Wallet")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
-                        .foregroundColor(Theme.primary)
-                }
-            }
-            .sheet(isPresented: $showDailyRewards) {
+                                Button("Close") { dismiss() }
+                                    .foregroundColor(Theme.primary)
+                            }
+                        }
+                        .sheet(isPresented: $showDailyRewards) {
                 DailyRewardsView()
             }
             .sheet(isPresented: $showStore) {
@@ -71,7 +71,7 @@ struct FitPointsWalletView: View {
                         .font(.system(size: 48, weight: .black))
                         .foregroundColor(.white)
                     
-                    Text("FitPoints Disponibili")
+                    Text("Available FitPoints")
                         .font(.system(size: 14, weight: .medium))
                         .foregroundColor(.white.opacity(0.8))
                 }
@@ -82,16 +82,16 @@ struct FitPointsWalletView: View {
     // MARK: - Quick Actions
     private var quickActions: some View {
         HStack(spacing: 12) {
-            walletActionButton(title: "Recompense\nZilnice", icon: "gift.fill", color: Theme.accent) {
+            walletActionButton(title: "Daily\nRewards", icon: "gift.fill", color: Theme.accent) {
                 showDailyRewards = true
             }
-            walletActionButton(title: "Magazin\nFitPoints", icon: "bag.fill", color: Theme.primary) {
+            walletActionButton(title: "FitPoints\nStore", icon: "bag.fill", color: Theme.primary) {
                 showStore = true
             }
-            walletActionButton(title: "Pachete\nSurpriza", icon: "shippingbox.fill", color: Theme.rarityEpic) {
+            walletActionButton(title: "Surprise\nPackages", icon: "shippingbox.fill", color: Theme.rarityEpic) {
                 showPackageStore = true
             }
-            walletActionButton(title: "Reincarca\nPuncte", icon: "plus.circle.fill", color: Theme.success) {
+            walletActionButton(title: "Reload\nPoints", icon: "plus.circle.fill", color: Theme.success) {
                 // Reload points
             }
         }
@@ -126,7 +126,7 @@ struct FitPointsWalletView: View {
         CardView {
             VStack(spacing: 12) {
                 HStack {
-                    Text("Misiuni Zilnice")
+                    Text("Daily Missions")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(Theme.textPrimary)
                     Spacer()
@@ -138,7 +138,7 @@ struct FitPointsWalletView: View {
                 ProgressView(value: 0.25)
                     .tint(Theme.primary)
                 
-                Text("Completeaza misiunile pentru a castiga pana la 55 FP!")
+                Text("Complete missions to earn up to 55 FP!")
                     .font(.system(size: 12))
                     .foregroundColor(Theme.textSecondary)
             }
@@ -148,7 +148,7 @@ struct FitPointsWalletView: View {
     // MARK: - Transaction History
     private var transactionHistory: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Istoric Tranzactii", showSeeAll: true)
+            SectionHeader(title: "Transaction History", showSeeAll: true)
             
             ForEach(FitPointsTransaction.samples) { transaction in
                 CardView(padding: 12) {
@@ -184,7 +184,7 @@ struct FitPointsWalletView: View {
     
     private func formatDate(_ date: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
-        formatter.locale = Locale(identifier: "ro_RO")
+        formatter.locale = Locale(identifier: "en_US")
         formatter.unitsStyle = .short
         return formatter.localizedString(for: date, relativeTo: Date())
     }

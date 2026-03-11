@@ -14,9 +14,9 @@ struct Workout: Identifiable {
     var fitPointsReward: Int
     
     enum WorkoutCategory: String, CaseIterable {
-        case strength = "Forta"
+        case strength = "Strength"
         case cardio = "Cardio"
-        case flexibility = "Flexibilitate"
+        case flexibility = "Flexibility"
         case hiit = "HIIT"
         case yoga = "Yoga"
         case functional = "Functional"
@@ -45,10 +45,10 @@ struct Workout: Identifiable {
     }
     
     enum Difficulty: String, CaseIterable {
-        case beginner = "Incepator"
-        case intermediate = "Intermediar"
-        case advanced = "Avansat"
-        case elite = "Elit"
+        case beginner = "Beginner"
+        case intermediate = "Intermediate"
+        case advanced = "Advanced"
+        case elite = "Elite"
         
         var color: Color {
             switch self {
@@ -62,32 +62,32 @@ struct Workout: Identifiable {
     
     static let samples: [Workout] = [
         Workout(
-            id: UUID(), name: "Putere Totala", description: "Antrenament complet de forta pentru tot corpul",
+            id: UUID(), name: "Total Power", description: "Complete full-body strength workout",
             category: .strength, difficulty: .intermediate, duration: 45, caloriesBurned: 350,
             exercises: Exercise.sampleStrength, imageSystemName: "dumbbell.fill", fitPointsReward: 50
         ),
         Workout(
-            id: UUID(), name: "Cardio Intens", description: "Sesiune de cardio de inalta intensitate",
+            id: UUID(), name: "Intense Cardio", description: "High intensity cardio session",
             category: .cardio, difficulty: .advanced, duration: 30, caloriesBurned: 400,
             exercises: Exercise.sampleCardio, imageSystemName: "heart.fill", fitPointsReward: 60
         ),
         Workout(
-            id: UUID(), name: "HIIT Fulger", description: "Antrenament HIIT scurt si eficient",
+            id: UUID(), name: "HIIT Lightning", description: "Short and efficient HIIT workout",
             category: .hiit, difficulty: .advanced, duration: 20, caloriesBurned: 300,
             exercises: Exercise.sampleHIIT, imageSystemName: "bolt.fill", fitPointsReward: 45
         ),
         Workout(
-            id: UUID(), name: "Yoga Dimineata", description: "Sesiune de yoga pentru energie si flexibilitate",
+            id: UUID(), name: "Morning Yoga", description: "Yoga session for energy and flexibility",
             category: .yoga, difficulty: .beginner, duration: 30, caloriesBurned: 150,
             exercises: Exercise.sampleYoga, imageSystemName: "figure.mind.and.body", fitPointsReward: 30
         ),
         Workout(
-            id: UUID(), name: "Flexibilitate & Stretching", description: "Imbunatateste mobilitatea si flexibilitatea",
+            id: UUID(), name: "Flexibility & Stretching", description: "Improve mobility and flexibility",
             category: .flexibility, difficulty: .beginner, duration: 25, caloriesBurned: 100,
             exercises: Exercise.sampleFlexibility, imageSystemName: "figure.flexibility", fitPointsReward: 25
         ),
         Workout(
-            id: UUID(), name: "Functional Elite", description: "Antrenament functional pentru performanta maxima",
+            id: UUID(), name: "Functional Elite", description: "Functional workout for peak performance",
             category: .functional, difficulty: .elite, duration: 60, caloriesBurned: 550,
             exercises: Exercise.sampleStrength, imageSystemName: "figure.cross.training", fitPointsReward: 80
         )
@@ -103,16 +103,16 @@ struct Exercise: Identifiable {
     var imageSystemName: String
     
     static let sampleStrength: [Exercise] = [
-        Exercise(id: UUID(), name: "Genuflexiuni cu Bara", sets: 4, reps: 10, restSeconds: 90, imageSystemName: "figure.strengthtraining.traditional"),
-        Exercise(id: UUID(), name: "Impins de pe Banca", sets: 4, reps: 8, restSeconds: 90, imageSystemName: "figure.strengthtraining.traditional"),
-        Exercise(id: UUID(), name: "Trase la Bara", sets: 3, reps: 10, restSeconds: 60, imageSystemName: "figure.strengthtraining.traditional"),
-        Exercise(id: UUID(), name: "Presa Umeri", sets: 3, reps: 12, restSeconds: 60, imageSystemName: "figure.strengthtraining.traditional"),
+        Exercise(id: UUID(), name: "Barbell Squats", sets: 4, reps: 10, restSeconds: 90, imageSystemName: "figure.strengthtraining.traditional"),
+        Exercise(id: UUID(), name: "Bench Press", sets: 4, reps: 8, restSeconds: 90, imageSystemName: "figure.strengthtraining.traditional"),
+        Exercise(id: UUID(), name: "Pull-Ups", sets: 3, reps: 10, restSeconds: 60, imageSystemName: "figure.strengthtraining.traditional"),
+        Exercise(id: UUID(), name: "Shoulder Press", sets: 3, reps: 12, restSeconds: 60, imageSystemName: "figure.strengthtraining.traditional"),
     ]
     
     static let sampleCardio: [Exercise] = [
-        Exercise(id: UUID(), name: "Alergare", sets: 1, reps: 1, restSeconds: 0, imageSystemName: "figure.run"),
-        Exercise(id: UUID(), name: "Sarituri cu Coarda", sets: 3, reps: 100, restSeconds: 30, imageSystemName: "figure.jumprope"),
-        Exercise(id: UUID(), name: "Bicicleta", sets: 1, reps: 1, restSeconds: 0, imageSystemName: "figure.outdoor.cycle"),
+        Exercise(id: UUID(), name: "Running", sets: 1, reps: 1, restSeconds: 0, imageSystemName: "figure.run"),
+        Exercise(id: UUID(), name: "Jump Rope", sets: 3, reps: 100, restSeconds: 30, imageSystemName: "figure.jumprope"),
+        Exercise(id: UUID(), name: "Cycling", sets: 1, reps: 1, restSeconds: 0, imageSystemName: "figure.outdoor.cycle"),
     ]
     
     static let sampleHIIT: [Exercise] = [
@@ -122,15 +122,15 @@ struct Exercise: Identifiable {
     ]
     
     static let sampleYoga: [Exercise] = [
-        Exercise(id: UUID(), name: "Salutul Soarelui", sets: 3, reps: 5, restSeconds: 15, imageSystemName: "figure.mind.and.body"),
-        Exercise(id: UUID(), name: "Pozitia Razboinicului", sets: 2, reps: 1, restSeconds: 10, imageSystemName: "figure.mind.and.body"),
-        Exercise(id: UUID(), name: "Pozitia Copacului", sets: 2, reps: 1, restSeconds: 10, imageSystemName: "figure.mind.and.body"),
+        Exercise(id: UUID(), name: "Sun Salutation", sets: 3, reps: 5, restSeconds: 15, imageSystemName: "figure.mind.and.body"),
+        Exercise(id: UUID(), name: "Warrior Pose", sets: 2, reps: 1, restSeconds: 10, imageSystemName: "figure.mind.and.body"),
+        Exercise(id: UUID(), name: "Tree Pose", sets: 2, reps: 1, restSeconds: 10, imageSystemName: "figure.mind.and.body"),
     ]
     
     static let sampleFlexibility: [Exercise] = [
-        Exercise(id: UUID(), name: "Stretching Spate", sets: 2, reps: 1, restSeconds: 30, imageSystemName: "figure.flexibility"),
-        Exercise(id: UUID(), name: "Stretching Picioare", sets: 2, reps: 1, restSeconds: 30, imageSystemName: "figure.flexibility"),
-        Exercise(id: UUID(), name: "Rotiri Umeri", sets: 2, reps: 15, restSeconds: 15, imageSystemName: "figure.flexibility"),
+        Exercise(id: UUID(), name: "Back Stretch", sets: 2, reps: 1, restSeconds: 30, imageSystemName: "figure.flexibility"),
+        Exercise(id: UUID(), name: "Leg Stretch", sets: 2, reps: 1, restSeconds: 30, imageSystemName: "figure.flexibility"),
+        Exercise(id: UUID(), name: "Shoulder Rotations", sets: 2, reps: 15, restSeconds: 15, imageSystemName: "figure.flexibility"),
     ]
 }
 
@@ -146,9 +146,9 @@ struct TrainingProgram: Identifiable {
     var imageSystemName: String
     
     static let samples: [TrainingProgram] = [
-        TrainingProgram(id: UUID(), name: "Putere Maxima 8 Saptamani", description: "Program complet de forta pentru masa musculara", durationWeeks: 8, workoutsPerWeek: 4, difficulty: .intermediate, category: .strength, progress: 0.35, imageSystemName: "dumbbell.fill"),
-        TrainingProgram(id: UUID(), name: "Cardio Warrior", description: "Creste rezistenta cardiovasculara", durationWeeks: 6, workoutsPerWeek: 5, difficulty: .advanced, category: .cardio, progress: 0.6, imageSystemName: "heart.fill"),
-        TrainingProgram(id: UUID(), name: "HIIT Transformation", description: "Transformare corporala in 4 saptamani", durationWeeks: 4, workoutsPerWeek: 3, difficulty: .advanced, category: .hiit, progress: 0.0, imageSystemName: "bolt.fill"),
-        TrainingProgram(id: UUID(), name: "Zen Master Yoga", description: "Yoga si mindfulness pentru echilibru", durationWeeks: 12, workoutsPerWeek: 3, difficulty: .beginner, category: .yoga, progress: 0.15, imageSystemName: "figure.mind.and.body"),
+        TrainingProgram(id: UUID(), name: "Max Power 8 Weeks", description: "Complete strength program for muscle mass", durationWeeks: 8, workoutsPerWeek: 4, difficulty: .intermediate, category: .strength, progress: 0.35, imageSystemName: "dumbbell.fill"),
+        TrainingProgram(id: UUID(), name: "Cardio Warrior", description: "Boost cardiovascular endurance", durationWeeks: 6, workoutsPerWeek: 5, difficulty: .advanced, category: .cardio, progress: 0.6, imageSystemName: "heart.fill"),
+        TrainingProgram(id: UUID(), name: "HIIT Transformation", description: "Body transformation in 4 weeks", durationWeeks: 4, workoutsPerWeek: 3, difficulty: .advanced, category: .hiit, progress: 0.0, imageSystemName: "bolt.fill"),
+        TrainingProgram(id: UUID(), name: "Zen Master Yoga", description: "Yoga and mindfulness for balance", durationWeeks: 12, workoutsPerWeek: 3, difficulty: .beginner, category: .yoga, progress: 0.15, imageSystemName: "figure.mind.and.body"),
     ]
 }

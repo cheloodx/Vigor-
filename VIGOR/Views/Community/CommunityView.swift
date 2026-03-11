@@ -23,7 +23,7 @@ struct CommunityView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Comunitate")
+            .navigationTitle("Community")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -49,7 +49,7 @@ struct CommunityView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "video.fill")
                         .font(.system(size: 16))
-                    Text("Antrenament Grup")
+                    Text("Group Workout")
                         .font(.system(size: 14, weight: .semibold))
                 }
                 .foregroundColor(.black)
@@ -63,7 +63,7 @@ struct CommunityView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "trophy.fill")
                         .font(.system(size: 16))
-                    Text("Provocari")
+                    Text("Challenges")
                         .font(.system(size: 14, weight: .semibold))
                 }
                 .foregroundColor(Theme.accent)
@@ -79,7 +79,7 @@ struct CommunityView: View {
     private var filterSection: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                filterChip(title: "Toate", isSelected: selectedFilter == nil) {
+                filterChip(title: "All", isSelected: selectedFilter == nil) {
                     selectedFilter = nil
                 }
                 ForEach(CommunityPost.PostCategory.allCases, id: \.self) { category in
@@ -261,19 +261,19 @@ struct CreatePostView: View {
                 Spacer()
                 
                 // Post Button
-                PrimaryButton("Posteaza", icon: "paperplane.fill") {
+                PrimaryButton("Post", icon: "paperplane.fill") {
                     dismiss()
                 }
                 .padding(.horizontal)
                 .padding(.bottom)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Postare Noua")
+            .navigationTitle("New Post")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Anuleaza") { dismiss() }
-                        .foregroundColor(Theme.primary)
+                                        Button("Cancel") { dismiss() }
+                                            .foregroundColor(Theme.primary)
                 }
             }
         }

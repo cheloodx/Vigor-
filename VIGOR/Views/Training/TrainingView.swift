@@ -26,7 +26,7 @@ struct TrainingView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Antrenament")
+            .navigationTitle("Training")
             .navigationBarTitleDisplayMode(.large)
         }
     }
@@ -35,7 +35,7 @@ struct TrainingView: View {
     private var categoryFilter: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 10) {
-                categoryChip(title: "Toate", icon: "square.grid.2x2.fill", isSelected: selectedCategory == nil) {
+                categoryChip(title: "All", icon: "square.grid.2x2.fill", isSelected: selectedCategory == nil) {
                     selectedCategory = nil
                 }
                 
@@ -67,7 +67,7 @@ struct TrainingView: View {
     // MARK: - Active Programs
     private var activeProgramsSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Programe Active", showSeeAll: true)
+            SectionHeader(title: "Active Programs", showSeeAll: true)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 14) {
@@ -99,14 +99,14 @@ struct TrainingView: View {
                 .foregroundColor(Theme.textPrimary)
                 .lineLimit(2)
             
-            Text("Sapt. \(Int(program.progress * Double(program.durationWeeks))) / \(program.durationWeeks)")
+            Text("Week \(Int(program.progress * Double(program.durationWeeks))) / \(program.durationWeeks)")
                 .font(.system(size: 12))
                 .foregroundColor(Theme.textSecondary)
             
             ProgressView(value: program.progress)
                 .tint(program.category.color)
             
-            Text("\(Int(program.progress * 100))% completat")
+            Text("\(Int(program.progress * 100))% completed")
                 .font(.system(size: 11, weight: .medium))
                 .foregroundColor(program.category.color)
         }
@@ -119,7 +119,7 @@ struct TrainingView: View {
     // MARK: - Available Workouts
     private var availableWorkoutsSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Antrenamente Disponibile", showSeeAll: true)
+            SectionHeader(title: "Available Workouts", showSeeAll: true)
             
             let filteredWorkouts = selectedCategory == nil ? Workout.samples : Workout.samples.filter { $0.category == selectedCategory }
             
@@ -189,12 +189,12 @@ struct TrainingView: View {
     // MARK: - Quick Start
     private var quickStartSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Start Rapid")
+            SectionHeader(title: "Quick Start")
             
             HStack(spacing: 12) {
                 quickStartCard(title: "Timer", icon: "timer", color: .green) {}
-                quickStartCard(title: "Liber", icon: "figure.run", color: .blue) {}
-                quickStartCard(title: "Grup", icon: "person.2.fill", color: .purple) {}
+                quickStartCard(title: "Free", icon: "figure.run", color: .blue) {}
+                quickStartCard(title: "Group", icon: "person.2.fill", color: .purple) {}
             }
         }
     }

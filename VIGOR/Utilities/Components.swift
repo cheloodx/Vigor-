@@ -157,7 +157,7 @@ struct SectionHeader: View {
             
             if showSeeAll {
                 Button(action: { seeAllAction?() }) {
-                    Text("Vezi tot")
+                    Text("See all")
                         .font(.system(size: 14, weight: .semibold))
                         .foregroundColor(Theme.primary)
                 }

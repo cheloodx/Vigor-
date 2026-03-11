@@ -44,7 +44,7 @@ struct NutritionView: View {
                     mealsSection
                     
                     // Add Meal Button
-                    PrimaryButton("Adauga Masa", icon: "plus") {
+                    PrimaryButton("Add Meal", icon: "plus") {
                         showAddMeal = true
                     }
                 }
@@ -52,7 +52,7 @@ struct NutritionView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Nutritie")
+            .navigationTitle("Nutrition")
             .navigationBarTitleDisplayMode(.large)
             .sheet(isPresented: $showAddMeal) {
                 AddMealView()
@@ -90,7 +90,7 @@ struct NutritionView: View {
     
     private func dayName(_ date: Date) -> String {
         let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "ro_RO")
+        formatter.locale = Locale(identifier: "en_US")
         formatter.dateFormat = "EEE"
         return formatter.string(from: date).capitalized
     }
@@ -101,7 +101,7 @@ struct NutritionView: View {
             VStack(spacing: 12) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Calorii Astazi")
+                        Text("Calories Today")
                             .font(.system(size: 14))
                             .foregroundColor(Theme.textSecondary)
                         HStack(alignment: .firstTextBaseline, spacing: 4) {
@@ -131,7 +131,7 @@ struct NutritionView: View {
                 
                 HStack(spacing: 16) {
                     VStack(spacing: 2) {
-                        Text("Ramase")
+                        Text("Remaining")
                             .font(.system(size: 11))
                             .foregroundColor(Theme.textTertiary)
                         Text("\(max(nutritionGoal.targetCalories - totalCalories, 0))")
@@ -142,7 +142,7 @@ struct NutritionView: View {
                     Divider().frame(height: 30)
                     
                     VStack(spacing: 2) {
-                        Text("Consumate")
+                        Text("Consumed")
                             .font(.system(size: 11))
                             .foregroundColor(Theme.textTertiary)
                         Text("\(totalCalories)")
@@ -153,7 +153,7 @@ struct NutritionView: View {
                     Divider().frame(height: 30)
                     
                     VStack(spacing: 2) {
-                        Text("Arse")
+                        Text("Burned")
                             .font(.system(size: 11))
                             .foregroundColor(Theme.textTertiary)
                         Text("350")
@@ -169,12 +169,12 @@ struct NutritionView: View {
     private var macrosSection: some View {
         CardView {
             VStack(spacing: 12) {
-                SectionHeader(title: "Macronutrienti")
+                SectionHeader(title: "Macronutrients")
                 
                 HStack(spacing: 16) {
-                    macroBar(title: "Proteine", current: totalProtein, target: nutritionGoal.targetProtein, color: .red, unit: "g")
-                    macroBar(title: "Carbohidrati", current: totalCarbs, target: nutritionGoal.targetCarbs, color: .blue, unit: "g")
-                    macroBar(title: "Grasimi", current: totalFat, target: nutritionGoal.targetFat, color: .yellow, unit: "g")
+                                        macroBar(title: "Protein", current: totalProtein, target: nutritionGoal.targetProtein, color: .red, unit: "g")
+                                        macroBar(title: "Carbs", current: totalCarbs, target: nutritionGoal.targetCarbs, color: .blue, unit: "g")
+                                        macroBar(title: "Fat", current: totalFat, target: nutritionGoal.targetFat, color: .yellow, unit: "g")
                 }
             }
         }
@@ -211,7 +211,7 @@ struct NutritionView: View {
                 HStack {
                     Image(systemName: "drop.fill")
                         .foregroundColor(.cyan)
-                    Text("Hidratare")
+                    Text("Hydration")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(Theme.textPrimary)
                     Spacer()
@@ -245,7 +245,7 @@ struct NutritionView: View {
     // MARK: - Meals Section
     private var mealsSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Mesele de Azi")
+            SectionHeader(title: "Today's Meals")
             
             ForEach(Meal.samples) { meal in
                 CardView(padding: 12) {
@@ -310,7 +310,7 @@ struct AddMealView: View {
                 VStack(spacing: 20) {
                     // Meal Type Selector
                     VStack(alignment: .leading, spacing: 8) {
-                        Text("Tip Masa")
+                        Text("Meal Type")
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(Theme.textSecondary)
                         
@@ -334,36 +334,36 @@ struct AddMealView: View {
                     }
                     
                     // Name
-                    inputField(title: "Numele Mesei", text: $mealName, placeholder: "ex: Piept de Pui cu Orez")
+                    inputField(title: "Meal Name", text: $mealName, placeholder: "e.g. Chicken Breast with Rice")
                     
                     // Macros
                     HStack(spacing: 12) {
-                        inputField(title: "Calorii", text: $calories, placeholder: "kcal")
-                        inputField(title: "Proteine", text: $protein, placeholder: "g")
+                                                inputField(title: "Calories", text: $calories, placeholder: "kcal")
+                                                inputField(title: "Protein", text: $protein, placeholder: "g")
                     }
                     
                     HStack(spacing: 12) {
-                        inputField(title: "Carbohidrati", text: $carbs, placeholder: "g")
-                        inputField(title: "Grasimi", text: $fat, placeholder: "g")
+                                                inputField(title: "Carbs", text: $carbs, placeholder: "g")
+                                                inputField(title: "Fat", text: $fat, placeholder: "g")
                     }
                     
-                    PrimaryButton("Salveaza Masa", icon: "checkmark") {
+                    PrimaryButton("Save Meal", icon: "checkmark") {
                         dismiss()
                     }
                 }
                 .padding()
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Adauga Masa")
+            .navigationTitle("Add Meal")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Anuleaza") { dismiss() }
-                        .foregroundColor(Theme.primary)
+                        Button("Cancel") { dismiss() }
+                            .foregroundColor(Theme.primary)
+                    }
                 }
             }
         }
-    }
     
     private func inputField(title: String, text: Binding<String>, placeholder: String) -> some View {
         VStack(alignment: .leading, spacing: 6) {

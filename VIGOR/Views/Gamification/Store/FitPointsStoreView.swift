@@ -18,14 +18,14 @@ struct FitPointsStoreView: View {
     }
     
     private let storeItems: [StoreItem] = [
-        StoreItem(name: "Insigna Legenda", description: "Pentru a-ti personaliza profilul", icon: "star.fill", price: 200, rarity: .legendary, category: .badge),
-        StoreItem(name: "Tricou Elite", description: "Echipament rar pentru avatar", icon: "tshirt.fill", price: 350, rarity: .epic, category: .equipment),
-        StoreItem(name: "Gantere de Aur", description: "Obiect legendar de colectie", icon: "dumbbell.fill", price: 500, rarity: .legendary, category: .equipment),
-        StoreItem(name: "Aura Energetica", description: "Efect vizual epic", icon: "sparkles", price: 250, rarity: .epic, category: .effect),
-        StoreItem(name: "Avatar Razboinic", description: "Cadru de avatar rar", icon: "person.crop.circle.badge.checkmark", price: 150, rarity: .rare, category: .avatar),
-        StoreItem(name: "Insigna Streak", description: "Pentru serii impresionante", icon: "flame.fill", price: 100, rarity: .rare, category: .badge),
-        StoreItem(name: "Casca Pro", description: "Echipament audio stilat", icon: "headphones", price: 80, rarity: .common, category: .equipment),
-        StoreItem(name: "Fundal Neon", description: "Efect de fundal pentru profil", icon: "paintbrush.fill", price: 120, rarity: .rare, category: .effect),
+                StoreItem(name: "Legend Badge", description: "Customize your profile", icon: "star.fill", price: 200, rarity: .legendary, category: .badge),
+                StoreItem(name: "Elite Shirt", description: "Rare avatar equipment", icon: "tshirt.fill", price: 350, rarity: .epic, category: .equipment),
+                StoreItem(name: "Golden Dumbbells", description: "Legendary collectible item", icon: "dumbbell.fill", price: 500, rarity: .legendary, category: .equipment),
+                StoreItem(name: "Energy Aura", description: "Epic visual effect", icon: "sparkles", price: 250, rarity: .epic, category: .effect),
+                StoreItem(name: "Warrior Avatar", description: "Rare avatar frame", icon: "person.crop.circle.badge.checkmark", price: 150, rarity: .rare, category: .avatar),
+                StoreItem(name: "Streak Badge", description: "For impressive streaks", icon: "flame.fill", price: 100, rarity: .rare, category: .badge),
+                StoreItem(name: "Pro Headset", description: "Stylish audio equipment", icon: "headphones", price: 80, rarity: .common, category: .equipment),
+                StoreItem(name: "Neon Background", description: "Profile background effect", icon: "paintbrush.fill", price: 120, rarity: .rare, category: .effect),
     ]
     
     var body: some View {
@@ -45,26 +45,26 @@ struct FitPointsStoreView: View {
                 .padding(.bottom, 20)
             }
             .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Magazin FitPoints")
+            .navigationTitle("FitPoints Store")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
-                        .foregroundColor(Theme.primary)
-                }
-            }
-            .alert("Confirma Achizitia", isPresented: $showPurchaseAlert) {
-                Button("Cumpara") {
-                    if let item = selectedItem {
-                        _ = appState.spendFitPoints(item.price)
-                    }
-                }
-                Button("Anuleaza", role: .cancel) {}
-            } message: {
-                if let item = selectedItem {
-                    Text("Vrei sa cumperi \(item.name) pentru \(item.price) FitPoints?")
-                }
-            }
+                                Button("Close") { dismiss() }
+                                    .foregroundColor(Theme.primary)
+                            }
+                        }
+                        .alert("Confirm Purchase", isPresented: $showPurchaseAlert) {
+                            Button("Buy") {
+                                if let item = selectedItem {
+                                    _ = appState.spendFitPoints(item.price)
+                                }
+                            }
+                            Button("Cancel", role: .cancel) {}
+                        } message: {
+                            if let item = selectedItem {
+                                Text("Do you want to buy \(item.name) for \(item.price) FitPoints?")
+                            }
+                        }
         }
     }
     
@@ -86,7 +86,7 @@ struct FitPointsStoreView: View {
     private var categoryFilter: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 8) {
-                filterButton(title: "Toate", isSelected: selectedCategory == nil) {
+                filterButton(title: "All", isSelected: selectedCategory == nil) {
                     selectedCategory = nil
                 }
                 ForEach(VirtualItem.ItemCategory.allCases, id: \.self) { category in

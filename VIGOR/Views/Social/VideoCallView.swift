@@ -78,10 +78,10 @@ struct VideoCallView: View {
             Spacer()
             
             VStack(spacing: 2) {
-                Text("Antrenament Grup")
+                Text("Group Workout")
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.white)
-                Text("\(participants.count) participanti")
+                Text("\(participants.count) participants")
                     .font(.system(size: 12))
                     .foregroundColor(.white.opacity(0.7))
             }
@@ -129,7 +129,7 @@ struct VideoCallView: View {
                                         Image(systemName: "video.slash.fill")
                                             .font(.system(size: 24))
                                             .foregroundColor(Theme.textTertiary)
-                                        Text("Camera oprita")
+                                        Text("Camera off")
                                             .font(.system(size: 11))
                                             .foregroundColor(Theme.textTertiary)
                                     }
@@ -275,7 +275,7 @@ struct VideoCallView: View {
                 
                 // Input
                 HStack(spacing: 8) {
-                    TextField("Scrie un mesaj...", text: $chatMessage)
+                    TextField("Write a message...", text: $chatMessage)
                         .font(.system(size: 14))
                         .foregroundColor(Theme.textPrimary)
                         .padding(.horizontal, 12)
@@ -285,7 +285,7 @@ struct VideoCallView: View {
                     
                     Button(action: {
                         if !chatMessage.isEmpty {
-                            messages.append(ChatMessage(id: UUID(), author: "Tu", content: chatMessage, timestamp: Date(), isCurrentUser: true))
+                            messages.append(ChatMessage(id: UUID(), author: "You", content: chatMessage, timestamp: Date(), isCurrentUser: true))
                             chatMessage = ""
                         }
                     }) {
@@ -310,7 +310,7 @@ struct VideoCallView: View {
             
             VStack(spacing: 16) {
                 HStack {
-                    Text("Cadouri Virtuale")
+                    Text("Virtual Gifts")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(Theme.textPrimary)
                     Spacer()
@@ -349,7 +349,7 @@ struct VideoCallView: View {
                                 }
                                 
                                 Button(action: {}) {
-                                    Text("Trimite")
+                                    Text("Send")
                                         .font(.system(size: 11, weight: .bold))
                                         .foregroundColor(.black)
                                         .padding(.horizontal, 14)

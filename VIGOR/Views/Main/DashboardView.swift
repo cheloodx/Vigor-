@@ -77,10 +77,10 @@ struct DashboardView: View {
     // MARK: - Header
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Buna, \(appState.currentUser.name)! 👋")
+            Text("Hey, \(appState.currentUser.name)! 👋")
                 .font(.system(size: 28, weight: .bold))
                 .foregroundColor(Theme.textPrimary)
-            Text("Hai sa ne antrenam astazi!")
+            Text("Let's train today!")
                 .font(.system(size: 16))
                 .foregroundColor(Theme.textSecondary)
         }
@@ -91,9 +91,9 @@ struct DashboardView: View {
     // MARK: - Quick Stats
     private var quickStatsSection: some View {
         HStack(spacing: 12) {
-            StatCard(title: "Streak", value: "\(appState.dailyStreak)🔥", icon: "flame.fill", color: .orange)
-            StatCard(title: "Nivel", value: "Lv.\(appState.currentUser.level)", icon: "star.fill", color: Theme.accent)
-            StatCard(title: "Calorii", value: "420", icon: "bolt.fill", color: .green)
+                        StatCard(title: "Streak", value: "\(appState.dailyStreak)🔥", icon: "flame.fill", color: .orange)
+                        StatCard(title: "Level", value: "Lv.\(appState.currentUser.level)", icon: "star.fill", color: Theme.accent)
+                        StatCard(title: "Calories", value: "420", icon: "bolt.fill", color: .green)
         }
     }
     
@@ -101,7 +101,7 @@ struct DashboardView: View {
     private var dailyProgressSection: some View {
         CardView {
             VStack(spacing: 16) {
-                SectionHeader(title: "Progres Zilnic")
+                SectionHeader(title: "Daily Progress")
                 
                 HStack(spacing: 24) {
                     VStack(spacing: 8) {
@@ -113,7 +113,7 @@ struct DashboardView: View {
                                         .foregroundColor(Theme.textPrimary)
                                 }
                             )
-                        Text("Antrenament")
+                        Text("Workout")
                             .font(.system(size: 11))
                             .foregroundColor(Theme.textSecondary)
                     }
@@ -127,21 +127,21 @@ struct DashboardView: View {
                                         .foregroundColor(Theme.textPrimary)
                                 }
                             )
-                        Text("Nutritie")
-                            .font(.system(size: 11))
-                            .foregroundColor(Theme.textSecondary)
-                    }
+                                            Text("Nutrition")
+                                                .font(.system(size: 11))
+                                                .foregroundColor(Theme.textSecondary)
+                                        }
                     
-                    VStack(spacing: 8) {
-                        ProgressRing(progress: 0.8, color: .blue, size: 70)
-                            .overlay(
-                                VStack(spacing: 0) {
-                                    Text("80%")
-                                        .font(.system(size: 14, weight: .bold))
-                                        .foregroundColor(Theme.textPrimary)
-                                }
-                            )
-                        Text("Pasi")
+                                        VStack(spacing: 8) {
+                                            ProgressRing(progress: 0.8, color: .blue, size: 70)
+                                                .overlay(
+                                                    VStack(spacing: 0) {
+                                                        Text("80%")
+                                                            .font(.system(size: 14, weight: .bold))
+                                                            .foregroundColor(Theme.textPrimary)
+                                                    }
+                                                )
+                                            Text("Steps")
                             .font(.system(size: 11))
                             .foregroundColor(Theme.textSecondary)
                     }
@@ -155,7 +155,7 @@ struct DashboardView: View {
                                         .foregroundColor(Theme.textPrimary)
                                 }
                             )
-                        Text("Apa")
+                        Text("Water")
                             .font(.system(size: 11))
                             .foregroundColor(Theme.textSecondary)
                     }
@@ -168,7 +168,7 @@ struct DashboardView: View {
     private var activeProgramSection: some View {
         CardView {
             VStack(spacing: 12) {
-                SectionHeader(title: "Program Activ")
+                SectionHeader(title: "Active Program")
                 
                 HStack(spacing: 12) {
                     ZStack {
@@ -181,10 +181,10 @@ struct DashboardView: View {
                     }
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Putere Maxima 8 Saptamani")
+                        Text("Max Power 8 Weeks")
                             .font(.system(size: 16, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
-                        Text("Saptamana 3 din 8")
+                        Text("Week 3 of 8")
                             .font(.system(size: 13))
                             .foregroundColor(Theme.textSecondary)
                     }
@@ -206,12 +206,12 @@ struct DashboardView: View {
     private var todayWorkoutSection: some View {
         CardView {
             VStack(spacing: 12) {
-                SectionHeader(title: "Antrenamentul de Azi")
+                SectionHeader(title: "Today's Workout")
                 
                 VStack(alignment: .leading, spacing: 8) {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("Putere Totala")
+                            Text("Total Power")
                                 .font(.system(size: 18, weight: .bold))
                                 .foregroundColor(Theme.textPrimary)
                             
@@ -236,7 +236,7 @@ struct DashboardView: View {
                     }
                 }
                 
-                PrimaryButton("Incepe Antrenamentul", icon: "play.fill") {
+                PrimaryButton("Start Workout", icon: "play.fill") {
                     // Start workout
                 }
             }
@@ -246,7 +246,7 @@ struct DashboardView: View {
     // MARK: - Daily Missions
     private var dailyMissionsSection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Misiuni Zilnice", showSeeAll: true)
+            SectionHeader(title: "Daily Missions", showSeeAll: true)
             
             ForEach(DailyMission.samples.prefix(3)) { mission in
                 CardView(padding: 12) {
@@ -292,7 +292,7 @@ struct DashboardView: View {
     // MARK: - Recent Activity
     private var recentActivitySection: some View {
         VStack(spacing: 12) {
-            SectionHeader(title: "Activitate Recenta", showSeeAll: true)
+            SectionHeader(title: "Recent Activity", showSeeAll: true)
             
             ForEach(FitPointsTransaction.samples.prefix(3)) { transaction in
                 CardView(padding: 12) {

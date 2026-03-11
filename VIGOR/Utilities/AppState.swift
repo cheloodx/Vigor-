@@ -18,6 +18,7 @@ class AppState: ObservableObject {
     func addFitPoints(_ amount: Int) {
         withAnimation {
             fitPoints += amount
+            currentUser.fitPoints = fitPoints
         }
     }
     
@@ -25,6 +26,7 @@ class AppState: ObservableObject {
         guard fitPoints >= amount else { return false }
         withAnimation {
             fitPoints -= amount
+            currentUser.fitPoints = fitPoints
         }
         return true
     }
