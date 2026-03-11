@@ -226,7 +226,7 @@ struct NutritionView: View {
                 HStack(spacing: 12) {
                     ForEach([0.25, 0.5, 1.0], id: \.self) { amount in
                         Button(action: {
-                            withAnimation { waterIntake = min(waterIntake + amount, nutritionGoal.waterGoalLiters) }
+                            withAnimation { waterIntake += amount }
                         }) {
                             Text("+\(amount == 1.0 ? "1L" : "\(Int(amount * 1000))ml")")
                                 .font(.system(size: 12, weight: .semibold))

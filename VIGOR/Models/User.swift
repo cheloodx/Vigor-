@@ -20,7 +20,8 @@ struct User: Identifiable, Codable {
     }
     
     var levelProgress: Double {
-        return Double(experience) / Double(experienceToNextLevel)
+        guard experienceToNextLevel > 0 else { return 0 }
+        return min(Double(experience) / Double(experienceToNextLevel), 1.0)
     }
     
     static let sample = User(

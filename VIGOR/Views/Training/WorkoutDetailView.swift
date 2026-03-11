@@ -170,7 +170,7 @@ struct ActiveWorkoutView: View {
                 
                 Spacer()
                 
-                Text("\(currentExercise + 1)/\(workout.exercises.count)")
+                Text("\(min(currentExercise + 1, workout.exercises.count))/\(workout.exercises.count)")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(Theme.primary)
             }
