@@ -65,9 +65,9 @@ export default function PlansScreen() {
         <TouchableOpacity style={s.card} onPress={() => navigation.navigate('Subscription')}>
           <LinearGradient colors={['#EF4444', '#DC2626']} style={s.cardGradient}>
             <Ionicons name="star" size={32} color="#FFF" />
-            <Text style={s.cardTitle}>Abonamente Premium</Text>
-            <Text style={s.cardDesc}>Deblocheaza toate retetele, exercitiile si video-urile</Text>
-            <View style={s.cardBadge}><Text style={s.cardBadgeText}>2 Planuri</Text></View>
+            <Text style={s.cardTitle}>Premium - {'\u00A3'}4.99/luna</Text>
+            <Text style={s.cardDesc}>Acces complet la tot: retete, exercitii, video, Apple Watch si notificari</Text>
+            <View style={s.cardBadge}><Text style={s.cardBadgeText}>Un Singur Abonament</Text></View>
           </LinearGradient>
         </TouchableOpacity>
       </View>

@@ -8,21 +8,30 @@ interface User {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
+  isPremium: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  subscribe: () => void;
   favorites: string[];
   toggleFavorite: (id: string) => void;
   shoppingList: { id: string; name: string; checked: boolean }[];
   toggleShoppingItem: (id: string) => void;
   addShoppingItem: (name: string) => void;
+  watchConnected: boolean;
+  toggleWatch: () => void;
+  notificationsEnabled: boolean;
+  toggleNotifications: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isPremium, setIsPremium] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [watchConnected, setWatchConnected] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [shoppingList, setShoppingList] = useState<{ id: string; name: string; checked: boolean }[]>([
     { id: '1', name: 'Piept de pui 500g', checked: false },
     { id: '2', name: 'Orez integral 1kg', checked: false },
@@ -44,8 +53,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return true;
   };
 
+  const subscribe = () => {
+    setIsPremium(true);
+  };
+
+  const toggleWatch = () => {
+    setWatchConnected(prev => !prev);
+  };
+
+  const toggleNotifications = () => {
+    setNotificationsEnabled(prev => !prev);
+  };
+
   const logout = () => {
     setUser(null);
+    setIsPremium(false);
     setFavorites([]);
     setShoppingList([]);
   };
@@ -76,14 +98,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         isAuthenticated: !!user,
+        isPremium,
         login,
         register,
         logout,
+        subscribe,
         favorites,
         toggleFavorite,
         shoppingList,
         toggleShoppingItem,
         addShoppingItem,
+        watchConnected,
+        toggleWatch,
+        notificationsEnabled,
+        toggleNotifications,
       }}
     >
       {children}

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, TextInput, Alert, Switch } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
@@ -12,9 +12,9 @@ import { recipes } from '../data/recipes';
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function ProfileScreen() {
-  const { user, isAuthenticated, logout, favorites, shoppingList, toggleShoppingItem, addShoppingItem } = useAuth();
+  const { user, isAuthenticated, isPremium, logout, favorites, shoppingList, toggleShoppingItem, addShoppingItem, watchConnected, toggleWatch, notificationsEnabled, toggleNotifications } = useAuth();
   const navigation = useNavigation<Nav>();
-  const [tab, setTab] = useState<'progres' | 'favorite' | 'lista' | 'plan'>('progres');
+  const [tab, setTab] = useState<'progres' | 'favorite' | 'lista' | 'setari'>('progres');
   const [newItem, setNewItem] = useState('');
 
   if (!isAuthenticated) {
@@ -64,7 +64,7 @@ export default function ProfileScreen() {
       </LinearGradient>
 
       <View style={s.tabs}>
-        {([['progres', 'analytics', 'Progres'], ['favorite', 'heart', 'Favorite'], ['lista', 'cart', 'Lista'], ['plan', 'calendar', 'Plan']] as const).map(([key, icon, label]) => (
+        {([['progres', 'analytics', 'Progres'], ['favorite', 'heart', 'Favorite'], ['lista', 'cart', 'Lista'], ['setari', 'settings', 'Setari']] as const).map(([key, icon, label]) => (
           <TouchableOpacity key={key} style={[s.tab, tab === key && s.tabActive]} onPress={() => setTab(key)}>
             <Ionicons name={icon as keyof typeof Ionicons.glyphMap} size={18} color={tab === key ? Colors.primary : Colors.gray[400]} />
             <Text style={[s.tabText, tab === key && s.tabTextActive]}>{label}</Text>
@@ -120,14 +120,89 @@ export default function ProfileScreen() {
         </View>
       )}
 
-      {tab === 'plan' && (
+      {tab === 'setari' && (
         <View style={s.section}>
-          <Text style={s.sectionTitle}>Planificare Mese</Text>
-          <View style={s.planCard}>
-            <Ionicons name="calendar" size={40} color={Colors.primary} />
-            <Text style={s.planTitle}>Planifica-ti mesele</Text>
-            <Text style={s.planDesc}>Organizeaza-ti saptamana cu planuri de masa personalizate. Functionalitate disponibila in curand!</Text>
+          <Text style={s.sectionTitle}>Setari</Text>
+
+          {/* Subscription status */}
+          <TouchableOpacity style={s.settingCard} onPress={() => navigation.navigate('Subscription')}>
+            <View style={s.settingLeft}>
+              <View style={[s.settingIcon, { backgroundColor: isPremium ? '#F59E0B20' : Colors.gray[100] }]}>
+                <Ionicons name={isPremium ? 'diamond' : 'star'} size={20} color={isPremium ? '#F59E0B' : Colors.gray[400]} />
+              </View>
+              <View>
+                <Text style={s.settingTitle}>Abonament</Text>
+                <Text style={s.settingDesc}>{isPremium ? 'Premium activ - £4.99/luna' : 'Basic (gratuit)'}</Text>
+              </View>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={Colors.gray[400]} />
+          </TouchableOpacity>
+
+          {/* Apple Watch */}
+          <View style={s.settingCard}>
+            <View style={s.settingLeft}>
+              <View style={[s.settingIcon, { backgroundColor: watchConnected ? Colors.primary + '20' : Colors.gray[100] }]}>
+                <Ionicons name="watch" size={20} color={watchConnected ? Colors.primary : Colors.gray[400]} />
+              </View>
+              <View>
+                <Text style={s.settingTitle}>Apple Watch</Text>
+                <Text style={s.settingDesc}>{watchConnected ? 'Conectat' : 'Deconectat'}</Text>
+              </View>
+            </View>
+            <Switch
+              value={watchConnected}
+              onValueChange={() => {
+                if (!isPremium && !watchConnected) {
+                  Alert.alert('Premium Necesar', 'Conectarea Apple Watch necesita abonament Premium.', [
+                    { text: 'Anuleaza' },
+                    { text: 'Vezi Premium', onPress: () => navigation.navigate('Subscription') },
+                  ]);
+                } else {
+                  toggleWatch();
+                }
+              }}
+              trackColor={{ false: Colors.gray[200], true: Colors.primary + '60' }}
+              thumbColor={watchConnected ? Colors.primary : Colors.gray[400]}
+            />
           </View>
+
+          {/* Notifications */}
+          <View style={s.settingCard}>
+            <View style={s.settingLeft}>
+              <View style={[s.settingIcon, { backgroundColor: notificationsEnabled ? Colors.primary + '20' : Colors.gray[100] }]}>
+                <Ionicons name="notifications" size={20} color={notificationsEnabled ? Colors.primary : Colors.gray[400]} />
+              </View>
+              <View>
+                <Text style={s.settingTitle}>Notificari</Text>
+                <Text style={s.settingDesc}>{notificationsEnabled ? 'Active - primesti remindere' : 'Dezactivate'}</Text>
+              </View>
+            </View>
+            <Switch
+              value={notificationsEnabled}
+              onValueChange={() => {
+                if (!isPremium && !notificationsEnabled) {
+                  Alert.alert('Premium Necesar', 'Notificarile personalizate necesita abonament Premium.', [
+                    { text: 'Anuleaza' },
+                    { text: 'Vezi Premium', onPress: () => navigation.navigate('Subscription') },
+                  ]);
+                } else {
+                  toggleNotifications();
+                }
+              }}
+              trackColor={{ false: Colors.gray[200], true: Colors.primary + '60' }}
+              thumbColor={notificationsEnabled ? Colors.primary : Colors.gray[400]}
+            />
+          </View>
+
+          {!isPremium && (
+            <TouchableOpacity style={s.upgradeCard} onPress={() => navigation.navigate('Subscription')}>
+              <LinearGradient colors={['#10B981', '#059669']} style={s.upgradeGradient}>
+                <Ionicons name="star" size={24} color="#FFF" />
+                <Text style={s.upgradeTitle}>Treci la Premium</Text>
+                <Text style={s.upgradeDesc}>£4.99/luna - Acces complet la tot continutul + Apple Watch + Notificari</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          )}
         </View>
       )}
       <View style={{ height: 100 }} />
@@ -179,7 +254,13 @@ const s = StyleSheet.create({
   listItem: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: Colors.gray[100] },
   listItemText: { fontSize: 15, color: Colors.black, flex: 1 },
   listItemChecked: { textDecorationLine: 'line-through', color: Colors.gray[400] },
-  planCard: { backgroundColor: Colors.primaryBg, borderRadius: 16, padding: 24, alignItems: 'center' },
-  planTitle: { fontSize: 16, fontWeight: '700', color: Colors.black, marginTop: 12 },
-  planDesc: { fontSize: 13, color: Colors.gray[500], textAlign: 'center', marginTop: 4 },
+  settingCard: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: Colors.gray[50], borderRadius: 12, padding: 14, marginBottom: 10 },
+  settingLeft: { flexDirection: 'row', alignItems: 'center', gap: 12, flex: 1 },
+  settingIcon: { width: 40, height: 40, borderRadius: 12, justifyContent: 'center', alignItems: 'center' },
+  settingTitle: { fontSize: 15, fontWeight: '600', color: Colors.black },
+  settingDesc: { fontSize: 12, color: Colors.gray[500], marginTop: 1 },
+  upgradeCard: { borderRadius: 16, overflow: 'hidden', marginTop: 12 },
+  upgradeGradient: { padding: 20, alignItems: 'center', gap: 6 },
+  upgradeTitle: { fontSize: 18, fontWeight: '800', color: '#FFF' },
+  upgradeDesc: { fontSize: 13, color: 'rgba(255,255,255,0.9)', textAlign: 'center' },
 });
