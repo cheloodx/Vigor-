@@ -19,6 +19,8 @@ import BreakfastIdeasScreen from '../screens/BreakfastIdeasScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import SfaturiNutritionaleScreen from '../screens/SfaturiNutritionaleScreen';
+import CalculatorCaloriiScreen from '../screens/CalculatorCaloriiScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
@@ -30,6 +32,8 @@ function PlansStack() {
       <Stack.Screen name="MealPlans" component={MealPlansScreen} />
       <Stack.Screen name="TrainingPlans" component={TrainingPlansScreen} />
       <Stack.Screen name="BreakfastIdeas" component={BreakfastIdeasScreen} />
+      <Stack.Screen name="SfaturiNutritionale" component={SfaturiNutritionaleScreen} />
+      <Stack.Screen name="CalculatorCalorii" component={CalculatorCaloriiScreen} />
     </Stack.Navigator>
   );
 }

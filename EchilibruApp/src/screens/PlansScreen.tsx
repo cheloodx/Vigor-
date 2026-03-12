@@ -43,6 +43,24 @@ export default function PlansScreen() {
             <View style={s.cardBadge}><Text style={s.cardBadgeText}>Zilnic</Text></View>
           </LinearGradient>
         </TouchableOpacity>
+
+        <TouchableOpacity style={s.card} onPress={() => navigation.navigate('SfaturiNutritionale')}>
+          <LinearGradient colors={['#06B6D4', '#0891B2']} style={s.cardGradient}>
+            <Ionicons name="bulb" size={32} color="#FFF" />
+            <Text style={s.cardTitle}>Sfaturi Nutritionale</Text>
+            <Text style={s.cardDesc}>Ghid complet pentru o alimentatie sanatoasa si echilibrata</Text>
+            <View style={s.cardBadge}><Text style={s.cardBadgeText}>10 Sfaturi</Text></View>
+          </LinearGradient>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={s.card} onPress={() => navigation.navigate('CalculatorCalorii')}>
+          <LinearGradient colors={['#F59E0B', '#D97706']} style={s.cardGradient}>
+            <Ionicons name="calculator" size={32} color="#FFF" />
+            <Text style={s.cardTitle}>Calculator de Calorii</Text>
+            <Text style={s.cardDesc}>Calculeaza necesarul tau zilnic de calorii personalizat</Text>
+            <View style={s.cardBadge}><Text style={s.cardBadgeText}>Personalizat</Text></View>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
       <View style={{ height: 100 }} />
     </ScrollView>

@@ -67,6 +67,8 @@ export type RootStackParamList = {
   MealPlans: undefined;
   TrainingPlans: undefined;
   BreakfastIdeas: undefined;
+  SfaturiNutritionale: undefined;
+  CalculatorCalorii: undefined;
 };
 
 export type TabParamList = {
