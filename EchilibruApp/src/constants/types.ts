@@ -69,6 +69,7 @@ export type RootStackParamList = {
   BreakfastIdeas: undefined;
   SfaturiNutritionale: undefined;
   CalculatorCalorii: undefined;
+  Subscription: undefined;
 };
 
 export type TabParamList = {

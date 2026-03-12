@@ -51,10 +51,16 @@ export default function ProfileScreen() {
         </View>
         <Text style={s.userName}>{user?.name}</Text>
         <Text style={s.userEmail}>{user?.email}</Text>
-        <TouchableOpacity style={s.logoutBtn} onPress={logout}>
-          <Ionicons name="log-out" size={16} color={Colors.accent} />
-          <Text style={s.logoutText}>Deconectare</Text>
-        </TouchableOpacity>
+        <View style={s.headerBtns}>
+          <TouchableOpacity style={s.premiumBtn} onPress={() => navigation.navigate('Subscription')}>
+            <Ionicons name="star" size={16} color="#F59E0B" />
+            <Text style={s.premiumText}>Premium</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={s.logoutBtn} onPress={logout}>
+            <Ionicons name="log-out" size={16} color={Colors.accent} />
+            <Text style={s.logoutText}>Deconectare</Text>
+          </TouchableOpacity>
+        </View>
       </LinearGradient>
 
       <View style={s.tabs}>
@@ -143,6 +149,9 @@ const s = StyleSheet.create({
   avatarText: { fontSize: 24, fontWeight: '800', color: Colors.primary },
   userName: { fontSize: 20, fontWeight: '700', color: '#FFF' },
   userEmail: { fontSize: 14, color: 'rgba(255,255,255,0.8)', marginBottom: 12 },
+  headerBtns: { flexDirection: 'row', gap: 8, marginTop: 4 },
+  premiumBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#FFF', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
+  premiumText: { color: '#F59E0B', fontWeight: '600', fontSize: 13 },
   logoutBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: '#FFF', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20 },
   logoutText: { color: Colors.accent, fontWeight: '600', fontSize: 13 },
   tabs: { flexDirection: 'row', borderBottomWidth: 1, borderBottomColor: Colors.gray[100], paddingHorizontal: 8 },

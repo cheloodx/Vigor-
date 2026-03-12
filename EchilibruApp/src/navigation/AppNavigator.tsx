@@ -21,6 +21,7 @@ import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import SfaturiNutritionaleScreen from '../screens/SfaturiNutritionaleScreen';
 import CalculatorCaloriiScreen from '../screens/CalculatorCaloriiScreen';
+import SubscriptionScreen from '../screens/SubscriptionScreen';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const Tab = createBottomTabNavigator();
@@ -87,6 +88,7 @@ export default function AppNavigator() {
         <Stack.Screen name="TrainingPlanDetail" component={TrainingPlanDetailScreen} />
         <Stack.Screen name="Login" component={LoginScreen} options={{ presentation: 'modal' }} />
         <Stack.Screen name="Register" component={RegisterScreen} options={{ presentation: 'modal' }} />
+        <Stack.Screen name="Subscription" component={SubscriptionScreen} options={{ presentation: 'modal' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

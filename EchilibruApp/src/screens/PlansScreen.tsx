@@ -61,6 +61,15 @@ export default function PlansScreen() {
             <View style={s.cardBadge}><Text style={s.cardBadgeText}>Personalizat</Text></View>
           </LinearGradient>
         </TouchableOpacity>
+
+        <TouchableOpacity style={s.card} onPress={() => navigation.navigate('Subscription')}>
+          <LinearGradient colors={['#EF4444', '#DC2626']} style={s.cardGradient}>
+            <Ionicons name="star" size={32} color="#FFF" />
+            <Text style={s.cardTitle}>Abonamente Premium</Text>
+            <Text style={s.cardDesc}>Deblocheaza toate retetele, exercitiile si video-urile</Text>
+            <View style={s.cardBadge}><Text style={s.cardBadgeText}>2 Planuri</Text></View>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
       <View style={{ height: 100 }} />
     </ScrollView>
