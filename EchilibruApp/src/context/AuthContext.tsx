@@ -70,6 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsPremium(false);
     setFavorites([]);
     setShoppingList([]);
+    setWatchConnected(false);
+    setNotificationsEnabled(false);
   };
 
   const toggleFavorite = (id: string) => {
@@ -88,8 +90,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const addShoppingItem = (name: string) => {
     setShoppingList(prev => {
-      const newId = (prev.length + 1).toString();
-      return [...prev, { id: newId, name, checked: false }];
+      const maxId = prev.reduce((max, item) => Math.max(max, parseInt(item.id, 10) || 0), 0);
+      return [...prev, { id: (maxId + 1).toString(), name, checked: false }];
     });
   };
 
