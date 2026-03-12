@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { Exercise } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface ExerciseCardProps {
   exercise: Exercise;
@@ -15,13 +16,13 @@ const difficultyColor: Record<string, string> = {
   avansat: Colors.accent,
 };
 
-const difficultyLabel: Record<string, string> = {
-  incepator: 'Incepator',
-  intermediar: 'Intermediar',
-  avansat: 'Avansat',
-};
-
 function ExerciseCard({ exercise, onPress }: ExerciseCardProps) {
+  const { t } = useLanguage();
+  const difficultyLabel: Record<string, string> = {
+    incepator: t.exerciseDetail.beginner,
+    intermediar: t.exerciseDetail.intermediate,
+    avansat: t.exerciseDetail.advanced,
+  };
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.imageContainer}>

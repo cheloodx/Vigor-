@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { Recipe } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -10,13 +11,6 @@ interface RecipeCardProps {
   onFavorite?: () => void;
   isFavorite?: boolean;
 }
-
-const categoryLabel: Record<string, string> = {
-  mic_dejun: 'Mic Dejun',
-  pranz: 'Pranz',
-  cina: 'Cina',
-  desert: 'Desert',
-};
 
 const categoryColor: Record<string, string> = {
   mic_dejun: Colors.secondary,
@@ -26,6 +20,13 @@ const categoryColor: Record<string, string> = {
 };
 
 function RecipeCard({ recipe, onPress, onFavorite, isFavorite }: RecipeCardProps) {
+  const { t } = useLanguage();
+  const categoryLabel: Record<string, string> = {
+    mic_dejun: t.recipes.breakfast,
+    pranz: t.recipes.lunch,
+    cina: t.recipes.dinner,
+    desert: t.recipes.dessert,
+  };
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.imageContainer}>
