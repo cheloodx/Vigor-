@@ -163,7 +163,7 @@ export default function SubscriptionScreen({ navigation }: Props) {
               ].map(([basic, premium], i) => (
                 <View key={i} style={s.compareRow}>
                   <View style={s.compareCellBasic}>
-                    <Ionicons name={i < 3 ? 'checkmark' : 'close'} size={14} color={i < 3 ? Colors.gray[500] : Colors.gray[300]} />
+                    <Ionicons name={(i < 2 || i === 3) ? 'checkmark' : 'close'} size={14} color={(i < 2 || i === 3) ? Colors.gray[500] : Colors.gray[300]} />
                     <Text style={s.compareCellText}>{basic}</Text>
                   </View>
                   <View style={s.compareCellPremium}>

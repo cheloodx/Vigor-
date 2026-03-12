@@ -28,7 +28,7 @@ export default function TrainingPlanDetailScreen({ route, navigation }: Props) {
             <Ionicons name="lock-closed" size={24} color={Colors.secondary} />
             <Text style={s.premTitle}>Continut Premium</Text>
             <Text style={s.premDesc}>Aboneaza-te pentru a accesa acest plan complet de antrenament.</Text>
-            <TouchableOpacity style={s.premBtn}><Text style={s.premBtnText}>Aboneaza-te - 29 RON/luna</Text></TouchableOpacity>
+            <TouchableOpacity style={s.premBtn} onPress={() => navigation.navigate('Subscription')}><Text style={s.premBtnText}>Aboneaza-te - £4.99/luna</Text></TouchableOpacity>
           </View>
         )}
       </View>
