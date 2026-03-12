@@ -1,11 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { Recipe } from '../constants/types';
-
-const { width } = Dimensions.get('window');
-const cardWidth = (width - 48) / 2;
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -72,7 +69,7 @@ export default function RecipeCard({ recipe, onPress, onFavorite, isFavorite }: 
 
 const styles = StyleSheet.create({
   card: {
-    width: cardWidth,
+    width: '48%',
     backgroundColor: Colors.white,
     borderRadius: 16,
     marginBottom: 16,

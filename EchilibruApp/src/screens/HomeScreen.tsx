@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
@@ -8,7 +8,6 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
 
-const { width } = Dimensions.get('window');
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function HomeScreen() {
@@ -168,7 +167,7 @@ const s = StyleSheet.create({
   ctaSec: { flexDirection: 'row', alignItems: 'center', gap: 6, backgroundColor: Colors.white, paddingHorizontal: 20, paddingVertical: 12, borderRadius: 12 },
   ctaSecText: { color: Colors.primary, fontWeight: '700', fontSize: 14 },
   features: { padding: 20, flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  featureCard: { width: (width - 52) / 2, backgroundColor: Colors.primaryBg, borderRadius: 16, padding: 16 },
+  featureCard: { width: '47%', backgroundColor: Colors.primaryBg, borderRadius: 16, padding: 16 },
   featureIcon: { width: 48, height: 48, borderRadius: 12, justifyContent: 'center', alignItems: 'center', marginBottom: 12 },
   featureTitle: { fontSize: 15, fontWeight: '700', color: Colors.black, marginBottom: 6 },
   featureDesc: { fontSize: 12, color: Colors.gray[500], lineHeight: 17 },

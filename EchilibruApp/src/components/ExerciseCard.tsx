@@ -1,11 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { Exercise } from '../constants/types';
-
-const { width } = Dimensions.get('window');
-const cardWidth = (width - 48) / 2;
 
 interface ExerciseCardProps {
   exercise: Exercise;
@@ -67,7 +64,7 @@ export default function ExerciseCard({ exercise, onPress }: ExerciseCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    width: cardWidth,
+    width: '48%',
     backgroundColor: Colors.white,
     borderRadius: 16,
     marginBottom: 16,
