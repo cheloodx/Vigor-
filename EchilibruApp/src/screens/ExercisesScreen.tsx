@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,9 +14,9 @@ type Nav = NativeStackNavigationProp<RootStackParamList>;
 export default function ExercisesScreen() {
   const navigation = useNavigation<Nav>();
 
-  const renderExercise = ({ item }: { item: Exercise }) => (
+  const renderExercise = useCallback(({ item }: { item: Exercise }) => (
     <ExerciseCard exercise={item} onPress={() => navigation.navigate('ExerciseDetail', { exercise: item })} />
-  );
+  ), [navigation]);
 
   return (
     <View style={s.container}>
@@ -39,6 +39,10 @@ export default function ExercisesScreen() {
         columnWrapperStyle={s.row}
         contentContainerStyle={s.list}
         showsVerticalScrollIndicator={false}
+        initialNumToRender={8}
+        maxToRenderPerBatch={6}
+        windowSize={5}
+        removeClippedSubviews={true}
       />
     </View>
   );

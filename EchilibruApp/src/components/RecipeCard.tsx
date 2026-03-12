@@ -11,21 +11,21 @@ interface RecipeCardProps {
   isFavorite?: boolean;
 }
 
-export default function RecipeCard({ recipe, onPress, onFavorite, isFavorite }: RecipeCardProps) {
-  const categoryLabel: Record<string, string> = {
-    mic_dejun: 'Mic Dejun',
-    pranz: 'Pranz',
-    cina: 'Cina',
-    desert: 'Desert',
-  };
+const categoryLabel: Record<string, string> = {
+  mic_dejun: 'Mic Dejun',
+  pranz: 'Pranz',
+  cina: 'Cina',
+  desert: 'Desert',
+};
 
-  const categoryColor: Record<string, string> = {
-    mic_dejun: Colors.secondary,
-    pranz: Colors.primary,
-    cina: Colors.purple,
-    desert: Colors.pink,
-  };
+const categoryColor: Record<string, string> = {
+  mic_dejun: Colors.secondary,
+  pranz: Colors.primary,
+  cina: Colors.purple,
+  desert: Colors.pink,
+};
 
+function RecipeCard({ recipe, onPress, onFavorite, isFavorite }: RecipeCardProps) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.imageContainer}>
@@ -66,6 +66,8 @@ export default function RecipeCard({ recipe, onPress, onFavorite, isFavorite }: 
     </TouchableOpacity>
   );
 }
+
+export default React.memo(RecipeCard);
 
 const styles = StyleSheet.create({
   card: {

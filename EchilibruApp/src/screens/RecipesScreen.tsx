@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -25,16 +25,16 @@ export default function RecipesScreen() {
   const { favorites, toggleFavorite } = useAuth();
   const [selected, setSelected] = useState('all');
 
-  const filtered = selected === 'all' ? recipes : recipes.filter(r => r.category === selected);
+  const filtered = useMemo(() => selected === 'all' ? recipes : recipes.filter(r => r.category === selected), [selected]);
 
-  const renderRecipe = ({ item }: { item: Recipe }) => (
+  const renderRecipe = useCallback(({ item }: { item: Recipe }) => (
     <RecipeCard
       recipe={item}
       onPress={() => navigation.navigate('RecipeDetail', { recipe: item })}
       onFavorite={() => toggleFavorite(item.id)}
       isFavorite={favorites.includes(item.id)}
     />
-  );
+  ), [favorites, navigation, toggleFavorite]);
 
   return (
     <View style={s.container}>
@@ -64,6 +64,10 @@ export default function RecipesScreen() {
         columnWrapperStyle={s.row}
         contentContainerStyle={s.list}
         showsVerticalScrollIndicator={false}
+        initialNumToRender={8}
+        maxToRenderPerBatch={6}
+        windowSize={5}
+        removeClippedSubviews={true}
       />
     </View>
   );

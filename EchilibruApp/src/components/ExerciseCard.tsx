@@ -9,19 +9,19 @@ interface ExerciseCardProps {
   onPress: () => void;
 }
 
-export default function ExerciseCard({ exercise, onPress }: ExerciseCardProps) {
-  const difficultyColor: Record<string, string> = {
-    incepator: Colors.primary,
-    intermediar: Colors.secondary,
-    avansat: Colors.accent,
-  };
+const difficultyColor: Record<string, string> = {
+  incepator: Colors.primary,
+  intermediar: Colors.secondary,
+  avansat: Colors.accent,
+};
 
-  const difficultyLabel: Record<string, string> = {
-    incepator: 'Incepator',
-    intermediar: 'Intermediar',
-    avansat: 'Avansat',
-  };
+const difficultyLabel: Record<string, string> = {
+  incepator: 'Incepator',
+  intermediar: 'Intermediar',
+  avansat: 'Avansat',
+};
 
+function ExerciseCard({ exercise, onPress }: ExerciseCardProps) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.8}>
       <View style={styles.imageContainer}>
@@ -61,6 +61,8 @@ export default function ExerciseCard({ exercise, onPress }: ExerciseCardProps) {
     </TouchableOpacity>
   );
 }
+
+export default React.memo(ExerciseCard);
 
 const styles = StyleSheet.create({
   card: {
