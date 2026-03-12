@@ -3,19 +3,21 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Platfo
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
+import { useLanguage } from '../context/LanguageContext';
 
 type Gender = 'masculin' | 'feminin';
 type ActivityLevel = 'sedentar' | 'usor_activ' | 'moderat_activ' | 'foarte_activ' | 'extra_activ';
 
-const activityOptions: { key: ActivityLevel; label: string; multiplier: number; desc: string }[] = [
-  { key: 'sedentar', label: 'Sedentar', multiplier: 1.2, desc: 'Munca de birou, fara sport' },
-  { key: 'usor_activ', label: 'Usor Activ', multiplier: 1.375, desc: 'Sport 1-3 zile/sapt' },
-  { key: 'moderat_activ', label: 'Moderat Activ', multiplier: 1.55, desc: 'Sport 3-5 zile/sapt' },
-  { key: 'foarte_activ', label: 'Foarte Activ', multiplier: 1.725, desc: 'Sport 6-7 zile/sapt' },
-  { key: 'extra_activ', label: 'Extra Activ', multiplier: 1.9, desc: 'Antrenament intens zilnic' },
-];
-
 export default function CalculatorCaloriiScreen() {
+  const { t } = useLanguage();
+
+  const activityOptions: { key: ActivityLevel; label: string; multiplier: number; desc: string }[] = [
+    { key: 'sedentar', label: t.calculator.sedentary, multiplier: 1.2, desc: t.calculator.sedentaryDesc },
+    { key: 'usor_activ', label: t.calculator.lightlyActive, multiplier: 1.375, desc: t.calculator.lightlyActiveDesc },
+    { key: 'moderat_activ', label: t.calculator.moderatelyActive, multiplier: 1.55, desc: t.calculator.moderatelyActiveDesc },
+    { key: 'foarte_activ', label: t.calculator.veryActive, multiplier: 1.725, desc: t.calculator.veryActiveDesc },
+    { key: 'extra_activ', label: t.calculator.extraActive, multiplier: 1.9, desc: t.calculator.extraActiveDesc },
+  ];
   const [gender, setGender] = useState<Gender>('masculin');
   const [age, setAge] = useState('');
   const [weight, setWeight] = useState('');
@@ -44,33 +46,33 @@ export default function CalculatorCaloriiScreen() {
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}>
       <LinearGradient colors={['#F59E0B', '#D97706']} style={s.header}>
         <Ionicons name="calculator" size={32} color="#FFF" />
-        <Text style={s.headerTitle}>Calculator de Calorii</Text>
-        <Text style={s.headerDesc}>Calculeaza necesarul tau zilnic de calorii folosind formula Mifflin-St Jeor</Text>
+                <Text style={s.headerTitle}>{t.calculator.title}</Text>
+                <Text style={s.headerDesc}>{t.calculator.desc}</Text>
       </LinearGradient>
 
       <View style={s.form}>
-        <Text style={s.sectionTitle}>Gen</Text>
+        <Text style={s.sectionTitle}>{t.calculator.gender}</Text>
         <View style={s.genderRow}>
           <TouchableOpacity
             style={[s.genderBtn, gender === 'masculin' && s.genderBtnActive]}
             onPress={() => setGender('masculin')}
           >
             <Ionicons name="male" size={24} color={gender === 'masculin' ? '#FFF' : Colors.primary} />
-            <Text style={[s.genderText, gender === 'masculin' && s.genderTextActive]}>Masculin</Text>
+            <Text style={[s.genderText, gender === 'masculin' && s.genderTextActive]}>{t.calculator.male}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[s.genderBtn, gender === 'feminin' && s.genderBtnActive]}
             onPress={() => setGender('feminin')}
           >
             <Ionicons name="female" size={24} color={gender === 'feminin' ? '#FFF' : Colors.primary} />
-            <Text style={[s.genderText, gender === 'feminin' && s.genderTextActive]}>Feminin</Text>
+            <Text style={[s.genderText, gender === 'feminin' && s.genderTextActive]}>{t.calculator.female}</Text>
           </TouchableOpacity>
         </View>
 
-        <Text style={s.sectionTitle}>Date Personale</Text>
+        <Text style={s.sectionTitle}>{t.calculator.personalData}</Text>
         <View style={s.inputRow}>
           <View style={s.inputGroup}>
-            <Text style={s.inputLabel}>Varsta (ani)</Text>
+            <Text style={s.inputLabel}>{t.calculator.age}</Text>
             <TextInput
               style={s.input}
               value={age}
@@ -81,7 +83,7 @@ export default function CalculatorCaloriiScreen() {
             />
           </View>
           <View style={s.inputGroup}>
-            <Text style={s.inputLabel}>Greutate (kg)</Text>
+            <Text style={s.inputLabel}>{t.calculator.weight}</Text>
             <TextInput
               style={s.input}
               value={weight}
@@ -92,7 +94,7 @@ export default function CalculatorCaloriiScreen() {
             />
           </View>
           <View style={s.inputGroup}>
-            <Text style={s.inputLabel}>Inaltime (cm)</Text>
+            <Text style={s.inputLabel}>{t.calculator.height}</Text>
             <TextInput
               style={s.input}
               value={height}
@@ -104,7 +106,7 @@ export default function CalculatorCaloriiScreen() {
           </View>
         </View>
 
-        <Text style={s.sectionTitle}>Nivel de Activitate</Text>
+        <Text style={s.sectionTitle}>{t.calculator.activityLevel}</Text>
         <View style={s.activityList}>
           {activityOptions.map(opt => (
             <TouchableOpacity
@@ -126,52 +128,52 @@ export default function CalculatorCaloriiScreen() {
         <TouchableOpacity onPress={calculate} activeOpacity={0.8}>
           <LinearGradient colors={Colors.gradient.primary} style={s.calcBtn}>
             <Ionicons name="calculator" size={20} color="#FFF" />
-            <Text style={s.calcBtnText}>Calculeaza</Text>
+            <Text style={s.calcBtnText}>{t.calculator.calculate}</Text>
           </LinearGradient>
         </TouchableOpacity>
 
         {result !== null && (
           <View style={s.resultBox}>
-            <Text style={s.resultLabel}>Necesarul tau zilnic</Text>
+            <Text style={s.resultLabel}>{t.calculator.dailyNeed}</Text>
             <Text style={s.resultValue}>{result}</Text>
-            <Text style={s.resultUnit}>calorii / zi</Text>
+            <Text style={s.resultUnit}>{t.calculator.caloriesPerDay}</Text>
 
             <View style={s.resultGoals}>
               <View style={s.goalItem}>
-                <Text style={s.goalLabel}>Slabire</Text>
+                <Text style={s.goalLabel}>{t.calculator.weightLoss}</Text>
                 <Text style={[s.goalValue, { color: '#EF4444' }]}>{Math.round(result * 0.8)} cal</Text>
-                <Text style={s.goalDesc}>-20% deficit</Text>
+                <Text style={s.goalDesc}>{t.calculator.deficit}</Text>
               </View>
               <View style={[s.goalItem, s.goalItemCenter]}>
-                <Text style={s.goalLabel}>Mentinere</Text>
+                <Text style={s.goalLabel}>{t.calculator.maintenance}</Text>
                 <Text style={[s.goalValue, { color: Colors.primary }]}>{result} cal</Text>
-                <Text style={s.goalDesc}>Echilibru</Text>
+                <Text style={s.goalDesc}>{t.calculator.balance}</Text>
               </View>
               <View style={s.goalItem}>
-                <Text style={s.goalLabel}>Castig masa</Text>
+                <Text style={s.goalLabel}>{t.calculator.muscleGain}</Text>
                 <Text style={[s.goalValue, { color: '#3B82F6' }]}>{Math.round(result * 1.15)} cal</Text>
-                <Text style={s.goalDesc}>+15% surplus</Text>
+                <Text style={s.goalDesc}>{t.calculator.surplus}</Text>
               </View>
             </View>
 
             <View style={s.macroBox}>
-              <Text style={s.macroTitle}>Distributie Macronutrienti Recomandata</Text>
+              <Text style={s.macroTitle}>{t.calculator.macroTitle}</Text>
               <View style={s.macroRow}>
                 <View style={s.macroItem}>
                   <View style={[s.macroDot, { backgroundColor: '#EF4444' }]} />
-                  <Text style={s.macroLabel}>Proteine</Text>
+                  <Text style={s.macroLabel}>{t.calculator.protein}</Text>
                   <Text style={s.macroValue}>{Math.round(result * 0.3 / 4)}g</Text>
                   <Text style={s.macroPercent}>30%</Text>
                 </View>
                 <View style={s.macroItem}>
                   <View style={[s.macroDot, { backgroundColor: '#F59E0B' }]} />
-                  <Text style={s.macroLabel}>Carbohidrati</Text>
+                  <Text style={s.macroLabel}>{t.calculator.carbs}</Text>
                   <Text style={s.macroValue}>{Math.round(result * 0.45 / 4)}g</Text>
                   <Text style={s.macroPercent}>45%</Text>
                 </View>
                 <View style={s.macroItem}>
                   <View style={[s.macroDot, { backgroundColor: '#10B981' }]} />
-                  <Text style={s.macroLabel}>Grasimi</Text>
+                  <Text style={s.macroLabel}>{t.calculator.fats}</Text>
                   <Text style={s.macroValue}>{Math.round(result * 0.25 / 9)}g</Text>
                   <Text style={s.macroPercent}>25%</Text>
                 </View>

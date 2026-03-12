@@ -8,11 +8,13 @@ import ExerciseCard from '../components/ExerciseCard';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList, Exercise } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function ExercisesScreen() {
   const navigation = useNavigation<Nav>();
+  const { t } = useLanguage();
 
   const renderExercise = useCallback(({ item }: { item: Exercise }) => (
     <ExerciseCard exercise={item} onPress={() => navigation.navigate('ExerciseDetail', { exercise: item })} />
@@ -22,13 +24,13 @@ export default function ExercisesScreen() {
     <View style={s.container}>
       <LinearGradient colors={Colors.gradient.primary} style={s.header}>
         <Ionicons name="fitness" size={32} color="#FFF" />
-        <Text style={s.headerTitle}>Exercitii</Text>
-        <Text style={s.headerDesc}>Biblioteca completa de exercitii pentru toate grupele musculare si nivelurile de experienta.</Text>
+                <Text style={s.headerTitle}>{t.exercises.title}</Text>
+                <Text style={s.headerDesc}>{t.exercises.desc}</Text>
       </LinearGradient>
 
       <View style={s.countBar}>
-        <Text style={s.countText}>Toate exercitiile ({exercises.length})</Text>
-        <Text style={s.countDesc}>Exploreaza biblioteca noastra completa de exercitii</Text>
+                <Text style={s.countText}>{t.exercises.allExercises} ({exercises.length})</Text>
+                <Text style={s.countDesc}>{t.exercises.exploreDesc}</Text>
       </View>
 
       <FlatList

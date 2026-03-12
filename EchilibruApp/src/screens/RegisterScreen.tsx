@@ -6,18 +6,20 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function RegisterScreen() {
   const { register } = useAuth();
   const navigation = useNavigation<Nav>();
+  const { t } = useLanguage();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleRegister = async () => {
-    if (!name || !email || !password) { Alert.alert('Eroare', 'Completeaza toate campurile'); return; }
+    if (!name || !email || !password) { Alert.alert(t.register.error, t.register.fillAll); return; }
     const success = await register(name, email, password);
     if (success) navigation.goBack();
   };
@@ -26,25 +28,25 @@ export default function RegisterScreen() {
     <KeyboardAvoidingView style={s.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <LinearGradient colors={['#F0FDF4', '#FFFFFF']} style={s.bg}>
         <View style={s.form}>
-          <Text style={s.title}>Inregistrare</Text>
-          <Text style={s.subtitle}>Creaza un cont nou pentru a accesa toate functionalitatile</Text>
+                    <Text style={s.title}>{t.register.title}</Text>
+                    <Text style={s.subtitle}>{t.register.subtitle}</Text>
 
-          <Text style={s.label}>Nume</Text>
-          <TextInput style={s.input} placeholder="Numele tau" value={name} onChangeText={setName} />
+                    <Text style={s.label}>{t.register.name}</Text>
+                    <TextInput style={s.input} placeholder={t.register.namePlaceholder} value={name} onChangeText={setName} />
 
-          <Text style={s.label}>Email</Text>
-          <TextInput style={s.input} placeholder="email@exemplu.com" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+                    <Text style={s.label}>{t.register.email}</Text>
+                    <TextInput style={s.input} placeholder={t.register.emailPlaceholder} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
 
-          <Text style={s.label}>Parola</Text>
-          <TextInput style={s.input} placeholder="Alege o parola" value={password} onChangeText={setPassword} secureTextEntry />
+                    <Text style={s.label}>{t.register.password}</Text>
+                    <TextInput style={s.input} placeholder={t.register.passwordPlaceholder} value={password} onChangeText={setPassword} secureTextEntry />
 
           <TouchableOpacity style={s.btn} onPress={handleRegister}>
-            <Text style={s.btnText}>Creaza Cont</Text>
+            <Text style={s.btnText}>{t.register.registerBtn}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('Login')} style={s.linkRow}>
-            <Text style={s.linkText}>Ai deja cont? </Text>
-            <Text style={s.linkBold}>Autentifica-te</Text>
+                        <Text style={s.linkText}>{t.register.hasAccount}</Text>
+                        <Text style={s.linkBold}>{t.register.login}</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>

@@ -7,11 +7,13 @@ import { recipes } from '../data/recipes';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function HomeScreen() {
   const navigation = useNavigation<Nav>();
+  const { t } = useLanguage();
   const featured = recipes.slice(0, 4);
 
   return (
@@ -19,21 +21,21 @@ export default function HomeScreen() {
       <LinearGradient colors={['#F0FDF4', '#FFFFFF']} style={s.hero}>
         <View style={s.premBanner}>
           <Ionicons name="sparkles" size={14} color={Colors.secondary} />
-          <Text style={s.premText}>Premium Content Disponibil</Text>
+          <Text style={s.premText}>{t.home.premiumBanner}</Text>
           <Ionicons name="gift" size={14} color={Colors.secondary} />
         </View>
         <Text style={s.heroTitle}>
-          <Text style={s.heroGreen}>{'Echilibru\nPerfect\n'}</Text>
-          <Text style={s.heroBlack}>{'Nutritie &\nFitness'}</Text>
+                    <Text style={s.heroGreen}>{t.home.heroTitle1}</Text>
+                    <Text style={s.heroBlack}>{t.home.heroTitle2}</Text>
         </Text>
         <Text style={s.heroDesc}>
-          Descopera <Text style={s.bold}>122 retete internationale, 85 exercitii profesionale</Text> si planuri personalizate pentru un stil de viata sanatos.
+          {t.home.heroDescStart}<Text style={s.bold}>{t.home.heroDescBold}</Text>{t.home.heroDescEnd}
         </Text>
         <View style={s.stats}>
-          {([['restaurant', '122 Retete'], ['fitness', '85 Exercitii'], ['calendar', 'Planuri Complete']] as const).map(([icon, t], i) => (
-            <View key={i} style={s.stat}>
-              <Ionicons name={icon} size={14} color={Colors.primary} />
-              <Text style={s.statText}>{t}</Text>
+                    {([['restaurant', t.home.stat1], ['fitness', t.home.stat2], ['calendar', t.home.stat3]] as const).map(([icon, txt], i) => (
+                      <View key={i} style={s.stat}>
+                        <Ionicons name={icon} size={14} color={Colors.primary} />
+                        <Text style={s.statText}>{txt}</Text>
             </View>
           ))}
         </View>
@@ -41,24 +43,24 @@ export default function HomeScreen() {
           <Ionicons name="star" size={20} color={Colors.primary} />
           <View>
             <Text style={s.ratingNum}>4.9/5</Text>
-            <Text style={s.ratingLabel}>Rating Mediu</Text>
+            <Text style={s.ratingLabel}>{t.home.ratingLabel}</Text>
           </View>
         </View>
       </LinearGradient>
 
       <View style={s.ctaWrap}>
         <LinearGradient colors={['rgba(16,185,129,0.9)', 'rgba(5,150,105,0.9)']} style={s.cta}>
-          <Text style={s.ctaLabel}>TRANSFORMA-TI VIATA ASTAZI</Text>
-          <Text style={s.ctaTitle}>{'Nutritie Sanatoasa\n+ Sport Regulat\n= Viata Echilibrata'}</Text>
-          <Text style={s.ctaDesc}>Alatura-te celor care si-au transformat stilul de viata cu retete sanatoase si programe de exercitii eficiente</Text>
+                    <Text style={s.ctaLabel}>{t.home.ctaLabel}</Text>
+                    <Text style={s.ctaTitle}>{t.home.ctaTitle}</Text>
+                    <Text style={s.ctaDesc}>{t.home.ctaDesc}</Text>
           <View style={s.ctaBtns}>
             <TouchableOpacity style={s.ctaPri} onPress={() => navigation.navigate('Subscription')}>
               <Ionicons name="cart" size={16} color="#FFF" />
-              <Text style={s.ctaPriText}>Incepe Acum - £4.99/luna</Text>
+              <Text style={s.ctaPriText}>{t.home.ctaPrimary}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={s.ctaSec} onPress={() => navigation.navigate('MainTabs', { screen: 'Recipes' } as any)}>
               <Ionicons name="book" size={16} color={Colors.primary} />
-              <Text style={s.ctaSecText}>Exploreaza Gratuit</Text>
+              <Text style={s.ctaSecText}>{t.home.ctaSecondary}</Text>
             </TouchableOpacity>
           </View>
         </LinearGradient>
@@ -66,11 +68,11 @@ export default function HomeScreen() {
 
       <View style={s.features}>
         {[
-          { icon: 'book' as const, color: Colors.primary, bg: Colors.primaryLight, title: 'Retete Internationale', desc: '122 retete din Italia, Franta, Spania si Anglia cu informatii nutritionale complete' },
-          { icon: 'fitness' as const, color: Colors.orange, bg: '#FEF3C7', title: 'Exercitii Profesionale', desc: '85 exercitii cu videoclipuri demonstrative pentru toate nivelurile' },
-          { icon: 'calendar' as const, color: Colors.accent, bg: '#FEE2E2', title: 'Planuri de Mese', desc: 'Planuri saptamanale echilibrate pentru a-ti organiza alimentatia' },
-          { icon: 'trending-up' as const, color: Colors.blue, bg: '#DBEAFE', title: 'Planuri de Antrenament', desc: 'Programe complete structurate pentru toate nivelurile' },
-          { icon: 'nutrition' as const, color: Colors.purple, bg: '#EDE9FE', title: 'Sfaturi Nutritionale', desc: 'Sfaturi practice pentru o alimentatie sanatoasa si echilibrata' },
+                    { icon: 'book' as const, color: Colors.primary, bg: Colors.primaryLight, title: t.home.feature1Title, desc: t.home.feature1Desc },
+                    { icon: 'fitness' as const, color: Colors.orange, bg: '#FEF3C7', title: t.home.feature2Title, desc: t.home.feature2Desc },
+                    { icon: 'calendar' as const, color: Colors.accent, bg: '#FEE2E2', title: t.home.feature3Title, desc: t.home.feature3Desc },
+                    { icon: 'trending-up' as const, color: Colors.blue, bg: '#DBEAFE', title: t.home.feature4Title, desc: t.home.feature4Desc },
+                    { icon: 'nutrition' as const, color: Colors.purple, bg: '#EDE9FE', title: t.home.feature5Title, desc: t.home.feature5Desc },
         ].map((f, i) => (
           <View key={i} style={s.featureCard}>
             <View style={[s.featureIcon, { backgroundColor: f.bg }]}>
@@ -83,7 +85,7 @@ export default function HomeScreen() {
       </View>
 
       <View style={s.recSection}>
-        <Text style={s.secTitle}>Retete Recomandate</Text>
+        <Text style={s.secTitle}>{t.home.recommendedRecipes}</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 12, paddingRight: 20 }}>
           {featured.map(r => (
             <TouchableOpacity key={r.id} style={s.recCard} onPress={() => navigation.navigate('RecipeDetail', { recipe: r })}>
@@ -91,7 +93,7 @@ export default function HomeScreen() {
               {r.isPremium && (
                 <View style={s.recPrem}>
                   <Ionicons name="star" size={8} color="#FFF" />
-                  <Text style={s.recPremT}>Premium</Text>
+                  <Text style={s.recPremT}>{t.common.premium}</Text>
                 </View>
               )}
               <View style={s.recContent}>
@@ -108,29 +110,29 @@ export default function HomeScreen() {
       </View>
 
       <View style={s.testSection}>
-        <Text style={s.secTitle}>Ce spun utilizatorii</Text>
-        {[
-          { name: 'Maria Popescu', ini: 'MP', res: '-8kg in 3 luni', text: 'Retetele sunt delicioase si usor de preparat! Am reusit sa slabesc 8kg fara sa ma simt flamanda.' },
-          { name: 'Andrei Ionescu', ini: 'AI', res: '+5kg muschi, -7% grasime', text: 'Planurile de antrenament sunt exact ce aveam nevoie. Am castigat muschi si am redus grasimea corporala.' },
-          { name: 'Elena Georgescu', ini: 'EG', res: '-12kg in 5 luni', text: 'Nu credeam ca pot slabi atat de mult! Abonamentul Premium merita fiecare ban.' },
-        ].map((t, i) => (
-          <View key={i} style={s.testCard}>
-            <Text style={s.testText}>{'"' + t.text + '"'}</Text>
-            <View style={s.testAuthor}>
-              <View style={s.testAvatar}><Text style={s.testIni}>{t.ini}</Text></View>
-              <View><Text style={s.testName}>{t.name}</Text><Text style={s.testRes}>{t.res}</Text></View>
+                <Text style={s.secTitle}>{t.home.testimonials}</Text>
+                {[
+                  { name: t.home.test1Name, ini: 'MP', res: t.home.test1Result, text: t.home.test1Text },
+                  { name: t.home.test2Name, ini: 'AI', res: t.home.test2Result, text: t.home.test2Text },
+                  { name: t.home.test3Name, ini: 'EG', res: t.home.test3Result, text: t.home.test3Text },
+                ].map((item, i) => (
+                  <View key={i} style={s.testCard}>
+                    <Text style={s.testText}>{'"' + item.text + '"'}</Text>
+                    <View style={s.testAuthor}>
+                      <View style={s.testAvatar}><Text style={s.testIni}>{item.ini}</Text></View>
+                      <View><Text style={s.testName}>{item.name}</Text><Text style={s.testRes}>{item.res}</Text></View>
             </View>
           </View>
         ))}
       </View>
 
       <View style={s.trust}>
-        <Text style={s.trustTitle}>Peste 500+ utilizatori multumiti</Text>
-        <View style={s.trustBadges}>
-          {([['shield-checkmark', 'Plata Securizata'], ['card', 'Stripe Certified'], ['close-circle', 'Anuleaza Oricand'], ['lock-closed', 'Date Protejate'], ['people', '1000+ Membri']] as const).map(([icon, t], i) => (
-            <View key={i} style={s.trustBadge}>
-              <Ionicons name={icon} size={18} color={Colors.gray[500]} />
-              <Text style={s.trustBadgeT}>{t}</Text>
+                <Text style={s.trustTitle}>{t.home.trustTitle}</Text>
+                <View style={s.trustBadges}>
+                  {([['shield-checkmark', t.home.trustSecure], ['card', t.home.trustCertified], ['close-circle', t.home.trustCancel], ['lock-closed', t.home.trustProtected], ['people', t.home.trustMembers]] as const).map(([icon, txt], i) => (
+                    <View key={i} style={s.trustBadge}>
+                      <Ionicons name={icon} size={18} color={Colors.gray[500]} />
+                      <Text style={s.trustBadgeT}>{txt}</Text>
             </View>
           ))}
         </View>

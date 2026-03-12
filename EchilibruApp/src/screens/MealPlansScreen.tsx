@@ -4,14 +4,16 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { weeklyMealPlan } from '../data/mealPlans';
-
-const mealTypeConfig: Record<string, { label: string; color: string; icon: string }> = {
-  mic_dejun: { label: 'Mic Dejun', color: Colors.primary, icon: 'sunny' },
-  pranz: { label: 'Pranz', color: Colors.secondary, icon: 'restaurant' },
-  cina: { label: 'Cina', color: Colors.purple, icon: 'moon' },
-};
+import { useLanguage } from '../context/LanguageContext';
 
 export default function MealPlansScreen() {
+  const { t } = useLanguage();
+
+  const mealTypeConfig: Record<string, { label: string; color: string; icon: string }> = {
+    mic_dejun: { label: t.mealPlans.breakfast, color: Colors.primary, icon: 'sunny' },
+    pranz: { label: t.mealPlans.lunch, color: Colors.secondary, icon: 'restaurant' },
+    cina: { label: t.mealPlans.dinner, color: Colors.purple, icon: 'moon' },
+  };
   const [expanded, setExpanded] = useState<string | null>('Luni');
 
   return (
@@ -19,18 +21,18 @@ export default function MealPlansScreen() {
       <LinearGradient colors={Colors.gradient.primary} style={s.header}>
         <TouchableOpacity style={s.planBadge}>
           <Ionicons name="sparkles" size={14} color={Colors.primary} />
-          <Text style={s.planBadgeText}>Plan Saptamanal Personalizat</Text>
+          <Text style={s.planBadgeText}>{t.mealPlans.weeklyPlan}</Text>
         </TouchableOpacity>
-        <Text style={s.headerTitle}>Planuri de Mese</Text>
-        <Text style={s.headerDesc}>Descopera planuri saptamanale echilibrate, create special pentru un stil de viata sanatos.</Text>
+                <Text style={s.headerTitle}>{t.mealPlans.title}</Text>
+                <Text style={s.headerDesc}>{t.mealPlans.desc}</Text>
       </LinearGradient>
 
       <View style={s.infoCards}>
         {[
-          { icon: 'calendar', label: '7 Zile', value: 'Complete' },
-          { icon: 'flame', label: 'Calorii', value: '~2000/zi' },
-          { icon: 'time', label: 'Timp Prep', value: '30-45 min' },
-          { icon: 'cart', label: 'Ingrediente', value: 'Simple' },
+          { icon: 'calendar', label: t.mealPlans.days7, value: t.mealPlans.complete },
+          { icon: 'flame', label: t.mealPlans.calories, value: '~2000/' + t.mealPlans.dayShort },
+          { icon: 'time', label: t.mealPlans.prepTime, value: '30-45 min' },
+          { icon: 'cart', label: t.mealPlans.ingredients, value: t.mealPlans.simple },
         ].map((item, i) => (
           <View key={i} style={s.infoCard}>
             <Ionicons name={item.icon as keyof typeof Ionicons.glyphMap} size={24} color={i === 0 ? Colors.primary : i === 1 ? Colors.accent : i === 2 ? Colors.blue : Colors.secondary} />
@@ -46,7 +48,7 @@ export default function MealPlansScreen() {
             <Ionicons name="calendar" size={20} color={expanded === day.day ? '#FFF' : Colors.gray[600]} />
             <View style={{ flex: 1 }}>
               <Text style={[s.dayTitle, expanded === day.day && s.dayTitleActive]}>{day.day}</Text>
-              <Text style={[s.daySubtitle, expanded === day.day && s.daySubtitleActive]}>Plan complet pentru zi</Text>
+              <Text style={[s.daySubtitle, expanded === day.day && s.daySubtitleActive]}>{t.mealPlans.fullDayPlan}</Text>
             </View>
             <Ionicons name={expanded === day.day ? 'chevron-up' : 'chevron-down'} size={20} color={expanded === day.day ? '#FFF' : Colors.gray[400]} />
           </LinearGradient>

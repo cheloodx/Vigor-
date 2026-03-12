@@ -3,87 +3,90 @@ import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
+import { useLanguage } from '../context/LanguageContext';
 
-const tips = [
+export default function SfaturiNutritionaleScreen() {
+  const { t } = useLanguage();
+
+  const tips = [
   {
     id: '1',
     icon: 'water' as const,
-    title: 'Hidratarea este Esentiala',
-    description: 'Bea cel putin 2 litri de apa pe zi. Hidratarea corecta ajuta la digestie, absorbtia nutrientilor si mentinerea energiei. Incepe dimineata cu un pahar de apa calda cu lamaie.',
+    title: t.nutritionTips.tip1Title,
+    description: t.nutritionTips.tip1Desc,
     color: '#3B82F6',
   },
   {
     id: '2',
     icon: 'leaf' as const,
-    title: 'Mananca Legume la Fiecare Masa',
-    description: 'Legumele furnizeaza vitamine, minerale si fibre esentiale. Incearca sa umplii jumatate din farfurie cu legume la fiecare masa principala.',
+    title: t.nutritionTips.tip2Title,
+    description: t.nutritionTips.tip2Desc,
     color: '#10B981',
   },
   {
     id: '3',
     icon: 'time' as const,
-    title: 'Nu Sari Peste Micul Dejun',
-    description: 'Micul dejun activeaza metabolismul si iti ofera energia necesara pentru inceputut zilei. Alege proteine, fibre si grasimi sanatoase.',
+    title: t.nutritionTips.tip3Title,
+    description: t.nutritionTips.tip3Desc,
     color: '#F59E0B',
   },
   {
     id: '4',
     icon: 'nutrition' as const,
-    title: 'Proteina la Fiecare Masa',
-    description: 'Proteinele ajuta la constructia si repararea tesuturilor musculare, mentin satietatea si stabilizeaza glicemia. Include surse variate: pui, peste, oua, leguminoase.',
+    title: t.nutritionTips.tip4Title,
+    description: t.nutritionTips.tip4Desc,
     color: '#EF4444',
   },
   {
     id: '5',
     icon: 'ban' as const,
-    title: 'Limiteaza Zaharul Adaugat',
-    description: 'Zaharul adaugat contribuie la inflamatie, obezitate si boli cronice. Citeste etichetele si alege alternative naturale precum fructele proaspete.',
+    title: t.nutritionTips.tip5Title,
+    description: t.nutritionTips.tip5Desc,
     color: '#8B5CF6',
   },
   {
     id: '6',
     icon: 'fish' as const,
-    title: 'Omega-3 pentru Sanatatea Creierului',
-    description: 'Acizii grasi omega-3 din peste, nuci si seminte de in sustin functia cognitiva si reduc inflamatia. Consuma peste gras de 2-3 ori pe saptamana.',
+    title: t.nutritionTips.tip6Title,
+    description: t.nutritionTips.tip6Desc,
     color: '#06B6D4',
   },
   {
     id: '7',
     icon: 'moon' as const,
-    title: 'Evita Mesele Tarziu in Noapte',
-    description: 'Manancatul tarziu poate afecta calitatea somnului si digestia. Ultima masa ar trebui sa fie cu cel putin 2-3 ore inainte de culcare.',
+    title: t.nutritionTips.tip7Title,
+    description: t.nutritionTips.tip7Desc,
     color: '#6366F1',
   },
   {
     id: '8',
     icon: 'basket' as const,
-    title: 'Planifica-ti Mesele',
-    description: 'Planificarea meselor reduce risul de a alege mancaruri nesanatoase din impuls. Pregateste meniul saptamanal si fa cumparaturile in avans.',
+    title: t.nutritionTips.tip8Title,
+    description: t.nutritionTips.tip8Desc,
     color: '#EC4899',
   },
   {
     id: '9',
     icon: 'fitness' as const,
-    title: 'Combina Nutritia cu Exercitiul',
-    description: 'O alimentatie echilibrata si exercitiul fizic regulat lucreaza sinergic. Mananca proteine dupa antrenament si carbohidrati inainte pentru energie.',
+    title: t.nutritionTips.tip9Title,
+    description: t.nutritionTips.tip9Desc,
     color: '#F97316',
   },
   {
     id: '10',
     icon: 'color-palette' as const,
-    title: 'Mananca Colorat',
-    description: 'Fiecare culoare din legume si fructe indica nutrienti diferiti. Cu cat farfuria ta este mai colorata, cu atat primesti o gama mai variata de vitamine.',
+    title: t.nutritionTips.tip10Title,
+    description: t.nutritionTips.tip10Desc,
     color: '#14B8A6',
   },
 ];
 
-export default function SfaturiNutritionaleScreen() {
   return (
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}>
       <LinearGradient colors={['#10B981', '#059669']} style={s.header}>
         <Ionicons name="bulb" size={32} color="#FFF" />
-        <Text style={s.headerTitle}>Sfaturi Nutritionale</Text>
-        <Text style={s.headerDesc}>Ghid complet pentru o alimentatie sanatoasa si echilibrata</Text>
+                <Text style={s.headerTitle}>{t.nutritionTips.title}</Text>
+                <Text style={s.headerDesc}>{t.nutritionTips.desc}</Text>
       </LinearGradient>
 
       <View style={s.tipsContainer}>
@@ -106,10 +109,10 @@ export default function SfaturiNutritionaleScreen() {
       <View style={s.bottomBox}>
         <LinearGradient colors={['#F0FDF4', '#DCFCE7']} style={s.bottomBoxGradient}>
           <Ionicons name="heart" size={24} color={Colors.primary} />
-          <Text style={s.bottomBoxTitle}>Retine!</Text>
-          <Text style={s.bottomBoxText}>
-            O alimentatie sanatoasa nu inseamna restrictie, ci echilibru. Asculta-ti corpul, mananca cu placere si fii constant in alegerile sanatoase.
-          </Text>
+                    <Text style={s.bottomBoxTitle}>{t.nutritionTips.remember}</Text>
+                    <Text style={s.bottomBoxText}>
+                      {t.nutritionTips.rememberText}
+                    </Text>
         </LinearGradient>
       </View>
 

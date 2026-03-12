@@ -4,70 +4,72 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import { useNavigation } from '@react-navigation/native';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function PlansScreen() {
   const navigation = useNavigation<any>();
+  const { t } = useLanguage();
 
   return (
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}>
       <LinearGradient colors={Colors.gradient.primary} style={s.header}>
         <Ionicons name="clipboard" size={32} color="#FFF" />
-        <Text style={s.headerTitle}>Planuri</Text>
-        <Text style={s.headerDesc}>Alege intre planuri de mese si planuri de antrenament personalizate.</Text>
+                <Text style={s.headerTitle}>{t.plans.title}</Text>
+                <Text style={s.headerDesc}>{t.plans.desc}</Text>
       </LinearGradient>
 
       <View style={s.cards}>
         <TouchableOpacity style={s.card} onPress={() => navigation.navigate('MealPlans')}>
           <LinearGradient colors={['#10B981', '#059669']} style={s.cardGradient}>
             <Ionicons name="restaurant" size={32} color="#FFF" />
-            <Text style={s.cardTitle}>Planuri de Mese</Text>
-            <Text style={s.cardDesc}>Planuri saptamanale echilibrate cu ~2000 cal/zi</Text>
-            <View style={s.cardBadge}><Text style={s.cardBadgeText}>7 Zile</Text></View>
+                        <Text style={s.cardTitle}>{t.plans.mealPlans}</Text>
+                        <Text style={s.cardDesc}>{t.plans.mealPlansDesc}</Text>
+                        <View style={s.cardBadge}><Text style={s.cardBadgeText}>{t.plans.days7}</Text></View>
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={s.card} onPress={() => navigation.navigate('TrainingPlans')}>
           <LinearGradient colors={['#F97316', '#EA580C']} style={s.cardGradient}>
             <Ionicons name="barbell" size={32} color="#FFF" />
-            <Text style={s.cardTitle}>Planuri de Antrenament</Text>
-            <Text style={s.cardDesc}>Programe complete pentru toate nivelurile</Text>
-            <View style={s.cardBadge}><Text style={s.cardBadgeText}>3 Planuri</Text></View>
+                        <Text style={s.cardTitle}>{t.plans.trainingPlans}</Text>
+                        <Text style={s.cardDesc}>{t.plans.trainingPlansDesc}</Text>
+                        <View style={s.cardBadge}><Text style={s.cardBadgeText}>{t.plans.plans3}</Text></View>
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={s.card} onPress={() => navigation.navigate('BreakfastIdeas')}>
           <LinearGradient colors={['#8B5CF6', '#7C3AED']} style={s.cardGradient}>
             <Ionicons name="sunny" size={32} color="#FFF" />
-            <Text style={s.cardTitle}>Idei Mic Dejun</Text>
-            <Text style={s.cardDesc}>Inspiratie pentru un mic dejun sanatos si energizant</Text>
-            <View style={s.cardBadge}><Text style={s.cardBadgeText}>Zilnic</Text></View>
+                        <Text style={s.cardTitle}>{t.plans.breakfastIdeas}</Text>
+                        <Text style={s.cardDesc}>{t.plans.breakfastIdeasDesc}</Text>
+                        <View style={s.cardBadge}><Text style={s.cardBadgeText}>{t.plans.daily}</Text></View>
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={s.card} onPress={() => navigation.navigate('SfaturiNutritionale')}>
           <LinearGradient colors={['#06B6D4', '#0891B2']} style={s.cardGradient}>
             <Ionicons name="bulb" size={32} color="#FFF" />
-            <Text style={s.cardTitle}>Sfaturi Nutritionale</Text>
-            <Text style={s.cardDesc}>Ghid complet pentru o alimentatie sanatoasa si echilibrata</Text>
-            <View style={s.cardBadge}><Text style={s.cardBadgeText}>10 Sfaturi</Text></View>
+                        <Text style={s.cardTitle}>{t.plans.nutritionTips}</Text>
+                        <Text style={s.cardDesc}>{t.plans.nutritionTipsDesc}</Text>
+                        <View style={s.cardBadge}><Text style={s.cardBadgeText}>{t.plans.tips10}</Text></View>
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={s.card} onPress={() => navigation.navigate('CalculatorCalorii')}>
           <LinearGradient colors={['#F59E0B', '#D97706']} style={s.cardGradient}>
             <Ionicons name="calculator" size={32} color="#FFF" />
-            <Text style={s.cardTitle}>Calculator de Calorii</Text>
-            <Text style={s.cardDesc}>Calculeaza necesarul tau zilnic de calorii personalizat</Text>
-            <View style={s.cardBadge}><Text style={s.cardBadgeText}>Personalizat</Text></View>
+                        <Text style={s.cardTitle}>{t.plans.calorieCalc}</Text>
+                        <Text style={s.cardDesc}>{t.plans.calorieCalcDesc}</Text>
+                        <View style={s.cardBadge}><Text style={s.cardBadgeText}>{t.plans.personalized}</Text></View>
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={s.card} onPress={() => navigation.navigate('Subscription')}>
           <LinearGradient colors={['#EF4444', '#DC2626']} style={s.cardGradient}>
             <Ionicons name="star" size={32} color="#FFF" />
-            <Text style={s.cardTitle}>Premium - {'\u00A3'}4.99/luna</Text>
-            <Text style={s.cardDesc}>Acces complet la tot: retete, exercitii, video, Apple Watch si notificari</Text>
-            <View style={s.cardBadge}><Text style={s.cardBadgeText}>Un Singur Abonament</Text></View>
+                        <Text style={s.cardTitle}>{t.plans.premiumTitle}</Text>
+                        <Text style={s.cardDesc}>{t.plans.premiumDesc}</Text>
+                        <View style={s.cardBadge}><Text style={s.cardBadgeText}>{t.plans.singleSub}</Text></View>
           </LinearGradient>
         </TouchableOpacity>
       </View>

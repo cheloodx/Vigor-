@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 import HomeScreen from '../screens/HomeScreen';
 import RecipesScreen from '../screens/RecipesScreen';
@@ -40,6 +41,7 @@ function PlansStack() {
 }
 
 function MainTabs() {
+  const { t } = useLanguage();
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -70,11 +72,11 @@ function MainTabs() {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: 'Acasa' }} />
-      <Tab.Screen name="Recipes" component={RecipesScreen} options={{ tabBarLabel: 'Retete' }} />
-      <Tab.Screen name="Exercises" component={ExercisesScreen} options={{ tabBarLabel: 'Exercitii' }} />
-      <Tab.Screen name="Plans" component={PlansStack} options={{ tabBarLabel: 'Planuri' }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Profil' }} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ tabBarLabel: t.nav.home }} />
+      <Tab.Screen name="Recipes" component={RecipesScreen} options={{ tabBarLabel: t.nav.recipes }} />
+      <Tab.Screen name="Exercises" component={ExercisesScreen} options={{ tabBarLabel: t.nav.exercises }} />
+      <Tab.Screen name="Plans" component={PlansStack} options={{ tabBarLabel: t.nav.plans }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: t.nav.profile }} />
     </Tab.Navigator>
   );
 }

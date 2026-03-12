@@ -4,11 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'RecipeDetail'>;
 
 export default function RecipeDetailScreen({ route, navigation }: Props) {
   const { recipe } = route.params;
+  const { t } = useLanguage();
 
   return (
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}>
@@ -20,7 +22,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
       <View style={s.content}>
         <View style={s.badges}>
           {recipe.isPremium && (
-            <View style={s.premBadge}><Ionicons name="star" size={12} color="#FFF" /><Text style={s.premText}>Premium</Text></View>
+            <View style={s.premBadge}><Ionicons name="star" size={12} color="#FFF" /><Text style={s.premText}>{t.common.premium}</Text></View>
           )}
           <View style={s.originBadge}><Text style={s.originText}>{recipe.origin}</Text></View>
         </View>
@@ -29,20 +31,20 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
         <Text style={s.desc}>{recipe.description}</Text>
 
         <View style={s.infoRow}>
-          <View style={s.infoItem}><Ionicons name="time-outline" size={20} color={Colors.primary} /><Text style={s.infoLabel}>Timp</Text><Text style={s.infoValue}>{recipe.prepTime}</Text></View>
-          <View style={s.infoItem}><Ionicons name="people-outline" size={20} color={Colors.primary} /><Text style={s.infoLabel}>Portii</Text><Text style={s.infoValue}>{recipe.portions}</Text></View>
-          <View style={s.infoItem}><Ionicons name="flame-outline" size={20} color={Colors.accent} /><Text style={s.infoLabel}>Calorii</Text><Text style={s.infoValue}>{recipe.calories} kcal</Text></View>
+                    <View style={s.infoItem}><Ionicons name="time-outline" size={20} color={Colors.primary} /><Text style={s.infoLabel}>{t.recipeDetail.time}</Text><Text style={s.infoValue}>{recipe.prepTime}</Text></View>
+                    <View style={s.infoItem}><Ionicons name="people-outline" size={20} color={Colors.primary} /><Text style={s.infoLabel}>{t.recipeDetail.portions}</Text><Text style={s.infoValue}>{recipe.portions}</Text></View>
+                    <View style={s.infoItem}><Ionicons name="flame-outline" size={20} color={Colors.accent} /><Text style={s.infoLabel}>{t.recipeDetail.calories}</Text><Text style={s.infoValue}>{recipe.calories} kcal</Text></View>
         </View>
 
-        <Text style={s.sectionTitle}>Informatii Nutritionale</Text>
-        <View style={s.nutritionRow}>
-          <View style={[s.nutritionItem, { backgroundColor: '#DBEAFE' }]}><Text style={s.nutritionValue}>{recipe.nutritionalInfo.proteine}g</Text><Text style={s.nutritionLabel}>Proteine</Text></View>
-          <View style={[s.nutritionItem, { backgroundColor: '#FEF3C7' }]}><Text style={s.nutritionValue}>{recipe.nutritionalInfo.carbohidrati}g</Text><Text style={s.nutritionLabel}>Carbohidrati</Text></View>
-          <View style={[s.nutritionItem, { backgroundColor: '#FEE2E2' }]}><Text style={s.nutritionValue}>{recipe.nutritionalInfo.grasimi}g</Text><Text style={s.nutritionLabel}>Grasimi</Text></View>
-          <View style={[s.nutritionItem, { backgroundColor: '#D1FAE5' }]}><Text style={s.nutritionValue}>{recipe.nutritionalInfo.fibre}g</Text><Text style={s.nutritionLabel}>Fibre</Text></View>
+                <Text style={s.sectionTitle}>{t.recipeDetail.nutritionalInfo}</Text>
+                <View style={s.nutritionRow}>
+                  <View style={[s.nutritionItem, { backgroundColor: '#DBEAFE' }]}><Text style={s.nutritionValue}>{recipe.nutritionalInfo.proteine}g</Text><Text style={s.nutritionLabel}>{t.recipeDetail.protein}</Text></View>
+                  <View style={[s.nutritionItem, { backgroundColor: '#FEF3C7' }]}><Text style={s.nutritionValue}>{recipe.nutritionalInfo.carbohidrati}g</Text><Text style={s.nutritionLabel}>{t.recipeDetail.carbs}</Text></View>
+                  <View style={[s.nutritionItem, { backgroundColor: '#FEE2E2' }]}><Text style={s.nutritionValue}>{recipe.nutritionalInfo.grasimi}g</Text><Text style={s.nutritionLabel}>{t.recipeDetail.fats}</Text></View>
+                  <View style={[s.nutritionItem, { backgroundColor: '#D1FAE5' }]}><Text style={s.nutritionValue}>{recipe.nutritionalInfo.fibre}g</Text><Text style={s.nutritionLabel}>{t.recipeDetail.fiber}</Text></View>
         </View>
 
-        <Text style={s.sectionTitle}>Ingrediente</Text>
+        <Text style={s.sectionTitle}>{t.recipeDetail.ingredients}</Text>
         {recipe.ingredients.map((ing, i) => (
           <View key={i} style={s.ingredientRow}>
             <Ionicons name="checkmark-circle" size={18} color={Colors.primary} />
@@ -50,7 +52,7 @@ export default function RecipeDetailScreen({ route, navigation }: Props) {
           </View>
         ))}
 
-        <Text style={s.sectionTitle}>Instructiuni</Text>
+        <Text style={s.sectionTitle}>{t.recipeDetail.instructions}</Text>
         {recipe.instructions.map((inst, i) => (
           <View key={i} style={s.stepRow}>
             <View style={s.stepNum}><Text style={s.stepNumText}>{i + 1}</Text></View>

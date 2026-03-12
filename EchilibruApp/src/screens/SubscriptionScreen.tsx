@@ -6,37 +6,39 @@ import { Colors } from '../constants/colors';
 import { useAuth } from '../context/AuthContext';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Subscription'>;
 
-const basicFeatures = [
-  { text: '10 retete de baza', included: true },
-  { text: '10 exercitii de baza', included: true },
-  { text: 'Calculator de calorii', included: true },
-  { text: 'Toate cele 122 retete', included: false },
-  { text: 'Toate cele 85 exercitii cu video HD', included: false },
-  { text: 'Planuri alimentare personalizate', included: false },
-  { text: 'Planuri de antrenament complete', included: false },
-  { text: 'Conectare Apple Watch', included: false },
-  { text: 'Notificari personalizate', included: false },
-  { text: 'Fara reclame', included: false },
-];
-
-const premiumFeatures = [
-  { text: 'Toate cele 122 retete complete', included: true },
-  { text: 'Toate cele 85 exercitii cu video HD', included: true },
-  { text: 'Planuri alimentare personalizate', included: true },
-  { text: 'Planuri de antrenament complete', included: true },
-  { text: 'Calculator de calorii avansat', included: true },
-  { text: 'Sfaturi nutritionale expert', included: true },
-  { text: 'Lista de cumparaturi smart', included: true },
-  { text: 'Conectare Apple Watch', included: true },
-  { text: 'Notificari personalizate', included: true },
-  { text: 'Fara reclame', included: true },
-];
-
 export default function SubscriptionScreen({ navigation }: Props) {
   const { isPremium, subscribe } = useAuth();
+  const { t } = useLanguage();
+
+  const basicFeatures = [
+    { text: t.subscription.basic10Recipes, included: true },
+    { text: t.subscription.basic10Exercises, included: true },
+    { text: t.subscription.basicCalculator, included: true },
+    { text: t.subscription.all122Recipes, included: false },
+    { text: t.subscription.all85ExercisesHD, included: false },
+    { text: t.subscription.personalMealPlans, included: false },
+    { text: t.subscription.completeTrainingPlans, included: false },
+    { text: t.subscription.appleWatchConnect, included: false },
+    { text: t.subscription.customNotifications, included: false },
+    { text: t.subscription.noAds, included: false },
+  ];
+
+  const premiumFeatures = [
+    { text: t.subscription.all122RecipesComplete, included: true },
+    { text: t.subscription.all85ExercisesHD, included: true },
+    { text: t.subscription.personalMealPlans, included: true },
+    { text: t.subscription.completeTrainingPlans, included: true },
+    { text: t.subscription.advancedCalculator, included: true },
+    { text: t.subscription.expertTips, included: true },
+    { text: t.subscription.smartShoppingList, included: true },
+    { text: t.subscription.appleWatchConnect, included: true },
+    { text: t.subscription.customNotifications, included: true },
+    { text: t.subscription.noAds, included: true },
+  ];
   const [loading, setLoading] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -52,11 +54,11 @@ export default function SubscriptionScreen({ navigation }: Props) {
       setLoading(false);
       subscribe();
       Alert.alert(
-        'Abonament Activat!',
-        'Felicitari! Ai acum acces complet la toate retetele, exercitiile, video-urile si functiile premium ale Echilibru.',
+        t.subscription.subscriptionActivated,
+        t.subscription.congratsMsg,
         [
           {
-            text: 'Excelent!',
+            text: t.subscription.excellent,
             onPress: () => navigation.goBack(),
           },
         ]
@@ -66,8 +68,8 @@ export default function SubscriptionScreen({ navigation }: Props) {
 
   const handleRestore = () => {
     Alert.alert(
-      'Restaurare Achizitii',
-      'Se verifica achizitiile anterioare prin Apple ID...',
+      t.subscription.restoreTitle,
+      t.subscription.restoreMsg,
       [{ text: 'OK' }]
     );
   };
@@ -80,20 +82,20 @@ export default function SubscriptionScreen({ navigation }: Props) {
             <Ionicons name="close" size={24} color="#FFF" />
           </TouchableOpacity>
           <Ionicons name="diamond" size={48} color="#FFF" />
-          <Text style={s.headerTitle}>Esti Premium!</Text>
-          <Text style={s.headerDesc}>Ai acces complet la tot continutul Echilibru. Multumim pentru sustinere!</Text>
+                    <Text style={s.headerTitle}>{t.subscription.youArePremium}</Text>
+                    <Text style={s.headerDesc}>{t.subscription.premiumDesc}</Text>
         </LinearGradient>
 
         <View style={s.plansContainer}>
           <View style={s.activeCard}>
             <Ionicons name="checkmark-circle" size={32} color={Colors.primary} />
-            <Text style={s.activeTitle}>Abonament Activ</Text>
-            <Text style={s.activePrice}>£4.99 / luna</Text>
-            <Text style={s.activeDesc}>Acces complet la toate cele 122 retete, 85 exercitii cu video, planuri si mai mult.</Text>
+                        <Text style={s.activeTitle}>{t.subscription.activeSubscription}</Text>
+                        <Text style={s.activePrice}>{t.subscription.pricePerMonth}</Text>
+                        <Text style={s.activeDesc}>{t.subscription.activeDesc}</Text>
           </View>
 
           <View style={s.featuresContainer}>
-            <Text style={s.featuresTitle}>Ce include abonamentul tau:</Text>
+            <Text style={s.featuresTitle}>{t.subscription.includesTitle}</Text>
             {premiumFeatures.map((f, i) => (
               <View key={i} style={s.featureRow}>
                 <Ionicons name="checkmark-circle" size={18} color={Colors.primary} />
@@ -114,18 +116,18 @@ export default function SubscriptionScreen({ navigation }: Props) {
           <Ionicons name="close" size={24} color="#FFF" />
         </TouchableOpacity>
         <Ionicons name="star" size={48} color="#FFF" />
-        <Text style={s.headerTitle}>Echilibru Premium</Text>
-        <Text style={s.headerDesc}>Deblocheaza tot continutul si toate functiile pentru o viata mai sanatoasa</Text>
+                <Text style={s.headerTitle}>{t.subscription.echilibruPremium}</Text>
+                <Text style={s.headerDesc}>{t.subscription.unlockDesc}</Text>
         
         <View style={s.statsRow}>
           <View style={s.stat}>
             <Text style={s.statNum}>122</Text>
-            <Text style={s.statLabel}>Retete</Text>
+            <Text style={s.statLabel}>{t.subscription.recipesLabel}</Text>
           </View>
           <View style={s.statDivider} />
           <View style={s.stat}>
             <Text style={s.statNum}>85</Text>
-            <Text style={s.statLabel}>Exercitii</Text>
+            <Text style={s.statLabel}>{t.subscription.exercisesLabel}</Text>
           </View>
           <View style={s.statDivider} />
           <View style={s.stat}>
@@ -143,30 +145,30 @@ export default function SubscriptionScreen({ navigation }: Props) {
       <View style={s.plansContainer}>
         {/* Free Basic comparison */}
         <View style={s.compareSection}>
-          <Text style={s.sectionTitle}>Gratuit vs Premium</Text>
+          <Text style={s.sectionTitle}>{t.subscription.freeVsPremium}</Text>
           
           <View style={s.compareCard}>
             <View style={s.compareHeader}>
               <View style={s.compareCol}>
-                <Text style={s.compareColTitle}>Basic</Text>
-                <Text style={s.compareColPrice}>Gratuit</Text>
-              </View>
-              <View style={[s.compareCol, s.compareColPremium]}>
-                <Text style={[s.compareColTitle, { color: '#FFF' }]}>Premium</Text>
-                <Text style={[s.compareColPrice, { color: '#FFF' }]}>£4.99/luna</Text>
+                              <Text style={s.compareColTitle}>{t.subscription.basic}</Text>
+                              <Text style={s.compareColPrice}>{t.subscription.free}</Text>
+                            </View>
+                            <View style={[s.compareCol, s.compareColPremium]}>
+                              <Text style={[s.compareColTitle, { color: '#FFF' }]}>{t.subscription.premium}</Text>
+                              <Text style={[s.compareColPrice, { color: '#FFF' }]}>{t.subscription.priceShort}</Text>
               </View>
             </View>
             
             <View style={s.compareRows}>
               {[
-                ['10 retete', 'Toate 122 retete'],
-                ['10 exercitii', 'Toate 85 exercitii'],
-                ['Fara video', 'Video HD incluse'],
-                ['Calculator basic', 'Calculator avansat'],
-                ['Fara planuri', 'Planuri complete'],
-                ['Fara Apple Watch', 'Apple Watch conectat'],
-                ['Fara notificari', 'Notificari personalizate'],
-                ['Cu reclame', 'Fara reclame'],
+                [t.subscription.compare10Recipes, t.subscription.compareAll122],
+                [t.subscription.compare10Exercises, t.subscription.compareAll85],
+                [t.subscription.noVideo, t.subscription.videoHD],
+                [t.subscription.basicCalc, t.subscription.advancedCalc],
+                [t.subscription.noPlans, t.subscription.completePlans],
+                [t.subscription.noWatch, t.subscription.watchConnected],
+                [t.subscription.noNotif, t.subscription.customNotif],
+                [t.subscription.withAds, t.subscription.noAds],
               ].map(([basic, premium], i) => (
                 <View key={i} style={s.compareRow}>
                   <View style={s.compareCellBasic}>
@@ -187,12 +189,12 @@ export default function SubscriptionScreen({ navigation }: Props) {
         <View style={s.premiumCard}>
           <LinearGradient colors={['#10B981', '#059669']} style={s.premiumGradient}>
             <Ionicons name="diamond" size={32} color="#FFF" />
-            <Text style={s.premiumTitle}>Echilibru Premium</Text>
+            <Text style={s.premiumTitle}>{t.subscription.echilibruPremium}</Text>
             <View style={s.priceRow}>
               <Text style={s.priceMain}>£4.99</Text>
               <Text style={s.pricePeriod}> / luna</Text>
             </View>
-            <Text style={s.premiumDesc}>Un singur abonament. Acces la tot.</Text>
+            <Text style={s.premiumDesc}>{t.subscription.singleSub}</Text>
           </LinearGradient>
 
           <View style={s.premiumFeatures}>
@@ -212,34 +214,34 @@ export default function SubscriptionScreen({ navigation }: Props) {
         >
           <LinearGradient colors={['#10B981', '#059669']} style={s.subscribeBtnGradient}>
             {loading ? (
-              <Text style={s.subscribeBtnText}>Se proceseaza...</Text>
-            ) : (
-              <>
-                <Ionicons name="logo-apple" size={22} color="#FFF" />
-                <Text style={s.subscribeBtnText}>Aboneaza-te - £4.99/luna</Text>
+                          <Text style={s.subscribeBtnText}>{t.subscription.processing}</Text>
+                        ) : (
+                          <>
+                            <Ionicons name="logo-apple" size={22} color="#FFF" />
+                            <Text style={s.subscribeBtnText}>{t.subscription.subscribeBtn}</Text>
               </>
             )}
           </LinearGradient>
         </TouchableOpacity>
 
         <TouchableOpacity style={s.restoreBtn} onPress={handleRestore}>
-          <Text style={s.restoreText}>Restaureaza achizitiile</Text>
+          <Text style={s.restoreText}>{t.subscription.restorePurchases}</Text>
         </TouchableOpacity>
 
         <View style={s.infoBox}>
           <Ionicons name="shield-checkmark" size={20} color={Colors.primary} />
           <View style={s.infoTextContainer}>
-            <Text style={s.infoTitle}>Plata securizata prin Apple</Text>
-            <Text style={s.infoDesc}>
-              Abonamentul se renoieste automat la £4.99/luna. Poti anula oricand din Setari &gt; Apple ID &gt; Abonamente.
-            </Text>
+                        <Text style={s.infoTitle}>{t.subscription.securePayment}</Text>
+                        <Text style={s.infoDesc}>
+                          {t.subscription.renewInfo}
+                        </Text>
           </View>
         </View>
 
         <View style={s.legalLinks}>
-          <TouchableOpacity><Text style={s.legalText}>Termeni si Conditii</Text></TouchableOpacity>
+          <TouchableOpacity><Text style={s.legalText}>{t.subscription.terms}</Text></TouchableOpacity>
           <Text style={s.legalDot}>{'\u2022'}</Text>
-          <TouchableOpacity><Text style={s.legalText}>Politica de Confidentialitate</Text></TouchableOpacity>
+          <TouchableOpacity><Text style={s.legalText}>{t.subscription.privacy}</Text></TouchableOpacity>
         </View>
       </View>
       <View style={{ height: 40 }} />

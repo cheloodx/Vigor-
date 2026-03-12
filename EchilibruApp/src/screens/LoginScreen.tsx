@@ -7,17 +7,19 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function LoginScreen() {
   const { login } = useAuth();
   const navigation = useNavigation<Nav>();
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
-    if (!email || !password) { Alert.alert('Eroare', 'Completeaza toate campurile'); return; }
+    if (!email || !password) { Alert.alert(t.login.error, t.login.fillAll); return; }
     const success = await login(email, password);
     if (success) navigation.goBack();
   };
@@ -26,22 +28,22 @@ export default function LoginScreen() {
     <KeyboardAvoidingView style={s.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <LinearGradient colors={['#F0FDF4', '#FFFFFF']} style={s.bg}>
         <View style={s.form}>
-          <Text style={s.title}>Autentificare</Text>
-          <Text style={s.subtitle}>Intra in contul tau pentru a accesa continut premium</Text>
+                    <Text style={s.title}>{t.login.title}</Text>
+                    <Text style={s.subtitle}>{t.login.subtitle}</Text>
 
-          <Text style={s.label}>Email</Text>
-          <TextInput style={s.input} placeholder="email@exemplu.com" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
+                    <Text style={s.label}>{t.login.email}</Text>
+                    <TextInput style={s.input} placeholder={t.login.emailPlaceholder} value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
 
-          <Text style={s.label}>Parola</Text>
-          <TextInput style={s.input} placeholder="Parola ta" value={password} onChangeText={setPassword} secureTextEntry />
+                    <Text style={s.label}>{t.login.password}</Text>
+                    <TextInput style={s.input} placeholder={t.login.passwordPlaceholder} value={password} onChangeText={setPassword} secureTextEntry />
 
           <TouchableOpacity style={s.btn} onPress={handleLogin}>
-            <Text style={s.btnText}>Autentifica-te</Text>
+            <Text style={s.btnText}>{t.login.loginBtn}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => navigation.navigate('Register')} style={s.linkRow}>
-            <Text style={s.linkText}>Nu ai cont? </Text>
-            <Text style={s.linkBold}>Inregistreaza-te</Text>
+                        <Text style={s.linkText}>{t.login.noAccount}</Text>
+                        <Text style={s.linkBold}>{t.login.register}</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>

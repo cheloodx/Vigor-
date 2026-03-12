@@ -5,6 +5,7 @@ import { Video, ResizeMode } from 'expo-av';
 import { Colors } from '../constants/colors';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ExerciseDetail'>;
 
@@ -23,8 +24,9 @@ export default function ExerciseDetailScreen({ route, navigation }: Props) {
   const { exercise } = route.params;
   const [showVideo, setShowVideo] = useState(false);
   const videoRef = useRef<Video>(null);
+  const { t } = useLanguage();
   const diffColor: Record<string, string> = { incepator: Colors.primary, intermediar: Colors.secondary, avansat: Colors.accent };
-  const diffLabel: Record<string, string> = { incepator: 'Incepator', intermediar: 'Intermediar', avansat: 'Avansat' };
+  const diffLabel: Record<string, string> = { incepator: t.exerciseDetail.beginner, intermediar: t.exerciseDetail.intermediate, avansat: t.exerciseDetail.advanced };
 
   const videoUrl = exerciseVideos[exercise.muscleGroup] || exerciseVideos['Full Body'];
 
@@ -53,7 +55,7 @@ export default function ExerciseDetailScreen({ route, navigation }: Props) {
               <View style={s.playCircle}>
                 <Ionicons name="play" size={32} color="#FFF" />
               </View>
-              <Text style={s.playText}>Vezi Video</Text>
+              <Text style={s.playText}>{t.exerciseDetail.seeVideo}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -82,19 +84,19 @@ export default function ExerciseDetailScreen({ route, navigation }: Props) {
 
         {(exercise.sets || exercise.reps) && (
           <View style={s.setsRow}>
-            {exercise.sets && <View style={s.setItem}><Text style={s.setLabel}>Seturi</Text><Text style={s.setValue}>{exercise.sets}</Text></View>}
-            {exercise.reps && <View style={s.setItem}><Text style={s.setLabel}>Repetari</Text><Text style={s.setValue}>{exercise.reps}</Text></View>}
+                        {exercise.sets && <View style={s.setItem}><Text style={s.setLabel}>{t.exerciseDetail.sets}</Text><Text style={s.setValue}>{exercise.sets}</Text></View>}
+                        {exercise.reps && <View style={s.setItem}><Text style={s.setLabel}>{t.exerciseDetail.reps}</Text><Text style={s.setValue}>{exercise.reps}</Text></View>}
           </View>
         )}
 
         {exercise.hasVideo && !showVideo && (
           <TouchableOpacity style={s.watchVideoBtn} onPress={() => setShowVideo(true)}>
             <Ionicons name="play-circle" size={24} color="#FFF" />
-            <Text style={s.watchVideoText}>Urmareste Video Demonstrativ</Text>
+            <Text style={s.watchVideoText}>{t.exerciseDetail.watchVideo}</Text>
           </TouchableOpacity>
         )}
 
-        <Text style={s.sectionTitle}>Instructiuni</Text>
+        <Text style={s.sectionTitle}>{t.exerciseDetail.instructions}</Text>
         {exercise.instructions.map((inst, i) => (
           <View key={i} style={s.stepRow}>
             <View style={s.stepNum}><Text style={s.stepNumText}>{i + 1}</Text></View>

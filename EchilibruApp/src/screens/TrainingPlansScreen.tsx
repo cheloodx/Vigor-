@@ -7,33 +7,35 @@ import { trainingPlans } from '../data/trainingPlans';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 const levelColor: Record<string, string> = { incepator: Colors.primary, intermediar: Colors.secondary, avansat: Colors.accent };
-const levelLabel: Record<string, string> = { incepator: 'Incepator', intermediar: 'Intermediar', avansat: 'Avansat' };
 
 export default function TrainingPlansScreen() {
   const navigation = useNavigation<Nav>();
+  const { t } = useLanguage();
+  const levelLabel: Record<string, string> = { incepator: t.trainingPlans.beginner, intermediar: t.trainingPlans.intermediate, avansat: t.trainingPlans.advanced };
 
   return (
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}>
       <LinearGradient colors={Colors.gradient.primary} style={s.header}>
         <Ionicons name="barbell" size={32} color="#FFF" />
-        <Text style={s.headerTitle}>Planuri de Antrenament</Text>
-        <Text style={s.headerDesc}>Programe complete de antrenament pentru toate nivelurile. Urmeaza un plan structurat si ating-ti obiectivele tale!</Text>
+                <Text style={s.headerTitle}>{t.trainingPlans.title}</Text>
+                <Text style={s.headerDesc}>{t.trainingPlans.desc}</Text>
       </LinearGradient>
 
       <View style={s.countBar}>
-        <Text style={s.countTitle}>Planuri disponibile ({trainingPlans.length})</Text>
-        <Text style={s.countDesc}>Alege planul potrivit pentru nivelul tau de experienta si obiectivele tale.</Text>
+                <Text style={s.countTitle}>{t.trainingPlans.available} ({trainingPlans.length})</Text>
+                <Text style={s.countDesc}>{t.trainingPlans.chooseDesc}</Text>
       </View>
 
       {trainingPlans.map(plan => (
         <TouchableOpacity key={plan.id} style={s.card} onPress={() => navigation.navigate('TrainingPlanDetail', { plan })}>
           <Image source={{ uri: plan.image }} style={s.cardImage} />
           {plan.isPremium && (
-            <View style={s.premBadge}><Ionicons name="star" size={10} color="#FFF" /><Text style={s.premText}>Premium</Text></View>
+            <View style={s.premBadge}><Ionicons name="star" size={10} color="#FFF" /><Text style={s.premText}>{t.common.premium}</Text></View>
           )}
           <View style={s.cardContent}>
             <Text style={s.cardTitle}>{plan.title}</Text>
@@ -49,9 +51,9 @@ export default function TrainingPlansScreen() {
               ))}
             </View>
             <View style={s.statsRow}>
-              <View style={s.statItem}><Text style={s.statValue}>{plan.duration.split(' ')[0]}</Text><Text style={s.statUnit}>saptamani</Text><Text style={s.statLabel}>Durata</Text></View>
-              <View style={s.statItem}><Text style={s.statValue}>{plan.daysPerWeek}</Text><Text style={s.statUnit}>Zile/sapt</Text><Text style={s.statLabel}>Frecventa</Text></View>
-              <View style={s.statItem}><Text style={s.statValue}>{plan.exerciseCount}</Text><Text style={s.statUnit}>Exercitii</Text><Text style={s.statLabel}>Per sesiune</Text></View>
+                            <View style={s.statItem}><Text style={s.statValue}>{plan.duration.split(' ')[0]}</Text><Text style={s.statUnit}>{t.trainingPlans.weeks}</Text><Text style={s.statLabel}>{t.trainingPlans.duration}</Text></View>
+                            <View style={s.statItem}><Text style={s.statValue}>{plan.daysPerWeek}</Text><Text style={s.statUnit}>{t.trainingPlans.daysWeek}</Text><Text style={s.statLabel}>{t.trainingPlans.frequency}</Text></View>
+                            <View style={s.statItem}><Text style={s.statValue}>{plan.exerciseCount}</Text><Text style={s.statUnit}>{t.trainingPlans.exercises}</Text><Text style={s.statLabel}>{t.trainingPlans.perSession}</Text></View>
             </View>
           </View>
         </TouchableOpacity>

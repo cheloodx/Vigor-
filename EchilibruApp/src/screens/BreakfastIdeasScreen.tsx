@@ -7,19 +7,21 @@ import { recipes } from '../data/recipes';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function BreakfastIdeasScreen() {
   const navigation = useNavigation<Nav>();
+  const { t } = useLanguage();
   const breakfastRecipes = recipes.filter(r => r.category === 'mic_dejun');
 
   return (
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}>
       <LinearGradient colors={['#8B5CF6', '#7C3AED']} style={s.header}>
         <Ionicons name="sunny" size={32} color="#FFF" />
-        <Text style={s.headerTitle}>Idei Mic Dejun</Text>
-        <Text style={s.headerDesc}>Inspiratie pentru un mic dejun sanatos si plin de energie!</Text>
+                <Text style={s.headerTitle}>{t.breakfast.title}</Text>
+                <Text style={s.headerDesc}>{t.breakfast.desc}</Text>
       </LinearGradient>
 
       <View style={s.list}>
@@ -37,7 +39,7 @@ export default function BreakfastIdeasScreen() {
           </TouchableOpacity>
         ))}
         {breakfastRecipes.length === 0 && (
-          <View style={s.empty}><Text style={s.emptyText}>Retete de mic dejun vin in curand!</Text></View>
+          <View style={s.empty}><Text style={s.emptyText}>{t.breakfast.empty}</Text></View>
         )}
       </View>
       <View style={{ height: 100 }} />

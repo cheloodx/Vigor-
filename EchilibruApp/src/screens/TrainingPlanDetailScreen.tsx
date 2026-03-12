@@ -4,11 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
+import { useLanguage } from '../context/LanguageContext';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainingPlanDetail'>;
 
 export default function TrainingPlanDetailScreen({ route, navigation }: Props) {
   const { plan } = route.params;
+  const { t } = useLanguage();
 
   return (
     <ScrollView style={s.container} showsVerticalScrollIndicator={false}>
@@ -20,15 +22,15 @@ export default function TrainingPlanDetailScreen({ route, navigation }: Props) {
         <Text style={s.title}>{plan.title}</Text>
         <Text style={s.desc}>{plan.description}</Text>
         <View style={s.statsRow}>
-          <View style={s.statItem}><Text style={s.statValue}>{plan.duration}</Text><Text style={s.statLabel}>Durata</Text></View>
-          <View style={s.statItem}><Text style={s.statValue}>{plan.daysPerWeek} zile/sapt</Text><Text style={s.statLabel}>Frecventa</Text></View>
+                    <View style={s.statItem}><Text style={s.statValue}>{plan.duration}</Text><Text style={s.statLabel}>{t.trainingPlanDetail.duration}</Text></View>
+                    <View style={s.statItem}><Text style={s.statValue}>{plan.daysPerWeek} {t.trainingPlanDetail.daysWeek}</Text><Text style={s.statLabel}>{t.trainingPlanDetail.frequency}</Text></View>
         </View>
         {plan.isPremium && (
           <View style={s.premCard}>
             <Ionicons name="lock-closed" size={24} color={Colors.secondary} />
-            <Text style={s.premTitle}>Continut Premium</Text>
-            <Text style={s.premDesc}>Aboneaza-te pentru a accesa acest plan complet de antrenament.</Text>
-            <TouchableOpacity style={s.premBtn} onPress={() => navigation.navigate('Subscription')}><Text style={s.premBtnText}>Aboneaza-te - £4.99/luna</Text></TouchableOpacity>
+                        <Text style={s.premTitle}>{t.trainingPlanDetail.premiumContent}</Text>
+                        <Text style={s.premDesc}>{t.trainingPlanDetail.premiumDesc}</Text>
+                        <TouchableOpacity style={s.premBtn} onPress={() => navigation.navigate('Subscription')}><Text style={s.premBtnText}>{t.trainingPlanDetail.subscribeBtn}</Text></TouchableOpacity>
           </View>
         )}
       </View>

@@ -8,12 +8,14 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../constants/types';
 import { recipes } from '../data/recipes';
+import { useLanguage } from '../context/LanguageContext';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
 
 export default function ProfileScreen() {
   const { user, isAuthenticated, isPremium, logout, favorites, shoppingList, toggleShoppingItem, addShoppingItem, watchConnected, toggleWatch, notificationsEnabled, toggleNotifications } = useAuth();
   const navigation = useNavigation<Nav>();
+  const { t, language, setLanguage } = useLanguage();
   const [tab, setTab] = useState<'progres' | 'favorite' | 'lista' | 'setari'>('progres');
   const [newItem, setNewItem] = useState('');
 
@@ -22,13 +24,13 @@ export default function ProfileScreen() {
       <View style={s.authContainer}>
         <LinearGradient colors={['#F0FDF4', '#FFFFFF']} style={s.authBg}>
           <Ionicons name="person-circle" size={80} color={Colors.gray[300]} />
-          <Text style={s.authTitle}>Autentificare necesara</Text>
-          <Text style={s.authDesc}>Intra in contul tau pentru a accesa profilul, progresul si favoritele tale.</Text>
+          <Text style={s.authTitle}>{t.profile.authRequired}</Text>
+          <Text style={s.authDesc}>{t.profile.authDesc}</Text>
           <TouchableOpacity style={s.authBtn} onPress={() => navigation.navigate('Login')}>
-            <Text style={s.authBtnText}>Autentifica-te</Text>
+            <Text style={s.authBtnText}>{t.profile.login}</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-            <Text style={s.authLink}>Nu ai cont? Inregistreaza-te</Text>
+            <Text style={s.authLink}>{t.profile.noAccount}</Text>
           </TouchableOpacity>
         </LinearGradient>
       </View>
@@ -58,13 +60,13 @@ export default function ProfileScreen() {
           </TouchableOpacity>
           <TouchableOpacity style={s.logoutBtn} onPress={logout}>
             <Ionicons name="log-out" size={16} color={Colors.accent} />
-            <Text style={s.logoutText}>Deconectare</Text>
+            <Text style={s.logoutText}>{t.profile.logout}</Text>
           </TouchableOpacity>
         </View>
       </LinearGradient>
 
       <View style={s.tabs}>
-        {([['progres', 'analytics', 'Progres'], ['favorite', 'heart', 'Favorite'], ['lista', 'cart', 'Lista'], ['setari', 'settings', 'Setari']] as const).map(([key, icon, label]) => (
+        {([['progres', 'analytics', t.profile.progress], ['favorite', 'heart', t.profile.favorites], ['lista', 'cart', t.profile.list], ['setari', 'settings', t.profile.settings]] as const).map(([key, icon, label]) => (
           <TouchableOpacity key={key} style={[s.tab, tab === key && s.tabActive]} onPress={() => setTab(key)}>
             <Ionicons name={icon as keyof typeof Ionicons.glyphMap} size={18} color={tab === key ? Colors.primary : Colors.gray[400]} />
             <Text style={[s.tabText, tab === key && s.tabTextActive]}>{label}</Text>
@@ -74,15 +76,15 @@ export default function ProfileScreen() {
 
       {tab === 'progres' && (
         <View style={s.section}>
-          <Text style={s.sectionTitle}>Progresul Tau</Text>
+          <Text style={s.sectionTitle}>{t.profile.yourProgress}</Text>
           <View style={s.progressCard}>
             <Ionicons name="trending-up" size={40} color={Colors.primary} />
-            <Text style={s.progressTitle}>Urmareste-ti progresul</Text>
-            <Text style={s.progressDesc}>Adauga masuratori corporale si urmareste-ti evolutia in timp.</Text>
+            <Text style={s.progressTitle}>{t.profile.trackProgress}</Text>
+            <Text style={s.progressDesc}>{t.profile.trackProgressDesc}</Text>
             <View style={s.progressStats}>
-              <View style={s.progressStat}><Text style={s.progressStatValue}>--</Text><Text style={s.progressStatLabel}>Greutate (kg)</Text></View>
-              <View style={s.progressStat}><Text style={s.progressStatValue}>--</Text><Text style={s.progressStatLabel}>IMC</Text></View>
-              <View style={s.progressStat}><Text style={s.progressStatValue}>--</Text><Text style={s.progressStatLabel}>% Grasime</Text></View>
+              <View style={s.progressStat}><Text style={s.progressStatValue}>--</Text><Text style={s.progressStatLabel}>{t.profile.weight}</Text></View>
+              <View style={s.progressStat}><Text style={s.progressStatValue}>--</Text><Text style={s.progressStatLabel}>{t.profile.bmi}</Text></View>
+              <View style={s.progressStat}><Text style={s.progressStatValue}>--</Text><Text style={s.progressStatLabel}>{t.profile.fatPercent}</Text></View>
             </View>
           </View>
         </View>
@@ -90,9 +92,9 @@ export default function ProfileScreen() {
 
       {tab === 'favorite' && (
         <View style={s.section}>
-          <Text style={s.sectionTitle}>Retete Favorite ({favRecipes.length})</Text>
+          <Text style={s.sectionTitle}>{t.profile.favoriteRecipes} ({favRecipes.length})</Text>
           {favRecipes.length === 0 ? (
-            <View style={s.emptyCard}><Ionicons name="heart-outline" size={40} color={Colors.gray[300]} /><Text style={s.emptyText}>Nu ai retete favorite inca</Text></View>
+            <View style={s.emptyCard}><Ionicons name="heart-outline" size={40} color={Colors.gray[300]} /><Text style={s.emptyText}>{t.profile.noFavorites}</Text></View>
           ) : (
             favRecipes.map(r => (
               <TouchableOpacity key={r.id} style={s.favCard} onPress={() => navigation.navigate('RecipeDetail', { recipe: r })}>
@@ -106,9 +108,9 @@ export default function ProfileScreen() {
 
       {tab === 'lista' && (
         <View style={s.section}>
-          <Text style={s.sectionTitle}>Lista de Cumparaturi</Text>
+          <Text style={s.sectionTitle}>{t.profile.shoppingList}</Text>
           <View style={s.addRow}>
-            <TextInput style={s.addInput} placeholder="Adauga un produs..." value={newItem} onChangeText={setNewItem} />
+            <TextInput style={s.addInput} placeholder={t.profile.addProduct} value={newItem} onChangeText={setNewItem} />
             <TouchableOpacity style={s.addBtn} onPress={handleAddItem}><Ionicons name="add" size={24} color="#FFF" /></TouchableOpacity>
           </View>
           {shoppingList.map(item => (
@@ -122,7 +124,34 @@ export default function ProfileScreen() {
 
       {tab === 'setari' && (
         <View style={s.section}>
-          <Text style={s.sectionTitle}>Setari</Text>
+          <Text style={s.sectionTitle}>{t.profile.settings}</Text>
+
+          {/* Language switcher */}
+          <View style={s.settingCard}>
+            <View style={s.settingLeft}>
+              <View style={[s.settingIcon, { backgroundColor: Colors.primary + '20' }]}>
+                <Ionicons name="language" size={20} color={Colors.primary} />
+              </View>
+              <View>
+                <Text style={s.settingTitle}>{t.profile.language}</Text>
+                <Text style={s.settingDesc}>{language === 'ro' ? t.profile.romanian : t.profile.english}</Text>
+              </View>
+            </View>
+            <View style={s.langBtns}>
+              <TouchableOpacity
+                style={[s.langBtn, language === 'ro' && s.langBtnActive]}
+                onPress={() => setLanguage('ro')}
+              >
+                <Text style={[s.langBtnText, language === 'ro' && s.langBtnTextActive]}>RO</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[s.langBtn, language === 'en' && s.langBtnActive]}
+                onPress={() => setLanguage('en')}
+              >
+                <Text style={[s.langBtnText, language === 'en' && s.langBtnTextActive]}>EN</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
 
           {/* Subscription status */}
           <TouchableOpacity style={s.settingCard} onPress={() => navigation.navigate('Subscription')}>
@@ -131,8 +160,8 @@ export default function ProfileScreen() {
                 <Ionicons name={isPremium ? 'diamond' : 'star'} size={20} color={isPremium ? '#F59E0B' : Colors.gray[400]} />
               </View>
               <View>
-                <Text style={s.settingTitle}>Abonament</Text>
-                <Text style={s.settingDesc}>{isPremium ? 'Premium activ - £4.99/luna' : 'Basic (gratuit)'}</Text>
+                <Text style={s.settingTitle}>{t.profile.subscription}</Text>
+                <Text style={s.settingDesc}>{isPremium ? t.profile.premiumActive : t.profile.basicFree}</Text>
               </View>
             </View>
             <Ionicons name="chevron-forward" size={20} color={Colors.gray[400]} />
@@ -145,17 +174,17 @@ export default function ProfileScreen() {
                 <Ionicons name="watch" size={20} color={watchConnected ? Colors.primary : Colors.gray[400]} />
               </View>
               <View>
-                <Text style={s.settingTitle}>Apple Watch</Text>
-                <Text style={s.settingDesc}>{watchConnected ? 'Conectat' : 'Deconectat'}</Text>
+                <Text style={s.settingTitle}>{t.profile.appleWatch}</Text>
+                <Text style={s.settingDesc}>{watchConnected ? t.profile.connected : t.profile.disconnected}</Text>
               </View>
             </View>
             <Switch
               value={watchConnected}
               onValueChange={() => {
                 if (!isPremium && !watchConnected) {
-                  Alert.alert('Premium Necesar', 'Conectarea Apple Watch necesita abonament Premium.', [
-                    { text: 'Anuleaza' },
-                    { text: 'Vezi Premium', onPress: () => navigation.navigate('Subscription') },
+                  Alert.alert(t.profile.premiumRequired, t.profile.watchPremiumMsg, [
+                    { text: t.profile.cancel },
+                    { text: t.profile.seePremium, onPress: () => navigation.navigate('Subscription') },
                   ]);
                 } else {
                   toggleWatch();
@@ -173,17 +202,17 @@ export default function ProfileScreen() {
                 <Ionicons name="notifications" size={20} color={notificationsEnabled ? Colors.primary : Colors.gray[400]} />
               </View>
               <View>
-                <Text style={s.settingTitle}>Notificari</Text>
-                <Text style={s.settingDesc}>{notificationsEnabled ? 'Active - primesti remindere' : 'Dezactivate'}</Text>
+                <Text style={s.settingTitle}>{t.profile.notifications}</Text>
+                <Text style={s.settingDesc}>{notificationsEnabled ? t.profile.notifActive : t.profile.notifDisabled}</Text>
               </View>
             </View>
             <Switch
               value={notificationsEnabled}
               onValueChange={() => {
                 if (!isPremium && !notificationsEnabled) {
-                  Alert.alert('Premium Necesar', 'Notificarile personalizate necesita abonament Premium.', [
-                    { text: 'Anuleaza' },
-                    { text: 'Vezi Premium', onPress: () => navigation.navigate('Subscription') },
+                  Alert.alert(t.profile.premiumRequired, t.profile.notifPremiumMsg, [
+                    { text: t.profile.cancel },
+                    { text: t.profile.seePremium, onPress: () => navigation.navigate('Subscription') },
                   ]);
                 } else {
                   toggleNotifications();
@@ -198,8 +227,8 @@ export default function ProfileScreen() {
             <TouchableOpacity style={s.upgradeCard} onPress={() => navigation.navigate('Subscription')}>
               <LinearGradient colors={['#10B981', '#059669']} style={s.upgradeGradient}>
                 <Ionicons name="star" size={24} color="#FFF" />
-                <Text style={s.upgradeTitle}>Treci la Premium</Text>
-                <Text style={s.upgradeDesc}>£4.99/luna - Acces complet la tot continutul + Apple Watch + Notificari</Text>
+                <Text style={s.upgradeTitle}>{t.profile.upgradeToPremium}</Text>
+                <Text style={s.upgradeDesc}>{t.profile.upgradeDesc}</Text>
               </LinearGradient>
             </TouchableOpacity>
           )}
@@ -263,4 +292,9 @@ const s = StyleSheet.create({
   upgradeGradient: { padding: 20, alignItems: 'center', gap: 6 },
   upgradeTitle: { fontSize: 18, fontWeight: '800', color: '#FFF' },
   upgradeDesc: { fontSize: 13, color: 'rgba(255,255,255,0.9)', textAlign: 'center' },
+  langBtns: { flexDirection: 'row', gap: 6 },
+  langBtn: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: 10, borderWidth: 1.5, borderColor: Colors.gray[200], backgroundColor: Colors.white },
+  langBtnActive: { borderColor: Colors.primary, backgroundColor: Colors.primary },
+  langBtnText: { fontSize: 13, fontWeight: '700', color: Colors.gray[500] },
+  langBtnTextActive: { color: '#FFF' },
 });

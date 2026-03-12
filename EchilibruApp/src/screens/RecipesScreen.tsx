@@ -9,20 +9,22 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList, Recipe } from '../constants/types';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 type Nav = NativeStackNavigationProp<RootStackParamList>;
-
-const categories = [
-  { key: 'all', label: 'Toate' },
-  { key: 'mic_dejun', label: 'Mic Dejun' },
-  { key: 'pranz', label: 'Pranz' },
-  { key: 'cina', label: 'Cina' },
-  { key: 'desert', label: 'Desert' },
-];
 
 export default function RecipesScreen() {
   const navigation = useNavigation<Nav>();
   const { favorites, toggleFavorite } = useAuth();
+  const { t } = useLanguage();
+
+  const categories = [
+    { key: 'all', label: t.recipes.all },
+    { key: 'mic_dejun', label: t.recipes.breakfast },
+    { key: 'pranz', label: t.recipes.lunch },
+    { key: 'cina', label: t.recipes.dinner },
+    { key: 'desert', label: t.recipes.dessert },
+  ];
   const [selected, setSelected] = useState('all');
 
   const filtered = useMemo(() => selected === 'all' ? recipes : recipes.filter(r => r.category === selected), [selected]);
@@ -40,8 +42,8 @@ export default function RecipesScreen() {
     <View style={s.container}>
       <LinearGradient colors={Colors.gradient.primary} style={s.header}>
         <Ionicons name="book" size={28} color="#FFF" />
-        <Text style={s.headerTitle}>Retete Sanatoase</Text>
-        <Text style={s.headerDesc}>Exploreaza colectia noastra de retete traditionale adaptate pentru o alimentatie sanatoasa.</Text>
+                <Text style={s.headerTitle}>{t.recipes.title}</Text>
+                <Text style={s.headerDesc}>{t.recipes.desc}</Text>
       </LinearGradient>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={s.cats} contentContainerStyle={s.catsContent}>

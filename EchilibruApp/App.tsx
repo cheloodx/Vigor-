@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AuthProvider } from './src/context/AuthContext';
+import { LanguageProvider } from './src/context/LanguageContext';
 import AppNavigator from './src/navigation/AppNavigator';
 
 const PHONE_MAX_WIDTH = 430;
@@ -13,10 +14,12 @@ export default function App() {
     <GestureHandlerRootView style={styles.root}>
       <View style={styles.phoneContainer}>
         <SafeAreaProvider>
-          <AuthProvider>
-            <StatusBar style="auto" />
-            <AppNavigator />
-          </AuthProvider>
+          <LanguageProvider>
+            <AuthProvider>
+              <StatusBar style="auto" />
+              <AppNavigator />
+            </AuthProvider>
+          </LanguageProvider>
         </SafeAreaProvider>
       </View>
     </GestureHandlerRootView>
