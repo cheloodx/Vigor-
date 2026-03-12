@@ -64,8 +64,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const addShoppingItem = (name: string) => {
-    const newId = (shoppingList.length + 1).toString();
-    setShoppingList(prev => [...prev, { id: newId, name, checked: false }]);
+    setShoppingList(prev => {
+      const newId = (prev.length + 1).toString();
+      return [...prev, { id: newId, name, checked: false }];
+    });
   };
 
   return (
