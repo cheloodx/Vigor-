@@ -56,7 +56,7 @@ export default function HomeScreen() {
               <Ionicons name="cart" size={16} color="#FFF" />
               <Text style={s.ctaPriText}>Incepe Acum - £4.99/luna</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={s.ctaSec} onPress={() => navigation.navigate('MainTabs', { screen: 'Retete' } as any)}>
+            <TouchableOpacity style={s.ctaSec} onPress={() => navigation.navigate('MainTabs', { screen: 'Recipes' } as any)}>
               <Ionicons name="book" size={16} color={Colors.primary} />
               <Text style={s.ctaSecText}>Exploreaza Gratuit</Text>
             </TouchableOpacity>

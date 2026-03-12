@@ -26,22 +26,24 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const DEFAULT_SHOPPING_LIST: { id: string; name: string; checked: boolean }[] = [
+  { id: '1', name: 'Piept de pui 500g', checked: false },
+  { id: '2', name: 'Orez integral 1kg', checked: false },
+  { id: '3', name: 'Broccoli 300g', checked: false },
+  { id: '4', name: 'Oua 10 buc', checked: true },
+  { id: '5', name: 'Lapte 1L', checked: false },
+  { id: '6', name: 'Rosii 500g', checked: false },
+  { id: '7', name: 'Ulei de masline', checked: true },
+  { id: '8', name: 'Banane 1kg', checked: false },
+];
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isPremium, setIsPremium] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [watchConnected, setWatchConnected] = useState(false);
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [shoppingList, setShoppingList] = useState<{ id: string; name: string; checked: boolean }[]>([
-    { id: '1', name: 'Piept de pui 500g', checked: false },
-    { id: '2', name: 'Orez integral 1kg', checked: false },
-    { id: '3', name: 'Broccoli 300g', checked: false },
-    { id: '4', name: 'Oua 10 buc', checked: true },
-    { id: '5', name: 'Lapte 1L', checked: false },
-    { id: '6', name: 'Rosii 500g', checked: false },
-    { id: '7', name: 'Ulei de masline', checked: true },
-    { id: '8', name: 'Banane 1kg', checked: false },
-  ]);
+  const [shoppingList, setShoppingList] = useState(DEFAULT_SHOPPING_LIST);
 
   const login = async (email: string, _password: string): Promise<boolean> => {
     setUser({ email, name: email.split('@')[0] });
@@ -69,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setIsPremium(false);
     setFavorites([]);
-    setShoppingList([]);
+    setShoppingList(DEFAULT_SHOPPING_LIST);
     setWatchConnected(false);
     setNotificationsEnabled(false);
   };
