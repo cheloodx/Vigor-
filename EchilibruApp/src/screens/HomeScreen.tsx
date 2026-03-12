@@ -52,11 +52,11 @@ export default function HomeScreen() {
           <Text style={s.ctaTitle}>{'Nutritie Sanatoasa\n+ Sport Regulat\n= Viata Echilibrata'}</Text>
           <Text style={s.ctaDesc}>Alatura-te celor care si-au transformat stilul de viata cu retete sanatoase si programe de exercitii eficiente</Text>
           <View style={s.ctaBtns}>
-            <TouchableOpacity style={s.ctaPri}>
+            <TouchableOpacity style={s.ctaPri} onPress={() => navigation.navigate('Subscription')}>
               <Ionicons name="cart" size={16} color="#FFF" />
-              <Text style={s.ctaPriText}>Incepe Acum - 29 RON/luna</Text>
+              <Text style={s.ctaPriText}>Incepe Acum - £4.99/luna</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={s.ctaSec}>
+            <TouchableOpacity style={s.ctaSec} onPress={() => navigation.navigate('MainTabs', { screen: 'Retete' } as any)}>
               <Ionicons name="book" size={16} color={Colors.primary} />
               <Text style={s.ctaSecText}>Exploreaza Gratuit</Text>
             </TouchableOpacity>

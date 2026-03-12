@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -38,10 +38,17 @@ const premiumFeatures = [
 export default function SubscriptionScreen({ navigation }: Props) {
   const { isPremium, subscribe } = useAuth();
   const [loading, setLoading] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleSubscribe = () => {
     setLoading(true);
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setLoading(false);
       subscribe();
       Alert.alert(
