@@ -47,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null);
     setFavorites([]);
+    setShoppingList([]);
   };
 
   const toggleFavorite = (id: string) => {
