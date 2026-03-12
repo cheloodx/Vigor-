@@ -192,7 +192,7 @@ export default function SubscriptionScreen({ navigation }: Props) {
             <Text style={s.premiumTitle}>{t.subscription.echilibruPremium}</Text>
             <View style={s.priceRow}>
               <Text style={s.priceMain}>£4.99</Text>
-              <Text style={s.pricePeriod}> / luna</Text>
+              <Text style={s.pricePeriod}> {t.subscription.pricePeriod}</Text>
             </View>
             <Text style={s.premiumDesc}>{t.subscription.singleSub}</Text>
           </LinearGradient>
