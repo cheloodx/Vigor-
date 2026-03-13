@@ -1,0 +1,40 @@
+import { TrainingPlan } from '../constants/types';
+
+export const trainingPlans: TrainingPlan[] = [
+  {
+    id: '1',
+    title: 'Plan Incepator - Full Body',
+    description: 'Program de 4 saptamani pentru incepatori care vor sa isi dezvolte forta si rezistenta. 3 antrenamente pe saptamana cu exercitii de baza.',
+    image: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400',
+    level: 'incepator',
+    duration: '4 saptamani',
+    daysPerWeek: 3,
+    exerciseCount: 3,
+    isPremium: false,
+    tags: ['Incepator', 'Dezvoltare forta'],
+  },
+  {
+    id: '2',
+    title: 'Plan Intermediar - Upper/Lower Split',
+    description: 'Program de 8 saptamani cu 4 antrenamente pe saptamana. Imparte partea superioara si inferioara pentru rezultate mai bune.',
+    image: 'https://images.unsplash.com/photo-1534368959876-26bf04f2c947?w=400',
+    level: 'intermediar',
+    duration: '8 saptamani',
+    daysPerWeek: 4,
+    exerciseCount: 0,
+    isPremium: true,
+    tags: ['Intermediar', 'Crestere masa musculara'],
+  },
+  {
+    id: '3',
+    title: 'Plan Avansat - Push/Pull/Legs',
+    description: 'Program intensiv de 12 saptamani cu 6 antrenamente pe saptamana. Ideal pentru cei avansati care vor masa musculara.',
+    image: 'https://images.unsplash.com/photo-1517963879433-6ad2b056d712?w=400',
+    level: 'avansat',
+    duration: '12 saptamani',
+    daysPerWeek: 6,
+    exerciseCount: 0,
+    isPremium: true,
+    tags: ['Avansat', 'Crestere masa musculara'],
+  },
+];
