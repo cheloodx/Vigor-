@@ -12,19 +12,26 @@ struct MainTabView: View {
                 }
                 .tag(0)
             
+            GamesListView()
+                .tabItem {
+                    Image(systemName: "gamecontroller.fill")
+                    Text("Jocuri")
+                }
+                .tag(1)
+            
             FavoritesView()
                 .tabItem {
                     Image(systemName: "heart.fill")
                     Text("Favorite")
                 }
-                .tag(1)
+                .tag(2)
             
             InfoView()
                 .tabItem {
                     Image(systemName: "info.circle.fill")
                     Text("Info")
                 }
-                .tag(2)
+                .tag(3)
         }
         .accentColor(Theme.primary)
         .onAppear {
