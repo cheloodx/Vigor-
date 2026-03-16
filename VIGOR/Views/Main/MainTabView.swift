@@ -5,41 +5,34 @@ struct MainTabView: View {
     
     var body: some View {
         TabView(selection: $appState.selectedTab) {
-            DashboardView()
+            PositionsGridView()
                 .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Acasa")
+                    Image(systemName: "square.grid.2x2.fill")
+                    Text("Pozitii")
                 }
-                .tag(AppState.Tab.home)
+                .tag(0)
             
-            TrainingView()
+            FavoritesView()
                 .tabItem {
-                    Image(systemName: "dumbbell.fill")
-                    Text("Antrenament")
+                    Image(systemName: "heart.fill")
+                    Text("Favorite")
                 }
-                .tag(AppState.Tab.training)
+                .tag(1)
             
-            CommunityView()
+            InfoView()
                 .tabItem {
-                    Image(systemName: "person.2.fill")
-                    Text("Comunitate")
+                    Image(systemName: "info.circle.fill")
+                    Text("Info")
                 }
-                .tag(AppState.Tab.community)
-            
-            NutritionView()
-                .tabItem {
-                    Image(systemName: "fork.knife")
-                    Text("Nutritie")
-                }
-                .tag(AppState.Tab.nutrition)
-            
-            ProfileView()
-                .tabItem {
-                    Image(systemName: "person.circle.fill")
-                    Text("Profil")
-                }
-                .tag(AppState.Tab.profile)
+                .tag(2)
         }
         .accentColor(Theme.primary)
+        .onAppear {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(Theme.background)
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
     }
 }

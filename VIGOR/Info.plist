@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>ro</string>
 	<key>CFBundleDisplayName</key>
-	<string>VIGOR</string>
+	<string>Kamasutra Guide</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -22,14 +22,8 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>VIGOR necesita acces la camera pentru apelurile video de grup.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>VIGOR necesita acces la microfon pentru apelurile video de grup.</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>VIGOR necesita acces la datele de sanatate pentru a urmari progresul antrenamentelor.</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>VIGOR doreste sa salveze datele antrenamentelor in Apple Health.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -43,10 +37,13 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Dark</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
