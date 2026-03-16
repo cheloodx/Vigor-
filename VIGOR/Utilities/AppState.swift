@@ -7,7 +7,9 @@ class AppState: ObservableObject {
     @Published var selectedTab: Int = 0
     @Published var favoriteIDs: Set<String> = [] {
         didSet {
-            saveFavorites()
+            if didFinishInit {
+                saveFavorites()
+            }
         }
     }
     @Published var searchText: String = ""
@@ -15,9 +17,11 @@ class AppState: ObservableObject {
     @Published var selectedDifficulty: Difficulty? = nil
     
     private let favoritesKey = "kamasutra_favorites"
+    private var didFinishInit = false
     
     init() {
         loadFavorites()
+        didFinishInit = true
     }
     
     // MARK: - Favorites Management
