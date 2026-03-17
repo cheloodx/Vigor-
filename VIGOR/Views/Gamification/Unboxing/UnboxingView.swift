@@ -160,9 +160,11 @@ struct MassageTimerView: View {
         guard timeRemaining > 0 else { return }
         endDate = Date().addingTimeInterval(Double(timeRemaining))
         isRunning = true
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+        let t = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if timeRemaining > 0 { timeRemaining -= 1 } else { stopTimer() }
         }
+        RunLoop.current.add(t, forMode: .common)
+        timer = t
     }
     
     func stopTimer() {
