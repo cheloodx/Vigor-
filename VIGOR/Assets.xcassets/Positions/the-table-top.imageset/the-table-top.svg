@@ -1,32 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
-<defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#0a0a24"/>
-    <stop offset="100%" stop-color="#161640"/>
-  </linearGradient>
-  <linearGradient id="p1" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#FFB0C8"/>
-    <stop offset="100%" stop-color="#FF6B95"/>
-  </linearGradient>
-  <linearGradient id="p2" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#D94F7A"/>
-    <stop offset="100%" stop-color="#A83258"/>
-  </linearGradient>
-  <radialGradient id="glow" cx="50%" cy="50%" r="45%">
-    <stop offset="0%" stop-color="#FF6B8A" stop-opacity="0.12"/>
-    <stop offset="70%" stop-color="#FF6B8A" stop-opacity="0.03"/>
-    <stop offset="100%" stop-color="#FF6B8A" stop-opacity="0"/>
-  </radialGradient>
-  <filter id="sf" x="-10%" y="-10%" width="120%" height="120%">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
-    <feOffset dx="1" dy="2" result="offsetBlur"/>
-    <feFlood flood-color="#FF6B8A" flood-opacity="0.25" result="color"/>
-    <feComposite in="color" in2="offsetBlur" operator="in" result="shadow"/>
-    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-</defs>
-<rect width="400" height="400" fill="url(#bg)" rx="24"/>
-<circle cx="200" cy="200" r="150" fill="url(#glow)"/>
-<path d="M-80,0 C-80,-10 -76,-16 -68,-16 C-60,-16 -56,-10 -54,-6 C-50,-4 -46,-8 -40,-10 C-34,-12 -28,-14 -22,-12 C-16,-10 -10,-6 -4,-4 C2,-2 8,-4 14,-8 C20,-12 28,-14 36,-12 C44,-10 52,-8 60,-6 C68,-4 74,-2 80,0 C82,2 84,4 82,6 C78,8 74,6 68,4 C60,6 52,8 44,8 C36,8 28,10 20,10 C12,10 4,8 -4,6 C-10,4 -16,6 -22,8 C-28,10 -34,8 -40,6 C-46,4 -52,2 -58,2 C-64,2 -70,4 -76,4 C-80,4 -82,2 -80,0 Z" fill="url(#p1)" transform="translate(175,232) rotate(-12) scale(1.15,1.15)" filter="url(#sf)"/>
-<path d="M0,-90 C-15,-90 -20,-82 -20,-72 C-20,-62 -16,-54 -10,-52 C-14,-50 -16,-48 -20,-46 C-28,-44 -36,-42 -38,-38 C-42,-34 -44,-28 -42,-20 C-40,-12 -38,-4 -36,2 C-34,8 -32,12 -30,14 C-32,12 -34,6 -36,0 C-38,-6 -40,-14 -38,-22 C-36,-28 -32,-34 -28,-36 C-24,-34 -22,-28 -22,-22 C-22,-14 -22,-8 -24,-2 C-26,4 -28,10 -28,16 C-28,24 -26,32 -26,40 C-26,48 -24,56 -24,64 C-24,72 -26,80 -28,86 C-30,90 -28,94 -22,94 C-16,94 -12,92 -14,88 C-14,82 -14,74 -14,66 C-14,58 -12,50 -10,42 C-8,34 -4,26 0,18 C4,26 8,34 10,42 C12,50 14,58 14,66 C14,74 14,82 14,88 C12,92 16,94 22,94 C28,94 30,90 28,86 C26,80 24,72 24,64 C24,56 26,48 26,40 C26,32 28,24 28,16 C28,10 26,4 24,-2 C22,-8 22,-14 22,-22 C22,-28 24,-34 28,-36 C32,-34 36,-28 38,-22 C40,-14 38,-6 36,0 C34,6 32,12 30,14 C32,12 34,8 36,2 C38,-4 40,-12 42,-20 C44,-28 42,-34 38,-38 C36,-42 28,-44 20,-46 C16,-48 14,-50 10,-52 C16,-54 20,-62 20,-72 C20,-82 15,-90 0,-90 Z" fill="url(#p2)" transform="translate(245,205) rotate(-3) scale(1.05,1.05)" filter="url(#sf)"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d0d2b"/>
+      <stop offset="100%" stop-color="#1a1a3e"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <ellipse cx="155" cy="235" rx="12" ry="14" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M143,230 Q141,213 155,215 Q169,213 167,230" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M143,230 Q147,245 145,260" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M165,240 Q182,245 191.0,246.5 Q200,248 209.0,249.0 L218,250" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M165,252 Q182,258 191.0,260.0 Q200,262 209.0,263.5 L218,265" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M172,252 Q180,260 188,252" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  <path d="M155,248 Q150,270 149.0,282.5 Q148,295 149.0,305.0 L150,315" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M162,255 Q160,278 159.0,289.0 Q158,300 159.0,309.0 L160,318" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M218,250 Q228,248 233.0,246.5 L238,245" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M218,265 Q225,268 228.5,269.0 L232,270" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <ellipse cx="260" cy="175" rx="14" ry="17" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M248,170 Q246,155 260,156 Q274,155 272,170" fill="none" stroke="#E8608A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M254,192 Q250,215 249.0,227.5 Q248,240 247.0,254.0 L246,268" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M266,192 Q270,215 271.0,227.5 Q272,240 273.0,254.0 L274,268" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M246,268 Q242,295 241.0,310.0 L240,325" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M274,268 Q278,295 279.0,310.0 L280,325" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M250,215 Q240,228 236.0,234.0 L232,240" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
 </svg>

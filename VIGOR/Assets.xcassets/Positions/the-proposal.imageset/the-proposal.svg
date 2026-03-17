@@ -1,32 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
-<defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#0a0a24"/>
-    <stop offset="100%" stop-color="#161640"/>
-  </linearGradient>
-  <linearGradient id="p1" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#FFB0C8"/>
-    <stop offset="100%" stop-color="#FF6B95"/>
-  </linearGradient>
-  <linearGradient id="p2" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#D94F7A"/>
-    <stop offset="100%" stop-color="#A83258"/>
-  </linearGradient>
-  <radialGradient id="glow" cx="50%" cy="50%" r="45%">
-    <stop offset="0%" stop-color="#FF6B8A" stop-opacity="0.12"/>
-    <stop offset="70%" stop-color="#FF6B8A" stop-opacity="0.03"/>
-    <stop offset="100%" stop-color="#FF6B8A" stop-opacity="0"/>
-  </radialGradient>
-  <filter id="sf" x="-10%" y="-10%" width="120%" height="120%">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
-    <feOffset dx="1" dy="2" result="offsetBlur"/>
-    <feFlood flood-color="#FF6B8A" flood-opacity="0.25" result="color"/>
-    <feComposite in="color" in2="offsetBlur" operator="in" result="shadow"/>
-    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-</defs>
-<rect width="400" height="400" fill="url(#bg)" rx="24"/>
-<circle cx="200" cy="200" r="150" fill="url(#glow)"/>
-<path d="M0,-76 C-14,-76 -18,-68 -18,-58 C-18,-48 -14,-42 -10,-40 C-12,-38 -16,-36 -22,-34 C-28,-32 -32,-28 -30,-22 C-28,-16 -26,-10 -24,-4 C-22,2 -20,6 -18,8 C-20,6 -22,2 -24,-4 C-26,-10 -28,-16 -26,-20 C-24,-14 -26,-8 -28,-2 C-30,4 -32,10 -30,16 C-28,22 -24,26 -20,28 C-16,30 -12,34 -12,40 C-12,46 -14,50 -18,52 C-22,54 -20,58 -14,58 C-8,58 -4,56 -2,52 C0,46 2,40 4,34 C6,28 10,22 14,16 C18,10 20,4 18,-2 C16,-8 14,-14 16,-20 C18,-26 22,-30 24,-34 C22,-30 18,-38 12,-40 C16,-42 18,-48 18,-58 C18,-68 14,-76 0,-76 Z" fill="url(#p2)" transform="translate(210,188) scale(1.2,1.2)" filter="url(#sf)"/>
-<path d="M0,-85 C-14,-85 -18,-78 -18,-70 C-18,-60 -14,-52 -8,-50 C-12,-48 -14,-46 -16,-44 C-22,-42 -28,-40 -30,-38 C-34,-36 -36,-32 -34,-26 C-32,-20 -30,-14 -28,-8 C-26,-2 -24,2 -22,4 C-24,2 -26,-4 -28,-10 C-30,-16 -32,-22 -30,-28 C-28,-32 -24,-36 -22,-38 C-20,-36 -18,-32 -18,-26 C-18,-20 -20,-16 -20,-10 C-20,-4 -22,2 -24,8 C-26,14 -26,20 -24,28 C-22,36 -20,44 -20,52 C-20,60 -22,68 -22,76 C-22,82 -24,86 -26,88 C-28,90 -26,92 -20,92 C-14,92 -10,90 -10,88 C-10,86 -12,82 -12,76 C-12,68 -10,60 -10,52 C-10,44 -8,36 -6,28 C-4,20 -2,14 0,8 C2,14 4,20 6,28 C8,36 10,44 10,52 C10,60 12,68 12,76 C12,82 10,86 10,88 C10,90 14,92 20,92 C26,92 28,90 26,88 C24,86 22,82 22,76 C22,68 20,60 20,52 C20,44 22,36 24,28 C26,20 26,14 24,8 C22,2 20,-4 20,-10 C20,-16 18,-20 18,-26 C18,-32 20,-36 22,-38 C24,-36 28,-32 30,-28 C32,-22 30,-16 28,-10 C26,-4 24,2 22,4 C24,2 26,-2 28,-8 C30,-14 32,-20 34,-26 C36,-32 34,-36 30,-38 C28,-40 22,-42 16,-44 C14,-46 12,-48 8,-50 C14,-52 18,-60 18,-70 C18,-78 14,-85 0,-85 Z" fill="url(#p1)" transform="translate(185,205) scale(1.05,1.08)" filter="url(#sf)"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d0d2b"/>
+      <stop offset="100%" stop-color="#1a1a3e"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <ellipse cx="225" cy="185" rx="14" ry="17" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M213,180 Q211,165 225,166 Q239,165 237,180" fill="none" stroke="#E8608A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M219,202 Q215,225 213.5,237.5 Q212,250 211.0,264.0 L210,278" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M231,202 Q235,225 236.5,237.5 Q238,250 239.0,264.0 L240,278" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M215,228 Q225,233 235,228" fill="none" stroke="#E8608A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+  <path d="M210,278 Q205,302 203.5,315.0 L202,328" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M240,278 Q245,302 246.5,315.0 L248,328" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M215,225 Q205,238 201.5,245.0 L198,252" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <ellipse cx="175" cy="120" rx="14" ry="17" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M163,115 Q161,98 175,100 Q189,98 187,115" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M187,115 Q191,130 189,145" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M169,137 Q165,162 163.5,176.0 Q162,190 161.0,204.0 Q160,218 159.0,233.0 L158,248" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M181,137 Q185,162 186.5,176.0 Q188,190 189.0,204.0 Q190,218 191.0,233.0 L192,248" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M167,168 Q175,176 183,168" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  <path d="M158,248 Q155,280 154.0,297.5 Q153,315 154.0,330.0 L155,345" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M192,248 Q205,235 211.5,227.5 L218,220" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M165,162 Q155,175 151.5,181.5 L148,188" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
 </svg>

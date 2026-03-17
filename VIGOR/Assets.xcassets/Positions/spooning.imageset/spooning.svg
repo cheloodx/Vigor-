@@ -1,32 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
-<defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#0a0a24"/>
-    <stop offset="100%" stop-color="#161640"/>
-  </linearGradient>
-  <linearGradient id="p1" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#FFB0C8"/>
-    <stop offset="100%" stop-color="#FF6B95"/>
-  </linearGradient>
-  <linearGradient id="p2" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#D94F7A"/>
-    <stop offset="100%" stop-color="#A83258"/>
-  </linearGradient>
-  <radialGradient id="glow" cx="50%" cy="50%" r="45%">
-    <stop offset="0%" stop-color="#FF6B8A" stop-opacity="0.12"/>
-    <stop offset="70%" stop-color="#FF6B8A" stop-opacity="0.03"/>
-    <stop offset="100%" stop-color="#FF6B8A" stop-opacity="0"/>
-  </radialGradient>
-  <filter id="sf" x="-10%" y="-10%" width="120%" height="120%">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
-    <feOffset dx="1" dy="2" result="offsetBlur"/>
-    <feFlood flood-color="#FF6B8A" flood-opacity="0.25" result="color"/>
-    <feComposite in="color" in2="offsetBlur" operator="in" result="shadow"/>
-    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-</defs>
-<rect width="400" height="400" fill="url(#bg)" rx="24"/>
-<circle cx="200" cy="200" r="150" fill="url(#glow)"/>
-<path d="M-80,0 C-80,-10 -76,-16 -68,-16 C-60,-16 -56,-10 -54,-6 C-50,-4 -46,-8 -40,-10 C-34,-12 -28,-14 -22,-12 C-16,-10 -10,-6 -4,-4 C2,-2 8,-4 14,-8 C20,-12 28,-14 36,-12 C44,-10 52,-8 60,-6 C68,-4 74,-2 80,0 C82,2 84,4 82,6 C78,8 74,6 68,4 C60,6 52,8 44,8 C36,8 28,10 20,10 C12,10 4,8 -4,6 C-10,4 -16,6 -22,8 C-28,10 -34,8 -40,6 C-46,4 -52,2 -58,2 C-64,2 -70,4 -76,4 C-80,4 -82,2 -80,0 Z" fill="url(#p1)" transform="translate(185,215) scale(1.2,1.2)" filter="url(#sf)"/>
-<path d="M-85,0 C-85,-12 -80,-18 -70,-18 C-60,-18 -54,-12 -52,-6 C-48,-4 -42,-8 -36,-12 C-28,-16 -20,-18 -12,-16 C-4,-14 4,-10 10,-6 C16,-2 24,-6 32,-10 C40,-14 50,-16 60,-14 C68,-12 76,-8 84,-2 C88,0 90,4 86,6 C82,8 76,6 68,4 C60,6 50,10 40,10 C30,10 20,12 10,10 C2,8 -6,6 -12,8 C-20,10 -28,10 -36,8 C-44,6 -52,4 -60,4 C-68,4 -76,6 -82,4 C-86,2 -87,0 -85,0 Z" fill="url(#p2)" transform="translate(215,215) scale(1.3,1.3)" filter="url(#sf)"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d0d2b"/>
+      <stop offset="100%" stop-color="#1a1a3e"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <ellipse cx="145" cy="210" rx="12" ry="15" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M133,205 Q131,188 145,190 Q159,188 157,205" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M133,205 Q137,220 135,235" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M150,225 Q155,245 157.5,255.0 Q160,265 161.0,275.0 Q162,285 161.0,297.5 L160,310" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M140,225 Q138,245 139.0,255.0 Q140,265 142.5,275.0 Q145,285 147.5,297.5 L150,310" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M142,250 Q150,258 158,250" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  <path d="M160,310 Q175,335 180.0,347.5 L185,360" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M150,310 Q160,340 162.5,352.5 L165,365" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M148,240 Q135,250 132.5,257.5 L130,265" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <ellipse cx="185" cy="200" rx="14" ry="17" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M173,195 Q171,180 185,181 Q199,180 197,195" fill="none" stroke="#E8608A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M182,217 Q178,240 176.5,252.5 Q175,265 174.0,277.5 Q173,290 174.0,302.5 L175,315" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M190,217 Q195,240 196.5,252.5 Q198,265 199.0,277.5 Q200,290 199.0,302.5 L198,315" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M178,240 Q160,250 154.0,255.0 L148,260" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M175,315 Q185,340 188.5,352.5 L192,365" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M198,315 Q205,340 207.5,352.5 L210,365" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
 </svg>

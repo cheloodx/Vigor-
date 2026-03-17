@@ -1,32 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
-<defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#0a0a24"/>
-    <stop offset="100%" stop-color="#161640"/>
-  </linearGradient>
-  <linearGradient id="p1" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#FFB0C8"/>
-    <stop offset="100%" stop-color="#FF6B95"/>
-  </linearGradient>
-  <linearGradient id="p2" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#D94F7A"/>
-    <stop offset="100%" stop-color="#A83258"/>
-  </linearGradient>
-  <radialGradient id="glow" cx="50%" cy="50%" r="45%">
-    <stop offset="0%" stop-color="#FF6B8A" stop-opacity="0.12"/>
-    <stop offset="70%" stop-color="#FF6B8A" stop-opacity="0.03"/>
-    <stop offset="100%" stop-color="#FF6B8A" stop-opacity="0"/>
-  </radialGradient>
-  <filter id="sf" x="-10%" y="-10%" width="120%" height="120%">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
-    <feOffset dx="1" dy="2" result="offsetBlur"/>
-    <feFlood flood-color="#FF6B8A" flood-opacity="0.25" result="color"/>
-    <feComposite in="color" in2="offsetBlur" operator="in" result="shadow"/>
-    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-</defs>
-<rect width="400" height="400" fill="url(#bg)" rx="24"/>
-<circle cx="200" cy="200" r="150" fill="url(#glow)"/>
-<path d="M-80,0 C-80,-10 -76,-16 -68,-16 C-60,-16 -56,-10 -54,-6 C-50,-4 -46,-8 -40,-10 C-34,-12 -28,-14 -22,-12 C-16,-10 -10,-6 -4,-4 C2,-2 8,-4 14,-8 C20,-12 28,-14 36,-12 C44,-10 52,-8 60,-6 C68,-4 74,-2 80,0 C82,2 84,4 82,6 C78,8 74,6 68,4 C60,6 52,8 44,8 C36,8 28,10 20,10 C12,10 4,8 -4,6 C-10,4 -16,6 -22,8 C-28,10 -34,8 -40,6 C-46,4 -52,2 -58,2 C-64,2 -70,4 -76,4 C-80,4 -82,2 -80,0 Z" fill="url(#p1)" transform="translate(180,235) rotate(-10) scale(1.2,1.2)" filter="url(#sf)"/>
-<path d="M0,-90 C-15,-90 -20,-82 -20,-72 C-20,-62 -16,-54 -10,-52 C-14,-50 -16,-48 -20,-46 C-28,-44 -36,-42 -38,-38 C-42,-34 -44,-28 -42,-20 C-40,-12 -38,-4 -36,2 C-34,8 -32,12 -30,14 C-32,12 -34,6 -36,0 C-38,-6 -40,-14 -38,-22 C-36,-28 -32,-34 -28,-36 C-24,-34 -22,-28 -22,-22 C-22,-14 -22,-8 -24,-2 C-26,4 -28,10 -28,16 C-28,24 -26,32 -26,40 C-26,48 -24,56 -24,64 C-24,72 -26,80 -28,86 C-30,90 -28,94 -22,94 C-16,94 -12,92 -14,88 C-14,82 -14,74 -14,66 C-14,58 -12,50 -10,42 C-8,34 -4,26 0,18 C4,26 8,34 10,42 C12,50 14,58 14,66 C14,74 14,82 14,88 C12,92 16,94 22,94 C28,94 30,90 28,86 C26,80 24,72 24,64 C24,56 26,48 26,40 C26,32 28,24 28,16 C28,10 26,4 24,-2 C22,-8 22,-14 22,-22 C22,-28 24,-34 28,-36 C32,-34 36,-28 38,-22 C40,-14 38,-6 36,0 C34,6 32,12 30,14 C32,12 34,8 36,2 C38,-4 40,-12 42,-20 C44,-28 42,-34 38,-38 C36,-42 28,-44 20,-46 C16,-48 14,-50 10,-52 C16,-54 20,-62 20,-72 C20,-82 15,-90 0,-90 Z" fill="url(#p2)" transform="translate(250,205) rotate(-5)" filter="url(#sf)"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d0d2b"/>
+      <stop offset="100%" stop-color="#1a1a3e"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <ellipse cx="155" cy="250" rx="14" ry="17" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M143,245 Q141,228 155,230 Q169,228 167,245" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M143,245 Q147,260 145,275" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M155,267 Q158,280 160.0,290.0 Q162,300 163.5,307.5 L165,315" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M155,267 Q150,280 149.0,290.0 Q148,300 149.0,307.5 L150,315" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M149,290 Q157,298 165,290" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  <path d="M165,315 Q190,295 200.0,282.5 L210,270" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M150,315 Q175,300 187.5,292.5 L200,285" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M150,275 Q135,265 130.0,260.0 L125,255" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <ellipse cx="225" cy="170" rx="14" ry="17" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M213,165 Q211,150 225,151 Q239,150 237,165" fill="none" stroke="#E8608A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M219,187 Q215,210 213.5,222.5 Q212,235 211.0,247.5 Q210,260 211.0,272.5 L212,285" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M231,187 Q235,210 236.5,222.5 Q238,235 239.0,247.5 Q240,260 239.0,272.5 L238,285" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M215,210 Q225,215 235,210" fill="none" stroke="#E8608A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+  <path d="M212,285 Q208,315 206.5,332.5 L205,350" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M238,285 Q242,315 243.5,332.5 L245,350" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M215,210 Q200,225 195.0,232.5 L190,240" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M235,210 Q245,225 247.5,232.5 L250,240" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
 </svg>

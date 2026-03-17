@@ -1,32 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
-<defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#0a0a24"/>
-    <stop offset="100%" stop-color="#161640"/>
-  </linearGradient>
-  <linearGradient id="p1" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#FFB0C8"/>
-    <stop offset="100%" stop-color="#FF6B95"/>
-  </linearGradient>
-  <linearGradient id="p2" x1="0" y1="0" x2="0.3" y2="1">
-    <stop offset="0%" stop-color="#D94F7A"/>
-    <stop offset="100%" stop-color="#A83258"/>
-  </linearGradient>
-  <radialGradient id="glow" cx="50%" cy="50%" r="45%">
-    <stop offset="0%" stop-color="#FF6B8A" stop-opacity="0.12"/>
-    <stop offset="70%" stop-color="#FF6B8A" stop-opacity="0.03"/>
-    <stop offset="100%" stop-color="#FF6B8A" stop-opacity="0"/>
-  </radialGradient>
-  <filter id="sf" x="-10%" y="-10%" width="120%" height="120%">
-    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
-    <feOffset dx="1" dy="2" result="offsetBlur"/>
-    <feFlood flood-color="#FF6B8A" flood-opacity="0.25" result="color"/>
-    <feComposite in="color" in2="offsetBlur" operator="in" result="shadow"/>
-    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
-  </filter>
-</defs>
-<rect width="400" height="400" fill="url(#bg)" rx="24"/>
-<circle cx="200" cy="200" r="150" fill="url(#glow)"/>
-<path d="M0,-90 C-15,-90 -20,-82 -20,-72 C-20,-62 -16,-54 -10,-52 C-14,-50 -16,-48 -20,-46 C-28,-44 -36,-42 -38,-38 C-42,-34 -44,-28 -42,-20 C-40,-12 -38,-4 -36,2 C-34,8 -32,12 -30,14 C-32,12 -34,6 -36,0 C-38,-6 -40,-14 -38,-22 C-36,-28 -32,-34 -28,-36 C-24,-34 -22,-28 -22,-22 C-22,-14 -22,-8 -24,-2 C-26,4 -28,10 -28,16 C-28,24 -26,32 -26,40 C-26,48 -24,56 -24,64 C-24,72 -26,80 -28,86 C-30,90 -28,94 -22,94 C-16,94 -12,92 -14,88 C-14,82 -14,74 -14,66 C-14,58 -12,50 -10,42 C-8,34 -4,26 0,18 C4,26 8,34 10,42 C12,50 14,58 14,66 C14,74 14,82 14,88 C12,92 16,94 22,94 C28,94 30,90 28,86 C26,80 24,72 24,64 C24,56 26,48 26,40 C26,32 28,24 28,16 C28,10 26,4 24,-2 C22,-8 22,-14 22,-22 C22,-28 24,-34 28,-36 C32,-34 36,-28 38,-22 C40,-14 38,-6 36,0 C34,6 32,12 30,14 C32,12 34,8 36,2 C38,-4 40,-12 42,-20 C44,-28 42,-34 38,-38 C36,-42 28,-44 20,-46 C16,-48 14,-50 10,-52 C16,-54 20,-62 20,-72 C20,-82 15,-90 0,-90 Z" fill="url(#p2)" transform="translate(200,210) scale(1.12,1.12)" filter="url(#sf)"/>
-<path d="M0,-85 C-14,-85 -18,-78 -18,-70 C-18,-60 -14,-52 -8,-50 C-12,-48 -14,-46 -16,-44 C-22,-42 -28,-40 -30,-38 C-34,-36 -36,-32 -34,-26 C-32,-20 -30,-14 -28,-8 C-26,-2 -24,2 -22,4 C-24,2 -26,-4 -28,-10 C-30,-16 -32,-22 -30,-28 C-28,-32 -24,-36 -22,-38 C-20,-36 -18,-32 -18,-26 C-18,-20 -20,-16 -20,-10 C-20,-4 -22,2 -24,8 C-26,14 -26,20 -24,28 C-22,36 -20,44 -20,52 C-20,60 -22,68 -22,76 C-22,82 -24,86 -26,88 C-28,90 -26,92 -20,92 C-14,92 -10,90 -10,88 C-10,86 -12,82 -12,76 C-12,68 -10,60 -10,52 C-10,44 -8,36 -6,28 C-4,20 -2,14 0,8 C2,14 4,20 6,28 C8,36 10,44 10,52 C10,60 12,68 12,76 C12,82 10,86 10,88 C10,90 14,92 20,92 C26,92 28,90 26,88 C24,86 22,82 22,76 C22,68 20,60 20,52 C20,44 22,36 24,28 C26,20 26,14 24,8 C22,2 20,-4 20,-10 C20,-16 18,-20 18,-26 C18,-32 20,-36 22,-38 C24,-36 28,-32 30,-28 C32,-22 30,-16 28,-10 C26,-4 24,2 22,4 C24,2 26,-2 28,-8 C30,-14 32,-20 34,-26 C36,-32 34,-36 30,-38 C28,-40 22,-42 16,-44 C14,-46 12,-48 8,-50 C14,-52 18,-60 18,-70 C18,-78 14,-85 0,-85 Z" fill="url(#p1)" transform="translate(200,200) rotate(5) scale(0.95,1.0)" filter="url(#sf)"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0d0d2b"/>
+      <stop offset="100%" stop-color="#1a1a3e"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <ellipse cx="215" cy="110" rx="14" ry="17" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M203,105 Q201,90 215,91 Q229,90 227,105" fill="none" stroke="#E8608A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M209,127 Q205,152 203.5,166.0 Q202,180 201.0,195.0 Q200,210 199.0,226.0 L198,242" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M221,127 Q225,152 226.5,166.0 Q228,180 229.0,195.0 Q230,210 231.0,226.0 L232,242" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M205,155 Q215,160 225,155" fill="none" stroke="#E8608A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
+  <path d="M198,242 Q195,280 194.0,300.0 Q193,320 194.0,334.0 L195,348" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M232,242 Q235,280 236.5,300.0 Q238,320 237.0,334.0 L236,348" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M205,152 Q195,165 191.5,171.5 L188,178" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M225,152 Q235,165 238.5,171.5 L242,178" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <ellipse cx="195" cy="125" rx="14" ry="17" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M183,120 Q181,103 195,105 Q209,103 207,120" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M207,120 Q211,135 209,150" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M189,142 Q185,165 183.5,177.5 Q182,190 181.0,204.0 L180,218" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M201,142 Q205,165 206.5,177.5 Q208,190 209.0,204.0 L210,218" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M187,172 Q195,180 203,172" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  <path d="M180,218 Q175,238 177.5,248.0 Q180,258 186.0,264.0 L192,270" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M210,218 Q215,238 217.5,248.0 Q220,258 225.0,261.5 L230,265" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <path d="M185,165 Q205,162 211.5,160.0 L218,158" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
 </svg>
