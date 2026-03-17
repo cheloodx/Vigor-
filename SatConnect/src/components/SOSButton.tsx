@@ -52,10 +52,11 @@ export function SOSButton({ onActivate, disabled = false }: SOSButtonProps) {
         if (holdTimer.current) clearInterval(holdTimer.current);
         setIsHolding(false);
         setHoldProgress(0);
+        onActivate();
         Alert.alert(
           'SOS Activat!',
           'Alerta de urgență a fost trimisă. Locația ta va fi partajată cu contactele de urgență.',
-          [{ text: 'OK', onPress: onActivate }]
+          [{ text: 'OK' }]
         );
       }
     }, 60); // 3 seconds total to fill

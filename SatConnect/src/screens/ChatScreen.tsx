@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
-import { MOCK_MESSAGES } from '../constants/data';
+import { MOCK_MESSAGES, MOCK_CONVERSATIONS } from '../constants/data';
 import { MessageBubble } from '../components/MessageBubble';
 import { Message } from '../types';
 
@@ -43,7 +43,7 @@ export function ChatScreen({ conversationId, contactName, onBack }: ChatScreenPr
     const newMessage: Message = {
       id: `msg-${Date.now()}`,
       senderId: 'user',
-      receiverId: conversationId.replace('conv-', ''),
+      receiverId: MOCK_CONVERSATIONS.find(c => c.id === conversationId)?.participants.find(p => p !== 'user') || '',
       conversationId,
       text: inputText.trim(),
       timestamp: new Date().toISOString(),
