@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -26,6 +26,13 @@ export function RegisterScreen({ onRegister, onGoToLogin }: RegisterScreenProps)
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleRegister = async () => {
     if (!name || !email || !password || !confirmPassword) {
@@ -37,7 +44,7 @@ export function RegisterScreen({ onRegister, onGoToLogin }: RegisterScreenProps)
       return;
     }
     setLoading(true);
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setLoading(false);
       onRegister();
     }, 1500);

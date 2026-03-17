@@ -16,8 +16,7 @@ import { ProfileScreen } from '../screens/ProfileScreen';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function MainTabs() {
-  const [tabNavigation, setTabNavigation] = useState<any>(null);
+function MainTabs({ onLogout }: { onLogout: () => void }) {
 
   return (
     <Tab.Navigator
@@ -85,7 +84,7 @@ function MainTabs() {
         name="Profile"
         options={{ tabBarLabel: 'Profil' }}
       >
-        {() => <ProfileScreen onLogout={() => {}} />}
+        {() => <ProfileScreen onLogout={onLogout} />}
       </Tab.Screen>
     </Tab.Navigator>
   );
@@ -122,7 +121,7 @@ export function AppNavigator() {
 
   return (
     <NavigationContainer>
-      <MainTabs />
+      <MainTabs onLogout={() => setCurrentScreen('login')} />
     </NavigationContainer>
   );
 }

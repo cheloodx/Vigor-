@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -24,6 +24,13 @@ export function LoginScreen({ onLogin, onGoToRegister }: LoginScreenProps) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, []);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -32,7 +39,7 @@ export function LoginScreen({ onLogin, onGoToRegister }: LoginScreenProps) {
     }
     setLoading(true);
     // Simulate API call
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       setLoading(false);
       onLogin();
     }, 1500);
