@@ -1,60 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
 <defs>
-<linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" style="stop-color:#FFB0C8;stop-opacity:1" />
-<stop offset="100%" style="stop-color:#FF7BA3;stop-opacity:1" />
-</linearGradient>
-<linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" style="stop-color:#E8608A;stop-opacity:1" />
-<stop offset="100%" style="stop-color:#C44569;stop-opacity:1" />
-</linearGradient>
-<radialGradient id="glow" cx="50%" cy="50%" r="50%">
-<stop offset="0%" style="stop-color:#FF6B8A;stop-opacity:0.15" />
-<stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:0" />
-</radialGradient>
+  <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#0d0d2b"/>
+    <stop offset="100%" stop-color="#1a1a3e"/>
+  </linearGradient>
+  <linearGradient id="f1" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#FFB8D0"/>
+    <stop offset="100%" stop-color="#FF7BA3"/>
+  </linearGradient>
+  <linearGradient id="f2" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%" stop-color="#E8608A"/>
+    <stop offset="100%" stop-color="#B83A5E"/>
+  </linearGradient>
+  <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#FF6B8A" stop-opacity="0.15"/>
+    <stop offset="60%" stop-color="#FF6B8A" stop-opacity="0.05"/>
+    <stop offset="100%" stop-color="#FF6B8A" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#FF6B8A" flood-opacity="0.3"/>
+  </filter>
 </defs>
-<rect width="200" height="200" fill="#12122a" rx="20"/>
-<circle cx="100" cy="100" r="80" fill="url(#glow)"/>
-
-    <!-- Head -->
-    <circle cx="82" cy="38" r="11" fill="url(#g1)" />
-    <!-- Neck -->
-    <line x1="82" y1="47" x2="82.0" y2="52.0" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
-    <!-- Torso (filled shape) -->
-    <path d="M74,55 Q82.0,52 90,55 
-             L88,92 Q82.0,94 76,92 Z" 
-          fill="url(#g1)" opacity="0.95"/>
-    <!-- Left arm -->
-    <path d="M74,55 Q62,62 55,52" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="55" cy="52" r="3.0" fill="url(#g1)"/>
-    <!-- Right arm -->
-    <path d="M90,55 Q98,58 108,48" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="108" cy="48" r="3.0" fill="url(#g1)"/>
-    <!-- Left leg -->
-    <path d="M76,92 Q72,118 68,150" fill="none" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
-    <circle cx="68" cy="150" r="3.5" fill="url(#g1)"/>
-    <!-- Right leg -->
-    <path d="M88,92 Q98,72 112,55" fill="none" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
-    <circle cx="112" cy="55" r="3.5" fill="url(#g1)"/>
-
-    <!-- Head -->
-    <circle cx="118" cy="38" r="11" fill="url(#g2)" />
-    <!-- Neck -->
-    <line x1="118" y1="47" x2="118.0" y2="52.0" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
-    <!-- Torso (filled shape) -->
-    <path d="M110,55 Q118.0,52 126,55 
-             L121,92 Q115.0,94 109,92 Z" 
-          fill="url(#g2)" opacity="0.95"/>
-    <!-- Left arm -->
-    <path d="M110,55 Q102,62 95,52" fill="none" stroke="url(#g2)" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="95" cy="52" r="3.0" fill="url(#g2)"/>
-    <!-- Right arm -->
-    <path d="M126,55 Q138,62 145,52" fill="none" stroke="url(#g2)" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="145" cy="52" r="3.0" fill="url(#g2)"/>
-    <!-- Left leg -->
-    <path d="M109,92 Q108,118 105,150" fill="none" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
-    <circle cx="105" cy="150" r="3.5" fill="url(#g2)"/>
-    <!-- Right leg -->
-    <path d="M121,92 Q128,118 132,150" fill="none" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
-    <circle cx="132" cy="150" r="3.5" fill="url(#g2)"/>
+<rect width="300" height="300" fill="url(#bg)" rx="20"/>
+<circle cx="150" cy="150" r="120" fill="url(#glow)"/>
+<g transform="translate(135,162) rotate(0) scale(0.9)" filter="url(#shadow)">
+<ellipse cx="0" cy="-62" rx="12" ry="14" fill="url(#f1)"/>
+<path d="M-12,-66 Q-14,-78 0,-82 Q14,-78 12,-66" fill="url(#f1)" opacity="0.85"/>
+<path d="M6,-78 Q20,-82 18,-67 Q16,-57 12,-62" fill="url(#f1)" opacity="0.6"/>
+<rect x="-4" y="-48" width="8" height="10" rx="3" fill="url(#f1)"/>
+<path d="M-14,-40 Q-16,-35 -15,-28 Q-13,-20 -16,-12 Q-18,-4 -14,4 Q-10,10 -10,12 L10,12 Q10,10 14,4 Q18,-4 16,-12 Q13,-20 15,-28 Q16,-35 14,-40 Z" fill="url(#f1)"/>
+<path d="M-14,-36 Q-16,-30 -15,-28 Q-12,-26 -8,-28 Q-4,-30 0,-28 Q4,-30 8,-28 Q12,-26 15,-28 Q16,-30 14,-36" fill="url(#f1)" opacity="0.9"/>
+<line x1="-16" y1="-45" x2="-10" y2="-28" stroke="url(#f1)" stroke-width="7" stroke-linecap="round"/>
+<line x1="-10" y1="-28" x2="-5" y2="-12" stroke="url(#f1)" stroke-width="6" stroke-linecap="round"/>
+<circle cx="-5" cy="-12" r="4" fill="url(#f1)"/>
+<line x1="16" y1="-45" x2="24" y2="-28" stroke="url(#f1)" stroke-width="7" stroke-linecap="round"/>
+<line x1="24" y1="-28" x2="28" y2="-12" stroke="url(#f1)" stroke-width="6" stroke-linecap="round"/>
+<circle cx="28" cy="-12" r="4" fill="url(#f1)"/>
+<line x1="-10" y1="10" x2="-12" y2="35" stroke="url(#f1)" stroke-width="9" stroke-linecap="round"/>
+<line x1="-12" y1="35" x2="-13" y2="58" stroke="url(#f1)" stroke-width="7" stroke-linecap="round"/>
+<ellipse cx="-13" cy="58" rx="5" ry="3" fill="url(#f1)"/>
+<line x1="10" y1="10" x2="15" y2="-5" stroke="url(#f1)" stroke-width="9" stroke-linecap="round"/>
+<line x1="15" y1="-5" x2="18" y2="-20" stroke="url(#f1)" stroke-width="7" stroke-linecap="round"/>
+<ellipse cx="18" cy="-20" rx="5" ry="3" fill="url(#f1)"/>
+</g>
+<g transform="translate(168,158) rotate(0) scale(0.95)" filter="url(#shadow)">
+<ellipse cx="0" cy="-66" rx="13" ry="14" fill="url(#f2)"/>
+<path d="M-13,-70 Q-15,-82 -4,-85 Q0,-87 4,-85 Q15,-82 13,-70" fill="url(#f2)" opacity="0.85"/>
+<rect x="-5" y="-52" width="10" height="12" rx="3" fill="url(#f2)"/>
+<path d="M-18,-42 Q-20,-35 -18,-25 Q-17,-15 -16,-5 Q-14,5 -12,12 L12,12 Q14,5 16,-5 Q17,-15 18,-25 Q20,-35 18,-42 Z" fill="url(#f2)"/>
+<path d="M-18,-42 Q-22,-44 -22,-40 Q-22,-38 -18,-38" fill="url(#f2)" opacity="0.8"/>
+<path d="M18,-42 Q22,-44 22,-40 Q22,-38 18,-38" fill="url(#f2)" opacity="0.8"/>
+<line x1="-20" y1="-45" x2="-28" y2="-28" stroke="url(#f2)" stroke-width="9" stroke-linecap="round"/>
+<line x1="-28" y1="-28" x2="-30" y2="-12" stroke="url(#f2)" stroke-width="7" stroke-linecap="round"/>
+<circle cx="-30" cy="-12" r="5" fill="url(#f2)"/>
+<line x1="20" y1="-45" x2="14" y2="-25" stroke="url(#f2)" stroke-width="9" stroke-linecap="round"/>
+<line x1="14" y1="-25" x2="5" y2="-12" stroke="url(#f2)" stroke-width="7" stroke-linecap="round"/>
+<circle cx="5" cy="-12" r="5" fill="url(#f2)"/>
+<line x1="-12" y1="10" x2="-13" y2="38" stroke="url(#f2)" stroke-width="11" stroke-linecap="round"/>
+<line x1="-13" y1="38" x2="-14" y2="62" stroke="url(#f2)" stroke-width="9" stroke-linecap="round"/>
+<ellipse cx="-14" cy="62" rx="6" ry="3.5" fill="url(#f2)"/>
+<line x1="12" y1="10" x2="13" y2="38" stroke="url(#f2)" stroke-width="11" stroke-linecap="round"/>
+<line x1="13" y1="38" x2="14" y2="62" stroke="url(#f2)" stroke-width="9" stroke-linecap="round"/>
+<ellipse cx="14" cy="62" rx="6" ry="3.5" fill="url(#f2)"/>
+</g>
 </svg>
