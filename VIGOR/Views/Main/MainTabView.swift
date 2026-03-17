@@ -32,6 +32,13 @@ struct MainTabView: View {
                     Text("Info")
                 }
                 .tag(3)
+            
+            DiscoverView()
+                .tabItem {
+                    Image(systemName: "sparkles")
+                    Text("Descopera")
+                }
+                .tag(4)
         }
         .accentColor(Theme.primary)
         .onAppear {
