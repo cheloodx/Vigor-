@@ -26,6 +26,7 @@ struct PositionCard: View {
                         .background(Color.black.opacity(0.5))
                         .clipShape(Circle())
                 }
+                .buttonStyle(BorderlessButtonStyle())
                 .padding(8)
             }
             
