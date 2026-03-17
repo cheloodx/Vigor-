@@ -169,30 +169,29 @@ export function AppNavigator() {
     );
   }
 
-  // Main app with chat overlay
-  if (chatState) {
-    return (
+  // Main app with chat as absolute overlay (preserves tab state)
+  return (
+    <View style={{ flex: 1 }}>
       <NavigationContainer>
-        <ChatScreen
-          conversationId={chatState.conversationId}
-          contactName={chatState.contactName}
-          onBack={() => setChatState(null)}
+        <MainTabs
+          onLogout={async () => {
+            await storage.removeAuthToken();
+            await storage.removeUser();
+            setCurrentScreen('login');
+          }}
+          onOpenChat={(conversationId, contactName) => setChatState({ conversationId, contactName })}
         />
       </NavigationContainer>
-    );
-  }
-
-  return (
-    <NavigationContainer>
-      <MainTabs
-        onLogout={async () => {
-          await storage.removeAuthToken();
-          await storage.removeUser();
-          setCurrentScreen('login');
-        }}
-        onOpenChat={(conversationId, contactName) => setChatState({ conversationId, contactName })}
-      />
-    </NavigationContainer>
+      {chatState && (
+        <View style={StyleSheet.absoluteFill}>
+          <ChatScreen
+            conversationId={chatState.conversationId}
+            contactName={chatState.contactName}
+            onBack={() => setChatState(null)}
+          />
+        </View>
+      )}
+    </View>
   );
 }
 
