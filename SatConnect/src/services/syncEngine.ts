@@ -45,11 +45,14 @@ class SyncEngine {
           await this.syncItem(item);
           await storage.removeSyncItem(item.id);
         } catch {
-          // Item failed - increment retries
+          // Item failed - increment retries and persist to storage
           if (item.retries < item.maxRetries) {
             item.retries++;
+            await storage.updateSyncItem(item);
+          } else {
+            // Max retries reached - remove from queue
+            await storage.removeSyncItem(item.id);
           }
-          // If max retries, leave in queue for manual handling
         }
       }
     } finally {

@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SyncQueueItem } from '../types';
 
 const KEYS = {
   AUTH_TOKEN: '@satconnect_auth_token',
@@ -70,6 +71,14 @@ export const storage = {
     await AsyncStorage.setItem(KEYS.SYNC_QUEUE, JSON.stringify(filtered));
   },
 
+  async updateSyncItem(updatedItem: SyncQueueItem): Promise<void> {
+    const queue = await this.getSyncQueue();
+    const updated = queue.map((item: any) =>
+      item.id === updatedItem.id ? { ...item, ...updatedItem } : item
+    );
+    await AsyncStorage.setItem(KEYS.SYNC_QUEUE, JSON.stringify(updated));
+  },
+
   // Messages (offline cache)
   async getMessages(conversationId: string): Promise<object[]> {
     const data = await AsyncStorage.getItem(`${KEYS.MESSAGES}_${conversationId}`);
@@ -92,18 +101,11 @@ export const storage = {
     await AsyncStorage.setItem(KEYS.LOCATIONS, JSON.stringify(locations));
   },
 
-  // Clear all
+  // Clear all (including per-conversation message keys)
   async clearAll(): Promise<void> {
-    const keys = [
-      KEYS.AUTH_TOKEN,
-      KEYS.USER,
-      KEYS.ONBOARDING_COMPLETE,
-      KEYS.SYNC_QUEUE,
-      KEYS.MESSAGES,
-      KEYS.LOCATIONS,
-      KEYS.CONNECTIVITY,
-    ];
-    for (const key of keys) {
+    const allKeys = await AsyncStorage.getAllKeys();
+    const appKeys = allKeys.filter(key => key.startsWith('@satconnect_'));
+    for (const key of appKeys) {
       await AsyncStorage.removeItem(key);
     }
   },

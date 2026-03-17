@@ -50,7 +50,7 @@ export function HomeScreen() {
       <View style={styles.connectionCard}>
         <View style={styles.connectionRow}>
           <MaterialCommunityIcons
-            name={connectivity.isConnected ? 'satellite-variant' : 'satellite-variant'}
+            name={connectivity.isConnected ? 'satellite-variant' : 'wifi-off'}
             size={28}
             color={connectivity.isConnected ? COLORS.accent : COLORS.error}
           />
