@@ -1,67 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" width="300" height="300">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
 <defs>
-  <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#0d0d2b"/>
-    <stop offset="100%" stop-color="#1a1a3e"/>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#0a0a24"/>
+    <stop offset="100%" stop-color="#161640"/>
   </linearGradient>
-  <linearGradient id="f1" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#FFB8D0"/>
-    <stop offset="100%" stop-color="#FF7BA3"/>
+  <linearGradient id="p1" x1="0" y1="0" x2="0.3" y2="1">
+    <stop offset="0%" stop-color="#FFB0C8"/>
+    <stop offset="100%" stop-color="#FF6B95"/>
   </linearGradient>
-  <linearGradient id="f2" x1="0" y1="0" x2="0" y2="1">
-    <stop offset="0%" stop-color="#E8608A"/>
-    <stop offset="100%" stop-color="#B83A5E"/>
+  <linearGradient id="p2" x1="0" y1="0" x2="0.3" y2="1">
+    <stop offset="0%" stop-color="#D94F7A"/>
+    <stop offset="100%" stop-color="#A83258"/>
   </linearGradient>
-  <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-    <stop offset="0%" stop-color="#FF6B8A" stop-opacity="0.15"/>
-    <stop offset="60%" stop-color="#FF6B8A" stop-opacity="0.05"/>
+  <radialGradient id="glow" cx="50%" cy="50%" r="45%">
+    <stop offset="0%" stop-color="#FF6B8A" stop-opacity="0.12"/>
+    <stop offset="70%" stop-color="#FF6B8A" stop-opacity="0.03"/>
     <stop offset="100%" stop-color="#FF6B8A" stop-opacity="0"/>
   </radialGradient>
-  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-    <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#FF6B8A" flood-opacity="0.3"/>
+  <filter id="sf" x="-10%" y="-10%" width="120%" height="120%">
+    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+    <feOffset dx="1" dy="2" result="offsetBlur"/>
+    <feFlood flood-color="#FF6B8A" flood-opacity="0.25" result="color"/>
+    <feComposite in="color" in2="offsetBlur" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="SourceGraphic"/></feMerge>
   </filter>
 </defs>
-<rect width="300" height="300" fill="url(#bg)" rx="20"/>
-<circle cx="150" cy="150" r="120" fill="url(#glow)"/>
-<g transform="translate(155,178) rotate(15) scale(0.85)" filter="url(#shadow)">
-<ellipse cx="0" cy="-66" rx="13" ry="14" fill="url(#f2)"/>
-<path d="M-13,-70 Q-15,-82 -4,-85 Q0,-87 4,-85 Q15,-82 13,-70" fill="url(#f2)" opacity="0.85"/>
-<rect x="-5" y="-52" width="10" height="12" rx="3" fill="url(#f2)"/>
-<path d="M-18,-42 Q-20,-35 -18,-25 Q-17,-15 -16,-5 Q-14,5 -12,12 L12,12 Q14,5 16,-5 Q17,-15 18,-25 Q20,-35 18,-42 Z" fill="url(#f2)"/>
-<path d="M-18,-42 Q-22,-44 -22,-40 Q-22,-38 -18,-38" fill="url(#f2)" opacity="0.8"/>
-<path d="M18,-42 Q22,-44 22,-40 Q22,-38 18,-38" fill="url(#f2)" opacity="0.8"/>
-<line x1="-20" y1="-45" x2="-30" y2="-55" stroke="url(#f2)" stroke-width="9" stroke-linecap="round"/>
-<line x1="-30" y1="-55" x2="-38" y2="-60" stroke="url(#f2)" stroke-width="7" stroke-linecap="round"/>
-<circle cx="-38" cy="-60" r="5" fill="url(#f2)"/>
-<line x1="20" y1="-45" x2="30" y2="-55" stroke="url(#f2)" stroke-width="9" stroke-linecap="round"/>
-<line x1="30" y1="-55" x2="38" y2="-60" stroke="url(#f2)" stroke-width="7" stroke-linecap="round"/>
-<circle cx="38" cy="-60" r="5" fill="url(#f2)"/>
-<line x1="-12" y1="10" x2="-14" y2="38" stroke="url(#f2)" stroke-width="11" stroke-linecap="round"/>
-<line x1="-14" y1="38" x2="-16" y2="58" stroke="url(#f2)" stroke-width="9" stroke-linecap="round"/>
-<ellipse cx="-16" cy="58" rx="6" ry="3.5" fill="url(#f2)"/>
-<line x1="12" y1="10" x2="14" y2="38" stroke="url(#f2)" stroke-width="11" stroke-linecap="round"/>
-<line x1="14" y1="38" x2="16" y2="58" stroke="url(#f2)" stroke-width="9" stroke-linecap="round"/>
-<ellipse cx="16" cy="58" rx="6" ry="3.5" fill="url(#f2)"/>
-</g>
-<g transform="translate(145,152) rotate(0) scale(0.85)" filter="url(#shadow)">
-<ellipse cx="0" cy="-62" rx="12" ry="14" fill="url(#f1)"/>
-<path d="M-12,-66 Q-14,-78 -4,-80 Q0,-82 4,-80 Q14,-78 12,-66" fill="url(#f1)" opacity="0.85"/>
-<path d="M-12,-62 Q-16,-52 -14,-37 Q-12,-32 -10,-37" fill="url(#f1)" opacity="0.6"/>
-<path d="M12,-62 Q16,-52 14,-37 Q12,-32 10,-37" fill="url(#f1)" opacity="0.6"/>
-<rect x="-4" y="-48" width="8" height="10" rx="3" fill="url(#f1)"/>
-<path d="M-14,-40 Q-16,-35 -15,-28 Q-13,-20 -16,-12 Q-18,-4 -14,4 Q-10,10 -10,12 L10,12 Q10,10 14,4 Q18,-4 16,-12 Q13,-20 15,-28 Q16,-35 14,-40 Z" fill="url(#f1)"/>
-<path d="M-14,-36 Q-16,-30 -15,-28 Q-12,-26 -8,-28 Q-4,-30 0,-28 Q4,-30 8,-28 Q12,-26 15,-28 Q16,-30 14,-36" fill="url(#f1)" opacity="0.9"/>
-<line x1="-16" y1="-45" x2="-22" y2="-28" stroke="url(#f1)" stroke-width="7" stroke-linecap="round"/>
-<line x1="-22" y1="-28" x2="-18" y2="-10" stroke="url(#f1)" stroke-width="6" stroke-linecap="round"/>
-<circle cx="-18" cy="-10" r="4" fill="url(#f1)"/>
-<line x1="16" y1="-45" x2="22" y2="-28" stroke="url(#f1)" stroke-width="7" stroke-linecap="round"/>
-<line x1="22" y1="-28" x2="18" y2="-10" stroke="url(#f1)" stroke-width="6" stroke-linecap="round"/>
-<circle cx="18" cy="-10" r="4" fill="url(#f1)"/>
-<line x1="-10" y1="10" x2="-18" y2="25" stroke="url(#f1)" stroke-width="9" stroke-linecap="round"/>
-<line x1="-18" y1="25" x2="-24" y2="12" stroke="url(#f1)" stroke-width="7" stroke-linecap="round"/>
-<ellipse cx="-24" cy="12" rx="5" ry="3" fill="url(#f1)"/>
-<line x1="10" y1="10" x2="18" y2="25" stroke="url(#f1)" stroke-width="9" stroke-linecap="round"/>
-<line x1="18" y1="25" x2="24" y2="12" stroke="url(#f1)" stroke-width="7" stroke-linecap="round"/>
-<ellipse cx="24" cy="12" rx="5" ry="3" fill="url(#f1)"/>
-</g>
+<rect width="400" height="400" fill="url(#bg)" rx="24"/>
+<circle cx="200" cy="200" r="150" fill="url(#glow)"/>
+<path d="M-85,0 C-85,-12 -80,-18 -70,-18 C-60,-18 -54,-12 -52,-6 C-48,-4 -42,-8 -36,-12 C-28,-16 -20,-18 -12,-16 C-4,-14 4,-10 10,-6 C16,-2 24,-6 32,-10 C40,-14 50,-16 60,-14 C68,-12 76,-8 84,-2 C88,0 90,4 86,6 C82,8 76,6 68,4 C60,6 50,10 40,10 C30,10 20,12 10,10 C2,8 -6,6 -12,8 C-20,10 -28,10 -36,8 C-44,6 -52,4 -60,4 C-68,4 -76,6 -82,4 C-86,2 -87,0 -85,0 Z" fill="url(#p2)" transform="translate(200,245) rotate(15) scale(1.2,1.2)" filter="url(#sf)"/>
+<path d="M0,-70 C-12,-70 -16,-62 -16,-54 C-16,-46 -12,-40 -8,-38 C-10,-36 -14,-34 -18,-32 C-22,-30 -24,-26 -22,-20 C-20,-14 -18,-8 -16,-2 C-14,4 -12,8 -10,10 C-12,8 -14,4 -16,-2 C-18,-8 -20,-14 -20,-18 C-20,-12 -22,-6 -24,0 C-26,6 -28,12 -26,18 C-24,24 -20,28 -16,30 C-12,32 -8,36 -8,42 C-8,48 -10,52 -14,54 C-18,56 -16,58 -12,58 C-6,58 -2,56 0,52 C2,48 4,42 6,36 C8,30 12,24 16,18 C20,12 22,6 20,0 C18,-6 16,-12 18,-18 C20,-24 22,-28 20,-32 C18,-28 16,-34 10,-38 C14,-40 16,-46 16,-54 C16,-62 12,-70 0,-70 Z" fill="url(#p1)" transform="translate(195,158) scale(1.1,1.1)" filter="url(#sf)"/>
 </svg>
