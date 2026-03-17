@@ -149,6 +149,7 @@ struct MassageTimerView: View {
     }
     
     func startTimer() {
+        guard timeRemaining > 0 else { return }
         isRunning = true
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if timeRemaining > 0 { timeRemaining -= 1 } else { stopTimer() }
