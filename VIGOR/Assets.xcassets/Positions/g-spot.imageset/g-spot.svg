@@ -1,26 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
-  <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0d0d2b"/>
-      <stop offset="100%" stop-color="#1a1a3e"/>
-    </linearGradient>
-  </defs>
-  <rect width="400" height="400" fill="url(#bg)"/>
-  <ellipse cx="160" cy="275" rx="14" ry="17" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M148,270 Q146,253 160,255 Q174,253 172,270" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M148,270 Q152,285 150,300" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M165,292 Q170,310 172.5,320.0 Q175,330 176.5,337.5 L178,345" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M155,292 Q152,310 151.0,320.0 Q150,330 151.0,337.5 L152,345" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M155,308 Q163,316 171,308" fill="none" stroke="#FFB0C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
-  <path d="M178,345 Q195,335 205.0,327.5 L215,320" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M152,345 Q140,340 135.0,335.0 L130,330" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M158,300 Q145,295 140.0,291.5 L135,288" fill="none" stroke="#FFB0C8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <ellipse cx="225" cy="215" rx="14" ry="17" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round"/>
-  <path d="M213,210 Q211,195 225,196 Q239,195 237,210" fill="none" stroke="#E8608A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M219,232 Q215,255 213.5,267.5 Q212,280 211.0,292.5 L210,305" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M231,232 Q235,255 236.5,267.5 Q238,280 239.0,292.5 L240,305" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M210,305 Q205,325 203.5,336.5 L202,348" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M240,305 Q245,325 246.5,336.5 L248,348" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
-  <path d="M215,255 Q205,270 201.5,277.5 L198,285" fill="none" stroke="#E8608A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" opacity="1"/>
+  <rect width="400" height="400" fill="#FFFFFF"/>
+  <g transform="rotate(170,165,275)">
+  <path d="M151.35,264.0 C149.25,269.5 148.2,275 150.3,280.5 C154.5,284.625 153.45,288.75 150.3,292.875 L154.5,297.0 L175.5,297.0 L179.7,292.875 C176.55,288.75 175.5,284.625 179.7,280.5 C181.8,275 180.75,269.5 178.65,264.0 Z" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M159.75,270.875 Q165,273.625 170.25,270.875" fill="none" stroke="#666666" stroke-width="0.8" stroke-linecap="round"/>
+  <path d="M158.7,283.25 Q165,284.625 171.3,283.25" fill="none" stroke="#666666" stroke-width="0.8" stroke-linecap="round"/>
+  <path d="M161.85,264.0 L162.48,259.875 L167.52,259.875 L168.15,264.0 Z" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M151,250.75 C147,230.75 160,227.75 165,233.75 C170,227.75 183,230.75 179,250.75 C181,260.75 183,275.75 179,285.75 L175,280.75 C173,270.75 175,260.75 177,253.75 L153,253.75 C155,260.75 157,270.75 155,280.75 L151,285.75 C147,275.75 149,260.75 151,250.75 Z" fill="#8B6F47" stroke="#3a3a3a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="165" cy="255.75" rx="16" ry="19" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8"/>
+  <path d="M160,263.75 Q165,269.75 170,263.75" fill="none" stroke="#666666" stroke-width="0.8" stroke-linecap="round"/>
+  <path d="M157.65,295.625 C156.6,300.75 157.02,320.75 157.65,324.5 L161.85,324.5 C161.22,320.75 160.8,300.75 161.85,295.625 Z" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M168.15,295.625 C169.2,300.75 168.78,320.75 168.15,324.5 L172.35,324.5 C172.98,320.75 173.4,300.75 172.35,295.625 Z" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M157.65,322.5 L149.65,328.5 L163.85,328.5 L161.85,322.5 Z" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M168.15,322.5 L166.15,328.5 L180.35,328.5 L172.35,322.5 Z" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M151.35,266.75 C148.2,277.75 149.25,287.75 150.3,287.375 L156.3,287.375 C155.25,287.75 154.2,277.75 157.35,266.75 Z" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M172.65,266.75 C175.8,277.75 174.75,287.75 173.7,287.375 L179.7,287.375 C180.75,287.75 181.8,277.75 178.65,266.75 Z" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="150.3" cy="287.375" rx="5" ry="5" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8"/>
+  <ellipse cx="179.7" cy="287.375" rx="5" ry="5" fill="#FDDCBC" stroke="#3a3a3a" stroke-width="1.8"/>
+  </g>
+  <g transform="rotate(5,235,200)">
+  <path d="M219.4,182.0 C217.0,191.0 215.8,200 218.2,209.0 C220.6,218.0 221.08,224.75 220.6,229.25 L223.0,236.0 L247.0,236.0 L249.4,229.25 C248.92,224.75 249.4,218.0 251.8,209.0 C254.2,200 253.0,191.0 250.6,182.0 Z" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M226.6,191.0 Q235,195.5 243.4,191.0" fill="none" stroke="#666666" stroke-width="0.8" stroke-linecap="round"/>
+  <path d="M235,200 L235,218.0" fill="none" stroke="#666666" stroke-width="0.8" stroke-linecap="round"/>
+  <path d="M231.4,182.0 L232.12,175.25 L237.88,175.25 L238.6,182.0 Z" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M220,160.5 C218,146.5 230,144.5 235,148.5 C240,144.5 252,146.5 250,160.5 C248,156.5 240,152.5 235,154.5 C230,152.5 222,156.5 220,160.5 Z" fill="#5C4033" stroke="#3a3a3a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="235" cy="168.5" rx="17" ry="18" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8"/>
+  <path d="M227,174.5 Q235,182.5 243,174.5" fill="none" stroke="#666666" stroke-width="0.8" stroke-linecap="round"/>
+  <path d="M226.6,233.75 C225.4,248.5 225.88,268.5 226.6,281.0 L231.4,281.0 C230.68,268.5 230.2,248.5 231.4,233.75 Z" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M238.6,233.75 C239.8,248.5 239.32,268.5 238.6,281.0 L243.4,281.0 C244.12,268.5 244.6,248.5 243.4,233.75 Z" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M226.6,279.0 L216.6,285.0 L233.4,285.0 L231.4,279.0 Z" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M238.6,279.0 L236.6,285.0 L253.4,285.0 L243.4,279.0 Z" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M219.4,186.5 C215.8,204.5 217.0,214.5 218.2,220.25 L226.2,220.25 C225.0,214.5 223.8,204.5 227.4,186.5 Z" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M242.6,186.5 C246.2,204.5 245.0,214.5 243.8,220.25 L251.8,220.25 C253.0,214.5 254.2,204.5 250.6,186.5 Z" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="218.2" cy="220.25" rx="5" ry="5" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8"/>
+  <ellipse cx="251.8" cy="220.25" rx="5" ry="5" fill="#F5DEB3" stroke="#3a3a3a" stroke-width="1.8"/>
+  </g>
 </svg>
