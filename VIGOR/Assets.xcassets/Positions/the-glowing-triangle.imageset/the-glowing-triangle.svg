@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs>
+<linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" style="stop-color:#FF8FAB;stop-opacity:1" />
+<stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:1" />
+</linearGradient>
+<linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" style="stop-color:#D4567A;stop-opacity:1" />
+<stop offset="100%" style="stop-color:#C44569;stop-opacity:1" />
+</linearGradient>
+</defs>
+<rect width="200" height="200" fill="#1a1a2e" rx="20"/>
+    <text x="100" y="30" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">Triunghiul Stralucitor</text>
+
+    <circle cx="78" cy="65" r="10" fill="url(#g1)" />
+    <line x1="78" y1="73" x2="82" y2="80" stroke="url(#g1)" stroke-width="4" stroke-linecap="round"/>
+    <line x1="82" y1="80" x2="88" y2="110" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M82,80 Q72.0,77.5 62,75" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M82,80 Q91.0,76.0 100,72" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M88,110 Q68,130 58,148" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M88,110 Q108,128 118,145" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+
+    <circle cx="122" cy="65" r="10" fill="url(#g2)" />
+    <line x1="122" y1="73" x2="118" y2="80" stroke="url(#g2)" stroke-width="4" stroke-linecap="round"/>
+    <line x1="118" y1="80" x2="112" y2="110" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M118,80 Q109.0,76.0 100,72" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M118,80 Q128.0,77.5 138,75" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M112,110 Q92,128 82,145" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M112,110 Q132,130 142,148" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+<defs>
+<linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" style="stop-color:#FF8FAB;stop-opacity:1" />
+<stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:1" />
+</linearGradient>
+<linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" style="stop-color:#D4567A;stop-opacity:1" />
+<stop offset="100%" style="stop-color:#C44569;stop-opacity:1" />
+</linearGradient>
+</defs>
+<rect width="200" height="200" fill="#1a1a2e" rx="20"/>
+    <text x="100" y="30" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">Cascatul</text>
+
+    <circle cx="55" cy="120" r="10" fill="url(#g2)" />
+    <line x1="55" y1="128" x2="70" y2="118" stroke="url(#g2)" stroke-width="4" stroke-linecap="round"/>
+    <line x1="70" y1="118" x2="105" y2="118" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M70,118 Q60.0,113.0 50,108" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M70,118 Q62.5,125.0 55,132" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M105,118 Q115,85 100,72" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M105,118 Q115,150 100,162" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+
+    <circle cx="130" cy="78" r="10" fill="url(#g1)" />
+    <line x1="130" y1="86" x2="125" y2="92" stroke="url(#g1)" stroke-width="4" stroke-linecap="round"/>
+    <line x1="125" y1="92" x2="115" y2="115" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
+    <path d="M125,92 Q120.0,87.0 115,82" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M125,92 Q135.0,86.0 145,80" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M115,115 Q120,138 118,158" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <path d="M115,115 Q130,138 138,158" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+</svg>

@@ -311,14 +311,12 @@ struct PositionRouletteView: View {
                 
                 if let position = selectedPosition {
                     VStack(spacing: 16) {
-                        AsyncImage(url: URL(string: position.image)) { image in
-                            image.resizable().aspectRatio(contentMode: .fill)
-                        } placeholder: {
-                            Rectangle().fill(Color.white.opacity(0.1))
-                        }
-                        .frame(height: 150)
-                        .clipped()
-                        .cornerRadius(16)
+                        Image(position.id)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 150)
+                            .clipped()
+                            .cornerRadius(16)
                         
                         Text(position.name)
                             .font(.title2)

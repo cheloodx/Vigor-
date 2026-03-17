@@ -11,21 +11,11 @@ struct PositionCard: View {
         VStack(alignment: .leading, spacing: 0) {
             // Image
             ZStack(alignment: .topTrailing) {
-                AsyncImage(url: URL(string: position.image)) { image in
-                    image
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                } placeholder: {
-                    Rectangle()
-                        .fill(Theme.cardGradient)
-                        .overlay(
-                            Image(systemName: "heart.fill")
-                                .font(.system(size: 30))
-                                .foregroundColor(Theme.primary.opacity(0.3))
-                        )
-                }
-                .frame(height: 140)
-                .clipped()
+                Image(position.id)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(height: 140)
+                    .clipped()
                 
                 // Favorite button
                 Button(action: onFavoriteToggle) {

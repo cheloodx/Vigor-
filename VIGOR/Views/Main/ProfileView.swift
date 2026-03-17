@@ -54,21 +54,11 @@ struct PositionDetailView: View {
     // MARK: - Hero Image
     private var heroImageView: some View {
         ZStack(alignment: .bottomLeading) {
-            AsyncImage(url: URL(string: position.image)) { image in
-                image
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } placeholder: {
-                Rectangle()
-                    .fill(Theme.cardGradient)
-                    .overlay(
-                        Image(systemName: "heart.fill")
-                            .font(.system(size: 50))
-                            .foregroundColor(Theme.primary.opacity(0.3))
-                    )
-            }
-            .frame(height: 300)
-            .clipped()
+            Image(position.id)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(height: 300)
+                .clipped()
             
             // Gradient overlay
             LinearGradient(
