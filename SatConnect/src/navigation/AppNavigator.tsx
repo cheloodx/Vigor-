@@ -23,7 +23,7 @@ type AppScreen = 'loading' | 'onboarding' | 'login' | 'register' | 'main';
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function MainTabs({ onLogout }: { onLogout: () => void }) {
+function MainTabs({ onLogout, onOpenChat }: { onLogout: () => void; onOpenChat: (conversationId: string, contactName: string) => void }) {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -62,7 +62,7 @@ function MainTabs({ onLogout }: { onLogout: () => void }) {
           tabBarBadge: 1,
         }}
       >
-        {() => <MessagesScreen onOpenChat={() => {}} />}
+        {() => <MessagesScreen onOpenChat={onOpenChat} />}
       </Tab.Screen>
       <Tab.Screen
         name="Map"
@@ -190,6 +190,7 @@ export function AppNavigator() {
           await storage.removeUser();
           setCurrentScreen('login');
         }}
+        onOpenChat={(conversationId, contactName) => setChatState({ conversationId, contactName })}
       />
     </NavigationContainer>
   );
