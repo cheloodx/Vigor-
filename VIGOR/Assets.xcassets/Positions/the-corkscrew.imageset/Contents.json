@@ -1,15 +1,13 @@
 {
-  "images" : [
+  "images": [
     {
-      "filename" : "the-corkscrew.svg",
-      "idiom" : "universal"
+      "filename": "the-corkscrew.jpeg",
+      "idiom": "universal",
+      "scale": "1x"
     }
   ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  },
-  "properties" : {
-    "preserves-vector-representation" : true
+  "info": {
+    "author": "xcode",
+    "version": 1
   }
 }

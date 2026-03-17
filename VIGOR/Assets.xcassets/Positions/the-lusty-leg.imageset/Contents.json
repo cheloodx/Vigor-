@@ -1,15 +1,13 @@
 {
-  "images" : [
+  "images": [
     {
-      "filename" : "the-lusty-leg.svg",
-      "idiom" : "universal"
+      "filename": "the-lusty-leg.jpeg",
+      "idiom": "universal",
+      "scale": "1x"
     }
   ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  },
-  "properties" : {
-    "preserves-vector-representation" : true
+  "info": {
+    "author": "xcode",
+    "version": 1
   }
 }

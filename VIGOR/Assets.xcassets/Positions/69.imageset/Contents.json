@@ -1,15 +1,13 @@
 {
-  "images" : [
+  "images": [
     {
-      "filename" : "69.svg",
-      "idiom" : "universal"
+      "filename": "69.jpeg",
+      "idiom": "universal",
+      "scale": "1x"
     }
   ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  },
-  "properties" : {
-    "preserves-vector-representation" : true
+  "info": {
+    "author": "xcode",
+    "version": 1
   }
 }
