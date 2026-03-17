@@ -1,30 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
 <defs>
 <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" style="stop-color:#FF8FAB;stop-opacity:1" />
-<stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:1" />
+<stop offset="0%" style="stop-color:#FFB0C8;stop-opacity:1" />
+<stop offset="100%" style="stop-color:#FF7BA3;stop-opacity:1" />
 </linearGradient>
 <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" style="stop-color:#D4567A;stop-opacity:1" />
+<stop offset="0%" style="stop-color:#E8608A;stop-opacity:1" />
 <stop offset="100%" style="stop-color:#C44569;stop-opacity:1" />
 </linearGradient>
+<radialGradient id="glow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" style="stop-color:#FF6B8A;stop-opacity:0.15" />
+<stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:0" />
+</radialGradient>
 </defs>
-<rect width="200" height="200" fill="#1a1a2e" rx="20"/>
-    <text x="100" y="30" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">Sprijinul pe Canapea</text>
-<rect x="30" y="68" width="40" height="20" rx="5" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)"/>
-    <circle cx="55" cy="85" r="10" fill="url(#g2)" />
-    <line x1="55" y1="93" x2="65" y2="95" stroke="url(#g2)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="65" y1="95" x2="85" y2="115" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
-    <path d="M65,95 Q53.5,86.5 42,78" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M65,95 Q57.5,85.0 50,75" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M85,115 Q95,135 100,155" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M85,115 Q80,135 75,155" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+<rect width="200" height="200" fill="#12122a" rx="20"/>
+<circle cx="100" cy="100" r="80" fill="url(#glow)"/>
 
-    <circle cx="120" cy="78" r="10" fill="url(#g1)" />
-    <line x1="120" y1="86" x2="115" y2="90" stroke="url(#g1)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="115" y1="90" x2="100" y2="115" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
-    <path d="M115,90 Q122.5,81.0 130,72" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M115,90 Q125.0,89.0 135,88" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M100,115 Q105,138 108,158" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M100,115 Q95,138 90,158" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <!-- Head -->
+    <circle cx="52" cy="78" r="11" fill="url(#g2)" />
+    <!-- Neck -->
+    <line x1="52" y1="87" x2="62.0" y2="85.0" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+    <!-- Torso (filled shape) -->
+    <path d="M54,88 Q62.0,85 70,88 
+             L88,112 Q82.0,114 76,112 Z" 
+          fill="url(#g2)" opacity="0.95"/>
+    <!-- Left arm -->
+    <path d="M54,88 Q42,82 35,78" fill="none" stroke="url(#g2)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="35" cy="78" r="3.0" fill="url(#g2)"/>
+    <!-- Right arm -->
+    <path d="M70,88 Q55,98 45,105" fill="none" stroke="url(#g2)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="45" cy="105" r="3.0" fill="url(#g2)"/>
+    <!-- Left leg -->
+    <path d="M76,112 Q95,128 108,142" fill="none" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="108" cy="142" r="3.5" fill="url(#g2)"/>
+    <!-- Right leg -->
+    <path d="M88,112 Q78,132 68,148" fill="none" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="68" cy="148" r="3.5" fill="url(#g2)"/>
+
+    <!-- Head -->
+    <circle cx="128" cy="68" r="11" fill="url(#g1)" />
+    <!-- Neck -->
+    <line x1="128" y1="77" x2="125.0" y2="79.0" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <!-- Torso (filled shape) -->
+    <path d="M117,82 Q125.0,79 133,82 
+             L121,108 Q115.0,110 109,108 Z" 
+          fill="url(#g1)" opacity="0.95"/>
+    <!-- Left arm -->
+    <path d="M117,82 Q112,72 105,65" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="105" cy="65" r="3.0" fill="url(#g1)"/>
+    <!-- Right arm -->
+    <path d="M133,82 Q142,72 148,65" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="148" cy="65" r="3.0" fill="url(#g1)"/>
+    <!-- Left leg -->
+    <path d="M109,108 Q108,128 102,150" fill="none" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="102" cy="150" r="3.5" fill="url(#g1)"/>
+    <!-- Right leg -->
+    <path d="M121,108 Q128,128 132,150" fill="none" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="132" cy="150" r="3.5" fill="url(#g1)"/>
 </svg>

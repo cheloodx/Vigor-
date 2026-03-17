@@ -1,30 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
 <defs>
 <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" style="stop-color:#FF8FAB;stop-opacity:1" />
-<stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:1" />
+<stop offset="0%" style="stop-color:#FFB0C8;stop-opacity:1" />
+<stop offset="100%" style="stop-color:#FF7BA3;stop-opacity:1" />
 </linearGradient>
 <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" style="stop-color:#D4567A;stop-opacity:1" />
+<stop offset="0%" style="stop-color:#E8608A;stop-opacity:1" />
 <stop offset="100%" style="stop-color:#C44569;stop-opacity:1" />
 </linearGradient>
+<radialGradient id="glow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" style="stop-color:#FF6B8A;stop-opacity:0.15" />
+<stop offset="100%" style="stop-color:#FF6B8A;stop-opacity:0" />
+</radialGradient>
 </defs>
-<rect width="200" height="200" fill="#1a1a2e" rx="20"/>
-    <text x="100" y="30" text-anchor="middle" fill="rgba(255,255,255,0.6)" font-family="-apple-system, sans-serif" font-size="11" font-weight="600">Inclinarea</text>
+<rect width="200" height="200" fill="#12122a" rx="20"/>
+<circle cx="100" cy="100" r="80" fill="url(#glow)"/>
 
-    <circle cx="55" cy="110" r="10" fill="url(#g2)" />
-    <line x1="55" y1="118" x2="70" y2="108" stroke="url(#g2)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="70" y1="108" x2="105" y2="115" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
-    <path d="M70,108 Q56.0,113.0 42,118" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M70,108 Q59.0,104.0 48,100" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M105,115 Q125,100 142,90" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M105,115 Q125,130 142,140" fill="none" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+    <!-- Head -->
+    <circle cx="52" cy="98" r="11" fill="url(#g2)" />
+    <!-- Neck -->
+    <line x1="52" y1="107" x2="65.0" y2="102.0" stroke="url(#g2)" stroke-width="6" stroke-linecap="round"/>
+    <!-- Torso (filled shape) -->
+    <path d="M57,105 Q65.0,102 73,105 
+             L101,118 Q95.0,120 89,118 Z" 
+          fill="url(#g2)" opacity="0.95"/>
+    <!-- Left arm -->
+    <path d="M57,105 Q45,88 38,78" fill="none" stroke="url(#g2)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="38" cy="78" r="3.0" fill="url(#g2)"/>
+    <!-- Right arm -->
+    <path d="M73,105 Q55,115 45,122" fill="none" stroke="url(#g2)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="45" cy="122" r="3.0" fill="url(#g2)"/>
+    <!-- Left leg -->
+    <path d="M89,118 Q112,105 132,92" fill="none" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="132" cy="92" r="3.5" fill="url(#g2)"/>
+    <!-- Right leg -->
+    <path d="M101,118 Q112,132 132,142" fill="none" stroke="url(#g2)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="132" cy="142" r="3.5" fill="url(#g2)"/>
 
-    <circle cx="135" cy="70" r="10" fill="url(#g1)" />
-    <line x1="135" y1="78" x2="132" y2="82" stroke="url(#g1)" stroke-width="4" stroke-linecap="round"/>
-    <line x1="132" y1="82" x2="125" y2="110" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
-    <path d="M132,82 Q123.5,78.5 115,75" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M132,82 Q140.0,77.0 148,72" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M125,110 Q125,135 122,155" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
-    <path d="M125,110 Q135,135 140,155" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <!-- Head -->
+    <circle cx="135" cy="62" r="11" fill="url(#g1)" />
+    <!-- Neck -->
+    <line x1="135" y1="71" x2="130.0" y2="75.0" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+    <!-- Torso (filled shape) -->
+    <path d="M122,78 Q130.0,75 138,78 
+             L124,112 Q118.0,114 112,112 Z" 
+          fill="url(#g1)" opacity="0.95"/>
+    <!-- Left arm -->
+    <path d="M122,78 Q118,68 110,60" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="110" cy="60" r="3.0" fill="url(#g1)"/>
+    <!-- Right arm -->
+    <path d="M138,78 Q148,68 155,60" fill="none" stroke="url(#g1)" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="155" cy="60" r="3.0" fill="url(#g1)"/>
+    <!-- Left leg -->
+    <path d="M112,112 Q112,132 108,155" fill="none" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="108" cy="155" r="3.5" fill="url(#g1)"/>
+    <!-- Right leg -->
+    <path d="M124,112 Q132,132 135,155" fill="none" stroke="url(#g1)" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="135" cy="155" r="3.5" fill="url(#g1)"/>
 </svg>

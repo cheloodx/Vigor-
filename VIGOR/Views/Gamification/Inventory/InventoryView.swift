@@ -3,6 +3,8 @@ import SwiftUI
 struct BucketListView: View {
     @State private var items: [BucketListItem] = FeatureData.defaultBucketList
     
+    private static let storageKey = "bucket_list_items"
+    
     var completedCount: Int { items.filter { $0.isCompleted }.count }
     var progress: Double { items.isEmpty ? 0 : Double(completedCount) / Double(items.count) }
     
@@ -49,9 +51,10 @@ struct BucketListView: View {
                         // Items List
                         ForEach(items.indices, id: \.self) { index in
                             Button(action: {
-                                withAnimation(.spring()) {
-                                    items[index].isCompleted.toggle()
-                                }
+                                    withAnimation(.spring()) {
+                                        items[index].isCompleted.toggle()
+                                        saveItems()
+                                    }
                             }) {
                                 HStack(spacing: 12) {
                                     Text(items[index].icon)
@@ -87,5 +90,17 @@ struct BucketListView: View {
         }
         .navigationTitle("Bucket List")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear { loadItems() }
+    }
+    
+    private func loadItems() {
+        guard let data = UserDefaults.standard.data(forKey: Self.storageKey),
+              let decoded = try? JSONDecoder().decode([BucketListItem].self, from: data) else { return }
+        items = decoded
+    }
+    
+    private func saveItems() {
+        guard let data = try? JSONEncoder().encode(items) else { return }
+        UserDefaults.standard.set(data, forKey: Self.storageKey)
     }
 }

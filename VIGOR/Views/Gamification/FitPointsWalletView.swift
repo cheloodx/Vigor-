@@ -6,6 +6,8 @@ struct MoodTrackerView: View {
     @State private var selectedIntimacy: Int = 3
     @State private var noteText: String = ""
     
+    private static let storageKey = "mood_tracker_entries"
+    
     private let moodEmojis = ["\u{1F614}", "\u{1F610}", "\u{1F642}", "\u{1F60A}", "\u{1F60D}"]
     private let intimacyLabels = ["Scazut", "Moderat", "Bun", "Ridicat", "Intens"]
     
@@ -140,6 +142,7 @@ struct MoodTrackerView: View {
         }
         .navigationTitle("Mood Tracker")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear { loadEntries() }
     }
     
     private var averageMood: Double {
@@ -156,6 +159,18 @@ struct MoodTrackerView: View {
         let entry = MoodEntry(mood: selectedMood, intimacy: selectedIntimacy, note: noteText)
         entries.append(entry)
         noteText = ""
+        saveEntries()
+    }
+    
+    private func loadEntries() {
+        guard let data = UserDefaults.standard.data(forKey: Self.storageKey),
+              let decoded = try? JSONDecoder().decode([MoodEntry].self, from: data) else { return }
+        entries = decoded
+    }
+    
+    private func saveEntries() {
+        guard let data = try? JSONEncoder().encode(entries) else { return }
+        UserDefaults.standard.set(data, forKey: Self.storageKey)
     }
 }
 
