@@ -10,13 +10,12 @@ struct MoodTrackerView: View {
     private let intimacyLabels = ["Scazut", "Moderat", "Bun", "Ridicat", "Intens"]
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        // Add Entry Card
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Add Entry Card
                         VStack(spacing: 16) {
                             Text("Cum te simti azi?")
                                 .font(.system(size: 18, weight: .bold))
@@ -136,12 +135,11 @@ struct MoodTrackerView: View {
                         }
                     }
                     .padding(.top, 8)
-                    .padding(.bottom, 30)
-                }
+                .padding(.bottom, 30)
             }
-            .navigationTitle("Mood Tracker")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationTitle("Mood Tracker")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     private var averageMood: Double {

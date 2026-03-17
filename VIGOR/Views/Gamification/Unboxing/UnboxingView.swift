@@ -7,25 +7,24 @@ struct MassageTimerView: View {
     @State private var timer: Timer? = nil
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        if let preset = selectedPreset {
-                            timerView(preset: preset)
-                        } else {
-                            presetsView
-                        }
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    if let preset = selectedPreset {
+                        timerView(preset: preset)
+                    } else {
+                        presetsView
                     }
-                    .padding(.top, 8)
-                    .padding(.bottom, 30)
                 }
+                .padding(.top, 8)
+                .padding(.bottom, 30)
             }
-            .navigationTitle("Timer Masaj")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationTitle("Timer Masaj")
+        .navigationBarTitleDisplayMode(.inline)
+        .onDisappear { stopTimer() }
     }
     
     var presetsView: some View {

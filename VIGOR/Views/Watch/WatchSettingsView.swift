@@ -3,13 +3,12 @@ import SwiftUI
 // MARK: - Playlist Recommendations View
 struct PlaylistView: View {
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 16) {
-                        ForEach(FeatureData.playlists) { playlist in
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 16) {
+                    ForEach(FeatureData.playlists) { playlist in
                             VStack(alignment: .leading, spacing: 12) {
                                 HStack(spacing: 12) {
                                     Text(playlist.icon)
@@ -55,25 +54,23 @@ struct PlaylistView: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, 8)
-                    .padding(.bottom, 30)
-                }
+                .padding(.bottom, 30)
             }
-            .navigationTitle("Playlisturi")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationTitle("Playlisturi")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 // MARK: - Achievements/Badges View
 struct AchievementsView: View {
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 16) {
-                        VStack(spacing: 8) {
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 16) {
+                    VStack(spacing: 8) {
                             Text("\u{1F3C6}")
                                 .font(.system(size: 50))
                             Text("Realizari")
@@ -118,11 +115,10 @@ struct AchievementsView: View {
                     }
                     .padding(.horizontal)
                     .padding(.top, 8)
-                    .padding(.bottom, 30)
-                }
+                .padding(.bottom, 30)
             }
-            .navigationTitle("Realizari")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationTitle("Realizari")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

@@ -20,21 +20,19 @@ struct CompatibilityQuizView: View {
     }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                if showResult {
-                    resultView
-                } else if started {
-                    questionView
-                } else {
-                    startView
-                }
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            if showResult {
+                resultView
+            } else if started {
+                questionView
+            } else {
+                startView
             }
-            .navigationTitle("Compatibilitate")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationTitle("Compatibilitate")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     var startView: some View {

@@ -13,21 +13,19 @@ struct LoveLanguageTestView: View {
     }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                if showResult {
-                    resultView
-                } else if started {
-                    questionView
-                } else {
-                    startView
-                }
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            if showResult {
+                resultView
+            } else if started {
+                questionView
+            } else {
+                startView
             }
-            .navigationTitle("Limbajul Iubirii")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationTitle("Limbajul Iubirii")
+        .navigationBarTitleDisplayMode(.inline)
     }
     
     var startView: some View {

@@ -12,13 +12,12 @@ struct RomanticQuotesView: View {
     }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        // Current Quote Card
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    // Current Quote Card
                         VStack(spacing: 16) {
                             Image(systemName: "quote.opening")
                                 .font(.system(size: 30))
@@ -117,12 +116,11 @@ struct RomanticQuotesView: View {
                         .padding(.horizontal)
                     }
                     .padding(.top, 8)
-                    .padding(.bottom, 30)
-                }
+                .padding(.bottom, 30)
             }
-            .navigationTitle("Citate Romantice")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationTitle("Citate Romantice")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

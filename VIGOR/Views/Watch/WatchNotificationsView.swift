@@ -14,13 +14,12 @@ struct DateNightGeneratorView: View {
     }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        if let idea = currentIdea {
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    if let idea = currentIdea {
                             VStack(spacing: 14) {
                                 Text(idea.icon)
                                     .font(.system(size: 50))
@@ -120,11 +119,10 @@ struct DateNightGeneratorView: View {
                         .padding(.horizontal)
                     }
                     .padding(.top, 8)
-                    .padding(.bottom, 30)
-                }
+                .padding(.bottom, 30)
             }
-            .navigationTitle("Date Night")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationTitle("Date Night")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

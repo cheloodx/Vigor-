@@ -7,13 +7,12 @@ struct BucketListView: View {
     var progress: Double { items.isEmpty ? 0 : Double(completedCount) / Double(items.count) }
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                Theme.background.ignoresSafeArea()
-                
-                ScrollView {
-                    VStack(spacing: 16) {
-                        // Progress Card
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 16) {
+                    // Progress Card
                         VStack(spacing: 12) {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
@@ -83,11 +82,10 @@ struct BucketListView: View {
                         }
                     }
                     .padding(.top, 8)
-                    .padding(.bottom, 30)
-                }
+                .padding(.bottom, 30)
             }
-            .navigationTitle("Bucket List")
-            .navigationBarTitleDisplayMode(.inline)
         }
+        .navigationTitle("Bucket List")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
