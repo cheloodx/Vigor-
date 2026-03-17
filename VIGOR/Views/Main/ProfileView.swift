@@ -1,215 +1,232 @@
 import SwiftUI
 
-struct ProfileView: View {
+struct PositionDetailView: View {
+    let position: Position
     @EnvironmentObject var appState: AppState
-    @State private var showSettings = false
-    @State private var showWatchSettings = false
-    @State private var showInventory = false
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        NavigationView {
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
             ScrollView {
-                VStack(spacing: 20) {
-                    // Profile Header
-                    profileHeader
+                VStack(spacing: 0) {
+                    // Hero Image
+                    heroImageView
                     
-                    // Level Progress
-                    levelProgressSection
-                    
-                    // Stats Grid
-                    statsGrid
-                    
-                    // Quick Actions
-                    quickActions
-                    
-                    // Badges
-                    badgesSection
-                    
-                    // Settings
-                    settingsSection
+                    // Content
+                    VStack(alignment: .leading, spacing: 20) {
+                        // Title & Category
+                        titleSection
+                        
+                        // Stats Row
+                        statsRow
+                        
+                        // Description
+                        descriptionSection
+                        
+                        // Benefits
+                        benefitsSection
+                        
+                        // Tips
+                        tipsSection
+                        
+                        // Variations
+                        variationsSection
+                        
+                        Spacer(minLength: 40)
+                    }
+                    .padding(20)
                 }
-                .padding(.horizontal)
-                .padding(.bottom, 20)
             }
-            .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Profil")
-            .navigationBarTitleDisplayMode(.large)
-            .sheet(isPresented: $showWatchSettings) {
-                WatchSettingsView()
-            }
-            .sheet(isPresented: $showInventory) {
-                InventoryView()
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { appState.toggleFavorite(position) }) {
+                    Image(systemName: appState.isFavorite(position) ? "heart.fill" : "heart")
+                        .foregroundColor(appState.isFavorite(position) ? .red : .white)
+                }
             }
         }
     }
     
-    private var profileHeader: some View {
-        VStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(Theme.primaryGradient)
-                    .frame(width: 90, height: 90)
-                
-                Image(systemName: "person.fill")
-                    .font(.system(size: 40))
-                    .foregroundColor(.white)
-            }
+    // MARK: - Hero Image
+    private var heroImageView: some View {
+        ZStack(alignment: .bottomLeading) {
+            Image(position.id)
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(height: 300)
+                .clipped()
             
-            Text(appState.currentUser.name)
-                .font(.system(size: 24, weight: .bold))
+            // Gradient overlay
+            LinearGradient(
+                colors: [.clear, Theme.background],
+                startPoint: .center,
+                endPoint: .bottom
+            )
+        }
+    }
+    
+    // MARK: - Title Section
+    private var titleSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(position.name)
+                .font(.system(size: 28, weight: .bold))
                 .foregroundColor(Theme.textPrimary)
             
-            Text("@\(appState.currentUser.username)")
-                .font(.system(size: 14))
-                .foregroundColor(Theme.textSecondary)
-            
-            HStack(spacing: 16) {
-                FitPointsDisplay(points: appState.fitPoints)
-                
+            HStack(spacing: 8) {
                 HStack(spacing: 4) {
-                    Image(systemName: "flame.fill")
-                        .foregroundColor(.orange)
-                    Text("\(appState.dailyStreak) zile streak")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(Theme.textPrimary)
+                    Image(systemName: position.category.icon)
+                    Text(position.category.displayName)
                 }
-            }
-        }
-        .padding(.top, 12)
-    }
-    
-    private var levelProgressSection: some View {
-        CardView {
-            VStack(spacing: 8) {
-                HStack {
-                    Text("Nivel \(appState.currentUser.level)")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(Theme.primary)
-                    Spacer()
-                    Text("\(appState.currentUser.experience)/\(appState.currentUser.experienceToNextLevel) XP")
-                        .font(.system(size: 13))
-                        .foregroundColor(Theme.textSecondary)
-                }
-                ProgressView(value: appState.currentUser.levelProgress)
-                    .tint(Theme.primary)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundColor(Theme.categoryColor(position.category))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(Theme.categoryColor(position.category).opacity(0.15))
+                .cornerRadius(8)
+                
+                Text(position.difficulty.displayName)
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundColor(Theme.difficultyColor(position.difficulty))
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(Theme.difficultyColor(position.difficulty).opacity(0.15))
+                    .cornerRadius(8)
             }
         }
     }
     
-    private var statsGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-            StatCard(title: "Antrenamente", value: "\(appState.currentUser.totalWorkouts)", icon: "dumbbell.fill", color: Theme.primary)
-            StatCard(title: "Calorii Arse", value: "\(appState.currentUser.totalCaloriesBurned / 1000)K", icon: "flame.fill", color: .red)
-            StatCard(title: "Streak Maxim", value: "\(appState.dailyStreak)", icon: "flame.fill", color: .orange)
-            StatCard(title: "Insigne", value: "\(appState.currentUser.badges.count)", icon: "star.fill", color: Theme.accent)
-        }
-    }
-    
-    private var quickActions: some View {
-        VStack(spacing: 12) {
-            SectionHeader(title: "Actiuni Rapide")
-            
-            HStack(spacing: 12) {
-                quickActionButton(title: "Inventar", icon: "bag.fill", color: Theme.primary) {
-                    showInventory = true
+    // MARK: - Stats Row
+    private var statsRow: some View {
+        HStack(spacing: 20) {
+            // Intimacy
+            VStack(spacing: 4) {
+                HStack(spacing: 2) {
+                    ForEach(1...5, id: \.self) { level in
+                        Image(systemName: level <= position.intimacy ? "heart.fill" : "heart")
+                            .font(.system(size: 14))
+                            .foregroundColor(level <= position.intimacy ? Theme.primary : Theme.textMuted)
+                    }
                 }
-                quickActionButton(title: "Ceas", icon: "applewatch", color: .blue) {
-                    showWatchSettings = true
-                }
-                quickActionButton(title: "Setari", icon: "gearshape.fill", color: .gray) {
-                    showSettings = true
-                }
-            }
-        }
-    }
-    
-    private func quickActionButton(title: String, icon: String, color: Color, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            VStack(spacing: 8) {
-                ZStack {
-                    Circle()
-                        .fill(color.opacity(0.2))
-                        .frame(width: 50, height: 50)
-                    Image(systemName: icon)
-                        .font(.system(size: 22))
-                        .foregroundColor(color)
-                }
-                Text(title)
-                    .font(.system(size: 12, weight: .medium))
+                Text("Intimitate")
+                    .font(.system(size: 11))
                     .foregroundColor(Theme.textSecondary)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .background(Theme.cardBackground)
-            .cornerRadius(Theme.cornerRadiusMedium)
+            
+            Divider()
+                .frame(height: 30)
+                .background(Theme.textMuted)
+            
+            // Difficulty
+            VStack(spacing: 4) {
+                Text(position.difficulty.displayName)
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(Theme.difficultyColor(position.difficulty))
+                Text("Dificultate")
+                    .font(.system(size: 11))
+                    .foregroundColor(Theme.textSecondary)
+            }
+            
+            Divider()
+                .frame(height: 30)
+                .background(Theme.textMuted)
+            
+            // Category
+            VStack(spacing: 4) {
+                Image(systemName: position.category.icon)
+                    .font(.system(size: 18))
+                    .foregroundColor(Theme.categoryColor(position.category))
+                Text(position.category.displayName)
+                    .font(.system(size: 11))
+                    .foregroundColor(Theme.textSecondary)
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity)
+        .background(Theme.cardBackground)
+        .cornerRadius(12)
+    }
+    
+    // MARK: - Description
+    private var descriptionSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            SectionHeader(title: "Descriere", icon: "text.alignleft")
+            Text(position.description)
+                .font(.system(size: 15))
+                .foregroundColor(Theme.textSecondary)
+                .lineSpacing(4)
         }
     }
     
-    private var badgesSection: some View {
-        VStack(spacing: 12) {
-            SectionHeader(title: "Insigne Obtinute")
+    // MARK: - Benefits
+    private var benefitsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionHeader(title: "Beneficii", icon: "star.fill")
             
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    ForEach(appState.currentUser.badges, id: \.self) { badge in
-                        VStack(spacing: 6) {
-                            ZStack {
-                                Circle()
-                                    .fill(Theme.accent.opacity(0.2))
-                                    .frame(width: 60, height: 60)
-                                Image(systemName: "star.fill")
-                                    .font(.system(size: 24))
-                                    .foregroundColor(Theme.accent)
-                            }
-                            Text(badge)
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundColor(Theme.textSecondary)
-                                .multilineTextAlignment(.center)
-                        }
-                        .frame(width: 80)
-                    }
+            ForEach(position.benefits, id: \.self) { benefit in
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 14))
+                        .foregroundColor(Color(hex: "4CAF50"))
+                        .padding(.top, 2)
+                    Text(benefit)
+                        .font(.system(size: 14))
+                        .foregroundColor(Theme.textSecondary)
                 }
             }
         }
+        .padding(16)
+        .background(Theme.cardBackground)
+        .cornerRadius(12)
     }
     
-    private var settingsSection: some View {
-        VStack(spacing: 8) {
-            SectionHeader(title: "Setari")
+    // MARK: - Tips
+    private var tipsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionHeader(title: "Sfaturi", icon: "lightbulb.fill")
             
-            ForEach(settingsItems, id: \.title) { item in
-                CardView(padding: 12) {
-                    HStack(spacing: 12) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(item.color.opacity(0.2))
-                                .frame(width: 36, height: 36)
-                            Image(systemName: item.icon)
-                                .font(.system(size: 16))
-                                .foregroundColor(item.color)
-                        }
-                        
-                        Text(item.title)
-                            .font(.system(size: 15, weight: .medium))
-                            .foregroundColor(Theme.textPrimary)
-                        
-                        Spacer()
-                        
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 14))
-                            .foregroundColor(Theme.textTertiary)
-                    }
+            ForEach(Array(position.tips.enumerated()), id: \.offset) { index, tip in
+                HStack(alignment: .top, spacing: 10) {
+                    Text("\(index + 1)")
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(Theme.primary)
+                        .frame(width: 22, height: 22)
+                        .background(Theme.primary.opacity(0.15))
+                        .clipShape(Circle())
+                        .padding(.top, 1)
+                    Text(tip)
+                        .font(.system(size: 14))
+                        .foregroundColor(Theme.textSecondary)
                 }
             }
         }
+        .padding(16)
+        .background(Theme.cardBackground)
+        .cornerRadius(12)
     }
     
-    private var settingsItems: [(title: String, icon: String, color: Color)] {
-        [
-            ("Notificari", "bell.fill", .blue),
-            ("Confidentialitate", "lock.fill", .green),
-            ("Limba", "globe", .purple),
-            ("Despre VIGOR", "info.circle.fill", Theme.primary),
-        ]
+    // MARK: - Variations
+    private var variationsSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            SectionHeader(title: "Variatii", icon: "arrow.triangle.branch")
+            
+            ForEach(position.variations, id: \.self) { variation in
+                HStack(alignment: .top, spacing: 10) {
+                    Image(systemName: "arrow.right.circle")
+                        .font(.system(size: 14))
+                        .foregroundColor(Theme.accent)
+                        .padding(.top, 2)
+                    Text(variation)
+                        .font(.system(size: 14))
+                        .foregroundColor(Theme.textSecondary)
+                }
+            }
+        }
+        .padding(16)
+        .background(Theme.cardBackground)
+        .cornerRadius(12)
     }
 }

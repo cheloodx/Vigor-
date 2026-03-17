@@ -5,41 +5,48 @@ struct MainTabView: View {
     
     var body: some View {
         TabView(selection: $appState.selectedTab) {
-            DashboardView()
+            PositionsGridView()
                 .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Acasa")
+                    Image(systemName: "square.grid.2x2.fill")
+                    Text("Pozitii")
                 }
-                .tag(AppState.Tab.home)
+                .tag(0)
             
-            TrainingView()
+            GamesListView()
                 .tabItem {
-                    Image(systemName: "dumbbell.fill")
-                    Text("Antrenament")
+                    Image(systemName: "gamecontroller.fill")
+                    Text("Jocuri")
                 }
-                .tag(AppState.Tab.training)
+                .tag(1)
             
-            CommunityView()
+            FavoritesView()
                 .tabItem {
-                    Image(systemName: "person.2.fill")
-                    Text("Comunitate")
+                    Image(systemName: "heart.fill")
+                    Text("Favorite")
                 }
-                .tag(AppState.Tab.community)
+                .tag(2)
             
-            NutritionView()
+            InfoView()
                 .tabItem {
-                    Image(systemName: "fork.knife")
-                    Text("Nutritie")
+                    Image(systemName: "info.circle.fill")
+                    Text("Info")
                 }
-                .tag(AppState.Tab.nutrition)
+                .tag(3)
             
-            ProfileView()
+            DiscoverView()
                 .tabItem {
-                    Image(systemName: "person.circle.fill")
-                    Text("Profil")
+                    Image(systemName: "sparkles")
+                    Text("Descopera")
                 }
-                .tag(AppState.Tab.profile)
+                .tag(4)
         }
         .accentColor(Theme.primary)
+        .onAppear {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor(Theme.background)
+            UITabBar.appearance().standardAppearance = appearance
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
     }
 }

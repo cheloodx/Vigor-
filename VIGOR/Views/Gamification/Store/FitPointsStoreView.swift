@@ -1,177 +1,188 @@
 import SwiftUI
 
-struct FitPointsStoreView: View {
-    @EnvironmentObject var appState: AppState
-    @Environment(\.dismiss) var dismiss
-    @State private var selectedCategory: VirtualItem.ItemCategory? = nil
-    @State private var showPurchaseAlert = false
-    @State private var selectedItem: StoreItem? = nil
+struct LoveLanguageTestView: View {
+    @State private var currentQuestion = 0
+    @State private var scores: [LoveLanguage: Int] = [:]
+    @State private var showResult = false
+    @State private var started = false
     
-    struct StoreItem: Identifiable {
-        let id = UUID()
-        var name: String
-        var description: String
-        var icon: String
-        var price: Int
-        var rarity: ItemRarity
-        var category: VirtualItem.ItemCategory
+    private let questions = FeatureData.loveLanguageQuestions
+    
+    var topLanguage: LoveLanguage {
+        scores.max(by: { $0.value < $1.value })?.key ?? .qualityTime
     }
-    
-    private let storeItems: [StoreItem] = [
-        StoreItem(name: "Insigna Legenda", description: "Pentru a-ti personaliza profilul", icon: "star.fill", price: 200, rarity: .legendary, category: .badge),
-        StoreItem(name: "Tricou Elite", description: "Echipament rar pentru avatar", icon: "tshirt.fill", price: 350, rarity: .epic, category: .equipment),
-        StoreItem(name: "Gantere de Aur", description: "Obiect legendar de colectie", icon: "dumbbell.fill", price: 500, rarity: .legendary, category: .equipment),
-        StoreItem(name: "Aura Energetica", description: "Efect vizual epic", icon: "sparkles", price: 250, rarity: .epic, category: .effect),
-        StoreItem(name: "Avatar Razboinic", description: "Cadru de avatar rar", icon: "person.crop.circle.badge.checkmark", price: 150, rarity: .rare, category: .avatar),
-        StoreItem(name: "Insigna Streak", description: "Pentru serii impresionante", icon: "flame.fill", price: 100, rarity: .rare, category: .badge),
-        StoreItem(name: "Casca Pro", description: "Echipament audio stilat", icon: "headphones", price: 80, rarity: .common, category: .equipment),
-        StoreItem(name: "Fundal Neon", description: "Efect de fundal pentru profil", icon: "paintbrush.fill", price: 120, rarity: .rare, category: .effect),
-    ]
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Balance
-                    balanceHeader
-                    
-                    // Categories
-                    categoryFilter
-                    
-                    // Items Grid
-                    itemsGrid
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 20)
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            if showResult {
+                resultView
+            } else if started {
+                questionView
+            } else {
+                startView
             }
-            .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Magazin FitPoints")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
-                        .foregroundColor(Theme.primary)
-                }
+        }
+        .navigationTitle("Limbajul Iubirii")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+    
+    var startView: some View {
+        VStack(spacing: 20) {
+            Text("\u{1F49D}")
+                .font(.system(size: 60))
+            Text("Descopera Limbajul\nTau al Iubirii")
+                .font(.system(size: 24, weight: .bold))
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+            Text("Raspunde la 15 intrebari pentru a descoperi cum preferi sa primesti si sa oferi iubire.")
+                .font(.system(size: 14))
+                .foregroundColor(.white.opacity(0.6))
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 30)
+            
+            Button(action: { started = true; currentQuestion = 0; scores = [:] }) {
+                Text("Incepe Testul")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Theme.primaryGradient)
+                    .cornerRadius(16)
             }
-            .alert("Confirma Achizitia", isPresented: $showPurchaseAlert) {
-                Button("Cumpara") {
-                    if let item = selectedItem {
-                        _ = appState.spendFitPoints(item.price)
-                    }
-                }
-                Button("Anuleaza", role: .cancel) {}
-            } message: {
-                if let item = selectedItem {
-                    Text("Vrei sa cumperi \(item.name) pentru \(item.price) FitPoints?")
-                }
-            }
+            .padding(.horizontal, 30)
         }
     }
     
-    private var balanceHeader: some View {
-        HStack {
-            Image(systemName: "flame.fill")
-                .font(.system(size: 20))
-                .foregroundColor(Theme.accent)
-            Text("\(appState.fitPoints) FitPoints")
-                .font(.system(size: 18, weight: .bold))
-                .foregroundColor(Theme.textPrimary)
+    var questionView: some View {
+        VStack(spacing: 20) {
+            HStack {
+                Text("Intrebarea \(currentQuestion + 1)/\(questions.count)")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.white.opacity(0.6))
+                Spacer()
+            }
+            .padding(.horizontal)
+            
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Color.white.opacity(0.1))
+                        .frame(height: 6)
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(Theme.primaryGradient)
+                        .frame(width: geo.size.width * Double(currentQuestion) / Double(questions.count), height: 6)
+                }
+            }
+            .frame(height: 6)
+            .padding(.horizontal)
+            
+            Text("Ce preferi?")
+                .font(.system(size: 20, weight: .bold))
+                .foregroundColor(.white)
+            
+            Spacer()
+            
+            let q = questions[currentQuestion]
+            
+            Button(action: { answer(q.languageA) }) {
+                Text(q.optionA)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(Color.white.opacity(0.08))
+                    .cornerRadius(16)
+            }
+            .padding(.horizontal)
+            
+            Text("sau")
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(.white.opacity(0.3))
+            
+            Button(action: { answer(q.languageB) }) {
+                Text(q.optionB)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(Color.white.opacity(0.08))
+                    .cornerRadius(16)
+            }
+            .padding(.horizontal)
+            
             Spacer()
         }
-        .padding()
-        .background(Theme.accent.opacity(0.1))
-        .cornerRadius(Theme.cornerRadiusMedium)
+        .padding(.top, 16)
     }
     
-    private var categoryFilter: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                filterButton(title: "Toate", isSelected: selectedCategory == nil) {
-                    selectedCategory = nil
-                }
-                ForEach(VirtualItem.ItemCategory.allCases, id: \.self) { category in
-                    filterButton(title: category.rawValue, isSelected: selectedCategory == category) {
-                        selectedCategory = category
+    var resultView: some View {
+        ScrollView {
+            VStack(spacing: 20) {
+                Text("\u{1F49D}")
+                    .font(.system(size: 50))
+                Text("Limbajul Tau al Iubirii")
+                    .font(.system(size: 14))
+                    .foregroundColor(.white.opacity(0.5))
+                
+                Text(topLanguage.rawValue)
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Image(systemName: topLanguage.icon)
+                    .font(.system(size: 40))
+                    .foregroundColor(topLanguage.color)
+                
+                Text(topLanguage.langDescription)
+                    .font(.system(size: 14))
+                    .foregroundColor(.white.opacity(0.7))
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 30)
+                
+                VStack(spacing: 10) {
+                    ForEach(LoveLanguage.allCases, id: \.self) { lang in
+                        HStack {
+                            Image(systemName: lang.icon)
+                                .foregroundColor(lang.color)
+                                .frame(width: 24)
+                            Text(lang.rawValue)
+                                .font(.system(size: 13))
+                                .foregroundColor(.white)
+                            Spacer()
+                            Text("\(scores[lang, default: 0])")
+                                .font(.system(size: 15, weight: .bold))
+                                .foregroundColor(lang.color)
+                        }
+                        .padding(12)
+                        .background(Color.white.opacity(0.06))
+                        .cornerRadius(12)
                     }
                 }
+                .padding(.horizontal)
+                
+                Button(action: { showResult = false; started = false }) {
+                    Text("Refa Testul")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                        .background(Theme.primaryGradient)
+                        .cornerRadius(16)
+                }
+                .padding(.horizontal)
             }
+            .padding(.top, 20)
+            .padding(.bottom, 30)
         }
     }
     
-    private func filterButton(title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(isSelected ? .black : Theme.textSecondary)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 7)
-                .background(isSelected ? Theme.primary : Theme.cardBackground)
-                .cornerRadius(16)
-        }
-    }
-    
-    private var itemsGrid: some View {
-        let filtered = selectedCategory == nil ? storeItems : storeItems.filter { $0.category == selectedCategory }
-        
-        return LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
-            ForEach(filtered) { item in
-                storeItemCard(item)
-            }
-        }
-    }
-    
-    private func storeItemCard(_ item: StoreItem) -> some View {
-        Button(action: {
-            selectedItem = item
-            showPurchaseAlert = true
-        }) {
-            VStack(spacing: 10) {
-                // Rarity indicator
-                HStack {
-                    Spacer()
-                    BadgeView(text: item.rarity.label, color: item.rarity.color)
-                }
-                
-                ZStack {
-                    Circle()
-                        .fill(item.rarity.color.opacity(0.15))
-                        .frame(width: 60, height: 60)
-                    Image(systemName: item.icon)
-                        .font(.system(size: 26))
-                        .foregroundColor(item.rarity.color)
-                }
-                
-                Text(item.name)
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(Theme.textPrimary)
-                    .lineLimit(1)
-                
-                Text(item.description)
-                    .font(.system(size: 11))
-                    .foregroundColor(Theme.textSecondary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.center)
-                
-                HStack(spacing: 4) {
-                    Image(systemName: "flame.fill")
-                        .font(.system(size: 12))
-                        .foregroundColor(Theme.accent)
-                    Text("\(item.price)")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(Theme.accent)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 6)
-                .background(Theme.accent.opacity(0.15))
-                .cornerRadius(12)
-            }
-            .padding(12)
-            .background(Theme.cardBackground)
-            .cornerRadius(Theme.cornerRadiusMedium)
-            .overlay(
-                RoundedRectangle(cornerRadius: Theme.cornerRadiusMedium)
-                    .stroke(item.rarity.color.opacity(0.3), lineWidth: 1)
-            )
+    private func answer(_ language: LoveLanguage) {
+        scores[language, default: 0] += 1
+        if currentQuestion + 1 >= questions.count {
+            showResult = true
+        } else {
+            withAnimation { currentQuestion += 1 }
         }
     }
 }

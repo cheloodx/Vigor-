@@ -1,205 +1,124 @@
 import SwiftUI
 
-struct WatchSettingsView: View {
-    @Environment(\.dismiss) var dismiss
-    @State private var settings = WatchSettings()
-    
+// MARK: - Playlist Recommendations View
+struct PlaylistView: View {
     var body: some View {
-        NavigationView {
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
             ScrollView {
-                VStack(spacing: 20) {
-                    // Watch Connection
-                    watchConnectionSection
-                    
-                    // Notifications
-                    notificationsSection
-                    
-                    // Health Settings
-                    healthSection
-                    
-                    // Display
-                    displaySection
-                    
-                    // Workout Detection
-                    workoutSection
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 20)
-            }
-            .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Setari Ceas")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
-                        .foregroundColor(Theme.primary)
-                }
-            }
-        }
-    }
-    
-    private var watchConnectionSection: some View {
-        CardView {
-            HStack(spacing: 16) {
-                ZStack {
-                    Circle()
-                        .fill(Theme.success.opacity(0.2))
-                        .frame(width: 50, height: 50)
-                    Image(systemName: "applewatch")
-                        .font(.system(size: 22))
-                        .foregroundColor(Theme.success)
-                }
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Apple Watch Conectat")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(Theme.textPrimary)
-                    Text("Series 9 • Baterie 78%")
-                        .font(.system(size: 13))
-                        .foregroundColor(Theme.textSecondary)
-                }
-                
-                Spacer()
-                
-                Circle()
-                    .fill(Theme.success)
-                    .frame(width: 10, height: 10)
-            }
-        }
-    }
-    
-    private var notificationsSection: some View {
-        VStack(spacing: 12) {
-            SectionHeader(title: "Notificari")
-            
-            CardView {
                 VStack(spacing: 16) {
-                    settingToggle(title: "Alerte Ritm Cardiac", icon: "heart.fill", color: .red, isOn: $settings.heartRateAlerts)
-                    Divider().background(Theme.textTertiary.opacity(0.3))
-                    settingToggle(title: "Remindere Antrenament", icon: "dumbbell.fill", color: Theme.primary, isOn: $settings.workoutReminders)
-                    Divider().background(Theme.textTertiary.opacity(0.3))
-                    settingToggle(title: "Notificari Comunitate", icon: "person.2.fill", color: .blue, isOn: $settings.communityNotifications)
-                    Divider().background(Theme.textTertiary.opacity(0.3))
-                    settingToggle(title: "Alerte Realizari", icon: "trophy.fill", color: Theme.accent, isOn: $settings.achievementAlerts)
-                }
-            }
-        }
-    }
-    
-    private var healthSection: some View {
-        VStack(spacing: 12) {
-            SectionHeader(title: "Sanatate")
-            
-            CardView {
-                VStack(spacing: 16) {
-                    HStack {
-                        Image(systemName: "figure.walk")
-                            .font(.system(size: 18))
-                            .foregroundColor(.green)
-                            .frame(width: 30)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Obiectiv Pasi Zilnici")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(Theme.textPrimary)
-                            Text("\(settings.stepGoal) pasi")
-                                .font(.system(size: 12))
-                                .foregroundColor(Theme.textSecondary)
+                    ForEach(FeatureData.playlists) { playlist in
+                            VStack(alignment: .leading, spacing: 12) {
+                                HStack(spacing: 12) {
+                                    Text(playlist.icon)
+                                        .font(.system(size: 30))
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(playlist.name)
+                                            .font(.system(size: 16, weight: .bold))
+                                            .foregroundColor(.white)
+                                        Text(playlist.description)
+                                            .font(.system(size: 12))
+                                            .foregroundColor(.white.opacity(0.5))
+                                    }
+                                    Spacer()
+                                    Text(playlist.mood)
+                                        .font(.system(size: 10, weight: .bold))
+                                        .foregroundColor(.white.opacity(0.5))
+                                        .padding(.horizontal, 8)
+                                        .padding(.vertical, 4)
+                                        .background(Color.white.opacity(0.08))
+                                        .cornerRadius(8)
+                                }
+                                
+                                ForEach(playlist.songs) { song in
+                                    HStack(spacing: 10) {
+                                        Image(systemName: "music.note")
+                                            .font(.system(size: 12))
+                                            .foregroundColor(Color(hex: "FF6B8A"))
+                                        Text(song.title)
+                                            .font(.system(size: 13, weight: .semibold))
+                                            .foregroundColor(.white)
+                                        Text("- \(song.artist)")
+                                            .font(.system(size: 12))
+                                            .foregroundColor(.white.opacity(0.5))
+                                        Spacer()
+                                    }
+                                    .padding(.leading, 4)
+                                }
+                            }
+                            .padding(16)
+                            .background(Color.white.opacity(0.06))
+                            .cornerRadius(18)
                         }
-                        
-                        Spacer()
-                        
-                        Stepper("", value: $settings.stepGoal, in: 5000...20000, step: 1000)
-                            .labelsHidden()
                     }
-                    
-                    Divider().background(Theme.textTertiary.opacity(0.3))
-                    
-                    HStack {
-                        Image(systemName: "heart.fill")
-                            .font(.system(size: 18))
-                            .foregroundColor(.red)
-                            .frame(width: 30)
-                        
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Prag Ritm Cardiac")
-                                .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(Theme.textPrimary)
-                            Text("\(settings.heartRateThreshold) BPM")
-                                .font(.system(size: 12))
-                                .foregroundColor(Theme.textSecondary)
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                .padding(.bottom, 30)
+            }
+        }
+        .navigationTitle("Playlisturi")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+// MARK: - Achievements/Badges View
+struct AchievementsView: View {
+    var body: some View {
+        ZStack {
+            Theme.background.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 16) {
+                    VStack(spacing: 8) {
+                            Text("\u{1F3C6}")
+                                .font(.system(size: 50))
+                            Text("Realizari")
+                                .font(.system(size: 22, weight: .bold))
+                                .foregroundColor(.white)
+                            Text("Deblocheaza realizari pe masura ce explorezi aplicatia!")
+                                .font(.system(size: 13))
+                                .foregroundColor(.white.opacity(0.5))
+                                .multilineTextAlignment(.center)
                         }
+                        .padding(.bottom, 8)
                         
-                        Spacer()
-                        
-                        Stepper("", value: $settings.heartRateThreshold, in: 120...200, step: 5)
-                            .labelsHidden()
+                        ForEach(FeatureData.achievements) { badge in
+                            HStack(spacing: 14) {
+                                Text(badge.icon)
+                                    .font(.system(size: 32))
+                                    .frame(width: 50, height: 50)
+                                    .background(badge.gradient.opacity(0.2))
+                                    .cornerRadius(14)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(badge.name)
+                                        .font(.system(size: 15, weight: .bold))
+                                        .foregroundColor(.white)
+                                    Text(badge.description)
+                                        .font(.system(size: 12))
+                                        .foregroundColor(.white.opacity(0.6))
+                                    Text(badge.requirement)
+                                        .font(.system(size: 10, weight: .semibold))
+                                        .foregroundColor(.white.opacity(0.4))
+                                }
+                                
+                                Spacer()
+                                
+                                Image(systemName: "lock.fill")
+                                    .foregroundColor(.white.opacity(0.2))
+                            }
+                            .padding(14)
+                            .background(Color.white.opacity(0.04))
+                            .cornerRadius(16)
+                        }
                     }
-                }
+                    .padding(.horizontal)
+                    .padding(.top, 8)
+                .padding(.bottom, 30)
             }
         }
-    }
-    
-    private var displaySection: some View {
-        VStack(spacing: 12) {
-            SectionHeader(title: "Afisaj")
-            
-            CardView {
-                VStack(spacing: 16) {
-                    settingToggle(title: "Feedback Haptic", icon: "hand.tap.fill", color: .purple, isOn: $settings.hapticFeedback)
-                    Divider().background(Theme.textTertiary.opacity(0.3))
-                    settingToggle(title: "Always On Display", icon: "sun.max.fill", color: .yellow, isOn: $settings.alwaysOnDisplay)
-                }
-            }
-        }
-    }
-    
-    private var workoutSection: some View {
-        VStack(spacing: 12) {
-            SectionHeader(title: "Antrenament")
-            
-            CardView {
-                VStack(spacing: 16) {
-                    settingToggle(title: "Detectare Automata Antrenament", icon: "figure.run", color: .green, isOn: $settings.autoWorkoutDetection)
-                    
-                    Divider().background(Theme.textTertiary.opacity(0.3))
-                    
-                    HStack {
-                        Image(systemName: "bell.fill")
-                            .font(.system(size: 18))
-                            .foregroundColor(Theme.primary)
-                            .frame(width: 30)
-                        
-                        Text("Ora Reminder")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(Theme.textPrimary)
-                        
-                        Spacer()
-                        
-                        DatePicker("", selection: $settings.reminderTime, displayedComponents: .hourAndMinute)
-                            .labelsHidden()
-                    }
-                }
-            }
-        }
-    }
-    
-    private func settingToggle(title: String, icon: String, color: Color, isOn: Binding<Bool>) -> some View {
-        HStack(spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 18))
-                .foregroundColor(color)
-                .frame(width: 30)
-            
-            Text(title)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundColor(Theme.textPrimary)
-            
-            Spacer()
-            
-            Toggle("", isOn: isOn)
-                .labelsHidden()
-                .tint(Theme.primary)
-        }
+        .navigationTitle("Realizari")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }

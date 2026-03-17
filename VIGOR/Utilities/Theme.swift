@@ -1,81 +1,79 @@
+import Foundation
 import SwiftUI
 
+// MARK: - Kamasutra Guide Theme
 struct Theme {
-    // MARK: - Colors
-    static let primary = Color(hex: "FF8C00") // Orange
-    static let primaryDark = Color(hex: "CC7000")
-    static let primaryLight = Color(hex: "FFB347")
-    static let accent = Color(hex: "FFD700") // Gold
-    
-    static let background = Color(hex: "0D0D0D")
-    static let cardBackground = Color(hex: "1A1A1A")
-    static let cardBackgroundLight = Color(hex: "242424")
-    static let surfaceBackground = Color(hex: "2A2A2A")
-    
-    static let textPrimary = Color.white
-    static let textSecondary = Color(hex: "B0B0B0")
-    static let textTertiary = Color(hex: "707070")
-    
-    static let success = Color(hex: "4CAF50")
-    static let warning = Color(hex: "FF9800")
-    static let error = Color(hex: "F44336")
-    static let info = Color(hex: "2196F3")
-    
-    // Rarity Colors
-    static let rarityLegendary = Color(hex: "FF8C00")
-    static let rarityEpic = Color(hex: "9C27B0")
-    static let rarityRare = Color(hex: "2196F3")
-    static let rarityCommon = Color(hex: "9E9E9E")
-    
-    // MARK: - Gradients
+    // MARK: - Primary Colors (Rose/Pink)
     static let primaryGradient = LinearGradient(
-        colors: [primary, primaryDark],
+        colors: [Color(hex: "FF6B8A"), Color(hex: "C44569")],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
-    static let goldGradient = LinearGradient(
-        colors: [accent, primary],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
-    
-    static let darkGradient = LinearGradient(
-        colors: [cardBackground, background],
+    static let backgroundGradient = LinearGradient(
+        colors: [Color(hex: "1A1A2E"), Color(hex: "16213E"), Color(hex: "0F3460")],
         startPoint: .top,
         endPoint: .bottom
     )
     
-    static let legendaryGradient = LinearGradient(
-        colors: [Color(hex: "FFD700"), Color(hex: "FF8C00"), Color(hex: "FF6347")],
+    static let cardGradient = LinearGradient(
+        colors: [Color(hex: "1E1E3F").opacity(0.8), Color(hex: "2D2D5F").opacity(0.6)],
         startPoint: .topLeading,
         endPoint: .bottomTrailing
     )
     
-    static let epicGradient = LinearGradient(
-        colors: [Color(hex: "CE93D8"), Color(hex: "9C27B0")],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
+    // MARK: - Colors
+    static let primary = Color(hex: "FF6B8A")
+    static let secondary = Color(hex: "C44569")
+    static let accent = Color(hex: "A855F7")
+    static let background = Color(hex: "1A1A2E")
+    static let cardBackground = Color(hex: "1E1E3F")
+    static let textPrimary = Color.white
+    static let textSecondary = Color.white.opacity(0.7)
+    static let textMuted = Color.white.opacity(0.5)
     
-    // MARK: - Spacing
-    static let paddingSmall: CGFloat = 8
-    static let paddingMedium: CGFloat = 16
-    static let paddingLarge: CGFloat = 24
-    static let paddingXLarge: CGFloat = 32
+    // MARK: - Category Colors
+    static func categoryColor(_ category: PositionCategory) -> Color {
+        switch category {
+        case .romantic: return Color(hex: "FF6B6B")
+        case .passionate: return Color(hex: "FF6348")
+        case .adventurous: return Color(hex: "A55EEA")
+        case .intimate: return Color(hex: "FC5C7D")
+        }
+    }
     
-    // MARK: - Corner Radius
-    static let cornerRadiusSmall: CGFloat = 8
-    static let cornerRadiusMedium: CGFloat = 12
-    static let cornerRadiusLarge: CGFloat = 16
-    static let cornerRadiusXLarge: CGFloat = 24
+    static func categoryGradient(_ category: PositionCategory) -> LinearGradient {
+        switch category {
+        case .romantic:
+            return LinearGradient(colors: [Color(hex: "FF6B6B"), Color(hex: "EE5A24")], startPoint: .leading, endPoint: .trailing)
+        case .passionate:
+            return LinearGradient(colors: [Color(hex: "FF6348"), Color(hex: "EE5A24")], startPoint: .leading, endPoint: .trailing)
+        case .adventurous:
+            return LinearGradient(colors: [Color(hex: "A55EEA"), Color(hex: "8854D0")], startPoint: .leading, endPoint: .trailing)
+        case .intimate:
+            return LinearGradient(colors: [Color(hex: "FC5C7D"), Color(hex: "6A82FB")], startPoint: .leading, endPoint: .trailing)
+        }
+    }
     
-    // MARK: - Shadows
-    static let shadowColor = Color.black.opacity(0.3)
-    static let glowColor = primary.opacity(0.3)
+    // MARK: - Difficulty Colors
+    static func difficultyColor(_ difficulty: Difficulty) -> Color {
+        switch difficulty {
+        case .beginner: return Color(hex: "4CAF50")
+        case .intermediate: return Color(hex: "FF9800")
+        case .advanced: return Color(hex: "F44336")
+        case .expert: return Color(hex: "9C27B0")
+        }
+    }
+    
+    // MARK: - Intimacy Hearts
+    static func intimacyColor(level: Int) -> Color {
+        if level >= 4 { return Color(hex: "FF6B8A") }
+        if level >= 3 { return Color(hex: "FF9800") }
+        return Color(hex: "78909C")
+    }
 }
 
-// MARK: - Color Extension
+// MARK: - Color Extension for Hex
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)

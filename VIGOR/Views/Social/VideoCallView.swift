@@ -1,402 +1,338 @@
 import SwiftUI
 
-struct VideoCallView: View {
+// MARK: - Game Detail Router View
+struct GameDetailView: View {
+    let game: CoupleGame
     @Environment(\.dismiss) var dismiss
-    @State private var isMuted = false
-    @State private var isVideoOn = true
-    @State private var showChat = false
-    @State private var showGifts = false
-    @State private var showEmojis = false
-    @State private var chatMessage = ""
-    @State private var messages: [ChatMessage] = ChatMessage.samples
-    @State private var floatingEmojis: [FloatingEmoji] = []
-    
-    let participants = VideoCallParticipant.samples
-    
-    struct FloatingEmoji: Identifiable {
-        let id = UUID()
-        let emoji: String
-        let xOffset: CGFloat
-    }
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
-        ZStack {
-            // Video Grid Background
-            Theme.background.ignoresSafeArea()
-            
-            VStack(spacing: 0) {
-                // Top Bar
-                topBar
-                
-                // Video Grid
-                videoGrid
-                
-                // Emoji Reactions Bar
-                if showEmojis {
-                    emojiBar
-                }
-                
-                // Bottom Controls
-                bottomControls
-            }
-            
-            // Chat Overlay
-            if showChat {
-                chatOverlay
-            }
-            
-            // Gift Panel
-            if showGifts {
-                giftPanel
-            }
-            
-            // Floating Emojis
-            ForEach(floatingEmojis) { emoji in
-                Text(emoji.emoji)
-                    .font(.system(size: 40))
-                    .offset(x: emoji.xOffset)
-                    .transition(.asymmetric(
-                        insertion: .move(edge: .bottom).combined(with: .opacity),
-                        removal: .move(edge: .top).combined(with: .opacity)
-                    ))
-            }
-        }
-    }
-    
-    // MARK: - Top Bar
-    private var topBar: some View {
-        HStack {
-            Button(action: { dismiss() }) {
-                Image(systemName: "xmark")
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
-                    .padding(8)
-                    .background(Color.white.opacity(0.2))
-                    .clipShape(Circle())
-            }
-            
-            Spacer()
-            
-            VStack(spacing: 2) {
-                Text("Antrenament Grup")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(.white)
-                Text("\(participants.count) participanti")
-                    .font(.system(size: 12))
-                    .foregroundColor(.white.opacity(0.7))
-            }
-            
-            Spacer()
-            
-            HStack(spacing: 8) {
-                Button(action: { showChat.toggle() }) {
-                    ZStack(alignment: .topTrailing) {
-                        Image(systemName: "bubble.left.fill")
-                            .font(.system(size: 18))
-                            .foregroundColor(.white)
-                            .padding(8)
-                            .background(showChat ? Theme.primary : Color.white.opacity(0.2))
-                            .clipShape(Circle())
-                        
-                        Circle()
-                            .fill(.red)
-                            .frame(width: 8, height: 8)
-                            .offset(x: 2, y: -2)
-                    }
+        NavigationView {
+            Group {
+                switch game.id {
+                case "truth-or-dare":
+                    TruthOrDareGameView()
+                case "would-you-rather":
+                    WouldYouRatherGameView()
+                case "dice-game":
+                    DiceGameView()
+                case "quiz":
+                    QuizGameView()
+                case "challenges":
+                    ChallengesGameView()
+                case "position-roulette":
+                    PositionRouletteView()
+                        .environmentObject(appState)
+                default:
+                    Text("Joc in curs de dezvoltare")
                 }
             }
-        }
-        .padding(.horizontal)
-        .padding(.vertical, 8)
-    }
-    
-    // MARK: - Video Grid
-    private var videoGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-            ForEach(participants) { participant in
-                ZStack(alignment: .bottomLeading) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(Theme.cardBackground)
-                        .aspectRatio(3/4, contentMode: .fit)
-                        .overlay(
-                            VStack {
-                                if participant.isVideoOn {
-                                    Image(systemName: participant.avatarSystemName)
-                                        .font(.system(size: 40))
-                                        .foregroundColor(Theme.primary.opacity(0.5))
-                                } else {
-                                    VStack(spacing: 8) {
-                                        Image(systemName: "video.slash.fill")
-                                            .font(.system(size: 24))
-                                            .foregroundColor(Theme.textTertiary)
-                                        Text("Camera oprita")
-                                            .font(.system(size: 11))
-                                            .foregroundColor(Theme.textTertiary)
-                                    }
-                                }
-                            }
-                        )
-                    
-                    // Name tag
-                    HStack(spacing: 4) {
-                        if participant.isMuted {
-                            Image(systemName: "mic.slash.fill")
-                                .font(.system(size: 10))
-                                .foregroundColor(.red)
-                        }
-                        Text(participant.name)
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(.white)
-                        if participant.isHost {
-                            Image(systemName: "star.fill")
-                                .font(.system(size: 8))
-                                .foregroundColor(Theme.accent)
-                        }
-                    }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.black.opacity(0.6))
-                    .cornerRadius(8)
-                    .padding(8)
-                }
-            }
-        }
-        .padding(.horizontal, 8)
-        .frame(maxHeight: .infinity)
-    }
-    
-    // MARK: - Emoji Bar
-    private var emojiBar: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 12) {
-                ForEach(["🔥", "💪", "👏", "❤️", "😤", "🏋️", "⚡️", "🎯", "💯", "🙌"], id: \.self) { emoji in
-                    Button(action: {
-                        sendEmoji(emoji)
-                    }) {
-                        Text(emoji)
-                            .font(.system(size: 28))
-                            .padding(6)
-                            .background(Color.white.opacity(0.1))
-                            .clipShape(Circle())
-                    }
-                }
-            }
-            .padding(.horizontal)
-        }
-        .padding(.vertical, 8)
-        .background(Theme.cardBackground.opacity(0.95))
-    }
-    
-    // MARK: - Bottom Controls
-    private var bottomControls: some View {
-        HStack(spacing: 16) {
-            controlButton(icon: isMuted ? "mic.slash.fill" : "mic.fill", isActive: !isMuted, color: isMuted ? .red : .white) {
-                isMuted.toggle()
-            }
-            
-            controlButton(icon: isVideoOn ? "video.fill" : "video.slash.fill", isActive: isVideoOn, color: isVideoOn ? .white : .red) {
-                isVideoOn.toggle()
-            }
-            
-            controlButton(icon: "face.smiling.fill", isActive: showEmojis, color: showEmojis ? Theme.accent : .white) {
-                withAnimation { showEmojis.toggle() }
-            }
-            
-            controlButton(icon: "gift.fill", isActive: false, color: Theme.primary) {
-                withAnimation { showGifts.toggle() }
-            }
-            
-            Button(action: { dismiss() }) {
-                Image(systemName: "phone.down.fill")
-                    .font(.system(size: 20))
-                    .foregroundColor(.white)
-                    .frame(width: 56, height: 44)
-                    .background(Color.red)
-                    .cornerRadius(22)
-            }
-        }
-        .padding()
-        .background(Theme.cardBackground.opacity(0.95))
-    }
-    
-    private func controlButton(icon: String, isActive: Bool, color: Color, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Image(systemName: icon)
-                .font(.system(size: 20))
-                .foregroundColor(color)
-                .frame(width: 44, height: 44)
-                .background(Color.white.opacity(isActive ? 0.2 : 0.1))
-                .clipShape(Circle())
-        }
-    }
-    
-    // MARK: - Chat Overlay
-    private var chatOverlay: some View {
-        VStack {
-            Spacer()
-            
-            VStack(spacing: 0) {
-                // Chat Header
-                HStack {
-                    Text("Chat")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(Theme.textPrimary)
-                    Spacer()
-                    Button(action: { showChat = false }) {
+            .background(Theme.backgroundGradient.ignoresSafeArea())
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { dismiss() }) {
                         Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 20))
-                            .foregroundColor(Theme.textTertiary)
+                            .font(.title3)
+                            .foregroundColor(.white.opacity(0.6))
                     }
                 }
-                .padding()
+            }
+        }
+    }
+}
+
+// MARK: - Truth or Dare Game
+struct TruthOrDareGameView: View {
+    @State private var currentCard: TruthOrDareCard?
+    @State private var showCard = false
+    @State private var selectedType: TruthOrDareType?
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                Text("Adevar sau Provocare")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(Theme.primaryGradient)
                 
-                Divider().background(Theme.textTertiary)
+                Text("Alege intre Adevar si Provocare!")
+                    .foregroundColor(.white.opacity(0.6))
                 
-                // Messages
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 8) {
-                        ForEach(messages) { message in
-                            HStack(alignment: .top, spacing: 8) {
-                                if !message.isCurrentUser {
-                                    Text(message.author)
-                                        .font(.system(size: 12, weight: .bold))
-                                        .foregroundColor(Theme.primary)
-                                }
-                                Text(message.content)
-                                    .font(.system(size: 14))
-                                    .foregroundColor(Theme.textPrimary)
+                if let card = currentCard, showCard {
+                    VStack(spacing: 16) {
+                        HStack {
+                            Image(systemName: card.type.icon)
+                                .foregroundColor(card.type.color)
+                            Text(card.type.rawValue)
+                                .fontWeight(.bold)
+                                .foregroundColor(card.type.color)
+                        }
+                        .font(.title3)
+                        
+                        Text(card.text)
+                            .font(.title3)
+                            .fontWeight(.medium)
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                        
+                        HStack(spacing: 4) {
+                            ForEach(0..<5) { i in
+                                Image(systemName: i < card.intensity ? "flame.fill" : "flame")
+                                    .foregroundColor(i < card.intensity ? Color(hex: "FF6B8A") : .white.opacity(0.3))
                             }
-                            .frame(maxWidth: .infinity, alignment: message.isCurrentUser ? .trailing : .leading)
+                        }
+                        .font(.caption)
+                        
+                        Text("Intensitate: \(card.intensity)/5")
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.5))
+                    }
+                    .padding(24)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(LinearGradient(
+                                colors: [Color.white.opacity(0.1), Color.white.opacity(0.05)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ))
+                    )
+                    .padding(.horizontal)
+                    .transition(.scale.combined(with: .opacity))
+                }
+                
+                HStack(spacing: 16) {
+                    Button(action: { drawCard(.truth) }) {
+                        HStack {
+                            Image(systemName: "bubble.left.fill")
+                            Text("Adevar")
+                        }
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(LinearGradient(colors: [Color(hex: "4FC3F7"), Color(hex: "0288D1")], startPoint: .top, endPoint: .bottom))
+                        )
+                    }
+                    
+                    Button(action: { drawCard(.dare) }) {
+                        HStack {
+                            Image(systemName: "flame.fill")
+                            Text("Provocare")
+                        }
+                        .fontWeight(.bold)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(Theme.primaryGradient)
+                        )
+                    }
+                }
+                .padding(.horizontal)
+            }
+            .padding(.top, 20)
+        }
+    }
+    
+    private func drawCard(_ type: TruthOrDareType) {
+        withAnimation(.spring(response: 0.5)) {
+            showCard = false
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            let cards = type == .truth ? GameData.truthCards : GameData.dareCards
+            currentCard = cards.randomElement()
+            withAnimation(.spring(response: 0.5)) {
+                showCard = true
+            }
+        }
+    }
+}
+
+// MARK: - Would You Rather Game
+struct WouldYouRatherGameView: View {
+    @State private var currentCard: WouldYouRatherCard?
+    @State private var selectedOption: String?
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                Text("Ce Ai Prefera?")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(
+                        LinearGradient(colors: [Color(hex: "A55EEA"), Color(hex: "8854D0")], startPoint: .leading, endPoint: .trailing)
+                    )
+                
+                if let card = currentCard {
+                    VStack(spacing: 16) {
+                        Text(card.category)
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 4)
+                            .background(Color(hex: "A55EEA").opacity(0.3))
+                            .cornerRadius(10)
+                            .foregroundColor(Color(hex: "A55EEA"))
+                        
+                        Button(action: { selectedOption = "A" }) {
+                            Text(card.optionA)
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(selectedOption == "A" ? Color(hex: "A55EEA") : Color.white.opacity(0.08))
+                                )
+                        }
+                        
+                        Text("SAU")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white.opacity(0.4))
+                        
+                        Button(action: { selectedOption = "B" }) {
+                            Text(card.optionB)
+                                .font(.headline)
+                                .foregroundColor(.white)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .fill(selectedOption == "B" ? Color(hex: "8854D0") : Color.white.opacity(0.08))
+                                )
                         }
                     }
+                    .padding(20)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.white.opacity(0.05))
+                    )
                     .padding(.horizontal)
                 }
-                .frame(height: 150)
                 
-                // Input
-                HStack(spacing: 8) {
-                    TextField("Scrie un mesaj...", text: $chatMessage)
-                        .font(.system(size: 14))
-                        .foregroundColor(Theme.textPrimary)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .background(Theme.surfaceBackground)
-                        .cornerRadius(20)
+                Button(action: { nextCard() }) {
+                    HStack {
+                        Image(systemName: "arrow.right.circle.fill")
+                        Text(currentCard == nil ? "Incepe Jocul" : "Urmatoarea Intrebare")
+                    }
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(LinearGradient(colors: [Color(hex: "A55EEA"), Color(hex: "8854D0")], startPoint: .leading, endPoint: .trailing))
+                    )
+                }
+                .padding(.horizontal)
+            }
+            .padding(.top, 20)
+        }
+    }
+    
+    private func nextCard() {
+        selectedOption = nil
+        currentCard = GameData.wouldYouRather.randomElement()
+    }
+}
+
+// MARK: - Dice Game
+struct DiceGameView: View {
+    @State private var currentAction: DiceAction?
+    @State private var isRolling = false
+    
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                Text("Zarurile Pasiunii")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(
+                        LinearGradient(colors: [Color(hex: "FF6348"), Color(hex: "EE5A24")], startPoint: .leading, endPoint: .trailing)
+                    )
+                
+                Text("Arunca zarurile si urmeaza instructiunile!")
+                    .foregroundColor(.white.opacity(0.6))
+                
+                // Dice display
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20)
+                        .fill(LinearGradient(colors: [Color(hex: "FF6348").opacity(0.2), Color(hex: "EE5A24").opacity(0.1)], startPoint: .top, endPoint: .bottom))
+                        .frame(width: 120, height: 120)
                     
-                    Button(action: {
-                        if !chatMessage.isEmpty {
-                            messages.append(ChatMessage(id: UUID(), author: "Tu", content: chatMessage, timestamp: Date(), isCurrentUser: true))
-                            chatMessage = ""
-                        }
-                    }) {
-                        Image(systemName: "paperplane.fill")
-                            .font(.system(size: 16))
-                            .foregroundColor(Theme.primary)
-                    }
-                }
-                .padding()
-            }
-            .background(Theme.cardBackground.opacity(0.95))
-            .cornerRadius(Theme.cornerRadiusLarge, corners: [.topLeft, .topRight])
-        }
-        .transition(.move(edge: .bottom))
-        .ignoresSafeArea(edges: .bottom)
-    }
-    
-    // MARK: - Gift Panel
-    private var giftPanel: some View {
-        VStack {
-            Spacer()
-            
-            VStack(spacing: 16) {
-                HStack {
-                    Text("Cadouri Virtuale")
-                        .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(Theme.textPrimary)
-                    Spacer()
-                    Button(action: { showGifts = false }) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 22))
-                            .foregroundColor(Theme.textTertiary)
-                    }
+                    Image(systemName: "dice.fill")
+                        .font(.system(size: 50))
+                        .foregroundStyle(LinearGradient(colors: [Color(hex: "FF6348"), Color(hex: "EE5A24")], startPoint: .top, endPoint: .bottom))
+                        .rotationEffect(.degrees(isRolling ? 360 : 0))
                 }
                 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 16) {
-                        ForEach(VirtualGift.samples) { gift in
-                            VStack(spacing: 8) {
-                                ZStack {
-                                    Circle()
-                                        .fill(gift.rarity.color.opacity(0.2))
-                                        .frame(width: 60, height: 60)
-                                    Image(systemName: gift.icon)
-                                        .font(.system(size: 26))
-                                        .foregroundColor(gift.rarity.color)
-                                }
-                                
-                                Text(gift.name)
-                                    .font(.system(size: 12, weight: .semibold))
-                                    .foregroundColor(Theme.textPrimary)
-                                    .lineLimit(1)
-                                
-                                HStack(spacing: 2) {
-                                    Image(systemName: "flame.fill")
-                                        .font(.system(size: 10))
-                                        .foregroundColor(Theme.accent)
-                                    Text("\(gift.cost)")
-                                        .font(.system(size: 12, weight: .bold))
-                                        .foregroundColor(Theme.accent)
-                                }
-                                
-                                Button(action: {}) {
-                                    Text("Trimite")
-                                        .font(.system(size: 11, weight: .bold))
-                                        .foregroundColor(.black)
-                                        .padding(.horizontal, 14)
-                                        .padding(.vertical, 6)
-                                        .background(Theme.primaryGradient)
-                                        .cornerRadius(12)
-                                }
-                            }
-                            .frame(width: 90)
+                if let action = currentAction {
+                    VStack(spacing: 16) {
+                        Image(systemName: action.icon)
+                            .font(.system(size: 40))
+                            .foregroundColor(Color(hex: "FF6348"))
+                        
+                        Text(action.action)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        
+                        Text(action.bodyPart)
+                            .font(.title3)
+                            .foregroundColor(Color(hex: "FF6348"))
+                        
+                        HStack {
+                            Image(systemName: "clock.fill")
+                            Text(action.duration)
                         }
+                        .font(.subheadline)
+                        .foregroundColor(.white.opacity(0.6))
                     }
+                    .padding(24)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.white.opacity(0.08))
+                    )
+                    .padding(.horizontal)
+                    .transition(.scale.combined(with: .opacity))
                 }
+                
+                Button(action: { rollDice() }) {
+                    HStack {
+                        Image(systemName: "dice.fill")
+                        Text("Arunca Zarurile!")
+                    }
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(LinearGradient(colors: [Color(hex: "FF6348"), Color(hex: "EE5A24")], startPoint: .leading, endPoint: .trailing))
+                    )
+                }
+                .padding(.horizontal)
             }
-            .padding()
-            .background(Theme.cardBackground.opacity(0.98))
-            .cornerRadius(Theme.cornerRadiusXLarge, corners: [.topLeft, .topRight])
+            .padding(.top, 20)
         }
-        .transition(.move(edge: .bottom))
-        .ignoresSafeArea(edges: .bottom)
     }
     
-    private func sendEmoji(_ emoji: String) {
-        let newEmoji = FloatingEmoji(emoji: emoji, xOffset: CGFloat.random(in: -100...100))
-        withAnimation(.easeOut(duration: 0.3)) {
-            floatingEmojis.append(newEmoji)
+    private func rollDice() {
+        withAnimation(.easeInOut(duration: 0.5)) {
+            isRolling = true
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            withAnimation {
-                floatingEmojis.removeAll { $0.id == newEmoji.id }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            withAnimation(.spring()) {
+                isRolling = false
+                currentAction = GameData.diceActions.randomElement()
             }
         }
-    }
-}
-
-// MARK: - Corner Radius Extension
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
-        return Path(path.cgPath)
     }
 }

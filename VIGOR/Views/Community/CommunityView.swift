@@ -1,281 +1,100 @@
 import SwiftUI
 
-struct CommunityView: View {
+// MARK: - Games List View
+struct GamesListView: View {
     @EnvironmentObject var appState: AppState
-    @State private var selectedFilter: CommunityPost.PostCategory? = nil
-    @State private var showCreatePost = false
-    @State private var showVideoCall = false
+    @State private var selectedGame: CoupleGame?
     
     var body: some View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 16) {
-                    // Quick Actions
-                    quickActions
+                    // Header
+                    VStack(spacing: 8) {
+                        Text("Jocuri de Cuplu")
+                            .font(.system(size: 28, weight: .bold))
+                            .foregroundStyle(Theme.primaryGradient)
+                        
+                        Text("Distractie si intimitate")
+                            .font(.subheadline)
+                            .foregroundColor(.white.opacity(0.5))
+                        
+                        Text("\(GameData.allGames.count) Jocuri")
+                            .font(.caption)
+                            .fontWeight(.bold)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 4)
+                            .background(Theme.primaryGradient)
+                            .foregroundColor(.white)
+                            .cornerRadius(12)
+                    }
+                    .padding(.top, 8)
                     
-                    // Filter
-                    filterSection
-                    
-                    // Posts
-                    postsSection
+                    // Games Grid
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
+                        ForEach(GameData.allGames) { game in
+                            GameCard(game: game)
+                                .onTapGesture {
+                                    selectedGame = game
+                                }
+                        }
+                    }
+                    .padding(.horizontal, 16)
                 }
-                .padding(.horizontal)
                 .padding(.bottom, 20)
             }
-            .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Comunitate")
-            .navigationBarTitleDisplayMode(.large)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { showCreatePost = true }) {
-                        Image(systemName: "square.and.pencil")
-                            .foregroundColor(Theme.primary)
-                    }
-                }
-            }
-            .sheet(isPresented: $showCreatePost) {
-                CreatePostView()
-            }
-            .fullScreenCover(isPresented: $showVideoCall) {
-                VideoCallView()
+            .background(Theme.backgroundGradient.ignoresSafeArea())
+            .navigationBarHidden(true)
+            .sheet(item: $selectedGame) { game in
+                GameDetailView(game: game)
+                    .environmentObject(appState)
             }
         }
     }
+}
+
+// MARK: - Game Card
+struct GameCard: View {
+    let game: CoupleGame
     
-    // MARK: - Quick Actions
-    private var quickActions: some View {
-        HStack(spacing: 12) {
-            Button(action: { showVideoCall = true }) {
-                HStack(spacing: 8) {
-                    Image(systemName: "video.fill")
-                        .font(.system(size: 16))
-                    Text("Antrenament Grup")
-                        .font(.system(size: 14, weight: .semibold))
-                }
-                .foregroundColor(.black)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
-                .background(Theme.primaryGradient)
-                .cornerRadius(Theme.cornerRadiusMedium)
+    var body: some View {
+        VStack(spacing: 12) {
+            ZStack {
+                Circle()
+                    .fill(game.gradient.opacity(0.3))
+                    .frame(width: 60, height: 60)
+                
+                Image(systemName: game.icon)
+                    .font(.system(size: 26))
+                    .foregroundStyle(game.gradient)
             }
             
-            Button(action: {}) {
-                HStack(spacing: 8) {
-                    Image(systemName: "trophy.fill")
-                        .font(.system(size: 16))
-                    Text("Provocari")
-                        .font(.system(size: 14, weight: .semibold))
-                }
-                .foregroundColor(Theme.accent)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
-                .background(Theme.accent.opacity(0.15))
-                .cornerRadius(Theme.cornerRadiusMedium)
-            }
+            Text(game.name)
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(.white)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+            
+            Text(game.description)
+                .font(.system(size: 10))
+                .foregroundColor(.white.opacity(0.5))
+                .multilineTextAlignment(.center)
+                .lineLimit(3)
         }
-    }
-    
-    // MARK: - Filter
-    private var filterSection: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 8) {
-                filterChip(title: "Toate", isSelected: selectedFilter == nil) {
-                    selectedFilter = nil
-                }
-                ForEach(CommunityPost.PostCategory.allCases, id: \.self) { category in
-                    filterChip(title: category.rawValue, isSelected: selectedFilter == category) {
-                        selectedFilter = category
-                    }
-                }
-            }
-        }
-    }
-    
-    private func filterChip(title: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Text(title)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(isSelected ? .black : Theme.textSecondary)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 7)
-                .background(isSelected ? Theme.primary : Theme.cardBackground)
-                .cornerRadius(16)
-        }
-    }
-    
-    // MARK: - Posts
-    private var postsSection: some View {
-        let filteredPosts = selectedFilter == nil ? CommunityPost.samples : CommunityPost.samples.filter { $0.category == selectedFilter }
-        
-        return ForEach(filteredPosts) { post in
-            PostCardView(post: post)
-        }
-    }
-}
-
-// MARK: - Post Card
-struct PostCardView: View {
-    let post: CommunityPost
-    @State private var isLiked: Bool
-    @State private var likeCount: Int
-    
-    init(post: CommunityPost) {
-        self.post = post
-        _isLiked = State(initialValue: post.isLiked)
-        _likeCount = State(initialValue: post.likes)
-    }
-    
-    var body: some View {
-        CardView {
-            VStack(alignment: .leading, spacing: 12) {
-                // Author
-                HStack(spacing: 10) {
-                    ZStack {
-                        Circle()
-                            .fill(Theme.primary.opacity(0.2))
-                            .frame(width: 40, height: 40)
-                        Image(systemName: post.authorAvatar)
-                            .font(.system(size: 20))
-                            .foregroundColor(Theme.primary)
-                    }
-                    
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(post.author)
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(Theme.textPrimary)
-                        HStack(spacing: 4) {
-                            BadgeView(text: post.category.rawValue, color: post.category.color)
-                            Text(post.timeAgo)
-                                .font(.system(size: 11))
-                                .foregroundColor(Theme.textTertiary)
-                        }
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {}) {
-                        Image(systemName: "ellipsis")
-                            .foregroundColor(Theme.textTertiary)
-                    }
-                }
-                
-                // Content
-                Text(post.content)
-                    .font(.system(size: 15))
-                    .foregroundColor(Theme.textPrimary)
-                    .lineSpacing(4)
-                
-                // Image placeholder
-                if let imageName = post.imageSystemName {
-                    HStack {
-                        Spacer()
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Theme.surfaceBackground)
-                                .frame(height: 120)
-                            Image(systemName: imageName)
-                                .font(.system(size: 40))
-                                .foregroundColor(Theme.primary.opacity(0.5))
-                        }
-                        Spacer()
-                    }
-                }
-                
-                // Actions
-                HStack(spacing: 24) {
-                    Button(action: {
-                        withAnimation(.spring(response: 0.3)) {
-                            isLiked.toggle()
-                            likeCount += isLiked ? 1 : -1
-                        }
-                    }) {
-                        HStack(spacing: 4) {
-                            Image(systemName: isLiked ? "heart.fill" : "heart")
-                                .foregroundColor(isLiked ? .red : Theme.textTertiary)
-                            Text("\(likeCount)")
-                                .font(.system(size: 13))
-                                .foregroundColor(Theme.textSecondary)
-                        }
-                    }
-                    
-                    Button(action: {}) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "bubble.left")
-                                .foregroundColor(Theme.textTertiary)
-                            Text("\(post.comments)")
-                                .font(.system(size: 13))
-                                .foregroundColor(Theme.textSecondary)
-                        }
-                    }
-                    
-                    Button(action: {}) {
-                        Image(systemName: "square.and.arrow.up")
-                            .foregroundColor(Theme.textTertiary)
-                    }
-                    
-                    Spacer()
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Create Post View
-struct CreatePostView: View {
-    @Environment(\.dismiss) var dismiss
-    @State private var content = ""
-    @State private var selectedCategory: CommunityPost.PostCategory = .workout
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 16) {
-                // Category Picker
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 8) {
-                        ForEach(CommunityPost.PostCategory.allCases, id: \.self) { category in
-                            Button(action: { selectedCategory = category }) {
-                                Text(category.rawValue)
-                                    .font(.system(size: 13, weight: .semibold))
-                                    .foregroundColor(selectedCategory == category ? .white : Theme.textSecondary)
-                                    .padding(.horizontal, 14)
-                                    .padding(.vertical, 7)
-                                    .background(selectedCategory == category ? category.color : Theme.cardBackground)
-                                    .cornerRadius(16)
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                
-                // Text Editor
-                TextEditor(text: $content)
-                    .font(.system(size: 16))
-                    .foregroundColor(Theme.textPrimary)
-                    .scrollContentBackground(.hidden)
-                    .padding()
-                    .background(Theme.cardBackground)
-                    .cornerRadius(12)
-                    .padding(.horizontal)
-                    .frame(minHeight: 200)
-                
-                Spacer()
-                
-                // Post Button
-                PrimaryButton("Posteaza", icon: "paperplane.fill") {
-                    dismiss()
-                }
-                .padding(.horizontal)
-                .padding(.bottom)
-            }
-            .background(Theme.background.ignoresSafeArea())
-            .navigationTitle("Postare Noua")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Anuleaza") { dismiss() }
-                        .foregroundColor(Theme.primary)
-                }
-            }
-        }
+        .padding(14)
+        .frame(maxWidth: .infinity)
+        .background(
+            RoundedRectangle(cornerRadius: 18)
+                .fill(LinearGradient(
+                    colors: [Color.white.opacity(0.08), Color.white.opacity(0.03)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                ))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 18)
+                .stroke(game.gradient, lineWidth: 1)
+                .opacity(0.3)
+        )
     }
 }

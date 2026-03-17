@@ -1,95 +1,216 @@
 import Foundation
 import SwiftUI
 
-struct Meal: Identifiable {
-    let id: UUID
-    var name: String
-    var mealType: MealType
-    var calories: Int
-    var protein: Double
-    var carbs: Double
-    var fat: Double
-    var foods: [Food]
-    var date: Date
-    var imageSystemName: String
+// MARK: - Romantic Quote
+struct RomanticQuote: Identifiable {
+    let id = UUID()
+    let text: String
+    let author: String
+    let category: QuoteCategory
+}
+
+enum QuoteCategory: String, CaseIterable {
+    case love = "Dragoste"
+    case passion = "Pasiune"
+    case romance = "Romantism"
+    case wisdom = "Intelepciune"
+    case humor = "Umor"
     
-    enum MealType: String, CaseIterable {
-        case breakfast = "Mic Dejun"
-        case lunch = "Pranz"
-        case dinner = "Cina"
-        case snack = "Gustare"
-        
-        var icon: String {
-            switch self {
-            case .breakfast: return "sunrise.fill"
-            case .lunch: return "sun.max.fill"
-            case .dinner: return "moon.fill"
-            case .snack: return "leaf.fill"
-            }
-        }
-        
-        var color: Color {
-            switch self {
-            case .breakfast: return .orange
-            case .lunch: return .yellow
-            case .dinner: return .indigo
-            case .snack: return .green
-            }
+    var icon: String {
+        switch self {
+        case .love: return "heart.fill"
+        case .passion: return "flame.fill"
+        case .romance: return "sparkles"
+        case .wisdom: return "brain.head.profile"
+        case .humor: return "face.smiling.fill"
         }
     }
     
-    static let samples: [Meal] = [
-        Meal(id: UUID(), name: "Omleta cu Legume", mealType: .breakfast, calories: 350, protein: 25, carbs: 15, fat: 20, foods: Food.sampleBreakfast, date: Date(), imageSystemName: "sunrise.fill"),
-        Meal(id: UUID(), name: "Piept de Pui cu Orez", mealType: .lunch, calories: 550, protein: 45, carbs: 55, fat: 12, foods: Food.sampleLunch, date: Date(), imageSystemName: "sun.max.fill"),
-        Meal(id: UUID(), name: "Somon la Gratar", mealType: .dinner, calories: 480, protein: 38, carbs: 30, fat: 22, foods: Food.sampleDinner, date: Date(), imageSystemName: "moon.fill"),
-        Meal(id: UUID(), name: "Shake Proteic", mealType: .snack, calories: 200, protein: 30, carbs: 15, fat: 5, foods: Food.sampleSnack, date: Date(), imageSystemName: "leaf.fill"),
-    ]
+    var color: Color {
+        switch self {
+        case .love: return Color(hex: "FF6B8A")
+        case .passion: return Color(hex: "FF6348")
+        case .romance: return Color(hex: "A55EEA")
+        case .wisdom: return Color(hex: "4FC3F7")
+        case .humor: return Color(hex: "FFB74D")
+        }
+    }
 }
 
-struct Food: Identifiable {
+// MARK: - Mood Entry
+struct MoodEntry: Identifiable, Codable {
     let id: UUID
-    var name: String
-    var calories: Int
-    var protein: Double
-    var carbs: Double
-    var fat: Double
-    var servingSize: String
+    let date: Date
+    let mood: Int
+    let intimacy: Int
+    let note: String
     
-    static let sampleBreakfast: [Food] = [
-        Food(id: UUID(), name: "Oua", calories: 180, protein: 14, carbs: 2, fat: 12, servingSize: "3 buc"),
-        Food(id: UUID(), name: "Rosii", calories: 40, protein: 2, carbs: 8, fat: 0.5, servingSize: "100g"),
-        Food(id: UUID(), name: "Ardei", calories: 30, protein: 1, carbs: 5, fat: 0.3, servingSize: "80g"),
-    ]
+    init(id: UUID = UUID(), date: Date = Date(), mood: Int, intimacy: Int, note: String = "") {
+        self.id = id
+        self.date = date
+        self.mood = mood
+        self.intimacy = intimacy
+        self.note = note
+    }
     
-    static let sampleLunch: [Food] = [
-        Food(id: UUID(), name: "Piept de Pui", calories: 280, protein: 40, carbs: 0, fat: 8, servingSize: "200g"),
-        Food(id: UUID(), name: "Orez Brun", calories: 220, protein: 5, carbs: 45, fat: 2, servingSize: "150g"),
-        Food(id: UUID(), name: "Salata Verde", calories: 50, protein: 2, carbs: 10, fat: 1, servingSize: "100g"),
-    ]
-    
-    static let sampleDinner: [Food] = [
-        Food(id: UUID(), name: "Somon", calories: 350, protein: 35, carbs: 0, fat: 20, servingSize: "200g"),
-        Food(id: UUID(), name: "Cartofi Dulci", calories: 130, protein: 3, carbs: 30, fat: 0.5, servingSize: "150g"),
-    ]
-    
-    static let sampleSnack: [Food] = [
-        Food(id: UUID(), name: "Whey Protein", calories: 120, protein: 25, carbs: 5, fat: 2, servingSize: "1 scoop"),
-        Food(id: UUID(), name: "Banana", calories: 80, protein: 1, carbs: 20, fat: 0.3, servingSize: "1 buc"),
-    ]
+    var moodEmoji: String {
+        switch mood {
+        case 1: return "\u{1F614}"
+        case 2: return "\u{1F610}"
+        case 3: return "\u{1F642}"
+        case 4: return "\u{1F60A}"
+        case 5: return "\u{1F60D}"
+        default: return "\u{1F642}"
+        }
+    }
 }
 
-struct NutritionGoal {
-    var targetCalories: Int
-    var targetProtein: Double
-    var targetCarbs: Double
-    var targetFat: Double
-    var waterGoalLiters: Double
+// MARK: - Bucket List Item
+struct BucketListItem: Identifiable, Codable {
+    let id: UUID
+    let title: String
+    let description: String
+    let icon: String
+    var isCompleted: Bool
+    let category: String
     
-    static let defaultGoal = NutritionGoal(
-        targetCalories: 2200,
-        targetProtein: 150,
-        targetCarbs: 250,
-        targetFat: 70,
-        waterGoalLiters: 3.0
-    )
+    init(id: UUID = UUID(), title: String, description: String, icon: String, isCompleted: Bool = false, category: String) {
+        self.id = id
+        self.title = title
+        self.description = description
+        self.icon = icon
+        self.isCompleted = isCompleted
+        self.category = category
+    }
+}
+
+// MARK: - Date Night Idea
+struct DateNightIdea: Identifiable {
+    let id = UUID()
+    let title: String
+    let description: String
+    let icon: String
+    let category: String
+    let budget: String
+    let duration: String
+}
+
+// MARK: - Badge/Achievement
+struct Achievement: Identifiable {
+    let id: String
+    let name: String
+    let description: String
+    let icon: String
+    let requirement: String
+    let color1: String
+    let color2: String
+    
+    var gradient: LinearGradient {
+        LinearGradient(colors: [Color(hex: color1), Color(hex: color2)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+}
+
+// MARK: - Love Language
+struct LoveLanguageQuestion: Identifiable {
+    let id = UUID()
+    let optionA: String
+    let optionB: String
+    let languageA: LoveLanguage
+    let languageB: LoveLanguage
+}
+
+enum LoveLanguage: String, CaseIterable {
+    case wordsOfAffirmation = "Cuvinte de Afirmare"
+    case actsOfService = "Acte de Serviciu"
+    case receivingGifts = "Primirea Cadourilor"
+    case qualityTime = "Timp de Calitate"
+    case physicalTouch = "Atingere Fizica"
+    
+    var icon: String {
+        switch self {
+        case .wordsOfAffirmation: return "text.bubble.fill"
+        case .actsOfService: return "hands.sparkles.fill"
+        case .receivingGifts: return "gift.fill"
+        case .qualityTime: return "clock.fill"
+        case .physicalTouch: return "hand.raised.fill"
+        }
+    }
+    
+    var langDescription: String {
+        switch self {
+        case .wordsOfAffirmation: return "Te simti iubit/a cand partenerul iti spune lucruri frumoase, te complimenteaza si iti exprima aprecierea verbal."
+        case .actsOfService: return "Te simti iubit/a cand partenerul face lucruri pentru tine - gateste, curata, te ajuta cu sarcinile zilnice."
+        case .receivingGifts: return "Te simti iubit/a cand primesti cadouri atente care arata ca partenerul s-a gandit la tine."
+        case .qualityTime: return "Te simti iubit/a cand petreceti timp de calitate impreuna, fara distractii, concentrati unul pe celalalt."
+        case .physicalTouch: return "Te simti iubit/a prin atingere fizica - imbratisari, saruturi, tinutul de mana, proximitate fizica."
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .wordsOfAffirmation: return Color(hex: "FF6B8A")
+        case .actsOfService: return Color(hex: "4FC3F7")
+        case .receivingGifts: return Color(hex: "FFB74D")
+        case .qualityTime: return Color(hex: "A55EEA")
+        case .physicalTouch: return Color(hex: "FF6348")
+        }
+    }
+}
+
+// MARK: - Compatibility Question
+struct CompatibilityQuestion: Identifiable {
+    let id = UUID()
+    let question: String
+    let options: [String]
+}
+
+// MARK: - Massage Timer Preset
+struct MassagePreset: Identifiable {
+    let id = UUID()
+    let name: String
+    let duration: Int
+    let icon: String
+    let description: String
+    let color1: String
+    let color2: String
+    
+    var gradient: LinearGradient {
+        LinearGradient(colors: [Color(hex: color1), Color(hex: color2)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+}
+
+// MARK: - Playlist
+struct PlaylistRecommendation: Identifiable {
+    let id = UUID()
+    let name: String
+    let description: String
+    let icon: String
+    let mood: String
+    let songs: [SongSuggestion]
+    let color1: String
+    let color2: String
+    
+    var gradient: LinearGradient {
+        LinearGradient(colors: [Color(hex: color1), Color(hex: color2)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+}
+
+struct SongSuggestion: Identifiable {
+    let id = UUID()
+    let title: String
+    let artist: String
+}
+
+// MARK: - Discover Feature Item
+struct DiscoverFeature: Identifiable {
+    let id: String
+    let name: String
+    let icon: String
+    let description: String
+    let color1: String
+    let color2: String
+    
+    var gradient: LinearGradient {
+        LinearGradient(colors: [Color(hex: color1), Color(hex: color2)], startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
 }

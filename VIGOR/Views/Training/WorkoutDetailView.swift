@@ -1,269 +1,393 @@
 import SwiftUI
 
-struct WorkoutDetailView: View {
-    let workout: Workout
-    @Environment(\.dismiss) var dismiss
-    @State private var isStarted = false
-    @State private var currentExerciseIndex = 0
-    @State private var timer: Int = 0
+// MARK: - Quiz Game View
+struct QuizGameView: View {
+    @State private var currentQuestion: QuizQuestion?
+    @State private var selectedAnswer: Int?
+    @State private var showExplanation = false
+    @State private var score = 0
+    @State private var questionsAnswered = 0
     
     var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack(spacing: 20) {
-                    // Header
-                    workoutHeader
-                    
-                    // Stats
-                    statsRow
-                    
-                    // Exercise List
-                    exerciseList
-                    
-                    // Start Button
-                    PrimaryButton("Incepe Antrenamentul", icon: "play.fill") {
-                        isStarted = true
+        ScrollView {
+            VStack(spacing: 24) {
+                Text("Cat de Bine Ma Cunosti?")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(
+                        LinearGradient(colors: [Color(hex: "4FC3F7"), Color(hex: "0288D1")], startPoint: .leading, endPoint: .trailing)
+                    )
+                
+                // Score
+                HStack(spacing: 20) {
+                    VStack {
+                        Text("\(score)")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color(hex: "4CAF50"))
+                        Text("Corecte")
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.5))
                     }
-                    .padding(.top, 8)
+                    
+                    VStack {
+                        Text("\(questionsAnswered)")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(Color(hex: "4FC3F7"))
+                        Text("Intrebari")
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.5))
+                    }
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 16)
+                        .fill(Color.white.opacity(0.08))
+                )
+                
+                if let question = currentQuestion {
+                    VStack(spacing: 16) {
+                        Text(question.question)
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .multilineTextAlignment(.center)
+                            .padding()
+                        
+                        ForEach(0..<question.options.count, id: \.self) { index in
+                            Button(action: {
+                                if selectedAnswer == nil {
+                                    selectedAnswer = index
+                                    showExplanation = true
+                                    questionsAnswered += 1
+                                    if index == question.correctIndex {
+                                        score += 1
+                                    }
+                                }
+                            }) {
+                                HStack {
+                                    Text(question.options[index])
+                                        .foregroundColor(.white)
+                                    Spacer()
+                                    if let selected = selectedAnswer {
+                                        if index == question.correctIndex {
+                                            Image(systemName: "checkmark.circle.fill")
+                                                .foregroundColor(Color(hex: "4CAF50"))
+                                        } else if index == selected {
+                                            Image(systemName: "xmark.circle.fill")
+                                                .foregroundColor(Color(hex: "F44336"))
+                                        }
+                                    }
+                                }
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .fill(backgroundColor(for: index))
+                                )
+                            }
+                        }
+                        
+                        if showExplanation {
+                            VStack(spacing: 8) {
+                                Image(systemName: "lightbulb.fill")
+                                    .foregroundColor(Color(hex: "FFB74D"))
+                                Text(question.explanation)
+                                    .font(.subheadline)
+                                    .foregroundColor(.white.opacity(0.7))
+                                    .multilineTextAlignment(.center)
+                            }
+                            .padding()
+                            .background(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .fill(Color(hex: "FFB74D").opacity(0.1))
+                            )
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                
+                Button(action: { nextQuestion() }) {
+                    HStack {
+                        Image(systemName: "arrow.right.circle.fill")
+                        Text(currentQuestion == nil ? "Incepe Quiz-ul" : "Urmatoarea Intrebare")
+                    }
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(LinearGradient(colors: [Color(hex: "4FC3F7"), Color(hex: "0288D1")], startPoint: .leading, endPoint: .trailing))
+                    )
                 }
                 .padding(.horizontal)
-                .padding(.bottom, 20)
             }
-            .background(Theme.background.ignoresSafeArea())
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Inchide") { dismiss() }
-                        .foregroundColor(Theme.primary)
-                }
-            }
-            .fullScreenCover(isPresented: $isStarted) {
-                ActiveWorkoutView(workout: workout)
-            }
+            .padding(.top, 20)
         }
     }
     
-    private var workoutHeader: some View {
-        VStack(spacing: 12) {
-            ZStack {
-                Circle()
-                    .fill(workout.category.color.opacity(0.2))
-                    .frame(width: 80, height: 80)
-                Image(systemName: workout.imageSystemName)
-                    .font(.system(size: 36))
-                    .foregroundColor(workout.category.color)
-            }
-            
-            Text(workout.name)
-                .font(.system(size: 24, weight: .bold))
-                .foregroundColor(Theme.textPrimary)
-            
-            Text(workout.description)
-                .font(.system(size: 14))
-                .foregroundColor(Theme.textSecondary)
-                .multilineTextAlignment(.center)
-            
-            HStack(spacing: 8) {
-                BadgeView(text: workout.category.rawValue, color: workout.category.color)
-                BadgeView(text: workout.difficulty.rawValue, color: workout.difficulty.color)
-            }
+    private func backgroundColor(for index: Int) -> Color {
+        guard let selected = selectedAnswer, let question = currentQuestion else {
+            return Color.white.opacity(0.08)
         }
-        .padding(.top, 12)
+        if index == question.correctIndex {
+            return Color(hex: "4CAF50").opacity(0.3)
+        } else if index == selected {
+            return Color(hex: "F44336").opacity(0.3)
+        }
+        return Color.white.opacity(0.08)
     }
     
-    private var statsRow: some View {
-        HStack(spacing: 0) {
-            statItem(title: "Durata", value: "\(workout.duration) min", icon: "clock.fill")
-            Divider().frame(height: 40).background(Theme.textTertiary)
-            statItem(title: "Calorii", value: "\(workout.caloriesBurned)", icon: "flame.fill")
-            Divider().frame(height: 40).background(Theme.textTertiary)
-            statItem(title: "Exercitii", value: "\(workout.exercises.count)", icon: "list.bullet")
-            Divider().frame(height: 40).background(Theme.textTertiary)
-            statItem(title: "Reward", value: "+\(workout.fitPointsReward) FP", icon: "star.fill")
-        }
-        .padding(.vertical, 12)
-        .background(Theme.cardBackground)
-        .cornerRadius(Theme.cornerRadiusMedium)
+    private func nextQuestion() {
+        selectedAnswer = nil
+        showExplanation = false
+        currentQuestion = GameData.quizQuestions.randomElement()
     }
+}
+
+// MARK: - Challenges Game View
+struct ChallengesGameView: View {
+    @State private var currentChallenge: ChallengeCard?
     
-    private func statItem(title: String, value: String, icon: String) -> some View {
-        VStack(spacing: 4) {
-            Image(systemName: icon)
-                .font(.system(size: 16))
-                .foregroundColor(Theme.primary)
-            Text(value)
-                .font(.system(size: 14, weight: .bold))
-                .foregroundColor(Theme.textPrimary)
-            Text(title)
-                .font(.system(size: 11))
-                .foregroundColor(Theme.textSecondary)
-        }
-        .frame(maxWidth: .infinity)
-    }
-    
-    private var exerciseList: some View {
-        VStack(spacing: 12) {
-            SectionHeader(title: "Exercitii")
-            
-            ForEach(Array(workout.exercises.enumerated()), id: \.element.id) { index, exercise in
-                CardView(padding: 12) {
-                    HStack(spacing: 12) {
-                        ZStack {
-                            Circle()
-                                .fill(Theme.primary.opacity(0.2))
-                                .frame(width: 36, height: 36)
-                            Text("\(index + 1)")
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(Theme.primary)
-                        }
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 24) {
+                Text("Provocari de Cuplu")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(
+                        LinearGradient(colors: [Color(hex: "FFB74D"), Color(hex: "FF8F00")], startPoint: .leading, endPoint: .trailing)
+                    )
+                
+                Text("Alege o provocare si distreaza-va impreuna!")
+                    .foregroundColor(.white.opacity(0.6))
+                
+                if let challenge = currentChallenge {
+                    VStack(spacing: 16) {
+                        Image(systemName: challenge.icon)
+                            .font(.system(size: 40))
+                            .foregroundColor(Color(hex: "FFB74D"))
                         
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(exercise.name)
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(Theme.textPrimary)
-                            Text("\(exercise.sets) seturi x \(exercise.reps) repetari")
-                                .font(.system(size: 12))
-                                .foregroundColor(Theme.textSecondary)
-                        }
+                        Text(challenge.title)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
                         
-                        Spacer()
+                        Text(challenge.description)
+                            .font(.body)
+                            .foregroundColor(.white.opacity(0.8))
+                            .multilineTextAlignment(.center)
                         
-                        if exercise.restSeconds > 0 {
-                            Label("\(exercise.restSeconds)s", systemImage: "pause.circle.fill")
-                                .font(.system(size: 11))
-                                .foregroundColor(Theme.textTertiary)
+                        HStack(spacing: 20) {
+                            HStack {
+                                Image(systemName: "clock.fill")
+                                Text(challenge.duration)
+                            }
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.6))
+                            
+                            HStack {
+                                Image(systemName: "speedometer")
+                                Text(challenge.difficulty)
+                            }
+                            .font(.caption)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.white.opacity(0.1))
+                            .cornerRadius(8)
+                            .foregroundColor(Color(hex: "FFB74D"))
                         }
                     }
+                    .padding(24)
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.white.opacity(0.08))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 20)
+                            .stroke(Color(hex: "FFB74D").opacity(0.3), lineWidth: 1)
+                    )
+                    .padding(.horizontal)
+                    .transition(.scale.combined(with: .opacity))
                 }
+                
+                Button(action: {
+                    withAnimation(.spring()) {
+                        currentChallenge = GameData.challenges.randomElement()
+                    }
+                }) {
+                    HStack {
+                        Image(systemName: "star.fill")
+                        Text(currentChallenge == nil ? "Alege o Provocare" : "Alta Provocare")
+                    }
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(LinearGradient(colors: [Color(hex: "FFB74D"), Color(hex: "FF8F00")], startPoint: .leading, endPoint: .trailing))
+                    )
+                }
+                .padding(.horizontal)
+                
+                // Show all challenges list
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Toate Provocarile")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding(.horizontal)
+                    
+                    ForEach(GameData.challenges) { challenge in
+                        HStack(spacing: 12) {
+                            Image(systemName: challenge.icon)
+                                .font(.title3)
+                                .foregroundColor(Color(hex: "FFB74D"))
+                                .frame(width: 36)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(challenge.title)
+                                    .font(.subheadline)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.white)
+                                
+                                Text(challenge.description)
+                                    .font(.caption)
+                                    .foregroundColor(.white.opacity(0.5))
+                                    .lineLimit(2)
+                            }
+                            
+                            Spacer()
+                            
+                            Text(challenge.difficulty)
+                                .font(.caption2)
+                                .fontWeight(.bold)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Color.white.opacity(0.1))
+                                .cornerRadius(8)
+                                .foregroundColor(.white.opacity(0.6))
+                        }
+                        .padding(.horizontal)
+                    }
+                }
+                .padding(.top, 8)
             }
+            .padding(.top, 20)
+            .padding(.bottom, 20)
         }
     }
 }
 
-// MARK: - Active Workout View
-struct ActiveWorkoutView: View {
-    let workout: Workout
-    @Environment(\.dismiss) var dismiss
-    @State private var currentExercise = 0
-    @State private var currentSet = 1
-    @State private var isResting = false
-    @State private var elapsedTime = 0
-    @State private var timerActive = true
-    
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+// MARK: - Position Roulette View
+struct PositionRouletteView: View {
+    @EnvironmentObject var appState: AppState
+    @State private var selectedPosition: Position?
+    @State private var isSpinning = false
+    @State private var rotation: Double = 0
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Top bar
-            HStack {
-                Button(action: { dismiss() }) {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(Theme.textSecondary)
+        ScrollView {
+            VStack(spacing: 24) {
+                Text("Ruleta Pozitiilor")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundStyle(
+                        LinearGradient(colors: [Color(hex: "FC5C7D"), Color(hex: "6A82FB")], startPoint: .leading, endPoint: .trailing)
+                    )
+                
+                Text("Lasa soarta sa aleaga pentru voi!")
+                    .foregroundColor(.white.opacity(0.6))
+                
+                // Spinning wheel
+                ZStack {
+                    Circle()
+                        .fill(LinearGradient(colors: [Color(hex: "FC5C7D").opacity(0.2), Color(hex: "6A82FB").opacity(0.2)], startPoint: .top, endPoint: .bottom))
+                        .frame(width: 150, height: 150)
+                    
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 50))
+                        .foregroundStyle(LinearGradient(colors: [Color(hex: "FC5C7D"), Color(hex: "6A82FB")], startPoint: .top, endPoint: .bottom))
+                        .rotationEffect(.degrees(rotation))
                 }
                 
-                Spacer()
-                
-                Text(timeString(elapsedTime))
-                    .font(.system(size: 18, weight: .bold, design: .monospaced))
-                    .foregroundColor(Theme.textPrimary)
-                
-                Spacer()
-                
-                Text("\(currentExercise + 1)/\(workout.exercises.count)")
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundColor(Theme.primary)
-            }
-            .padding()
-            
-            Spacer()
-            
-            // Current Exercise
-            if currentExercise < workout.exercises.count {
-                let exercise = workout.exercises[currentExercise]
-                
-                VStack(spacing: 24) {
-                    ZStack {
-                        Circle()
-                            .fill(Theme.primary.opacity(0.15))
-                            .frame(width: 120, height: 120)
-                        Image(systemName: exercise.imageSystemName)
-                            .font(.system(size: 50))
-                            .foregroundColor(Theme.primary)
-                    }
-                    
-                    Text(exercise.name)
-                        .font(.system(size: 28, weight: .bold))
-                        .foregroundColor(Theme.textPrimary)
-                    
-                    Text("Set \(currentSet) din \(exercise.sets)")
-                        .font(.system(size: 18))
-                        .foregroundColor(Theme.textSecondary)
-                    
-                    Text("\(exercise.reps) repetari")
-                        .font(.system(size: 40, weight: .black))
-                        .foregroundColor(Theme.primary)
-                    
-                    if isResting {
-                        VStack(spacing: 8) {
-                            Text("Pauza")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(Theme.accent)
-                            Text("\(exercise.restSeconds)s")
-                                .font(.system(size: 24, weight: .bold))
-                                .foregroundColor(Theme.textPrimary)
+                if let position = selectedPosition {
+                    VStack(spacing: 16) {
+                        Image(position.id)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 150)
+                            .clipped()
+                            .cornerRadius(16)
+                        
+                        Text(position.name)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                        
+                        HStack(spacing: 8) {
+                            Text(position.category.displayName)
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Theme.categoryColor(position.category).opacity(0.3))
+                                .cornerRadius(8)
+                                .foregroundColor(Theme.categoryColor(position.category))
+                            
+                            Text(position.difficulty.displayName)
+                                .font(.caption)
+                                .fontWeight(.bold)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(Theme.difficultyColor(position.difficulty).opacity(0.3))
+                                .cornerRadius(8)
+                                .foregroundColor(Theme.difficultyColor(position.difficulty))
                         }
-                        .padding()
-                        .background(Theme.accent.opacity(0.1))
-                        .cornerRadius(Theme.cornerRadiusMedium)
+                        
+                        Text(position.description)
+                            .font(.subheadline)
+                            .foregroundColor(.white.opacity(0.7))
+                            .multilineTextAlignment(.center)
                     }
-                }
-            }
-            
-            Spacer()
-            
-            // Bottom Controls
-            HStack(spacing: 20) {
-                SecondaryButton("Pauza", icon: "pause.fill") {
-                    timerActive.toggle()
+                    .padding(20)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color.white.opacity(0.08))
+                    )
+                    .padding(.horizontal)
+                    .transition(.scale.combined(with: .opacity))
                 }
                 
-                PrimaryButton("Urmatorul", icon: "forward.fill") {
-                    nextStep()
+                Button(action: { spin() }) {
+                    HStack {
+                        Image(systemName: "arrow.triangle.2.circlepath")
+                        Text(selectedPosition == nil ? "Invarte Ruleta!" : "Invarte Din Nou!")
+                    }
+                    .fontWeight(.bold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(LinearGradient(colors: [Color(hex: "FC5C7D"), Color(hex: "6A82FB")], startPoint: .leading, endPoint: .trailing))
+                    )
                 }
+                .padding(.horizontal)
+                .disabled(isSpinning)
             }
-            .padding()
-        }
-        .background(Theme.background.ignoresSafeArea())
-        .onReceive(timer) { _ in
-            if timerActive {
-                elapsedTime += 1
-            }
+            .padding(.top, 20)
         }
     }
     
-    private func nextStep() {
-        guard currentExercise < workout.exercises.count else { return }
-        let exercise = workout.exercises[currentExercise]
-        
-        if currentSet < exercise.sets {
-            currentSet += 1
-            isResting = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                isResting = false
-            }
-        } else {
-            currentSet = 1
-            currentExercise += 1
-            if currentExercise >= workout.exercises.count {
-                dismiss()
+    private func spin() {
+        isSpinning = true
+        withAnimation(.easeInOut(duration: 1.5)) {
+            rotation += Double.random(in: 720...1440)
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+            withAnimation(.spring()) {
+                selectedPosition = PositionData.allPositions.randomElement()
+                isSpinning = false
             }
         }
-    }
-    
-    private func timeString(_ seconds: Int) -> String {
-        let m = seconds / 60
-        let s = seconds % 60
-        return String(format: "%02d:%02d", m, s)
     }
 }
