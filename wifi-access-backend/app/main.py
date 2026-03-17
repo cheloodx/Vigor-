@@ -177,22 +177,26 @@ async def healthz():
 @app.post("/api/auth/register", response_model=TokenResponse)
 async def register(user: UserRegister):
     conn = get_db()
-    cursor = conn.cursor()
+    try:
+        cursor = conn.cursor()
 
-    # Check if email exists
-    cursor.execute("SELECT id FROM users WHERE email = ?", (user.email,))
-    if cursor.fetchone():
+        # Check if email exists
+        cursor.execute("SELECT id FROM users WHERE email = ?", (user.email,))
+        if cursor.fetchone():
+            raise HTTPException(status_code=400, detail="Email-ul este deja înregistrat")
+
+        password_hash = hash_password(user.password)
+        try:
+            cursor.execute(
+                "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
+                (user.name, user.email, password_hash),
+            )
+            conn.commit()
+        except sqlite3.IntegrityError:
+            raise HTTPException(status_code=400, detail="Email-ul este deja înregistrat")
+        user_id = cursor.lastrowid
+    finally:
         conn.close()
-        raise HTTPException(status_code=400, detail="Email-ul este deja înregistrat")
-
-    password_hash = hash_password(user.password)
-    cursor.execute(
-        "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
-        (user.name, user.email, password_hash),
-    )
-    conn.commit()
-    user_id = cursor.lastrowid
-    conn.close()
 
     token = create_access_token({"user_id": user_id, "email": user.email})
     return TokenResponse(
@@ -204,10 +208,12 @@ async def register(user: UserRegister):
 @app.post("/api/auth/login", response_model=TokenResponse)
 async def login(user: UserLogin):
     conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users WHERE email = ?", (user.email,))
-    row = cursor.fetchone()
-    conn.close()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE email = ?", (user.email,))
+        row = cursor.fetchone()
+    finally:
+        conn.close()
 
     if not row or not verify_password(user.password, row["password_hash"]):
         raise HTTPException(status_code=401, detail="Email sau parolă incorectă")
@@ -227,10 +233,12 @@ async def login(user: UserLogin):
 @app.get("/api/user/profile")
 async def get_profile(current_user: dict = Depends(get_current_user)):
     conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users WHERE id = ?", (current_user["user_id"],))
-    row = cursor.fetchone()
-    conn.close()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", (current_user["user_id"],))
+        row = cursor.fetchone()
+    finally:
+        conn.close()
 
     if not row:
         raise HTTPException(status_code=404, detail="Utilizator negăsit")
@@ -249,10 +257,12 @@ async def get_profile(current_user: dict = Depends(get_current_user)):
 @app.get("/api/plans")
 async def get_plans():
     conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM plans")
-    rows = cursor.fetchall()
-    conn.close()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM plans")
+        rows = cursor.fetchall()
+    finally:
+        conn.close()
 
     return [
         {
@@ -271,19 +281,20 @@ async def get_plans():
 @app.post("/api/user/select-plan")
 async def select_plan(plan: PlanSelect, current_user: dict = Depends(get_current_user)):
     conn = get_db()
-    cursor = conn.cursor()
+    try:
+        cursor = conn.cursor()
 
-    cursor.execute("SELECT id FROM plans WHERE id = ?", (plan.plan_id,))
-    if not cursor.fetchone():
+        cursor.execute("SELECT id FROM plans WHERE id = ?", (plan.plan_id,))
+        if not cursor.fetchone():
+            raise HTTPException(status_code=404, detail="Planul nu a fost găsit")
+
+        cursor.execute(
+            "UPDATE users SET plan = ? WHERE id = ?",
+            (plan.plan_id, current_user["user_id"]),
+        )
+        conn.commit()
+    finally:
         conn.close()
-        raise HTTPException(status_code=404, detail="Planul nu a fost găsit")
-
-    cursor.execute(
-        "UPDATE users SET plan = ? WHERE id = ?",
-        (plan.plan_id, current_user["user_id"]),
-    )
-    conn.commit()
-    conn.close()
 
     return {"message": f"Planul {plan.plan_id} a fost activat cu succes"}
 
@@ -291,21 +302,23 @@ async def select_plan(plan: PlanSelect, current_user: dict = Depends(get_current
 @app.get("/api/hotspots")
 async def get_hotspots(country: Optional[str] = None, type: Optional[str] = None):
     conn = get_db()
-    cursor = conn.cursor()
+    try:
+        cursor = conn.cursor()
 
-    query = "SELECT * FROM hotspots WHERE 1=1"
-    params: list = []
+        query = "SELECT * FROM hotspots WHERE 1=1"
+        params: list = []
 
-    if country:
-        query += " AND country = ?"
-        params.append(country)
-    if type:
-        query += " AND type = ?"
-        params.append(type)
+        if country:
+            query += " AND country = ?"
+            params.append(country)
+        if type:
+            query += " AND type = ?"
+            params.append(type)
 
-    cursor.execute(query, params)
-    rows = cursor.fetchall()
-    conn.close()
+        cursor.execute(query, params)
+        rows = cursor.fetchall()
+    finally:
+        conn.close()
 
     return [
         {
@@ -324,10 +337,12 @@ async def get_hotspots(country: Optional[str] = None, type: Optional[str] = None
 @app.get("/api/hotspots/{hotspot_id}")
 async def get_hotspot(hotspot_id: int):
     conn = get_db()
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM hotspots WHERE id = ?", (hotspot_id,))
-    row = cursor.fetchone()
-    conn.close()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM hotspots WHERE id = ?", (hotspot_id,))
+        row = cursor.fetchone()
+    finally:
+        conn.close()
 
     if not row:
         raise HTTPException(status_code=404, detail="Hotspot-ul nu a fost găsit")
@@ -346,15 +361,16 @@ async def get_hotspot(hotspot_id: int):
 @app.get("/api/stats")
 async def get_stats():
     conn = get_db()
-    cursor = conn.cursor()
+    try:
+        cursor = conn.cursor()
 
-    cursor.execute("SELECT COUNT(*) FROM users")
-    users_count = cursor.fetchone()[0]
+        cursor.execute("SELECT COUNT(*) FROM users")
+        users_count = cursor.fetchone()[0]
 
-    cursor.execute("SELECT COUNT(*) FROM hotspots")
-    hotspots_count = cursor.fetchone()[0]
-
-    conn.close()
+        cursor.execute("SELECT COUNT(*) FROM hotspots")
+        hotspots_count = cursor.fetchone()[0]
+    finally:
+        conn.close()
 
     return {
         "countries": 175,
