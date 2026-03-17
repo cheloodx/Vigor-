@@ -1,10 +1,12 @@
 import SwiftUI
 
 struct MassageTimerView: View {
+    @Environment(\.scenePhase) var scenePhase
     @State private var selectedPreset: MassagePreset? = nil
     @State private var timeRemaining: Int = 0
     @State private var isRunning = false
     @State private var timer: Timer? = nil
+    @State private var endDate: Date? = nil
     
     var body: some View {
         ZStack {
@@ -25,6 +27,12 @@ struct MassageTimerView: View {
         .navigationTitle("Timer Masaj")
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear { stopTimer() }
+        .onChange(of: scenePhase) { newPhase in
+            if newPhase == .active, let endDate = endDate, isRunning {
+                timeRemaining = max(0, Int(endDate.timeIntervalSinceNow))
+                if timeRemaining <= 0 { stopTimer() }
+            }
+        }
     }
     
     var presetsView: some View {
@@ -150,6 +158,7 @@ struct MassageTimerView: View {
     
     func startTimer() {
         guard timeRemaining > 0 else { return }
+        endDate = Date().addingTimeInterval(Double(timeRemaining))
         isRunning = true
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
             if timeRemaining > 0 { timeRemaining -= 1 } else { stopTimer() }
@@ -160,10 +169,13 @@ struct MassageTimerView: View {
         isRunning = false
         timer?.invalidate()
         timer = nil
+        endDate = nil
     }
     
     func resetTimer() {
         stopTimer()
-        if let preset = selectedPreset { timeRemaining = preset.duration * 60 }
+        if let preset = selectedPreset {
+            timeRemaining = preset.duration * 60
+        }
     }
 }
