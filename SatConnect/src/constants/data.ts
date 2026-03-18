@@ -209,8 +209,8 @@ export const MOCK_MESSAGES: Message[] = [
 ];
 
 export const MOCK_USAGE: UsageStats = {
-  dataUsedMB: 127,
-  dataLimitMB: 200,
+  dataUsedMB: 2150,
+  dataLimitMB: 51200,
   messagesSent: 342,
   messagesQueued: 3,
   locationsShared: 58,

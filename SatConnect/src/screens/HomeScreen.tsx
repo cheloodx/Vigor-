@@ -136,7 +136,7 @@ export function HomeScreen() {
               icon="calendar-outline"
               title="Zile rămase"
               value={`${usage.planDaysRemaining}`}
-              subtitle="plan Standard"
+              subtitle="plan Explorer"
               progress={usage.planDaysRemaining / 30}
               color={COLORS.success}
             />
