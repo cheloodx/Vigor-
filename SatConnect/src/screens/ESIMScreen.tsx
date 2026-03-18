@@ -43,12 +43,17 @@ export function ESIMScreen() {
   const [activeCardId, setActiveCardId] = useState<string>('esim-1');
 
   const handleActivate = (card: ESIMCard) => {
-    if (card.status === 'active') {
+    if (card.id === activeCardId) {
       Alert.alert(
         'eSIM Activ',
         `Cartela "${card.label}" este deja activă și în uz.`,
         [{ text: 'OK' }]
       );
+      return;
+    }
+
+    if (card.status === 'active') {
+      setActiveCardId(card.id);
       return;
     }
     Alert.alert(
