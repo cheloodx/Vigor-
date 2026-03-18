@@ -14,16 +14,20 @@ interface ConnectivityBadgeProps {
 const CONNECTION_ICONS: Record<ConnectionType, string> = {
   wifi: 'wifi',
   cellular: 'signal-cellular-3',
-  bluetooth: 'bluetooth',
+  roaming: 'earth',
   satellite: 'satellite-variant',
+  esim: 'sim-outline',
+  bluetooth: 'bluetooth',
   none: 'wifi-off',
 };
 
 const CONNECTION_COLORS: Record<ConnectionType, string> = {
   wifi: COLORS.success,
   cellular: COLORS.info,
-  bluetooth: COLORS.info,
+  roaming: '#F59E0B',
   satellite: COLORS.satellite,
+  esim: COLORS.accent,
+  bluetooth: COLORS.info,
   none: COLORS.error,
 };
 

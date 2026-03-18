@@ -5,10 +5,11 @@ import {
   StyleSheet,
   ScrollView,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
-import { MOCK_USAGE, MOCK_CONNECTIVITY, CONNECTION_TYPE_LABELS } from '../constants/data';
+import { MOCK_USAGE, MOCK_CONNECTIVITY, CONNECTION_TYPE_LABELS, MOCK_ESIM_CARDS } from '../constants/data';
 import { ConnectivityBadge } from '../components/ConnectivityBadge';
 import { UsageCard } from '../components/UsageCard';
 import { SOSButton } from '../components/SOSButton';
@@ -81,6 +82,17 @@ export function HomeScreen() {
         )}
       </View>
 
+      {/* Multi-connectivity panel */}
+      <Text style={styles.sectionTitle}>Conectivitate activă</Text>
+      <View style={styles.connectivityPanel}>
+        <ConnectivityTile icon="wifi" label="WiFi" sublabel="72% semnal" color={COLORS.success} active />
+        <ConnectivityTile icon="signal-cellular-3" label="Date mobile" sublabel="Național" color={COLORS.info} active />
+        <ConnectivityTile icon="earth" label="Roaming EU" sublabel="175 țări" color="#F59E0B" active={connectivity.isRoaming} />
+        <ConnectivityTile icon="satellite-variant" label="GPS Satelit" sublabel={connectivity.gpsAccuracy ? `±${connectivity.gpsAccuracy}m` : 'Activ'} color={COLORS.satellite} active={connectivity.gpsEnabled} />
+        <ConnectivityTile icon="sim-outline" label="eSIM" sublabel={MOCK_ESIM_CARDS.find((c) => c.iccid === connectivity.activeESIM)?.label ?? 'Inactiv'} color={COLORS.accent} active={!!connectivity.activeESIM} />
+        <ConnectivityTile icon="map-marker-radius-outline" label="GPS Local" sublabel="Activ" color={COLORS.primary} active />
+      </View>
+
       {/* SOS Button */}
       <View style={styles.sosSection}>
         <SOSButton onActivate={() => {}} />
@@ -141,6 +153,23 @@ export function HomeScreen() {
         <QuickAction icon="cog-outline" label="Setări" color={COLORS.textSecondary} />
       </View>
     </ScrollView>
+  );
+}
+
+function ConnectivityTile({ icon, label, sublabel, color, active }: { icon: string; label: string; sublabel: string; color: string; active: boolean }) {
+  return (
+    <View style={[styles.connectivityTile, active && { borderColor: color, borderWidth: 1.5 }]}>
+      <View style={[styles.connectivityTileIcon, { backgroundColor: color + '20' }]}>
+        <MaterialCommunityIcons
+          name={icon as keyof typeof MaterialCommunityIcons.glyphMap}
+          size={18}
+          color={active ? color : COLORS.textLight}
+        />
+      </View>
+      <Text style={[styles.connectivityTileLabel, { color: active ? COLORS.text : COLORS.textLight }]}>{label}</Text>
+      <Text style={styles.connectivityTileSub}>{sublabel}</Text>
+      {active && <View style={[styles.connectivityActiveDot, { backgroundColor: color }]} />}
+    </View>
   );
 }
 
@@ -252,6 +281,49 @@ const styles = StyleSheet.create({
   },
   usageItem: {
     flex: 1,
+  },
+  connectivityPanel: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.sm,
+    marginBottom: SPACING.xl,
+  },
+  connectivityTile: {
+    width: '30%',
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.lg,
+    padding: SPACING.sm,
+    gap: 3,
+    borderColor: COLORS.border,
+    borderWidth: 1,
+    ...SHADOWS.sm,
+    position: 'relative',
+  },
+  connectivityTileIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: RADIUS.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  connectivityTileLabel: {
+    fontSize: FONTS.sizes.xs,
+    fontWeight: '700',
+    textAlign: 'center',
+  },
+  connectivityTileSub: {
+    fontSize: 9,
+    color: COLORS.textLight,
+    textAlign: 'center',
+  },
+  connectivityActiveDot: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+    width: 7,
+    height: 7,
+    borderRadius: 4,
   },
   quickActions: {
     flexDirection: 'row',

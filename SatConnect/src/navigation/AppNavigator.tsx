@@ -15,6 +15,7 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { MessagesScreen } from '../screens/MessagesScreen';
 import { ChatScreen } from '../screens/ChatScreen';
 import { MapScreen } from '../screens/MapScreen';
+import { ESIMScreen } from '../screens/ESIMScreen';
 import { PlansScreen } from '../screens/PlansScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 
@@ -71,6 +72,16 @@ function MainTabs({ onLogout, onOpenChat }: { onLogout: () => void; onOpenChat: 
           tabBarLabel: 'Locație',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="map-marker-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ESIM"
+        component={ESIMScreen}
+        options={{
+          tabBarLabel: 'eSIM',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="sim-outline" size={size} color={color} />
           ),
         }}
       />

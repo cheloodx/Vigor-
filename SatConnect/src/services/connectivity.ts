@@ -58,9 +58,11 @@ class ConnectivityManager {
   getConnectionLabel(): string {
     const labels: Record<ConnectionType, string> = {
       wifi: 'WiFi',
-      cellular: 'Rețea mobilă',
+      cellular: 'Date mobile',
+      roaming: 'Roaming internațional',
+      satellite: 'Satelit GPS',
+      esim: 'eSIM activ',
       bluetooth: 'Bluetooth',
-      satellite: 'Satelit',
       none: 'Deconectat',
     };
     return labels[this.state.connectionType];

@@ -83,7 +83,28 @@ export interface SOSAlert {
 export type SOSStatus = 'queued' | 'sending' | 'sent' | 'acknowledged' | 'resolved';
 
 // Connectivity types
-export type ConnectionType = 'wifi' | 'cellular' | 'bluetooth' | 'satellite' | 'none';
+export type ConnectionType = 'wifi' | 'cellular' | 'roaming' | 'satellite' | 'esim' | 'bluetooth' | 'none';
+
+export type ESIMStatus = 'active' | 'inactive' | 'pending' | 'expired';
+
+export interface ESIMCard {
+  id: string;
+  iccid: string;
+  label: string;
+  carrier: string;
+  country: string;
+  countryFlag: string;
+  dataLimit: string;
+  dataUsed: string;
+  dataUsedMB: number;
+  dataLimitMB: number;
+  validUntil: string;
+  status: ESIMStatus;
+  isRoaming: boolean;
+  planType: 'national' | 'international' | 'global';
+  price: number;
+  currency: string;
+}
 
 export interface ConnectivityState {
   isConnected: boolean;
@@ -94,6 +115,10 @@ export interface ConnectivityState {
   isSyncing: boolean;
   pendingSync: number;
   lastSyncAt?: string;
+  activeESIM?: string; // ICCID of active eSIM
+  isRoaming: boolean;
+  gpsEnabled: boolean;
+  gpsAccuracy?: number; // meters
 }
 
 export interface SyncQueueItem {
@@ -133,6 +158,7 @@ export type MainTabParamList = {
   Home: undefined;
   Messages: undefined;
   Map: undefined;
+  ESIM: undefined;
   Plans: undefined;
   Profile: undefined;
 };
