@@ -86,8 +86,8 @@ export function HomeScreen() {
       <Text style={styles.sectionTitle}>Conectivitate activă</Text>
       <View style={styles.connectivityPanel}>
         <ConnectivityTile icon="wifi" label="WiFi" sublabel="72% semnal" color={COLORS.success} active />
-        <ConnectivityTile icon="signal-cellular-3" label="Date mobile" sublabel="Național" color={COLORS.info} active />
-        <ConnectivityTile icon="earth" label="Roaming EU" sublabel="175 țări" color="#F59E0B" active={connectivity.isRoaming} />
+        <ConnectivityTile icon="signal-cellular-3" label="Date mobile" sublabel="175 țări" color={COLORS.info} active />
+        <ConnectivityTile icon="earth" label="Roaming Global" sublabel="175 țări" color="#F59E0B" active={connectivity.isRoaming} />
         <ConnectivityTile icon="satellite-variant" label="GPS Satelit" sublabel={connectivity.gpsAccuracy ? `±${connectivity.gpsAccuracy}m` : 'Activ'} color={COLORS.satellite} active={connectivity.gpsEnabled} />
         <ConnectivityTile icon="sim-outline" label="eSIM" sublabel={MOCK_ESIM_CARDS.find((c) => c.iccid === connectivity.activeESIM)?.label ?? 'Inactiv'} color={COLORS.accent} active={!!connectivity.activeESIM} />
         <ConnectivityTile icon="map-marker-radius-outline" label="GPS Local" sublabel="Activ" color={COLORS.primary} active />

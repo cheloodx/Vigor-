@@ -122,7 +122,7 @@ export function ESIMScreen() {
       <View style={styles.modesGrid}>
         <ConnectivityMode icon="wifi" label="WiFi" color={COLORS.success} active />
         <ConnectivityMode icon="signal-cellular-3" label="Date mobile" color={COLORS.info} active />
-        <ConnectivityMode icon="earth" label="Roaming EU" color="#F59E0B" active />
+        <ConnectivityMode icon="earth" label="Roaming Global" color="#F59E0B" active />
         <ConnectivityMode icon="satellite-variant" label="GPS Satelit" color={COLORS.satellite} active />
         <ConnectivityMode icon="sim-outline" label="eSIM" color={COLORS.accent} active />
         <ConnectivityMode icon="map-marker-radius-outline" label="GPS Local" color={COLORS.primary} active />
