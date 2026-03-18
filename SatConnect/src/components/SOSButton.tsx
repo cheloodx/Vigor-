@@ -40,6 +40,7 @@ export function SOSButton({ onActivate, disabled = false }: SOSButtonProps) {
 
   const startHold = () => {
     if (disabled) return;
+    if (holdTimer.current) clearInterval(holdTimer.current);
     setIsHolding(true);
     progressRef.current = 0;
     setHoldProgress(0);
@@ -50,6 +51,7 @@ export function SOSButton({ onActivate, disabled = false }: SOSButtonProps) {
 
       if (progressRef.current >= 100) {
         if (holdTimer.current) clearInterval(holdTimer.current);
+        holdTimer.current = null;
         setIsHolding(false);
         setHoldProgress(0);
         onActivate();
