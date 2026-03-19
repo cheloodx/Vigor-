@@ -106,8 +106,8 @@ export function HomeScreen() {
             <UsageCard
               icon="cloud-upload-outline"
               title="Date folosite"
-              value={`${usage.dataUsedMB} MB`}
-              subtitle={`din ${usage.dataLimitMB} MB`}
+              value={`${(usage.dataUsedMB / 1024).toFixed(1)} GB`}
+              subtitle={`din ${(usage.dataLimitMB / 1024).toFixed(0)} GB`}
               progress={dataProgress}
               color={COLORS.primary}
             />

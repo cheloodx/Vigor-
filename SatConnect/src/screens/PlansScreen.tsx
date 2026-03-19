@@ -12,7 +12,7 @@ import { PlanCard } from '../components/PlanCard';
 import { Plan, PlanType } from '../types';
 
 export function PlansScreen() {
-  const [currentPlan] = useState<PlanType>('standard');
+  const [currentPlan] = useState<PlanType>('basic');
 
   const handleSelectPlan = (plan: Plan) => {
     if (plan.id === currentPlan) return;
