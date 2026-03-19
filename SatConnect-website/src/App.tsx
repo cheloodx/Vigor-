@@ -416,7 +416,9 @@ function App() {
                   alt="Pamantul vazut din spatiu cu retele de conectivitate"
                   className="w-full h-96 object-cover"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://placehold.co/800x600/1E3A5F/00D4AA?text=Global+Connectivity";
+                    const img = e.target as HTMLImageElement;
+                    img.onerror = null;
+                    img.src = "https://placehold.co/800x600/1E3A5F/00D4AA?text=Global+Connectivity";
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 to-transparent" />
@@ -486,7 +488,9 @@ function App() {
                     alt={useCase.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = "https://placehold.co/800x500/1E3A5F/00D4AA?text=" + encodeURIComponent(useCase.title);
+                      const img = e.target as HTMLImageElement;
+                      img.onerror = null;
+                      img.src = "https://placehold.co/800x500/1E3A5F/00D4AA?text=" + encodeURIComponent(useCase.title);
                     }}
                   />
                   <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-2">
