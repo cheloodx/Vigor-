@@ -37,5 +37,8 @@ yarn-error.*
 *.tsbuildinfo
 
 # generated native folders
-/ios
 /android
+
+# iOS CocoaPods (installed locally via pod install)
+/ios/Pods
+/ios/SatConnect.xcworkspace
