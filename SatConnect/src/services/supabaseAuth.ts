@@ -150,7 +150,7 @@ export interface SyncOperation {
 
 class DataSyncService {
   private queue: SyncOperation[] = [];
-  private readonly SYNC_QUEUE_KEY = '@satconnect_sync_queue';
+  private readonly SYNC_QUEUE_KEY = '@satconnect_supabase_sync_queue';
 
   async loadQueue(): Promise<void> {
     const stored = await AsyncStorage.getItem(this.SYNC_QUEUE_KEY);
