@@ -39,14 +39,19 @@ export function PlansScreen() {
           text: 'Cumpără',
           onPress: async () => {
             setPurchasing(true);
-            const productId = PLAN_PRODUCT_MAP[plan.id] || PRODUCT_IDS.FREE;
-            const result = await appleIAP.purchaseSubscription(productId);
-            setPurchasing(false);
-            if (result.success) {
-              setCurrentPlan(plan.id as PlanType);
-              Alert.alert('Achiziție reușită!', `Planul ${plan.name} a fost activat.`);
-            } else {
-              Alert.alert('Eroare', result.error || 'Achiziția a eșuat.');
+            try {
+              const productId = PLAN_PRODUCT_MAP[plan.id] || PRODUCT_IDS.FREE;
+              const result = await appleIAP.purchaseSubscription(productId);
+              if (result.success) {
+                setCurrentPlan(plan.id as PlanType);
+                Alert.alert('Achiziție reușită!', `Planul ${plan.name} a fost activat.`);
+              } else {
+                Alert.alert('Eroare', result.error || 'Achiziția a eșuat.');
+              }
+            } catch {
+              Alert.alert('Eroare', 'Achiziția a eșuat. Încearcă din nou.');
+            } finally {
+              setPurchasing(false);
             }
           },
         },
@@ -56,14 +61,19 @@ export function PlansScreen() {
 
   const handleRestorePurchases = async () => {
     setRestoring(true);
-    const result = await appleIAP.restorePurchases();
-    setRestoring(false);
-    if (result.success && result.subscription) {
-      const planType = appleIAP.getPlanTypeForProduct(result.subscription.productId);
-      if (planType) setCurrentPlan(planType as PlanType);
-      Alert.alert('Restaurare reușită!', 'Abonamentul tău a fost restaurat.');
-    } else {
-      Alert.alert('Info', result.error || 'Nu au fost găsite achiziții anterioare.');
+    try {
+      const result = await appleIAP.restorePurchases();
+      if (result.success && result.subscription) {
+        const planType = appleIAP.getPlanTypeForProduct(result.subscription.productId);
+        if (planType) setCurrentPlan(planType as PlanType);
+        Alert.alert('Restaurare reușită!', 'Abonamentul tău a fost restaurat.');
+      } else {
+        Alert.alert('Info', result.error || 'Nu au fost găsite achiziții anterioare.');
+      }
+    } catch {
+      Alert.alert('Eroare', 'Restaurarea a eșuat. Încearcă din nou.');
+    } finally {
+      setRestoring(false);
     }
   };
 
