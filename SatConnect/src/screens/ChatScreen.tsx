@@ -75,7 +75,7 @@ export function ChatScreen({ conversationId, contactName, onBack }: ChatScreenPr
     }, 3500);
   };
 
-  const estimateSize = new TextEncoder().encode(inputText).length;
+  const estimateSize = new TextEncoder().encode(inputText.trim()).length;
 
   return (
     <KeyboardAvoidingView
