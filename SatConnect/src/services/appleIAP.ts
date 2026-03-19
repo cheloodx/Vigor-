@@ -155,8 +155,9 @@ class AppleIAPService {
 
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
-    if (this.subscription && this.subscription.isActive) {
-      return { success: true, subscription: this.subscription };
+    const activeSub = this.getActiveSubscription();
+    if (activeSub && activeSub.isActive) {
+      return { success: true, subscription: activeSub };
     }
 
     return { success: false, error: 'Nu au fost găsite achiziții anterioare' };
