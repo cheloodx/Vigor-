@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, BackHandler } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -132,6 +132,24 @@ export function AppNavigator() {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>('loading');
   const [chatState, setChatState] = useState<{ conversationId: string; contactName: string } | null>(null);
   const [overlayScreen, setOverlayScreen] = useState<OverlayScreen>(null);
+
+  // Android hardware back button handling for overlays
+  useEffect(() => {
+    if (!chatState && !overlayScreen) return;
+    const handler = () => {
+      if (overlayScreen) {
+        setOverlayScreen(null);
+        return true;
+      }
+      if (chatState) {
+        setChatState(null);
+        return true;
+      }
+      return false;
+    };
+    const sub = BackHandler.addEventListener('hardwareBackPress', handler);
+    return () => sub.remove();
+  }, [chatState, overlayScreen]);
 
   useEffect(() => {
     const init = async () => {

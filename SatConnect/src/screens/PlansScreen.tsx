@@ -65,6 +65,7 @@ export function PlansScreen() {
   };
 
   return (
+    <View style={styles.wrapper}>
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <View style={styles.header}>
         <Text style={styles.title}>Planuri</Text>
@@ -96,17 +97,6 @@ export function PlansScreen() {
         <Text style={styles.restoreText}>Restaurează cumpărăturile</Text>
       </TouchableOpacity>
 
-      {/* Purchase in progress overlay */}
-      {purchasing && (
-        <View style={styles.purchasingOverlay}>
-          <View style={styles.purchasingCard}>
-            <MaterialCommunityIcons name="apple" size={36} color={COLORS.text} />
-            <Text style={styles.purchasingText}>Se procesează plata...</Text>
-            <ActivityIndicator size="large" color={COLORS.primary} />
-          </View>
-        </View>
-      )}
-
       <View style={styles.footer}>
         <Text style={styles.footerTitle}>Ai nevoie de mai mult?</Text>
         <Text style={styles.footerText}>
@@ -118,10 +108,25 @@ export function PlansScreen() {
         </Text>
       </View>
     </ScrollView>
+
+      {/* Purchase in progress overlay - outside ScrollView for proper positioning */}
+      {purchasing && (
+        <View style={styles.purchasingOverlay}>
+          <View style={styles.purchasingCard}>
+            <MaterialCommunityIcons name="apple" size={36} color={COLORS.text} />
+            <Text style={styles.purchasingText}>Se procesează plata...</Text>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          </View>
+        </View>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.surface,

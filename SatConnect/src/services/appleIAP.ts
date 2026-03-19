@@ -116,6 +116,8 @@ class AppleIAPService {
     subscription?: IAPSubscription;
     error?: string;
   }> {
+    if (!this.initialized) await this.initialize();
+
     // Simulate purchase flow (2 second delay for Apple payment sheet)
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -149,6 +151,8 @@ class AppleIAPService {
     subscription?: IAPSubscription;
     error?: string;
   }> {
+    if (!this.initialized) await this.initialize();
+
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     if (this.subscription && this.subscription.isActive) {
