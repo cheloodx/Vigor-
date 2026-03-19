@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  TextInput,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
@@ -16,6 +17,8 @@ interface MessagesScreenProps {
 }
 
 export function MessagesScreen({ onOpenChat }: MessagesScreenProps) {
+  const [searchQuery, setSearchQuery] = useState('');
+
   const getContact = (participantId: string): Contact | undefined => {
     return MOCK_CONTACTS.find((c) => c.id === participantId);
   };
@@ -30,6 +33,20 @@ export function MessagesScreen({ onOpenChat }: MessagesScreenProps) {
     if (hours < 24) return `${hours}h`;
     return date.toLocaleDateString('ro-RO', { day: 'numeric', month: 'short' });
   };
+
+  const getContactName = (conversation: Conversation): string => {
+    const other = conversation.participants.find((p) => p !== 'user');
+    const c = other ? getContact(other) : undefined;
+    return c?.name || 'Necunoscut';
+  };
+
+  const filteredConversations = MOCK_CONVERSATIONS.filter((conv) => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    const name = getContactName(conv).toLowerCase();
+    const messageText = conv.lastMessage?.text?.toLowerCase() || '';
+    return name.includes(query) || messageText.includes(query);
+  });
 
   const renderConversation = ({ item }: { item: Conversation }) => {
     const otherParticipant = item.participants.find((p) => p !== 'user');
@@ -92,18 +109,45 @@ export function MessagesScreen({ onOpenChat }: MessagesScreenProps) {
         </View>
       </View>
 
+      {/* Search Bar */}
+      <View style={styles.searchContainer}>
+        <View style={styles.searchBar}>
+          <MaterialCommunityIcons name="magnify" size={20} color={COLORS.textLight} />
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Caută în mesaje..."
+            placeholderTextColor={COLORS.textLight}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <MaterialCommunityIcons name="close-circle" size={18} color={COLORS.textLight} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+
       <FlatList
-        data={MOCK_CONVERSATIONS}
+        data={filteredConversations}
         renderItem={renderConversation}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListEmptyComponent={
           <View style={styles.empty}>
-            <MaterialCommunityIcons name="message-text-outline" size={48} color={COLORS.textLight} />
-            <Text style={styles.emptyText}>Nicio conversație încă</Text>
+            <MaterialCommunityIcons
+              name={searchQuery ? 'magnify-close' : 'message-text-outline'}
+              size={48}
+              color={COLORS.textLight}
+            />
+            <Text style={styles.emptyText}>
+              {searchQuery ? 'Niciun rezultat' : 'Nicio conversație încă'}
+            </Text>
             <Text style={styles.emptySubtext}>
-              Mesajele tale se salvează offline și se sincronizează automat
+              {searchQuery
+                ? `Nu am găsit mesaje pentru "${searchQuery}"`
+                : 'Mesajele tale se salvează offline și se sincronizează automat'}
             </Text>
           </View>
         }
@@ -125,8 +169,27 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: SPACING.md,
     backgroundColor: COLORS.white,
+  },
+  searchContainer: {
+    paddingHorizontal: SPACING.lg,
+    paddingBottom: SPACING.sm,
+    backgroundColor: COLORS.white,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.gray[50],
+    borderRadius: RADIUS.lg,
+    paddingHorizontal: SPACING.md,
+    gap: SPACING.sm,
+  },
+  searchInput: {
+    flex: 1,
+    paddingVertical: SPACING.sm,
+    fontSize: FONTS.sizes.md,
+    color: COLORS.text,
   },
   title: {
     fontSize: FONTS.sizes.xxl,

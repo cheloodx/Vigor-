@@ -5,31 +5,63 @@ import {
   StyleSheet,
   ScrollView,
   Alert,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
-import { COLORS, FONTS, SPACING } from '../constants/theme';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
 import { PLANS } from '../constants/data';
 import { PlanCard } from '../components/PlanCard';
 import { Plan, PlanType } from '../types';
+import { appleIAP, PRODUCT_IDS } from '../services/appleIAP';
+
+const PLAN_PRODUCT_MAP: Record<string, string> = {
+  free: PRODUCT_IDS.FREE,
+  basic: PRODUCT_IDS.EXPLORER,
+  standard: PRODUCT_IDS.PRO,
+  premium: PRODUCT_IDS.UNLIMITED,
+};
 
 export function PlansScreen() {
   const [currentPlan] = useState<PlanType>('basic');
+  const [purchasing, setPurchasing] = useState(false);
+  const [restoring, setRestoring] = useState(false);
 
   const handleSelectPlan = (plan: Plan) => {
     if (plan.id === currentPlan) return;
 
     Alert.alert(
-      'Schimbă planul',
-      `Vrei să treci la planul ${plan.name} (€${plan.price}/${plan.period})?\n\nIntegrarea cu Stripe va fi disponibilă în curând.`,
+      'Cumpără planul',
+      `Vrei să treci la planul ${plan.name} (€${plan.price}/${plan.period})?\n\nPlata se procesează prin Apple In-App Purchase.`,
       [
         { text: 'Anulează', style: 'cancel' },
         {
-          text: 'Confirmă',
-          onPress: () => {
-            Alert.alert('Succes', `Ai selectat planul ${plan.name}. Plata va fi procesată prin Stripe.`);
+          text: 'Cumpără',
+          onPress: async () => {
+            setPurchasing(true);
+            const productId = PLAN_PRODUCT_MAP[plan.id] || PRODUCT_IDS.FREE;
+            const result = await appleIAP.purchaseSubscription(productId);
+            setPurchasing(false);
+            if (result.success) {
+              Alert.alert('Achiziție reușită!', `Planul ${plan.name} a fost activat.`);
+            } else {
+              Alert.alert('Eroare', result.error || 'Achiziția a eșuat.');
+            }
           },
         },
       ]
     );
+  };
+
+  const handleRestorePurchases = async () => {
+    setRestoring(true);
+    const result = await appleIAP.restorePurchases();
+    setRestoring(false);
+    if (result.success) {
+      Alert.alert('Restaurare reușită!', 'Abonamentul tău a fost restaurat.');
+    } else {
+      Alert.alert('Info', result.error || 'Nu au fost găsite achiziții anterioare.');
+    }
   };
 
   return (
@@ -50,6 +82,31 @@ export function PlansScreen() {
         />
       ))}
 
+      {/* Restore Purchases */}
+      <TouchableOpacity
+        style={styles.restoreButton}
+        onPress={handleRestorePurchases}
+        disabled={restoring}
+      >
+        {restoring ? (
+          <ActivityIndicator size="small" color={COLORS.accent} />
+        ) : (
+          <MaterialCommunityIcons name="restore" size={18} color={COLORS.accent} />
+        )}
+        <Text style={styles.restoreText}>Restaurează cumpărăturile</Text>
+      </TouchableOpacity>
+
+      {/* Purchase in progress overlay */}
+      {purchasing && (
+        <View style={styles.purchasingOverlay}>
+          <View style={styles.purchasingCard}>
+            <MaterialCommunityIcons name="apple" size={36} color={COLORS.text} />
+            <Text style={styles.purchasingText}>Se procesează plata...</Text>
+            <ActivityIndicator size="large" color={COLORS.primary} />
+          </View>
+        </View>
+      )}
+
       <View style={styles.footer}>
         <Text style={styles.footerTitle}>Ai nevoie de mai mult?</Text>
         <Text style={styles.footerText}>
@@ -57,6 +114,7 @@ export function PlansScreen() {
         </Text>
         <Text style={styles.footerNote}>
           Toate planurile includ buton SOS de urgență și criptare end-to-end.
+          Plățile sunt procesate securizat prin Apple In-App Purchase.
         </Text>
       </View>
     </ScrollView>
@@ -107,5 +165,42 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
     textAlign: 'center',
     marginTop: SPACING.sm,
+  },
+  restoreButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: SPACING.sm,
+    paddingVertical: SPACING.md,
+    marginBottom: SPACING.md,
+  },
+  restoreText: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: '600',
+    color: COLORS.accent,
+  },
+  purchasingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 100,
+  },
+  purchasingCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.xl,
+    padding: SPACING.xxl,
+    alignItems: 'center',
+    gap: SPACING.md,
+    width: 250,
+  },
+  purchasingText: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: '600',
+    color: COLORS.text,
   },
 });

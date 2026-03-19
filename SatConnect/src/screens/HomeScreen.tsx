@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   ScrollView,
   RefreshControl,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
@@ -20,12 +21,40 @@ export function HomeScreen() {
   const [connectivity] = useState<ConnectivityState>(MOCK_CONNECTIVITY);
   const [usage] = useState<UsageStats>(MOCK_USAGE);
 
+  const [dataAlertShown, setDataAlertShown] = useState(false);
+
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => setRefreshing(false), 1500);
   };
 
   const dataProgress = usage.dataUsedMB / usage.dataLimitMB;
+
+  // Data usage alert
+  useEffect(() => {
+    if (dataAlertShown) return;
+    const percentage = (usage.dataUsedMB / usage.dataLimitMB) * 100;
+    if (percentage >= 80) {
+      setDataAlertShown(true);
+      const remaining = ((usage.dataLimitMB - usage.dataUsedMB) / 1024).toFixed(1);
+      if (percentage >= 100) {
+        Alert.alert(
+          'Alert\u0103 consum date',
+          'Ai consumat toate datele planului t\u0103u. F\u0103 upgrade pentru a continua.',
+        );
+      } else if (percentage >= 90) {
+        Alert.alert(
+          'Alert\u0103 consum date',
+          `Ai consumat 90% din date. Mai ai ${remaining} GB disponibil. Consider\u0103 upgrade-ul.`,
+        );
+      } else {
+        Alert.alert(
+          'Alert\u0103 consum date',
+          `Ai consumat ${Math.round(percentage)}% din date. Mai ai ${remaining} GB disponibil.`,
+        );
+      }
+    }
+  }, [usage.dataUsedMB, usage.dataLimitMB, dataAlertShown]);
 
   return (
     <ScrollView

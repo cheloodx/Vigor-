@@ -14,6 +14,10 @@ import { MOCK_USAGE, MOCK_CONNECTIVITY } from '../constants/data';
 
 interface ProfileScreenProps {
   onLogout: () => void;
+  onOpenSettings?: () => void;
+  onOpenTerms?: () => void;
+  onOpenPrivacy?: () => void;
+  onOpenContacts?: () => void;
 }
 
 interface MenuItem {
@@ -24,7 +28,7 @@ interface MenuItem {
   onPress?: () => void;
 }
 
-export function ProfileScreen({ onLogout }: ProfileScreenProps) {
+export function ProfileScreen({ onLogout, onOpenSettings, onOpenTerms, onOpenPrivacy, onOpenContacts }: ProfileScreenProps) {
   const handleLogout = () => {
     Alert.alert(
       'Deconectare',
@@ -45,8 +49,8 @@ export function ProfileScreen({ onLogout }: ProfileScreenProps) {
       title: 'Cont',
       items: [
         { icon: 'account-outline', label: 'Editează profilul' },
-        { icon: 'shield-lock-outline', label: 'Securitate' },
-        { icon: 'bell-outline', label: 'Notificări' },
+        { icon: 'cog-outline', label: 'Setări', onPress: onOpenSettings },
+        { icon: 'account-group-outline', label: 'Contacte', onPress: onOpenContacts },
       ],
     },
     {
@@ -99,8 +103,8 @@ export function ProfileScreen({ onLogout }: ProfileScreenProps) {
       title: 'Despre',
       items: [
         { icon: 'information-outline', label: 'Versiune', value: '1.0.0 (MVP)' },
-        { icon: 'file-document-outline', label: 'Termeni și condiții' },
-        { icon: 'shield-check-outline', label: 'Politica de confidențialitate' },
+        { icon: 'file-document-outline', label: 'Termeni și condiții', onPress: onOpenTerms },
+        { icon: 'shield-check-outline', label: 'Politica de confidențialitate', onPress: onOpenPrivacy },
         { icon: 'help-circle-outline', label: 'Ajutor & Suport' },
       ],
     },

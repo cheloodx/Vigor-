@@ -66,14 +66,65 @@ export function MapScreen() {
         </View>
       </View>
 
-      {/* Map Placeholder */}
-      <View style={styles.mapPlaceholder}>
-        <MaterialCommunityIcons name="map-marker-radius" size={64} color={COLORS.primary} />
-        <Text style={styles.mapTitle}>Hartă GPS</Text>
-        <Text style={styles.mapSubtitle}>
-          Ultima locație: {locations[0].latitude.toFixed(4)}° N, {locations[0].longitude.toFixed(4)}° E
-        </Text>
-        <Text style={styles.mapAccuracy}>Precizie: ±{locations[0].accuracy}m</Text>
+      {/* GPS Map with location pins */}
+      <View style={styles.mapContainer}>
+        <View style={styles.mapGrid}>
+          {/* Grid lines */}
+          {[0, 1, 2, 3, 4].map((i) => (
+            <View key={`h-${i}`} style={[styles.gridLineH, { top: `${i * 25}%` }]} />
+          ))}
+          {[0, 1, 2, 3, 4].map((i) => (
+            <View key={`v-${i}`} style={[styles.gridLineV, { left: `${i * 25}%` }]} />
+          ))}
+          {/* Location pins */}
+          {locations.map((loc, index) => {
+            const xPercent = 20 + (index * 15) % 60;
+            const yPercent = 15 + (index * 18) % 65;
+            return (
+              <View
+                key={loc.id}
+                style={[
+                  styles.mapPin,
+                  {
+                    left: `${xPercent}%`,
+                    top: `${yPercent}%`,
+                    backgroundColor: loc.synced ? COLORS.success : COLORS.warning,
+                  },
+                ]}
+              >
+                <MaterialCommunityIcons
+                  name="map-marker"
+                  size={index === 0 ? 28 : 20}
+                  color={index === 0 ? COLORS.primary : loc.synced ? COLORS.success : COLORS.warning}
+                />
+                {index === 0 && (
+                  <View style={styles.currentLocationPulse} />
+                )}
+              </View>
+            );
+          })}
+          {/* Current location label */}
+          <View style={styles.mapLabelContainer}>
+            <Text style={styles.mapLabel}>
+              {locations[0].latitude.toFixed(4)}° N, {locations[0].longitude.toFixed(4)}° E
+            </Text>
+            <Text style={styles.mapLabelSub}>±{locations[0].accuracy}m precizie</Text>
+          </View>
+        </View>
+        <View style={styles.mapLegend}>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: COLORS.primary }]} />
+            <Text style={styles.legendText}>Locație curentă</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: COLORS.success }]} />
+            <Text style={styles.legendText}>Sincronizat</Text>
+          </View>
+          <View style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: COLORS.warning }]} />
+            <Text style={styles.legendText}>În așteptare</Text>
+          </View>
+        </View>
       </View>
 
       {/* Actions */}
@@ -194,31 +245,93 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.xs,
     fontWeight: '600',
   },
-  mapPlaceholder: {
+  mapContainer: {
     backgroundColor: COLORS.white,
     borderRadius: RADIUS.xl,
-    padding: SPACING.xxxl,
-    alignItems: 'center',
     marginBottom: SPACING.xl,
     borderWidth: 1,
     borderColor: COLORS.border,
+    overflow: 'hidden',
     ...SHADOWS.md,
   },
-  mapTitle: {
-    fontSize: FONTS.sizes.lg,
+  mapGrid: {
+    height: 280,
+    backgroundColor: '#E8F4E8',
+    position: 'relative',
+  },
+  gridLineH: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    height: 1,
+    backgroundColor: COLORS.border,
+    opacity: 0.4,
+  },
+  gridLineV: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    width: 1,
+    backgroundColor: COLORS.border,
+    opacity: 0.4,
+  },
+  mapPin: {
+    position: 'absolute',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  currentLocationPulse: {
+    position: 'absolute',
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: COLORS.primary + '20',
+    borderWidth: 2,
+    borderColor: COLORS.primary + '40',
+  },
+  mapLabelContainer: {
+    position: 'absolute',
+    bottom: SPACING.sm,
+    left: SPACING.sm,
+    backgroundColor: COLORS.white + 'E0',
+    paddingHorizontal: SPACING.sm,
+    paddingVertical: SPACING.xs,
+    borderRadius: RADIUS.sm,
+  },
+  mapLabel: {
+    fontSize: FONTS.sizes.xs,
     fontWeight: '700',
     color: COLORS.text,
-    marginTop: SPACING.md,
   },
-  mapSubtitle: {
-    fontSize: FONTS.sizes.sm,
+  mapLabelSub: {
+    fontSize: 10,
     color: COLORS.textSecondary,
-    marginTop: SPACING.xs,
   },
-  mapAccuracy: {
+  mapLegend: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: SPACING.lg,
+    padding: SPACING.sm,
+    borderTopWidth: 1,
+    borderTopColor: COLORS.border,
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  legendDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+  },
+  legendText: {
     fontSize: FONTS.sizes.xs,
-    color: COLORS.textLight,
-    marginTop: SPACING.xs,
+    color: COLORS.textSecondary,
   },
   actions: {
     gap: SPACING.md,

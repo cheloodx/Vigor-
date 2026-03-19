@@ -11,6 +11,7 @@ import { storage } from '../services/storage';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { RegisterScreen } from '../screens/RegisterScreen';
+import { ForgotPasswordScreen } from '../screens/ForgotPasswordScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { MessagesScreen } from '../screens/MessagesScreen';
 import { ChatScreen } from '../screens/ChatScreen';
@@ -18,13 +19,22 @@ import { MapScreen } from '../screens/MapScreen';
 import { ESIMScreen } from '../screens/ESIMScreen';
 import { PlansScreen } from '../screens/PlansScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
+import { SettingsScreen } from '../screens/SettingsScreen';
+import { TermsScreen } from '../screens/TermsScreen';
+import { PrivacyScreen } from '../screens/PrivacyScreen';
+import { ContactsScreen } from '../screens/ContactsScreen';
 
-type AppScreen = 'loading' | 'onboarding' | 'login' | 'register' | 'main';
+type AppScreen = 'loading' | 'onboarding' | 'login' | 'register' | 'forgotPassword' | 'main';
+type OverlayScreen = 'settings' | 'terms' | 'privacy' | 'contacts' | null;
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
-function MainTabs({ onLogout, onOpenChat }: { onLogout: () => void; onOpenChat: (conversationId: string, contactName: string) => void }) {
+function MainTabs({ onLogout, onOpenChat, onOpenOverlay }: {
+  onLogout: () => void;
+  onOpenChat: (conversationId: string, contactName: string) => void;
+  onOpenOverlay: (screen: OverlayScreen) => void;
+}) {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -104,7 +114,15 @@ function MainTabs({ onLogout, onOpenChat }: { onLogout: () => void; onOpenChat: 
           ),
         }}
       >
-        {() => <ProfileScreen onLogout={onLogout} />}
+        {() => (
+          <ProfileScreen
+            onLogout={onLogout}
+            onOpenSettings={() => onOpenOverlay('settings')}
+            onOpenTerms={() => onOpenOverlay('terms')}
+            onOpenPrivacy={() => onOpenOverlay('privacy')}
+            onOpenContacts={() => onOpenOverlay('contacts')}
+          />
+        )}
       </Tab.Screen>
     </Tab.Navigator>
   );
@@ -113,6 +131,7 @@ function MainTabs({ onLogout, onOpenChat }: { onLogout: () => void; onOpenChat: 
 export function AppNavigator() {
   const [currentScreen, setCurrentScreen] = useState<AppScreen>('loading');
   const [chatState, setChatState] = useState<{ conversationId: string; contactName: string } | null>(null);
+  const [overlayScreen, setOverlayScreen] = useState<OverlayScreen>(null);
 
   useEffect(() => {
     const init = async () => {
@@ -160,6 +179,7 @@ export function AppNavigator() {
             setCurrentScreen('main');
           }}
           onGoToRegister={() => setCurrentScreen('register')}
+          onForgotPassword={() => setCurrentScreen('forgotPassword')}
         />
       </NavigationContainer>
     );
@@ -180,7 +200,17 @@ export function AppNavigator() {
     );
   }
 
-  // Main app with chat as absolute overlay (preserves tab state)
+  if (currentScreen === 'forgotPassword') {
+    return (
+      <NavigationContainer>
+        <ForgotPasswordScreen
+          onBack={() => setCurrentScreen('login')}
+        />
+      </NavigationContainer>
+    );
+  }
+
+  // Main app with chat and overlay screens as absolute overlays (preserves tab state)
   return (
     <View style={{ flex: 1 }}>
       <NavigationContainer>
@@ -191,6 +221,7 @@ export function AppNavigator() {
             setCurrentScreen('login');
           }}
           onOpenChat={(conversationId, contactName) => setChatState({ conversationId, contactName })}
+          onOpenOverlay={(screen) => setOverlayScreen(screen)}
         />
       </NavigationContainer>
       {chatState && (
@@ -200,6 +231,26 @@ export function AppNavigator() {
             contactName={chatState.contactName}
             onBack={() => setChatState(null)}
           />
+        </View>
+      )}
+      {overlayScreen === 'settings' && (
+        <View style={StyleSheet.absoluteFill}>
+          <SettingsScreen onBack={() => setOverlayScreen(null)} />
+        </View>
+      )}
+      {overlayScreen === 'terms' && (
+        <View style={StyleSheet.absoluteFill}>
+          <TermsScreen onBack={() => setOverlayScreen(null)} />
+        </View>
+      )}
+      {overlayScreen === 'privacy' && (
+        <View style={StyleSheet.absoluteFill}>
+          <PrivacyScreen onBack={() => setOverlayScreen(null)} />
+        </View>
+      )}
+      {overlayScreen === 'contacts' && (
+        <View style={StyleSheet.absoluteFill}>
+          <ContactsScreen onBack={() => setOverlayScreen(null)} />
         </View>
       )}
     </View>

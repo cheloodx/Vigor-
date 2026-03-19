@@ -13,17 +13,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
 import { Button } from '../components/Button';
 
-interface LoginScreenProps {
-  onLogin: () => void;
-  onGoToRegister: () => void;
-  onForgotPassword?: () => void;
+interface ForgotPasswordScreenProps {
+  onBack: () => void;
 }
 
-export function LoginScreen({ onLogin, onGoToRegister, onForgotPassword }: LoginScreenProps) {
+export function ForgotPasswordScreen({ onBack }: ForgotPasswordScreenProps) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [sent, setSent] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -32,18 +29,41 @@ export function LoginScreen({ onLogin, onGoToRegister, onForgotPassword }: Login
     };
   }, []);
 
-  const handleLogin = () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert('Eroare', 'Completează toate câmpurile');
+  const handleSendReset = () => {
+    if (!email.trim()) {
+      Alert.alert('Eroare', 'Introdu adresa de email.');
       return;
     }
     setLoading(true);
-    // Simulate API call
     timeoutRef.current = setTimeout(() => {
       setLoading(false);
-      onLogin();
-    }, 1500);
+      setSent(true);
+    }, 2000);
   };
+
+  if (sent) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.sentContent}>
+          <View style={styles.successCircle}>
+            <MaterialCommunityIcons name="email-check-outline" size={56} color={COLORS.success} />
+          </View>
+          <Text style={styles.sentTitle}>Email trimis!</Text>
+          <Text style={styles.sentDesc}>
+            Verifică emailul pentru linkul de resetare a parolei. Poate dura câteva minute.
+          </Text>
+          <Text style={styles.sentEmail}>{email}</Text>
+          <Button
+            title="Înapoi la login"
+            onPress={onBack}
+            variant="primary"
+            size="lg"
+            style={styles.backButton}
+          />
+        </View>
+      </View>
+    );
+  }
 
   return (
     <KeyboardAvoidingView
@@ -51,12 +71,22 @@ export function LoginScreen({ onLogin, onGoToRegister, onForgotPassword }: Login
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
+        <Button
+          title=""
+          onPress={onBack}
+          variant="ghost"
+          icon={<MaterialCommunityIcons name="arrow-left" size={24} color={COLORS.text} />}
+          style={styles.backNav}
+        />
+
         <View style={styles.header}>
           <View style={styles.iconCircle}>
-            <MaterialCommunityIcons name="satellite-variant" size={48} color={COLORS.white} />
+            <MaterialCommunityIcons name="lock-reset" size={48} color={COLORS.white} />
           </View>
-          <Text style={styles.title}>SatConnect</Text>
-          <Text style={styles.subtitle}>Conectat oriunde, oricând</Text>
+          <Text style={styles.title}>Recuperare parolă</Text>
+          <Text style={styles.subtitle}>
+            Introdu adresa de email asociată contului tău și îți vom trimite un link pentru resetarea parolei.
+          </Text>
         </View>
 
         <View style={styles.form}>
@@ -77,56 +107,14 @@ export function LoginScreen({ onLogin, onGoToRegister, onForgotPassword }: Login
             </View>
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Parolă</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="lock-outline" size={20} color={COLORS.textLight} />
-              <TextInput
-                style={styles.input}
-                placeholder="Parola ta"
-                placeholderTextColor={COLORS.textLight}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <Button
-                title=""
-                onPress={() => setShowPassword(!showPassword)}
-                variant="ghost"
-                icon={
-                  <MaterialCommunityIcons
-                    name={showPassword ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={COLORS.textLight}
-                  />
-                }
-              />
-            </View>
-          </View>
-
           <Button
-            title="Conectează-te"
-            onPress={handleLogin}
+            title="Trimite link de resetare"
+            onPress={handleSendReset}
             variant="primary"
             size="lg"
             loading={loading}
-            style={styles.loginButton}
+            style={styles.submitButton}
           />
-
-          {onForgotPassword && (
-            <Button
-              title="Am uitat parola"
-              onPress={onForgotPassword}
-              variant="ghost"
-              size="sm"
-              style={styles.forgotButton}
-            />
-          )}
-
-          <View style={styles.registerRow}>
-            <Text style={styles.registerText}>Nu ai cont? </Text>
-            <Button title="Înregistrează-te" onPress={onGoToRegister} variant="ghost" size="sm" />
-          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -140,9 +128,12 @@ const styles = StyleSheet.create({
   },
   scroll: {
     flexGrow: 1,
-    justifyContent: 'center',
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.xxxl,
+  },
+  backNav: {
+    alignSelf: 'flex-start',
+    marginBottom: SPACING.lg,
   },
   header: {
     alignItems: 'center',
@@ -158,14 +149,16 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.lg,
   },
   title: {
-    fontSize: FONTS.sizes.xxxl,
+    fontSize: FONTS.sizes.xxl,
     fontWeight: '800',
     color: COLORS.primary,
-    marginBottom: SPACING.xs,
+    marginBottom: SPACING.sm,
   },
   subtitle: {
     fontSize: FONTS.sizes.md,
     color: COLORS.textSecondary,
+    textAlign: 'center',
+    lineHeight: 22,
   },
   form: {
     gap: SPACING.lg,
@@ -195,19 +188,44 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.md,
     color: COLORS.text,
   },
-  loginButton: {
+  submitButton: {
     marginTop: SPACING.md,
   },
-  registerRow: {
-    flexDirection: 'row',
+  sentContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.xl,
+  },
+  successCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: COLORS.success + '15',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: SPACING.xl,
   },
-  registerText: {
+  sentTitle: {
+    fontSize: FONTS.sizes.xxl,
+    fontWeight: '800',
+    color: COLORS.text,
+    marginBottom: SPACING.sm,
+  },
+  sentDesc: {
     fontSize: FONTS.sizes.md,
     color: COLORS.textSecondary,
+    textAlign: 'center',
+    lineHeight: 22,
+    marginBottom: SPACING.md,
   },
-  forgotButton: {
-    alignSelf: 'center',
+  sentEmail: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: '700',
+    color: COLORS.primary,
+    marginBottom: SPACING.xxl,
+  },
+  backButton: {
+    width: '100%',
   },
 });
