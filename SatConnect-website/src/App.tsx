@@ -417,8 +417,10 @@ function App() {
                   className="w-full h-96 object-cover"
                   onError={(e) => {
                     const img = e.target as HTMLImageElement;
-                    img.onerror = null;
-                    img.src = "https://placehold.co/800x600/1E3A5F/00D4AA?text=Global+Connectivity";
+                    const fallback = "https://placehold.co/800x600/1E3A5F/00D4AA?text=Global+Connectivity";
+                    if (img.src !== fallback) {
+                      img.src = fallback;
+                    }
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-blue-900/60 to-transparent" />
@@ -489,8 +491,10 @@ function App() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     onError={(e) => {
                       const img = e.target as HTMLImageElement;
-                      img.onerror = null;
-                      img.src = "https://placehold.co/800x500/1E3A5F/00D4AA?text=" + encodeURIComponent(useCase.title);
+                      const fallback = "https://placehold.co/800x500/1E3A5F/00D4AA?text=" + encodeURIComponent(useCase.title);
+                      if (img.src !== fallback) {
+                        img.src = fallback;
+                      }
                     }}
                   />
                   <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-lg p-2">
