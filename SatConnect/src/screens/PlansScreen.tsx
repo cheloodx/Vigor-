@@ -23,7 +23,7 @@ const PLAN_PRODUCT_MAP: Record<string, string> = {
 };
 
 export function PlansScreen() {
-  const [currentPlan] = useState<PlanType>('basic');
+  const [currentPlan, setCurrentPlan] = useState<PlanType>('basic');
   const [purchasing, setPurchasing] = useState(false);
   const [restoring, setRestoring] = useState(false);
 
@@ -43,6 +43,7 @@ export function PlansScreen() {
             const result = await appleIAP.purchaseSubscription(productId);
             setPurchasing(false);
             if (result.success) {
+              setCurrentPlan(plan.id as PlanType);
               Alert.alert('Achiziție reușită!', `Planul ${plan.name} a fost activat.`);
             } else {
               Alert.alert('Eroare', result.error || 'Achiziția a eșuat.');
@@ -57,7 +58,9 @@ export function PlansScreen() {
     setRestoring(true);
     const result = await appleIAP.restorePurchases();
     setRestoring(false);
-    if (result.success) {
+    if (result.success && result.subscription) {
+      const planType = appleIAP.getPlanTypeForProduct(result.subscription.productId);
+      if (planType) setCurrentPlan(planType as PlanType);
       Alert.alert('Restaurare reușită!', 'Abonamentul tău a fost restaurat.');
     } else {
       Alert.alert('Info', result.error || 'Nu au fost găsite achiziții anterioare.');
