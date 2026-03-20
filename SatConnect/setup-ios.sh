@@ -21,91 +21,95 @@ NC='\033[0m' # No Color
 
 echo ""
 echo -e "${BLUE}╔══════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║     🛰️  SatConnect - Setup iOS/Xcode     ║${NC}"
+echo -e "${BLUE}║     SatConnect - Setup iOS/Xcode         ║${NC}"
 echo -e "${BLUE}╚══════════════════════════════════════════╝${NC}"
 echo ""
 
 # Pas 1: Verifică dacă suntem pe macOS
-echo -e "${YELLOW}[1/6] Verificare sistem...${NC}"
+echo -e "${YELLOW}[1/7] Verificare sistem...${NC}"
 if [[ "$OSTYPE" != "darwin"* ]]; then
-    echo -e "${RED}EROARE: Acest script funcționează doar pe macOS!${NC}"
+    echo -e "${RED}EROARE: Acest script functioneaza doar pe macOS!${NC}"
     echo "Ai nevoie de un Mac cu Xcode instalat."
     exit 1
 fi
-echo -e "${GREEN}  ✓ macOS detectat${NC}"
+echo -e "${GREEN}  OK - macOS detectat${NC}"
 
 # Pas 2: Verifică dacă Xcode este instalat
-echo -e "${YELLOW}[2/6] Verificare Xcode...${NC}"
+echo -e "${YELLOW}[2/7] Verificare Xcode...${NC}"
 if ! command -v xcodebuild &> /dev/null; then
     echo -e "${RED}EROARE: Xcode nu este instalat!${NC}"
     echo ""
-    echo "Instalează Xcode din Mac App Store:"
+    echo "Instaleaza Xcode din Mac App Store:"
     echo "  https://apps.apple.com/app/xcode/id497799835"
     echo ""
-    echo "După instalare, rulează:"
+    echo "Dupa instalare, ruleaza:"
     echo "  sudo xcode-select --install"
     echo "  sudo xcodebuild -license accept"
     echo ""
     exit 1
 fi
 XCODE_VERSION=$(xcodebuild -version | head -1)
-echo -e "${GREEN}  ✓ $XCODE_VERSION${NC}"
+echo -e "${GREEN}  OK - $XCODE_VERSION${NC}"
 
 # Pas 3: Verifică/instalează Node.js
-echo -e "${YELLOW}[3/6] Verificare Node.js...${NC}"
+echo -e "${YELLOW}[3/7] Verificare Node.js...${NC}"
 if ! command -v node &> /dev/null; then
     echo -e "${RED}EROARE: Node.js nu este instalat!${NC}"
     echo ""
-    echo "Instalează Node.js de la: https://nodejs.org/"
+    echo "Instaleaza Node.js de la: https://nodejs.org/"
     echo "  sau cu Homebrew: brew install node"
     echo ""
     exit 1
 fi
 NODE_VERSION=$(node --version)
-echo -e "${GREEN}  ✓ Node.js $NODE_VERSION${NC}"
+echo -e "${GREEN}  OK - Node.js $NODE_VERSION${NC}"
 
-# Pas 4: Instalare dependențe npm
-echo -e "${YELLOW}[4/6] Instalare dependențe JavaScript...${NC}"
-if [ ! -d "node_modules" ]; then
-    npm install
-else
-    echo "  node_modules există deja, verificare..."
-    npm install
-fi
-echo -e "${GREEN}  ✓ Dependențe instalate${NC}"
-
-# Pas 5: Verifică/instalează CocoaPods și instalează pod-urile
-echo -e "${YELLOW}[5/6] Instalare dependențe iOS (CocoaPods)...${NC}"
+# Pas 4: Verifică/instalează CocoaPods
+echo -e "${YELLOW}[4/7] Verificare CocoaPods...${NC}"
 if ! command -v pod &> /dev/null; then
-    echo "  CocoaPods nu este instalat. Se instalează acum..."
-    sudo gem install cocoapods
+    echo "  CocoaPods nu este instalat. Se instaleaza acum..."
+    if command -v brew &> /dev/null; then
+        brew install cocoapods
+    else
+        sudo gem install cocoapods
+    fi
 fi
 POD_VERSION=$(pod --version)
-echo -e "  CocoaPods $POD_VERSION"
+echo -e "${GREEN}  OK - CocoaPods $POD_VERSION${NC}"
 
+# Pas 5: Instalare dependențe npm
+echo -e "${YELLOW}[5/7] Instalare dependente JavaScript...${NC}"
+npm install
+echo -e "${GREEN}  OK - Dependente instalate${NC}"
+
+# Pas 6: Regenerare proiect iOS nativ
+echo -e "${YELLOW}[6/7] Generare proiect iOS nativ (poate dura 2-3 minute)...${NC}"
+echo "  Se sterge ios/ vechi si se regenereaza..."
+rm -rf ios
+npx expo prebuild --platform ios --no-install
+echo "  Se instaleaza pod-uri..."
 cd ios
-echo "  Se rulează pod install... (poate dura 1-2 minute)"
 pod install
 cd ..
-echo -e "${GREEN}  ✓ Pod-uri instalate${NC}"
+echo -e "${GREEN}  OK - Proiect iOS generat si pod-uri instalate${NC}"
 
-# Pas 6: Deschide în Xcode
-echo -e "${YELLOW}[6/6] Deschidere Xcode...${NC}"
+# Pas 7: Deschide în Xcode
+echo -e "${YELLOW}[7/7] Deschidere Xcode...${NC}"
 echo ""
 echo -e "${GREEN}╔══════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║          Setup complet! 🎉               ║${NC}"
+echo -e "${GREEN}║          Setup complet!                  ║${NC}"
 echo -e "${GREEN}╚══════════════════════════════════════════╝${NC}"
 echo ""
-echo -e "Proiectul se deschide în Xcode acum..."
+echo -e "Proiectul se deschide in Xcode acum..."
 echo ""
-echo -e "${BLUE}Pași următori în Xcode:${NC}"
-echo "  1. Selectează un simulator (ex: iPhone 16)"
-echo "  2. Apasă ▶ (Play) sau Cmd+R pentru a rula"
-echo "  3. Dacă cere echipă de dezvoltare:"
-echo "     - Xcode → Settings → Accounts → adaugă Apple ID"
-echo "     - La Signing & Capabilities → selectează echipa ta"
+echo -e "${BLUE}Pasi urmatori in Xcode:${NC}"
+echo "  1. Selecteaza un simulator (ex: iPhone 16)"
+echo "  2. Apasa Play sau Cmd+R pentru a rula"
+echo "  3. Daca cere echipa de dezvoltare:"
+echo "     - Xcode > Settings > Accounts > adauga Apple ID"
+echo "     - La Signing & Capabilities > selecteaza echipa ta"
 echo ""
-echo -e "${YELLOW}NOTĂ: Prima compilare durează 2-5 minute.${NC}"
+echo -e "${YELLOW}NOTA: Prima compilare dureaza 2-5 minute.${NC}"
 echo ""
 
 open ios/SatConnect.xcworkspace
