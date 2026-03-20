@@ -139,6 +139,12 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
       .single();
 
     if (esimError || !userEsim) {
+      // Mark order as failed and record the error
+      await supabase
+        .from('orders')
+        .update({ status: 'failed', error_message: esimError?.message || 'Failed to create eSIM record', airalo_order_id: esimData.airalo_order_id })
+        .eq('id', orderData.id);
+
       const response: ApiResponse<null> = { success: false, error: 'Failed to create eSIM record' };
       res.status(500).json(response);
       return;
