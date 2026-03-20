@@ -83,18 +83,52 @@ npm install
 echo -e "${GREEN}  OK - Dependente instalate${NC}"
 
 # Pas 6: Regenerare proiect iOS nativ
-echo -e "${YELLOW}[6/7] Generare proiect iOS nativ (poate dura 2-3 minute)...${NC}"
+echo -e "${YELLOW}[6/8] Generare proiect iOS nativ (poate dura 2-3 minute)...${NC}"
 echo "  Se sterge ios/ vechi si se regenereaza..."
 rm -rf ios
 npx expo prebuild --platform ios --no-install
+
+# Fix Xcode 15/16 sandbox errors - patch Podfile after prebuild
+echo "  Se aplica fix pentru Xcode sandbox..."
+if ! grep -q "ENABLE_USER_SCRIPT_SANDBOXING" ios/Podfile; then
+  sed -i '' 's/react_native_post_install(/react_native_post_install(/' ios/Podfile
+  # Add sandbox fix before the closing 'end' of post_install
+  sed -i '' '/react_native_post_install/,/^  end/{
+    /^  end/i\
+\
+    # Fix Xcode 15\/16 sandbox errors with React Native\
+    installer.pods_project.targets.each do |target|\
+      target.build_configurations.each do |config|\
+        config.build_settings['"'"'ENABLE_USER_SCRIPT_SANDBOXING'"'"'] = '"'"'NO'"'"'\
+      end\
+    end
+  }' ios/Podfile
+fi
+
 echo "  Se instaleaza pod-uri..."
 cd ios
 pod install
 cd ..
 echo -e "${GREEN}  OK - Proiect iOS generat si pod-uri instalate${NC}"
 
-# Pas 7: Deschide în Xcode
-echo -e "${YELLOW}[7/7] Deschidere Xcode...${NC}"
+# Pas 7: Bundling JavaScript pentru offline use
+echo -e "${YELLOW}[7/8] Bundling JavaScript (aplicatia va merge fara Metro server)...${NC}"
+npx react-native bundle \
+  --platform ios \
+  --dev false \
+  --entry-file index.ts \
+  --bundle-output ios/main.jsbundle \
+  --assets-dest ios
+echo -e "${GREEN}  OK - JavaScript bundle creat${NC}"
+
+# Pas 8: Setare Release mode si deschidere Xcode
+echo -e "${YELLOW}[8/8] Deschidere Xcode...${NC}"
+
+# Change scheme to Release mode so it uses the embedded JS bundle
+SCHEME_FILE="ios/SatConnect.xcodeproj/xcshareddata/xcschemes/SatConnect.xcscheme"
+if [ -f "$SCHEME_FILE" ]; then
+  sed -i '' 's/buildConfiguration = "Debug"/buildConfiguration = "Release"/g' "$SCHEME_FILE"
+fi
 echo ""
 echo -e "${GREEN}╔══════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║          Setup complet!                  ║${NC}"
