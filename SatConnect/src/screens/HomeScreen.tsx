@@ -15,13 +15,22 @@ import { ConnectivityBadge } from '../components/ConnectivityBadge';
 import { UsageCard } from '../components/UsageCard';
 import { SOSButton } from '../components/SOSButton';
 import { ConnectivityState, UsageStats } from '../types';
+import { supabaseAuth } from '../services/supabaseAuth';
 
 export function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [connectivity] = useState<ConnectivityState>(MOCK_CONNECTIVITY);
   const [usage] = useState<UsageStats>(MOCK_USAGE);
+  const [userName, setUserName] = useState('Ion Popescu');
 
   const [dataAlertShown, setDataAlertShown] = useState(false);
+
+  useEffect(() => {
+    const user = supabaseAuth.getUser();
+    if (user?.name) {
+      setUserName(user.name);
+    }
+  }, []);
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -66,7 +75,7 @@ export function HomeScreen() {
       <View style={styles.header}>
         <View>
           <Text style={styles.greeting}>Bună ziua!</Text>
-          <Text style={styles.name}>Ion Popescu</Text>
+          <Text style={styles.name}>{userName}</Text>
         </View>
         <ConnectivityBadge
           connectionType={connectivity.connectionType}

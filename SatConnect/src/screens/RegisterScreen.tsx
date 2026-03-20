@@ -12,6 +12,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
 import { Button } from '../components/Button';
+import { supabaseAuth } from '../services/supabaseAuth';
 
 interface RegisterScreenProps {
   onRegister: () => void;
@@ -33,7 +34,7 @@ export function RegisterScreen({ onRegister, onGoToLogin }: RegisterScreenProps)
     };
   }, []);
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
       Alert.alert('Eroare', 'Completează toate câmpurile');
       return;
@@ -47,10 +48,22 @@ export function RegisterScreen({ onRegister, onGoToLogin }: RegisterScreenProps)
       return;
     }
     setLoading(true);
-    timeoutRef.current = setTimeout(() => {
+    try {
+      const result = await supabaseAuth.signUp(email.trim(), password, name.trim());
       setLoading(false);
-      onRegister();
-    }, 1500);
+      if (result.success) {
+        if (result.needsEmailConfirmation) {
+          Alert.alert('Succes', result.message ?? 'Verifică emailul pentru confirmare.');
+        } else {
+          onRegister();
+        }
+      } else {
+        Alert.alert('Eroare', result.error ?? 'Înregistrare eșuată.');
+      }
+    } catch {
+      setLoading(false);
+      Alert.alert('Eroare', 'A apărut o eroare de rețea. Încearcă din nou.');
+    }
   };
 
   return (

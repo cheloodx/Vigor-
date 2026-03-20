@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
 import { Button } from '../components/Button';
 import { MOCK_USAGE, MOCK_CONNECTIVITY } from '../constants/data';
+import { supabaseAuth, type AuthUser } from '../services/supabaseAuth';
 
 interface ProfileScreenProps {
   onLogout: () => void;
@@ -29,6 +30,21 @@ interface MenuItem {
 }
 
 export function ProfileScreen({ onLogout, onOpenSettings, onOpenTerms, onOpenPrivacy, onOpenContacts }: ProfileScreenProps) {
+  const [user, setUser] = useState<AuthUser | null>(null);
+
+  useEffect(() => {
+    setUser(supabaseAuth.getUser());
+  }, []);
+
+  const displayName = user?.name ?? 'Ion Popescu';
+  const displayEmail = user?.email ?? 'ion.popescu@exemplu.com';
+  const initials = displayName
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2) || 'IP';
+
   const handleLogout = () => {
     Alert.alert(
       'Deconectare',
@@ -115,10 +131,10 @@ export function ProfileScreen({ onLogout, onOpenSettings, onOpenTerms, onOpenPri
       {/* Profile Header */}
       <View style={styles.profileHeader}>
         <View style={styles.avatar}>
-          <Text style={styles.avatarText}>IP</Text>
+          <Text style={styles.avatarText}>{initials}</Text>
         </View>
-        <Text style={styles.name}>Ion Popescu</Text>
-        <Text style={styles.email}>ion.popescu@exemplu.com</Text>
+        <Text style={styles.name}>{displayName}</Text>
+        <Text style={styles.email}>{displayEmail}</Text>
         <View style={styles.planBadge}>
           <MaterialCommunityIcons name="star" size={14} color={COLORS.accent} />
           <Text style={styles.planText}>Plan Standard</Text>

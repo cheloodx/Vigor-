@@ -7,6 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { COLORS, FONTS } from '../constants/theme';
 import { storage } from '../services/storage';
+import { supabaseAuth } from '../services/supabaseAuth';
 
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { LoginScreen } from '../screens/LoginScreen';
@@ -154,13 +155,20 @@ export function AppNavigator() {
   useEffect(() => {
     const init = async () => {
       const onboardingDone = await storage.isOnboardingComplete();
-      const token = await storage.getAuthToken();
-      if (token) {
+      const session = await supabaseAuth.initialize();
+      if (session) {
+        await storage.setAuthToken(session.token);
+        await storage.setUser({ id: session.user.id, name: session.user.name, email: session.user.email, plan: 'standard' });
         setCurrentScreen('main');
-      } else if (onboardingDone) {
-        setCurrentScreen('login');
       } else {
-        setCurrentScreen('onboarding');
+        const token = await storage.getAuthToken();
+        if (token) {
+          setCurrentScreen('main');
+        } else if (onboardingDone) {
+          setCurrentScreen('login');
+        } else {
+          setCurrentScreen('onboarding');
+        }
       }
     };
     init();
@@ -192,8 +200,15 @@ export function AppNavigator() {
       <NavigationContainer>
         <LoginScreen
           onLogin={async () => {
-            await storage.setAuthToken('mock-jwt-token');
-            await storage.setUser({ id: '1', name: 'Ion Popescu', email: 'ion@exemplu.com', plan: 'standard' });
+            const session = supabaseAuth.getSession();
+            const user = supabaseAuth.getUser();
+            await storage.setAuthToken(session?.token ?? 'mock-jwt-token');
+            await storage.setUser({
+              id: user?.id ?? '1',
+              name: user?.name ?? 'Utilizator',
+              email: user?.email ?? 'user@satconnect.app',
+              plan: 'standard',
+            });
             setCurrentScreen('main');
           }}
           onGoToRegister={() => setCurrentScreen('register')}
@@ -208,8 +223,15 @@ export function AppNavigator() {
       <NavigationContainer>
         <RegisterScreen
           onRegister={async () => {
-            await storage.setAuthToken('mock-jwt-token');
-            await storage.setUser({ id: '1', name: 'Ion Popescu', email: 'ion@exemplu.com', plan: 'basic' });
+            const session = supabaseAuth.getSession();
+            const user = supabaseAuth.getUser();
+            await storage.setAuthToken(session?.token ?? 'mock-jwt-token');
+            await storage.setUser({
+              id: user?.id ?? '1',
+              name: user?.name ?? 'Utilizator',
+              email: user?.email ?? 'user@satconnect.app',
+              plan: 'basic',
+            });
             setCurrentScreen('main');
           }}
           onGoToLogin={() => setCurrentScreen('login')}
@@ -234,6 +256,7 @@ export function AppNavigator() {
       <NavigationContainer>
         <MainTabs
           onLogout={async () => {
+            await supabaseAuth.signOut();
             await storage.removeAuthToken();
             await storage.removeUser();
             setCurrentScreen('login');

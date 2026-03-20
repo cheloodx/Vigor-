@@ -12,6 +12,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
 import { Button } from '../components/Button';
+import { supabaseAuth } from '../services/supabaseAuth';
 
 interface LoginScreenProps {
   onLogin: () => void;
@@ -32,17 +33,24 @@ export function LoginScreen({ onLogin, onGoToRegister, onForgotPassword }: Login
     };
   }, []);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
       Alert.alert('Eroare', 'Completează toate câmpurile');
       return;
     }
     setLoading(true);
-    // Simulate API call
-    timeoutRef.current = setTimeout(() => {
+    try {
+      const result = await supabaseAuth.signIn(email.trim(), password);
       setLoading(false);
-      onLogin();
-    }, 1500);
+      if (result.success) {
+        onLogin();
+      } else {
+        Alert.alert('Eroare', result.error ?? 'Autentificare eșuată.');
+      }
+    } catch {
+      setLoading(false);
+      Alert.alert('Eroare', 'A apărut o eroare de rețea. Încearcă din nou.');
+    }
   };
 
   return (

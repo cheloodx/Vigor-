@@ -12,6 +12,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
 import { Button } from '../components/Button';
+import { supabaseAuth } from '../services/supabaseAuth';
 
 interface ForgotPasswordScreenProps {
   onBack: () => void;
@@ -29,16 +30,24 @@ export function ForgotPasswordScreen({ onBack }: ForgotPasswordScreenProps) {
     };
   }, []);
 
-  const handleSendReset = () => {
+  const handleSendReset = async () => {
     if (!email.trim()) {
       Alert.alert('Eroare', 'Introdu adresa de email.');
       return;
     }
     setLoading(true);
-    timeoutRef.current = setTimeout(() => {
+    try {
+      const result = await supabaseAuth.resetPassword(email.trim());
       setLoading(false);
-      setSent(true);
-    }, 2000);
+      if (result.success) {
+        setSent(true);
+      } else {
+        Alert.alert('Eroare', result.error ?? 'Nu am putut trimite emailul.');
+      }
+    } catch {
+      setLoading(false);
+      Alert.alert('Eroare', 'A apărut o eroare de rețea. Încearcă din nou.');
+    }
   };
 
   if (sent) {
