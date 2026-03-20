@@ -88,23 +88,6 @@ echo "  Se sterge ios/ vechi si se regenereaza..."
 rm -rf ios
 npx expo prebuild --platform ios --no-install
 
-# Fix Xcode 15/16 sandbox errors - patch Podfile after prebuild
-echo "  Se aplica fix pentru Xcode sandbox..."
-if ! grep -q "ENABLE_USER_SCRIPT_SANDBOXING" ios/Podfile; then
-  sed -i '' 's/react_native_post_install(/react_native_post_install(/' ios/Podfile
-  # Add sandbox fix before the closing 'end' of post_install
-  sed -i '' '/react_native_post_install/,/^  end/{
-    /^  end/i\
-\
-    # Fix Xcode 15\/16 sandbox errors with React Native\
-    installer.pods_project.targets.each do |target|\
-      target.build_configurations.each do |config|\
-        config.build_settings['"'"'ENABLE_USER_SCRIPT_SANDBOXING'"'"'] = '"'"'NO'"'"'\
-      end\
-    end
-  }' ios/Podfile
-fi
-
 echo "  Se instaleaza pod-uri..."
 cd ios
 pod install
