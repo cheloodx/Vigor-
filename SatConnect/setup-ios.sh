@@ -88,11 +88,30 @@ echo "  Se sterge ios/ vechi si se regenereaza..."
 rm -rf ios
 npx expo prebuild --platform ios --no-install
 
+# Pas 6b: Fix Xcode 15/16 sandbox — disable ENABLE_USER_SCRIPT_SANDBOXING in MAIN project
+echo "  Se dezactiveaza sandbox pentru Xcode 15/16..."
+PBXPROJ="ios/SatConnect.xcodeproj/project.pbxproj"
+if [ -f "$PBXPROJ" ]; then
+  if ! grep -q "ENABLE_USER_SCRIPT_SANDBOXING" "$PBXPROJ"; then
+    sed -i '' 's/buildSettings = {/buildSettings = {\
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;/g' "$PBXPROJ"
+  fi
+fi
+
 echo "  Se instaleaza pod-uri..."
 cd ios
 pod install
 cd ..
-echo -e "${GREEN}  OK - Proiect iOS generat si pod-uri instalate${NC}"
+
+# Fix sandbox in Pods project too (after pod install generates it)
+PODS_PBXPROJ="ios/Pods/Pods.xcodeproj/project.pbxproj"
+if [ -f "$PODS_PBXPROJ" ]; then
+  if ! grep -q "ENABLE_USER_SCRIPT_SANDBOXING" "$PODS_PBXPROJ"; then
+    sed -i '' 's/buildSettings = {/buildSettings = {\
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;/g' "$PODS_PBXPROJ"
+  fi
+fi
+echo -e "${GREEN}  OK - Proiect iOS generat, pod-uri instalate, sandbox dezactivat${NC}"
 
 # Pas 7: Bundling JavaScript pentru offline use
 echo -e "${YELLOW}[7/8] Bundling JavaScript (aplicatia va merge fara Metro server)...${NC}"

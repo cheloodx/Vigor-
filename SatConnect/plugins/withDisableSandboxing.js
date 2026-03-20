@@ -6,28 +6,44 @@ function withDisableSandboxing(config) {
   return withDangerousMod(config, [
     'ios',
     async (config) => {
-      const podfilePath = path.join(config.modRequest.platformProjectRoot, 'Podfile');
-      let podfileContent = fs.readFileSync(podfilePath, 'utf8');
+      const platformRoot = config.modRequest.platformProjectRoot;
 
-      // Add ENABLE_USER_SCRIPT_SANDBOXING = NO to fix Xcode 15/16 sandbox errors
-      if (!podfileContent.includes('ENABLE_USER_SCRIPT_SANDBOXING')) {
-        const searchString = 'react_native_post_install(';
-        const insertAfterBlock = `
+      // 1. Patch Podfile: add ENABLE_USER_SCRIPT_SANDBOXING = NO for all Pod targets
+      const podfilePath = path.join(platformRoot, 'Podfile');
+      if (fs.existsSync(podfilePath)) {
+        let podfileContent = fs.readFileSync(podfilePath, 'utf8');
+        if (!podfileContent.includes('ENABLE_USER_SCRIPT_SANDBOXING')) {
+          const insertCode = `
     # Fix Xcode 15/16 sandbox errors with React Native
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
         config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
       end
+    end
+    installer.pods_project.build_configurations.each do |config|
+      config.build_settings['ENABLE_USER_SCRIPT_SANDBOXING'] = 'NO'
     end`;
-
-        // Find the post_install block's end and insert before it
-        const postInstallEnd = podfileContent.lastIndexOf('  end\nend');
-        if (postInstallEnd !== -1) {
-          podfileContent = podfileContent.slice(0, postInstallEnd) + insertAfterBlock + '\n' + podfileContent.slice(postInstallEnd);
+          const postInstallEnd = podfileContent.lastIndexOf('  end\nend');
+          if (postInstallEnd !== -1) {
+            podfileContent = podfileContent.slice(0, postInstallEnd) + insertCode + '\n' + podfileContent.slice(postInstallEnd);
+            fs.writeFileSync(podfilePath, podfileContent);
+          }
         }
       }
 
-      fs.writeFileSync(podfilePath, podfileContent);
+      // 2. Patch the main project .pbxproj to disable sandboxing at project level
+      const pbxprojPath = path.join(platformRoot, 'SatConnect.xcodeproj', 'project.pbxproj');
+      if (fs.existsSync(pbxprojPath)) {
+        let pbxContent = fs.readFileSync(pbxprojPath, 'utf8');
+        if (!pbxContent.includes('ENABLE_USER_SCRIPT_SANDBOXING')) {
+          pbxContent = pbxContent.replace(
+            /buildSettings = \{/g,
+            'buildSettings = {\n\t\t\t\tENABLE_USER_SCRIPT_SANDBOXING = NO;'
+          );
+          fs.writeFileSync(pbxprojPath, pbxContent);
+        }
+      }
+
       return config;
     },
   ]);
