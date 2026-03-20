@@ -94,8 +94,7 @@ PBXPROJ="ios/SatConnect.xcodeproj/project.pbxproj"
 if [ -f "$PBXPROJ" ]; then
   if ! grep -q "ENABLE_USER_SCRIPT_SANDBOXING" "$PBXPROJ"; then
     sed -i '' 's/buildSettings = {/buildSettings = {\
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;\
-				SKIP_BUNDLING = 1;/g' "$PBXPROJ"
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;/g' "$PBXPROJ"
   fi
 fi
 
@@ -121,22 +120,28 @@ npx expo export --platform ios --output-dir ios/expo-bundle
 # Find the JS/HBC bundle from expo export and copy it as main.jsbundle
 # Expo with Hermes produces .hbc files (Hermes bytecode), not .js
 BUNDLE_FILE=$(find ios/expo-bundle -name "*.hbc" -o -name "*.js" 2>/dev/null | grep "_expo/static/js" | head -1)
+SCHEME_FILE="ios/SatConnect.xcodeproj/xcshareddata/xcschemes/SatConnect.xcscheme"
 if [ -n "$BUNDLE_FILE" ]; then
   cp "$BUNDLE_FILE" ios/main.jsbundle
   echo -e "${GREEN}  OK - JavaScript bundle creat${NC}"
+  # Bundle exists: set SKIP_BUNDLING in Release configs so Xcode doesn't re-bundle
+  if [ -f "$PBXPROJ" ]; then
+    sed -i '' '/Release/,/};/ s/ENABLE_USER_SCRIPT_SANDBOXING = NO;/ENABLE_USER_SCRIPT_SANDBOXING = NO;\
+				SKIP_BUNDLING = 1;/' "$PBXPROJ" 2>/dev/null || true
+  fi
+  # Set scheme to Release mode (uses embedded bundle, no Metro needed)
+  if [ -f "$SCHEME_FILE" ]; then
+    sed -i '' '/<LaunchAction/,/<\/LaunchAction/ s/buildConfiguration = "Debug"/buildConfiguration = "Release"/g' "$SCHEME_FILE"
+  fi
 else
   echo -e "${YELLOW}  WARN - Bundle nu a fost gasit, se va folosi Metro la runtime${NC}"
+  echo -e "${YELLOW}  Ruleaza 'npx expo start' inainte de a apasa Play in Xcode${NC}"
+  # Keep Debug mode so Metro can serve the bundle
 fi
 rm -rf ios/expo-bundle
 
-# Pas 8: Setare Release mode si deschidere Xcode
+# Pas 8: Deschidere Xcode
 echo -e "${YELLOW}[8/8] Deschidere Xcode...${NC}"
-
-# Change scheme to Release mode so it uses the embedded JS bundle
-SCHEME_FILE="ios/SatConnect.xcodeproj/xcshareddata/xcschemes/SatConnect.xcscheme"
-if [ -f "$SCHEME_FILE" ]; then
-  sed -i '' '/<LaunchAction/,/<\/LaunchAction/ s/buildConfiguration = "Debug"/buildConfiguration = "Release"/g' "$SCHEME_FILE"
-fi
 echo ""
 echo -e "${GREEN}╔══════════════════════════════════════════╗${NC}"
 echo -e "${GREEN}║          Setup complet!                  ║${NC}"
