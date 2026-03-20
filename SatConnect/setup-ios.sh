@@ -118,8 +118,9 @@ echo -e "${GREEN}  OK - Proiect iOS generat, pod-uri instalate, sandbox dezactiv
 echo -e "${YELLOW}[7/8] Bundling JavaScript (aplicatia va merge fara Metro server)...${NC}"
 # Use Expo's built-in bundler (no extra CLI dependencies needed)
 npx expo export --platform ios --output-dir ios/expo-bundle
-# Find the JS bundle from expo export and copy it as main.jsbundle
-BUNDLE_FILE=$(find ios/expo-bundle -name "*.js" -path "*/_expo/static/js/*" 2>/dev/null | head -1)
+# Find the JS/HBC bundle from expo export and copy it as main.jsbundle
+# Expo with Hermes produces .hbc files (Hermes bytecode), not .js
+BUNDLE_FILE=$(find ios/expo-bundle -name "*.hbc" -o -name "*.js" 2>/dev/null | grep "_expo/static/js" | head -1)
 if [ -n "$BUNDLE_FILE" ]; then
   cp "$BUNDLE_FILE" ios/main.jsbundle
   echo -e "${GREEN}  OK - JavaScript bundle creat${NC}"
