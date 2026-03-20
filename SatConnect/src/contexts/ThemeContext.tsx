@@ -110,12 +110,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggleTheme = () => {
-    setIsDark(prev => {
-      const next = !prev;
-      AsyncStorage.setItem(THEME_KEY, next ? 'dark' : 'light');
-      return next;
-    });
+    setIsDark(prev => !prev);
   };
+
+  useEffect(() => {
+    AsyncStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+  }, [isDark]);
 
   const value = useMemo(() => ({
     isDark,
