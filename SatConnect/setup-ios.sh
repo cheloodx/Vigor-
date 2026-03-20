@@ -116,14 +116,17 @@ echo -e "${GREEN}  OK - Proiect iOS generat, pod-uri instalate, sandbox dezactiv
 
 # Pas 7: Bundling JavaScript pentru offline use
 echo -e "${YELLOW}[7/8] Bundling JavaScript (aplicatia va merge fara Metro server)...${NC}"
-# Use NODE_OPTIONS to polyfill util.styleText for Node < 20.12 compatibility
-NODE_OPTIONS="--require ./scripts/node-polyfill.js" npx react-native bundle \
-  --platform ios \
-  --dev false \
-  --entry-file index.ts \
-  --bundle-output ios/main.jsbundle \
-  --assets-dest ios
-echo -e "${GREEN}  OK - JavaScript bundle creat${NC}"
+# Use Expo's built-in bundler (no extra CLI dependencies needed)
+npx expo export --platform ios --output-dir ios/expo-bundle
+# Find the JS bundle from expo export and copy it as main.jsbundle
+BUNDLE_FILE=$(find ios/expo-bundle -name "*.js" -path "*/_expo/static/js/*" 2>/dev/null | head -1)
+if [ -n "$BUNDLE_FILE" ]; then
+  cp "$BUNDLE_FILE" ios/main.jsbundle
+  echo -e "${GREEN}  OK - JavaScript bundle creat${NC}"
+else
+  echo -e "${YELLOW}  WARN - Bundle nu a fost gasit, se va folosi Metro la runtime${NC}"
+fi
+rm -rf ios/expo-bundle
 
 # Pas 8: Setare Release mode si deschidere Xcode
 echo -e "${YELLOW}[8/8] Deschidere Xcode...${NC}"

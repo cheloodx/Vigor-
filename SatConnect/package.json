@@ -24,8 +24,6 @@
     "react-native-web": "^0.21.0"
   },
   "devDependencies": {
-    "@react-native-community/cli": "^18.0.0",
-    "@react-native-community/cli-platform-ios": "^18.0.0",
     "@types/react": "~19.2.2",
     "typescript": "~5.9.2"
   },
