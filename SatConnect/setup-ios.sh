@@ -26,7 +26,7 @@ echo -e "${BLUE}╚════════════════════�
 echo ""
 
 # Pas 1: Verifică dacă suntem pe macOS
-echo -e "${YELLOW}[1/7] Verificare sistem...${NC}"
+echo -e "${YELLOW}[1/8] Verificare sistem...${NC}"
 if [[ "$OSTYPE" != "darwin"* ]]; then
     echo -e "${RED}EROARE: Acest script functioneaza doar pe macOS!${NC}"
     echo "Ai nevoie de un Mac cu Xcode instalat."
@@ -35,7 +35,7 @@ fi
 echo -e "${GREEN}  OK - macOS detectat${NC}"
 
 # Pas 2: Verifică dacă Xcode este instalat
-echo -e "${YELLOW}[2/7] Verificare Xcode...${NC}"
+echo -e "${YELLOW}[2/8] Verificare Xcode...${NC}"
 if ! command -v xcodebuild &> /dev/null; then
     echo -e "${RED}EROARE: Xcode nu este instalat!${NC}"
     echo ""
@@ -52,7 +52,7 @@ XCODE_VERSION=$(xcodebuild -version | head -1)
 echo -e "${GREEN}  OK - $XCODE_VERSION${NC}"
 
 # Pas 3: Verifică/instalează Node.js
-echo -e "${YELLOW}[3/7] Verificare Node.js...${NC}"
+echo -e "${YELLOW}[3/8] Verificare Node.js...${NC}"
 if ! command -v node &> /dev/null; then
     echo -e "${RED}EROARE: Node.js nu este instalat!${NC}"
     echo ""
@@ -65,7 +65,7 @@ NODE_VERSION=$(node --version)
 echo -e "${GREEN}  OK - Node.js $NODE_VERSION${NC}"
 
 # Pas 4: Verifică/instalează CocoaPods
-echo -e "${YELLOW}[4/7] Verificare CocoaPods...${NC}"
+echo -e "${YELLOW}[4/8] Verificare CocoaPods...${NC}"
 if ! command -v pod &> /dev/null; then
     echo "  CocoaPods nu este instalat. Se instaleaza acum..."
     if command -v brew &> /dev/null; then
@@ -78,7 +78,7 @@ POD_VERSION=$(pod --version)
 echo -e "${GREEN}  OK - CocoaPods $POD_VERSION${NC}"
 
 # Pas 5: Instalare dependențe npm
-echo -e "${YELLOW}[5/7] Instalare dependente JavaScript...${NC}"
+echo -e "${YELLOW}[5/8] Instalare dependente JavaScript...${NC}"
 npm install
 echo -e "${GREEN}  OK - Dependente instalate${NC}"
 
@@ -94,7 +94,8 @@ PBXPROJ="ios/SatConnect.xcodeproj/project.pbxproj"
 if [ -f "$PBXPROJ" ]; then
   if ! grep -q "ENABLE_USER_SCRIPT_SANDBOXING" "$PBXPROJ"; then
     sed -i '' 's/buildSettings = {/buildSettings = {\
-				ENABLE_USER_SCRIPT_SANDBOXING = NO;/g' "$PBXPROJ"
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;\
+				SKIP_BUNDLING = 1;/g' "$PBXPROJ"
   fi
 fi
 
@@ -115,7 +116,8 @@ echo -e "${GREEN}  OK - Proiect iOS generat, pod-uri instalate, sandbox dezactiv
 
 # Pas 7: Bundling JavaScript pentru offline use
 echo -e "${YELLOW}[7/8] Bundling JavaScript (aplicatia va merge fara Metro server)...${NC}"
-npx react-native bundle \
+# Use NODE_OPTIONS to polyfill util.styleText for Node < 20.12 compatibility
+NODE_OPTIONS="--require ./scripts/node-polyfill.js" npx react-native bundle \
   --platform ios \
   --dev false \
   --entry-file index.ts \
@@ -129,7 +131,7 @@ echo -e "${YELLOW}[8/8] Deschidere Xcode...${NC}"
 # Change scheme to Release mode so it uses the embedded JS bundle
 SCHEME_FILE="ios/SatConnect.xcodeproj/xcshareddata/xcschemes/SatConnect.xcscheme"
 if [ -f "$SCHEME_FILE" ]; then
-  sed -i '' 's/buildConfiguration = "Debug"/buildConfiguration = "Release"/g' "$SCHEME_FILE"
+  sed -i '' '/<LaunchAction/,/<\/LaunchAction/ s/buildConfiguration = "Debug"/buildConfiguration = "Release"/g' "$SCHEME_FILE"
 fi
 echo ""
 echo -e "${GREEN}╔══════════════════════════════════════════╗${NC}"
