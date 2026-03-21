@@ -568,8 +568,10 @@ class ESIMProvisioningService {
         await AsyncStorage.setItem(PROFILES_KEY, JSON.stringify(this.profiles));
         return { success: true, profile };
       }
+      // Airalo configured but order failed — do NOT fall through to mock
+      return { success: false, error: 'Activarea eSIM a eșuat. Încearcă din nou.' };
     }
-    // Fallback mock provisioning
+    // Fallback mock provisioning (only when Airalo is NOT configured)
     await delay(2000);
     let foundPlan: ESIMCountryPlan | undefined;
     for (const plans of Object.values(COUNTRY_PLANS)) {
