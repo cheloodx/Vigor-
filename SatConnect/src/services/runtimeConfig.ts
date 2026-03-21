@@ -21,7 +21,7 @@ function readEnv(name: string): string | undefined {
 export const runtimeConfig = {
   supabaseUrl: readEnv('EXPO_PUBLIC_SUPABASE_URL'),
   supabaseAnonKey: readEnv('EXPO_PUBLIC_SUPABASE_ANON_KEY'),
-  airaloBaseUrl: readEnv('EXPO_PUBLIC_AIRALO_BASE_URL') ?? 'https://partners-api.airalo.com',
+  airaloBaseUrl: readEnv('EXPO_PUBLIC_AIRALO_BASE_URL') ?? 'https://sandbox-partners-api.airalo.com',
   airaloClientId: readEnv('EXPO_PUBLIC_AIRALO_CLIENT_ID'),
   airaloClientSecret: readEnv('EXPO_PUBLIC_AIRALO_CLIENT_SECRET'),
   airaloMode: readEnv('EXPO_PUBLIC_AIRALO_MODE') ?? 'sandbox',
