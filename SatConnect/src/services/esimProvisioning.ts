@@ -534,6 +534,7 @@ class ESIMProvisioningService {
   }
 
   async provisionESIM(planId: string): Promise<ProvisioningResult> {
+    if (!this.initialized) await this.initialize();
     if (hasAiraloConfig) {
       const form = new FormData();
       form.append('package_id', planId);
@@ -614,6 +615,7 @@ class ESIMProvisioningService {
   }
 
   async activateESIM(profileId: string): Promise<ProvisioningResult> {
+    if (!this.initialized) await this.initialize();
     await delay(2000);
     const profile = this.profiles.find((p) => p.id === profileId);
     if (!profile) {
@@ -627,11 +629,13 @@ class ESIMProvisioningService {
     return { success: true, profile };
   }
 
-  getProfiles(): ESIMProfile[] {
+  async getProfiles(): Promise<ESIMProfile[]> {
+    if (!this.initialized) await this.initialize();
     return [...this.profiles];
   }
 
-  getActiveProfile(): ESIMProfile | null {
+  async getActiveProfile(): Promise<ESIMProfile | null> {
+    if (!this.initialized) await this.initialize();
     return this.profiles.find((p) => p.status === 'active') ?? null;
   }
 
@@ -640,6 +644,7 @@ class ESIMProvisioningService {
   }
 
   async deactivateESIM(profileId: string): Promise<ProvisioningResult> {
+    if (!this.initialized) await this.initialize();
     const profile = this.profiles.find((p) => p.id === profileId);
     if (!profile) {
       return { success: false, error: 'Profilul eSIM nu a fost g\u0103sit' };
