@@ -576,6 +576,16 @@ class ESIMProvisioningService {
       if (foundPlan) break;
     }
     if (!foundPlan) {
+      // Check dynamically generated plans for countries without explicit entries
+      for (const country of ESIM_COUNTRIES) {
+        if (!COUNTRY_PLANS[country.code]) {
+          const defaultPlans = generateDefaultPlans(country);
+          foundPlan = defaultPlans.find((p) => p.id === planId);
+          if (foundPlan) break;
+        }
+      }
+    }
+    if (!foundPlan) {
       return { success: false, error: 'Planul selectat nu a fost g\u0103sit' };
     }
     const mockId = Date.now();

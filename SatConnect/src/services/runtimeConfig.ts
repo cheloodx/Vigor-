@@ -1,31 +1,27 @@
-type EnvMap = Record<string, string | undefined>;
+// Expo inlines EXPO_PUBLIC_* at compile time via babel-preset-expo.
+// We must access them as static member expressions for the transform to work.
+const rawSupabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
+const rawSupabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+const rawAiraloBaseUrl = process.env.EXPO_PUBLIC_AIRALO_BASE_URL;
+const rawAiraloClientId = process.env.EXPO_PUBLIC_AIRALO_CLIENT_ID;
+const rawAiraloClientSecret = process.env.EXPO_PUBLIC_AIRALO_CLIENT_SECRET;
+const rawAiraloMode = process.env.EXPO_PUBLIC_AIRALO_MODE;
+const rawBackendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
 
-type GlobalWithProcess = typeof globalThis & {
-  process?: {
-    env?: EnvMap;
-  };
-};
-
-const env = ((globalThis as GlobalWithProcess).process?.env ?? {}) as EnvMap;
-
-function readEnv(name: string): string | undefined {
-  const value = env[name];
-  if (!value) {
-    return undefined;
-  }
-
+function clean(value: string | undefined): string | undefined {
+  if (!value) return undefined;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
 export const runtimeConfig = {
-  supabaseUrl: readEnv('EXPO_PUBLIC_SUPABASE_URL'),
-  supabaseAnonKey: readEnv('EXPO_PUBLIC_SUPABASE_ANON_KEY'),
-  airaloBaseUrl: readEnv('EXPO_PUBLIC_AIRALO_BASE_URL') ?? 'https://sandbox-partners-api.airalo.com',
-  airaloClientId: readEnv('EXPO_PUBLIC_AIRALO_CLIENT_ID'),
-  airaloClientSecret: readEnv('EXPO_PUBLIC_AIRALO_CLIENT_SECRET'),
-  airaloMode: readEnv('EXPO_PUBLIC_AIRALO_MODE') ?? 'sandbox',
-  backendUrl: readEnv('EXPO_PUBLIC_BACKEND_URL'),
+  supabaseUrl: clean(rawSupabaseUrl),
+  supabaseAnonKey: clean(rawSupabaseAnonKey),
+  airaloBaseUrl: clean(rawAiraloBaseUrl) ?? 'https://sandbox-partners-api.airalo.com',
+  airaloClientId: clean(rawAiraloClientId),
+  airaloClientSecret: clean(rawAiraloClientSecret),
+  airaloMode: clean(rawAiraloMode) ?? 'sandbox',
+  backendUrl: clean(rawBackendUrl),
 };
 
 export const hasSupabaseConfig = Boolean(
