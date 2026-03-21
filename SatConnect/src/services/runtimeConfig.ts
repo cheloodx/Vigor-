@@ -25,6 +25,7 @@ export const runtimeConfig = {
   airaloClientId: readEnv('EXPO_PUBLIC_AIRALO_CLIENT_ID'),
   airaloClientSecret: readEnv('EXPO_PUBLIC_AIRALO_CLIENT_SECRET'),
   airaloMode: readEnv('EXPO_PUBLIC_AIRALO_MODE') ?? 'sandbox',
+  backendUrl: readEnv('EXPO_PUBLIC_BACKEND_URL'),
 };
 
 export const hasSupabaseConfig = Boolean(
