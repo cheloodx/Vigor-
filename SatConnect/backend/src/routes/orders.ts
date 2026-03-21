@@ -32,7 +32,7 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
 
     // 2. Fetch the plan
     const { data: plan, error: planError } = await supabase
-      .from('plans')
+      .from('esim_plans')
       .select('*')
       .eq('id', plan_id)
       .eq('is_active', true)
@@ -48,7 +48,7 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
 
     // 3. Create order (status: pending)
     const { data: order, error: orderError } = await supabase
-      .from('orders')
+      .from('esim_orders')
       .insert({
         user_id: userId,
         plan_id: planData.id,
@@ -95,7 +95,7 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
       } catch (airaloErr) {
         // If Airalo fails, mark order as failed
         await supabase
-          .from('orders')
+          .from('esim_orders')
           .update({ status: 'failed', error_message: String(airaloErr) })
           .eq('id', orderData.id);
 
@@ -141,7 +141,7 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
     if (esimError || !userEsim) {
       // Mark order as failed and record the error
       await supabase
-        .from('orders')
+        .from('esim_orders')
         .update({ status: 'failed', error_message: esimError?.message || 'Failed to create eSIM record', airalo_order_id: esimData.airalo_order_id })
         .eq('id', orderData.id);
 
@@ -152,7 +152,7 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
 
     // 6. Update order to completed
     await supabase
-      .from('orders')
+      .from('esim_orders')
       .update({ status: 'completed', airalo_order_id: esimData.airalo_order_id })
       .eq('id', orderData.id);
 

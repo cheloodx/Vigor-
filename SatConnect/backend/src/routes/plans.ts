@@ -19,7 +19,7 @@ router.get('/', async (req: Request, res: Response) => {
     const { country_code, region } = req.query;
 
     let query = supabase
-      .from('plans')
+      .from('esim_plans')
       .select('*')
       .eq('is_active', true)
       .order('country_name', { ascending: true })
