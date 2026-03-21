@@ -51,13 +51,64 @@ fi
 XCODE_VERSION=$(xcodebuild -version | head -1)
 echo -e "${GREEN}  OK - $XCODE_VERSION${NC}"
 
-# Pas 3: Verifică/instalează Node.js
+# Pas 3: Verifică/instalează Node.js >= 20.19.4 (necesar pentru Expo 55)
 echo -e "${YELLOW}[3/8] Verificare Node.js...${NC}"
+NODE_MIN_MAJOR=20
+NODE_MIN_MINOR=19
+NODE_MIN_PATCH=4
+
+check_node_version() {
+    local ver
+    ver=$(node --version 2>/dev/null | sed 's/^v//')
+    if [ -z "$ver" ]; then return 1; fi
+    local major minor patch
+    major=$(echo "$ver" | cut -d. -f1)
+    minor=$(echo "$ver" | cut -d. -f2)
+    patch=$(echo "$ver" | cut -d. -f3)
+    if [ "$major" -gt "$NODE_MIN_MAJOR" ]; then return 0; fi
+    if [ "$major" -eq "$NODE_MIN_MAJOR" ] && [ "$minor" -gt "$NODE_MIN_MINOR" ]; then return 0; fi
+    if [ "$major" -eq "$NODE_MIN_MAJOR" ] && [ "$minor" -eq "$NODE_MIN_MINOR" ] && [ "$patch" -ge "$NODE_MIN_PATCH" ]; then return 0; fi
+    return 1
+}
+
+# Try brew node@22 path first if default node is too old
+if ! command -v node &> /dev/null || ! check_node_version; then
+    BREW_NODE22="/opt/homebrew/opt/node@22/bin"
+    BREW_NODE="/opt/homebrew/opt/node/bin"
+    BREW_INTEL_NODE22="/usr/local/opt/node@22/bin"
+    if [ -d "$BREW_NODE22" ]; then
+        export PATH="$BREW_NODE22:$PATH"
+        echo "  Se foloseste Node.js din $BREW_NODE22"
+    elif [ -d "$BREW_INTEL_NODE22" ]; then
+        export PATH="$BREW_INTEL_NODE22:$PATH"
+        echo "  Se foloseste Node.js din $BREW_INTEL_NODE22"
+    elif [ -d "$BREW_NODE" ]; then
+        export PATH="$BREW_NODE:$PATH"
+        echo "  Se foloseste Node.js din $BREW_NODE"
+    fi
+fi
+
 if ! command -v node &> /dev/null; then
     echo -e "${RED}EROARE: Node.js nu este instalat!${NC}"
     echo ""
-    echo "Instaleaza Node.js de la: https://nodejs.org/"
-    echo "  sau cu Homebrew: brew install node"
+    echo "Instaleaza Node.js 22 cu Homebrew:"
+    echo "  brew install node@22"
+    echo "sau descarca de la: https://nodejs.org/"
+    echo ""
+    exit 1
+fi
+
+if ! check_node_version; then
+    echo -e "${RED}EROARE: Node.js $(node --version) e prea vechi! Trebuie >= v${NODE_MIN_MAJOR}.${NODE_MIN_MINOR}.${NODE_MIN_PATCH}${NC}"
+    echo ""
+    echo "Actualizeaza Node.js:"
+    echo "  brew install node@22"
+    echo "  sau: brew upgrade node"
+    echo "  sau descarca de la: https://nodejs.org/"
+    echo ""
+    echo "Daca ai instalat deja node@22 cu brew, ruleaza:"
+    echo "  export PATH=\"/opt/homebrew/opt/node@22/bin:\$PATH\""
+    echo "  ./setup-ios.sh"
     echo ""
     exit 1
 fi
