@@ -102,10 +102,12 @@ const THEME_KEY = '@satconnect_theme';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [isDark, setIsDark] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     AsyncStorage.getItem(THEME_KEY).then((value) => {
       if (value === 'dark') setIsDark(true);
+      setLoaded(true);
     });
   }, []);
 
@@ -114,8 +116,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    if (!loaded) return;
     AsyncStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
-  }, [isDark]);
+  }, [isDark, loaded]);
 
   const value = useMemo(() => ({
     isDark,
