@@ -80,6 +80,10 @@ async function airaloFetch(path: string, options: { method?: string; body?: stri
   });
 
   if (!response.ok) {
+    if (response.status === 401) {
+      cachedToken = null;
+      tokenExpiresAt = 0;
+    }
     const text = await response.text();
     throw new Error(`Airalo API error (${response.status}): ${text}`);
   }
