@@ -9,13 +9,14 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface SettingsScreenProps {
   onBack: () => void;
 }
 
 export function SettingsScreen({ onBack }: SettingsScreenProps) {
-  const [darkMode, setDarkMode] = useState(true);
+  const { isDark, toggleTheme } = useTheme();
   const [notifications, setNotifications] = useState(true);
   const [dataAlerts, setDataAlerts] = useState(true);
   const [roamingAlerts, setRoamingAlerts] = useState(true);
@@ -37,7 +38,7 @@ export function SettingsScreen({ onBack }: SettingsScreenProps) {
       {/* Appearance */}
       <Text style={styles.sectionLabel}>Aparenta</Text>
       <View style={styles.settingsCard}>
-        <SettingRow icon="theme-light-dark" label="Mod intunecat" value={darkMode} onToggle={setDarkMode} />
+        <SettingRow icon="theme-light-dark" label="Mod intunecat" value={isDark} onToggle={() => toggleTheme()} />
       </View>
 
       {/* Notifications */}

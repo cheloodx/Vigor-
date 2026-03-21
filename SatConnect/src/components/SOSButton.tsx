@@ -20,6 +20,10 @@ export function SOSButton({ onActivate }: Props) {
         Animated.timing(pulseAnim, { toValue: 1, duration: 1200, useNativeDriver: true }),
       ])
     ).start();
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, [pulseAnim]);
 
   const startPress = () => {
