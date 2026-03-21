@@ -7,7 +7,8 @@ Express + TypeScript + Supabase + Airalo eSIM API
 ```
 backend/
 ├── sql/
-│   └── schema.sql          # PostgreSQL schema (run in Supabase SQL editor)
+│   ├── schema.sql          # PostgreSQL schema (reference)
+│   └── migration.sql      # Migration script (run in Supabase SQL editor)
 ├── src/
 │   ├── index.ts             # Express server entry point
 │   ├── config/
@@ -34,7 +35,7 @@ backend/
 
 1. Create a Supabase project at https://supabase.com
 2. Go to SQL Editor
-3. Paste and run `sql/schema.sql`
+3. Paste and run `sql/migration.sql` (idempotent - safe to re-run)
 4. Copy your project URL and service role key
 
 ### 2. Environment Variables
@@ -184,10 +185,9 @@ curl http://localhost:3001/health
 
 | Table | Description |
 |-------|-------------|
-| `users` | User profiles (extends Supabase auth) |
-| `plans` | Available eSIM plans with pricing |
+| `esim_plans` | Available eSIM plans with pricing (22 countries, 58 plans) |
 | `subscriptions` | Apple IAP premium subscriptions |
-| `orders` | eSIM purchase orders |
+| `esim_orders` | eSIM purchase orders |
 | `user_esims` | Provisioned eSIM profiles with QR codes |
 
 ## Testing with Postman
