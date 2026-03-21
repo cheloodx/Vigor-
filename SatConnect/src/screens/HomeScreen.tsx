@@ -165,7 +165,7 @@ export function HomeScreen() {
       <View style={styles.usageGrid}>
         <View style={styles.usageRow}>
           <GlassUsageCard icon="cloud-upload-outline" title="Date folosite" value={`${(usage.dataUsedMB / 1024).toFixed(1)} GB`} subtitle={`din ${(usage.dataLimitMB / 1024).toFixed(0)} GB`} progress={dataProgress} color={COLORS.accent} />
-          <GlassUsageCard icon="chatbubble-outline" title="Mesaje" value={`${usage.messagesSent}`} subtitle={`${usage.messagesQueued} in coada`} color={COLORS.info} />
+          <GlassUsageCard icon="message-text-outline" title="Mesaje" value={`${usage.messagesSent}`} subtitle={`${usage.messagesQueued} in coada`} color={COLORS.info} />
         </View>
         <View style={styles.usageRow}>
           <GlassUsageCard icon="map-marker-outline" title="Locatii" value={`${usage.locationsShared}`} subtitle="partajate" color={COLORS.satellite} />

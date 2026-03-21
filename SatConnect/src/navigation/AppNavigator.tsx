@@ -162,10 +162,10 @@ export function AppNavigator() {
         await storage.setUser({ id: session.user.id, name: session.user.name, email: session.user.email, plan: 'standard' });
         setCurrentScreen('main');
       } else {
-        const token = await storage.getAuthToken();
-        if (token) {
-          setCurrentScreen('main');
-        } else if (onboardingDone) {
+        // Session expired or invalid — clear any stale auth token
+        await storage.removeAuthToken();
+        await storage.removeUser();
+        if (onboardingDone) {
           setCurrentScreen('login');
         } else {
           setCurrentScreen('onboarding');
