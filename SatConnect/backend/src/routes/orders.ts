@@ -151,10 +151,14 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
     }
 
     // 6. Update order to completed
-    await supabase
+    const { error: updateError } = await supabase
       .from('esim_orders')
       .update({ status: 'completed', airalo_order_id: esimData.airalo_order_id })
       .eq('id', orderData.id);
+
+    if (updateError) {
+      console.error(`Failed to mark order ${orderData.id} as completed: ${updateError.message}`);
+    }
 
     // 7. Return success with QR code
     const response: ApiResponse<UserEsim> = {

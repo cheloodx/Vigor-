@@ -58,7 +58,7 @@ async function getToken(): Promise<string> {
   const json = (await response.json()) as AiraloTokenResponse;
   cachedToken = json.data.access_token;
   // Expire 5 min early to be safe
-  tokenExpiresAt = Date.now() + (json.data.expires_in - 300) * 1000;
+  tokenExpiresAt = Date.now() + Math.max(json.data.expires_in - 300, 0) * 1000;
 
   return cachedToken;
 }
