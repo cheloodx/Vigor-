@@ -1,39 +1,31 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 
-interface UsageCardProps {
-  icon: keyof typeof Ionicons.glyphMap;
+interface Props {
+  icon: string;
   title: string;
   value: string;
-  subtitle?: string;
-  progress?: number; // 0-1
-  color?: string;
+  maxValue?: string;
+  progress?: number;
+  color: string;
 }
 
-export function UsageCard({ icon, title, value, subtitle, progress, color = COLORS.primary }: UsageCardProps) {
+export function UsageCard({ icon, title, value, maxValue, progress, color }: Props) {
   return (
     <View style={styles.card}>
       <View style={styles.header}>
         <View style={[styles.iconCircle, { backgroundColor: color + '15' }]}>
-          <Ionicons name={icon} size={20} color={color} />
+          <MaterialCommunityIcons name={icon as keyof typeof MaterialCommunityIcons.glyphMap} size={18} color={color} />
         </View>
         <Text style={styles.title}>{title}</Text>
       </View>
-      <Text style={styles.value}>{value}</Text>
-      {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+      <Text style={[styles.value, { color }]}>{value}</Text>
+      {maxValue && <Text style={styles.maxValue}>din {maxValue}</Text>}
       {progress !== undefined && (
-        <View style={styles.progressBar}>
-          <View
-            style={[
-              styles.progressFill,
-              {
-                width: `${Math.min(progress * 100, 100)}%`,
-                backgroundColor: progress > 0.85 ? COLORS.error : progress > 0.6 ? COLORS.warning : color,
-              },
-            ]}
-          />
+        <View style={styles.progressBg}>
+          <View style={[styles.progressFill, { width: `${Math.min(progress * 100, 100)}%`, backgroundColor: color }]} />
         </View>
       )}
     </View>
@@ -41,52 +33,12 @@ export function UsageCard({ icon, title, value, subtitle, progress, color = COLO
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: COLORS.white,
-    borderRadius: RADIUS.lg,
-    padding: SPACING.lg,
-    ...SHADOWS.sm,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-    marginBottom: SPACING.sm,
-  },
-  iconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: FONTS.sizes.sm,
-    color: COLORS.textSecondary,
-    fontWeight: '500',
-  },
-  value: {
-    fontSize: FONTS.sizes.xxl,
-    fontWeight: '800',
-    color: COLORS.text,
-    marginBottom: 2,
-  },
-  subtitle: {
-    fontSize: FONTS.sizes.xs,
-    color: COLORS.textLight,
-    marginBottom: SPACING.sm,
-  },
-  progressBar: {
-    height: 6,
-    backgroundColor: COLORS.gray[100],
-    borderRadius: 3,
-    overflow: 'hidden',
-    marginTop: SPACING.xs,
-  },
-  progressFill: {
-    height: '100%',
-    borderRadius: 3,
-  },
+  card: { ...GLASS.panel, borderRadius: RADIUS.lg, padding: SPACING.md },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: SPACING.sm },
+  iconCircle: { width: 32, height: 32, borderRadius: RADIUS.sm, alignItems: 'center', justifyContent: 'center' },
+  title: { fontSize: FONTS.sizes.xs, color: COLORS.textSecondary, fontWeight: '600' },
+  value: { fontSize: FONTS.sizes.xxl, fontWeight: '800', letterSpacing: -0.5 },
+  maxValue: { fontSize: FONTS.sizes.xs, color: COLORS.textLight, marginTop: 2 },
+  progressBg: { height: 3, backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 2, marginTop: SPACING.sm, overflow: 'hidden' },
+  progressFill: { height: 3, borderRadius: 2 },
 });

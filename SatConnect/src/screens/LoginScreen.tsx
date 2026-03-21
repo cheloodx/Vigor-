@@ -1,23 +1,23 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
-import { Button } from '../components/Button';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 import { supabaseAuth } from '../services/supabaseAuth';
 
 interface LoginScreenProps {
   onLogin: () => void;
   onGoToRegister: () => void;
-  onForgotPassword?: () => void;
+  onForgotPassword: () => void;
 }
 
 export function LoginScreen({ onLogin, onGoToRegister, onForgotPassword }: LoginScreenProps) {
@@ -25,17 +25,10 @@ export function LoginScreen({ onLogin, onGoToRegister, onForgotPassword }: Login
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
 
   const handleLogin = async () => {
-    if (!email.trim() || !password.trim()) {
-      Alert.alert('Eroare', 'Completează toate câmpurile');
+    if (!email || !password) {
+      Alert.alert('Eroare', 'Completati email si parola.');
       return;
     }
     setLoading(true);
@@ -45,177 +38,116 @@ export function LoginScreen({ onLogin, onGoToRegister, onForgotPassword }: Login
       if (result.success) {
         onLogin();
       } else {
-        Alert.alert('Eroare', result.error ?? 'Autentificare eșuată.');
+        Alert.alert('Eroare', result.error ?? 'Autentificare esuata.');
       }
-    } catch {
+    } catch (err: unknown) {
       setLoading(false);
-      Alert.alert('Eroare', 'A apărut o eroare de rețea. Încearcă din nou.');
+      const message = err instanceof Error ? err.message : 'Autentificare esuata.';
+      Alert.alert('Eroare', message);
+    }
+  };
+
+  const handleDemoLogin = async () => {
+    setLoading(true);
+    try {
+      await supabaseAuth.signIn('demo@satconnect.app', 'demo123');
+      onLogin();
+    } catch {
+      // Even if demo login fails, go to main screen
+      onLogin();
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-        <View style={styles.header}>
-          <View style={styles.iconCircle}>
-            <MaterialCommunityIcons name="satellite-variant" size={48} color={COLORS.white} />
-          </View>
-          <Text style={styles.title}>SatConnect</Text>
-          <Text style={styles.subtitle}>Conectat oriunde, oricând</Text>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <View style={styles.inner}>
+        {/* Logo */}
+        <View style={styles.logoWrap}>
+          <MaterialCommunityIcons name="satellite-variant" size={40} color={COLORS.accent} />
         </View>
+        <Text style={styles.title}>SatConnect</Text>
+        <Text style={styles.subtitle}>Conectivitate globala</Text>
 
+        {/* Form */}
         <View style={styles.form}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="email-outline" size={20} color={COLORS.textLight} />
-              <TextInput
-                style={styles.input}
-                placeholder="email@exemplu.com"
-                placeholderTextColor={COLORS.textLight}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Parolă</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="lock-outline" size={20} color={COLORS.textLight} />
-              <TextInput
-                style={styles.input}
-                placeholder="Parola ta"
-                placeholderTextColor={COLORS.textLight}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <Button
-                title=""
-                onPress={() => setShowPassword(!showPassword)}
-                variant="ghost"
-                icon={
-                  <MaterialCommunityIcons
-                    name={showPassword ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={COLORS.textLight}
-                  />
-                }
-              />
-            </View>
-          </View>
-
-          <Button
-            title="Conectează-te"
-            onPress={handleLogin}
-            variant="primary"
-            size="lg"
-            loading={loading}
-            style={styles.loginButton}
-          />
-
-          {onForgotPassword && (
-            <Button
-              title="Am uitat parola"
-              onPress={onForgotPassword}
-              variant="ghost"
-              size="sm"
-              style={styles.forgotButton}
+          <View style={styles.inputWrap}>
+            <MaterialCommunityIcons name="email-outline" size={20} color={COLORS.textLight} />
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              placeholderTextColor={COLORS.textLight}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
             />
-          )}
-
-          <View style={styles.registerRow}>
-            <Text style={styles.registerText}>Nu ai cont? </Text>
-            <Button title="Înregistrează-te" onPress={onGoToRegister} variant="ghost" size="sm" />
           </View>
+          <View style={styles.inputWrap}>
+            <MaterialCommunityIcons name="lock-outline" size={20} color={COLORS.textLight} />
+            <TextInput
+              style={styles.input}
+              placeholder="Parola"
+              placeholderTextColor={COLORS.textLight}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={20} color={COLORS.textLight} />
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity onPress={onForgotPassword}>
+            <Text style={styles.forgotText}>Am uitat parola</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.loginBtn} onPress={handleLogin} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color={COLORS.primary} />
+            ) : (
+              <Text style={styles.loginBtnText}>Conectare</Text>
+            )}
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.registerBtn} onPress={onGoToRegister} disabled={loading}>
+            <Text style={styles.registerBtnText}>Creeaza cont</Text>
+          </TouchableOpacity>
+
+          <View style={styles.divider}>
+            <View style={styles.dividerLine} />
+            <Text style={styles.dividerText}>sau</Text>
+            <View style={styles.dividerLine} />
+          </View>
+
+          <TouchableOpacity style={styles.demoBtn} onPress={handleDemoLogin} disabled={loading}>
+            <MaterialCommunityIcons name="play-circle-outline" size={20} color={COLORS.accent} />
+            <Text style={styles.demoBtnText}>Mod Demo</Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-  },
-  scroll: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: SPACING.xl,
-    paddingVertical: SPACING.xxxl,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: SPACING.xxxl,
-  },
-  iconCircle: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: SPACING.lg,
-  },
-  title: {
-    fontSize: FONTS.sizes.xxxl,
-    fontWeight: '800',
-    color: COLORS.primary,
-    marginBottom: SPACING.xs,
-  },
-  subtitle: {
-    fontSize: FONTS.sizes.md,
-    color: COLORS.textSecondary,
-  },
-  form: {
-    gap: SPACING.lg,
-  },
-  inputGroup: {
-    gap: SPACING.xs,
-  },
-  label: {
-    fontSize: FONTS.sizes.sm,
-    fontWeight: '600',
-    color: COLORS.text,
-    marginLeft: SPACING.xs,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.gray[50],
-    borderRadius: RADIUS.lg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    paddingHorizontal: SPACING.md,
-    gap: SPACING.sm,
-  },
-  input: {
-    flex: 1,
-    paddingVertical: SPACING.md,
-    fontSize: FONTS.sizes.md,
-    color: COLORS.text,
-  },
-  loginButton: {
-    marginTop: SPACING.md,
-  },
-  registerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  registerText: {
-    fontSize: FONTS.sizes.md,
-    color: COLORS.textSecondary,
-  },
-  forgotButton: {
-    alignSelf: 'center',
-  },
+  container: { flex: 1, backgroundColor: COLORS.surface },
+  inner: { flex: 1, justifyContent: 'center', paddingHorizontal: SPACING.xl },
+  logoWrap: { width: 72, height: 72, borderRadius: 36, ...GLASS.card, alignItems: 'center', justifyContent: 'center', alignSelf: 'center', marginBottom: SPACING.lg },
+  title: { fontSize: FONTS.sizes.xxxl, fontWeight: '800', color: COLORS.text, textAlign: 'center', letterSpacing: -0.5 },
+  subtitle: { fontSize: FONTS.sizes.md, color: COLORS.textSecondary, textAlign: 'center', marginBottom: SPACING.xxl },
+  form: { gap: SPACING.md },
+  inputWrap: { ...GLASS.card, borderRadius: RADIUS.lg, flexDirection: 'row', alignItems: 'center', paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, gap: SPACING.sm },
+  input: { flex: 1, fontSize: FONTS.sizes.md, color: COLORS.text, paddingVertical: SPACING.xs },
+  forgotText: { fontSize: FONTS.sizes.sm, color: COLORS.accent, textAlign: 'right', fontWeight: '600' },
+  loginBtn: { backgroundColor: COLORS.accent, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, alignItems: 'center', marginTop: SPACING.sm },
+  loginBtnText: { fontSize: FONTS.sizes.md, fontWeight: '700', color: COLORS.primary },
+  registerBtn: { ...GLASS.panel, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, alignItems: 'center' },
+  registerBtnText: { fontSize: FONTS.sizes.md, fontWeight: '600', color: COLORS.text },
+  divider: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md, marginVertical: SPACING.sm },
+  dividerLine: { flex: 1, height: 0.5, backgroundColor: 'rgba(255,255,255,0.1)' },
+  dividerText: { fontSize: FONTS.sizes.sm, color: COLORS.textLight },
+  demoBtn: { ...GLASS.panel, borderRadius: RADIUS.lg, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: SPACING.md, gap: SPACING.sm },
+  demoBtnText: { fontSize: FONTS.sizes.md, fontWeight: '600', color: COLORS.accent },
 });

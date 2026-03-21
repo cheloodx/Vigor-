@@ -4,345 +4,122 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
   Switch,
-  Alert,
+  TouchableOpacity,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
-import { useTheme } from '../contexts/ThemeContext';
-import { useLanguage } from '../i18n/LanguageContext';
-import { Language, LANGUAGE_NAMES } from '../i18n/translations';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 
 interface SettingsScreenProps {
   onBack: () => void;
 }
 
 export function SettingsScreen({ onBack }: SettingsScreenProps) {
-  const { isDark, colors, toggleTheme } = useTheme();
-  const { language, t, setLanguage } = useLanguage();
-
-  const [pushEnabled, setPushEnabled] = useState(true);
-  const [sosEnabled, setSosEnabled] = useState(true);
-  const [dataAlertEnabled, setDataAlertEnabled] = useState(true);
-  const [biometricEnabled, setBiometricEnabled] = useState(false);
-  const [autoLockEnabled, setAutoLockEnabled] = useState(true);
-  const [autoSyncEnabled, setAutoSyncEnabled] = useState(true);
-  const [compressionEnabled, setCompressionEnabled] = useState(true);
-  const [wifiOnlyEnabled, setWifiOnlyEnabled] = useState(false);
-
-  const handleLanguageChange = () => {
-    const languages: Language[] = ['ro', 'en'];
-    const currentIndex = languages.indexOf(language);
-    const nextLanguage = languages[(currentIndex + 1) % languages.length];
-    setLanguage(nextLanguage);
-  };
-
-  const bg = isDark ? colors.card : COLORS.white;
-  const surfaceBg = isDark ? colors.surface : COLORS.surface;
-  const textColor = isDark ? colors.text : COLORS.text;
-  const secondaryText = isDark ? colors.textSecondary : COLORS.textSecondary;
-  const borderColor = isDark ? colors.border : COLORS.gray[100];
+  const [darkMode, setDarkMode] = useState(true);
+  const [notifications, setNotifications] = useState(true);
+  const [dataAlerts, setDataAlerts] = useState(true);
+  const [roamingAlerts, setRoamingAlerts] = useState(true);
+  const [biometric, setBiometric] = useState(false);
+  const [autoSync, setAutoSync] = useState(true);
+  const [wifiOnly, setWifiOnly] = useState(false);
+  const [analytics, setAnalytics] = useState(true);
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: surfaceBg }]} contentContainerStyle={styles.content}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
-          <MaterialCommunityIcons name="arrow-left" size={24} color={textColor} />
-        </TouchableOpacity>
-        <Text style={[styles.title, { color: textColor }]}>{t.settingsTitle}</Text>
-        <View style={{ width: 40 }} />
-      </View>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
+      {/* Back button */}
+      <TouchableOpacity style={styles.backBtn} onPress={onBack}>
+        <MaterialCommunityIcons name="arrow-left" size={22} color={COLORS.accent} />
+        <Text style={styles.backText}>Inapoi</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.screenTitle}>Setari</Text>
 
       {/* Appearance */}
-      <Text style={[styles.sectionTitle, { color: secondaryText }]}>{t.appearance}</Text>
-      <View style={[styles.card, { backgroundColor: bg }]}>
-        <SettingRow
-          icon="theme-light-dark"
-          label={t.darkMode}
-          description={t.darkModeDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          showBorder
-          right={
-            <Switch
-              value={isDark}
-              onValueChange={toggleTheme}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.accent }}
-              thumbColor={COLORS.white}
-            />
-          }
-        />
-        <SettingRow
-          icon="translate"
-          label={t.language}
-          description={t.languageDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          right={
-            <TouchableOpacity onPress={handleLanguageChange} style={[styles.langBadge, { backgroundColor: COLORS.accent + '20' }]}>
-              <Text style={styles.langText}>{LANGUAGE_NAMES[language]}</Text>
-            </TouchableOpacity>
-          }
-        />
+      <Text style={styles.sectionLabel}>Aparenta</Text>
+      <View style={styles.settingsCard}>
+        <SettingRow icon="theme-light-dark" label="Mod intunecat" value={darkMode} onToggle={setDarkMode} />
       </View>
 
       {/* Notifications */}
-      <Text style={[styles.sectionTitle, { color: secondaryText }]}>{t.notificationsSettings}</Text>
-      <View style={[styles.card, { backgroundColor: bg }]}>
-        <SettingRow
-          icon="bell-outline"
-          label={t.pushNotifications}
-          description={t.pushNotificationsDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          showBorder
-          right={
-            <Switch
-              value={pushEnabled}
-              onValueChange={setPushEnabled}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.accent }}
-              thumbColor={COLORS.white}
-            />
-          }
-        />
-        <SettingRow
-          icon="alert-circle-outline"
-          label={t.sosAlerts}
-          description={t.sosAlertsDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          showBorder
-          right={
-            <Switch
-              value={sosEnabled}
-              onValueChange={() => {
-                Alert.alert(t.sosAlerts, t.sosAlertsDesc);
-              }}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.success }}
-              thumbColor={COLORS.white}
-              disabled
-            />
-          }
-        />
-        <SettingRow
-          icon="chart-line"
-          label={t.dataAlerts}
-          description={t.dataAlertsDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          right={
-            <Switch
-              value={dataAlertEnabled}
-              onValueChange={setDataAlertEnabled}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.accent }}
-              thumbColor={COLORS.white}
-            />
-          }
-        />
+      <Text style={styles.sectionLabel}>Notificari</Text>
+      <View style={styles.settingsCard}>
+        <SettingRow icon="bell-outline" label="Notificari push" value={notifications} onToggle={setNotifications} />
+        <SettingRow icon="chart-bar" label="Alerte consum date" value={dataAlerts} onToggle={setDataAlerts} />
+        <SettingRow icon="airplane" label="Alerte roaming" value={roamingAlerts} onToggle={setRoamingAlerts} />
       </View>
 
       {/* Security */}
-      <Text style={[styles.sectionTitle, { color: secondaryText }]}>{t.securitySettings}</Text>
-      <View style={[styles.card, { backgroundColor: bg }]}>
-        <SettingRow
-          icon="fingerprint"
-          label={t.biometricLogin}
-          description={t.biometricDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          showBorder
-          right={
-            <Switch
-              value={biometricEnabled}
-              onValueChange={setBiometricEnabled}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.accent }}
-              thumbColor={COLORS.white}
-            />
-          }
-        />
-        <SettingRow
-          icon="lock-clock"
-          label={t.autoLock}
-          description={t.autoLockDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          right={
-            <Switch
-              value={autoLockEnabled}
-              onValueChange={setAutoLockEnabled}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.accent }}
-              thumbColor={COLORS.white}
-            />
-          }
-        />
+      <Text style={styles.sectionLabel}>Securitate</Text>
+      <View style={styles.settingsCard}>
+        <SettingRow icon="fingerprint" label="Autentificare biometrica" value={biometric} onToggle={setBiometric} />
+        <SettingArrow icon="lock-outline" label="Schimba parola" />
+        <SettingArrow icon="two-factor-authentication" label="Autentificare 2FA" />
       </View>
 
       {/* General */}
-      <Text style={[styles.sectionTitle, { color: secondaryText }]}>{t.generalSettings}</Text>
-      <View style={[styles.card, { backgroundColor: bg }]}>
-        <SettingRow
-          icon="sync"
-          label={t.autoSync}
-          description={t.autoSyncDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          showBorder
-          right={
-            <Switch
-              value={autoSyncEnabled}
-              onValueChange={setAutoSyncEnabled}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.accent }}
-              thumbColor={COLORS.white}
-            />
-          }
-        />
-        <SettingRow
-          icon="arrow-collapse"
-          label={t.dataCompressor}
-          description={t.dataCompressorDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          showBorder
-          right={
-            <Switch
-              value={compressionEnabled}
-              onValueChange={setCompressionEnabled}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.accent }}
-              thumbColor={COLORS.white}
-            />
-          }
-        />
-        <SettingRow
-          icon="wifi"
-          label={t.wifiOnly}
-          description={t.wifiOnlyDesc}
-          textColor={textColor}
-          secondaryText={secondaryText}
-          borderColor={borderColor}
-          right={
-            <Switch
-              value={wifiOnlyEnabled}
-              onValueChange={setWifiOnlyEnabled}
-              trackColor={{ false: COLORS.gray[300], true: COLORS.accent }}
-              thumbColor={COLORS.white}
-            />
-          }
-        />
+      <Text style={styles.sectionLabel}>General</Text>
+      <View style={styles.settingsCard}>
+        <SettingRow icon="sync" label="Sincronizare automata" value={autoSync} onToggle={setAutoSync} />
+        <SettingRow icon="wifi" label="Doar WiFi" value={wifiOnly} onToggle={setWifiOnly} />
+        <SettingRow icon="chart-line" label="Analitice" value={analytics} onToggle={setAnalytics} />
+      </View>
+
+      {/* About */}
+      <Text style={styles.sectionLabel}>Despre</Text>
+      <View style={styles.settingsCard}>
+        <SettingArrow icon="information-outline" label="Versiune: 1.0.0" />
+        <SettingArrow icon="file-document-outline" label="Termeni & Conditii" />
+        <SettingArrow icon="shield-check-outline" label="Politica de confidentialitate" />
+        <SettingArrow icon="open-source-initiative" label="Licente open source" />
+      </View>
+
+      {/* Danger zone */}
+      <Text style={styles.sectionLabel}>Zona periculoasa</Text>
+      <View style={[styles.settingsCard, { borderColor: 'rgba(248,113,113,0.15)' }]}>
+        <TouchableOpacity style={styles.dangerRow}>
+          <MaterialCommunityIcons name="trash-can-outline" size={20} color={COLORS.error} />
+          <Text style={styles.dangerText}>Sterge contul</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
 }
 
-function SettingRow({
-  icon,
-  label,
-  description,
-  right,
-  showBorder,
-  textColor,
-  secondaryText,
-  borderColor,
-}: {
-  icon: string;
-  label: string;
-  description: string;
-  right: React.ReactNode;
-  showBorder?: boolean;
-  textColor: string;
-  secondaryText: string;
-  borderColor: string;
-}) {
+function SettingRow({ icon, label, value, onToggle }: { icon: string; label: string; value: boolean; onToggle: (v: boolean) => void }) {
   return (
-    <View style={[styles.settingRow, showBorder && { borderBottomWidth: 1, borderBottomColor: borderColor }]}>
-      <MaterialCommunityIcons
-        name={icon as keyof typeof MaterialCommunityIcons.glyphMap}
-        size={22}
-        color={secondaryText}
+    <View style={styles.settingRow}>
+      <MaterialCommunityIcons name={icon as keyof typeof MaterialCommunityIcons.glyphMap} size={20} color={COLORS.textSecondary} />
+      <Text style={styles.settingLabel}>{label}</Text>
+      <Switch
+        value={value}
+        onValueChange={onToggle}
+        trackColor={{ false: 'rgba(255,255,255,0.1)', true: COLORS.accent + '60' }}
+        thumbColor={value ? COLORS.accent : COLORS.textLight}
       />
-      <View style={styles.settingInfo}>
-        <Text style={[styles.settingLabel, { color: textColor }]}>{label}</Text>
-        <Text style={[styles.settingDesc, { color: secondaryText }]}>{description}</Text>
-      </View>
-      {right}
     </View>
   );
 }
 
+function SettingArrow({ icon, label }: { icon: string; label: string }) {
+  return (
+    <TouchableOpacity style={styles.settingRow}>
+      <MaterialCommunityIcons name={icon as keyof typeof MaterialCommunityIcons.glyphMap} size={20} color={COLORS.textSecondary} />
+      <Text style={styles.settingLabel}>{label}</Text>
+      <MaterialCommunityIcons name="chevron-right" size={18} color={COLORS.textLight} />
+    </TouchableOpacity>
+  );
+}
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
-    paddingBottom: SPACING.xxxl,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 60,
-    paddingHorizontal: SPACING.lg,
-    paddingBottom: SPACING.lg,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: FONTS.sizes.xl,
-    fontWeight: '800',
-  },
-  sectionTitle: {
-    fontSize: FONTS.sizes.sm,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginLeft: SPACING.xl,
-    marginTop: SPACING.xl,
-    marginBottom: SPACING.sm,
-  },
-  card: {
-    marginHorizontal: SPACING.lg,
-    borderRadius: RADIUS.lg,
-    ...SHADOWS.sm,
-  },
-  settingRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: SPACING.md,
-    gap: SPACING.md,
-  },
-  settingInfo: {
-    flex: 1,
-  },
-  settingLabel: {
-    fontSize: FONTS.sizes.md,
-    fontWeight: '600',
-  },
-  settingDesc: {
-    fontSize: FONTS.sizes.xs,
-    marginTop: 2,
-  },
-  langBadge: {
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.xs,
-    borderRadius: RADIUS.full,
-  },
-  langText: {
-    fontSize: FONTS.sizes.sm,
-    fontWeight: '600',
-    color: COLORS.accent,
-  },
+  container: { flex: 1, backgroundColor: COLORS.surface },
+  content: { paddingHorizontal: SPACING.lg, paddingTop: 60, paddingBottom: SPACING.xxxl },
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: SPACING.lg },
+  backText: { fontSize: FONTS.sizes.md, color: COLORS.accent, fontWeight: '600' },
+  screenTitle: { fontSize: FONTS.sizes.xxxl, fontWeight: '800', color: COLORS.text, marginBottom: SPACING.xl, letterSpacing: -0.5 },
+  sectionLabel: { fontSize: FONTS.sizes.sm, fontWeight: '700', color: COLORS.textSecondary, textTransform: 'uppercase', letterSpacing: 1, marginBottom: SPACING.sm, marginTop: SPACING.lg },
+  settingsCard: { ...GLASS.panel, borderRadius: RADIUS.lg, overflow: 'hidden', marginBottom: SPACING.sm },
+  settingRow: { flexDirection: 'row', alignItems: 'center', padding: SPACING.md, gap: SPACING.md, borderBottomWidth: 0.5, borderBottomColor: 'rgba(255,255,255,0.06)' },
+  settingLabel: { flex: 1, fontSize: FONTS.sizes.md, color: COLORS.text, fontWeight: '500' },
+  dangerRow: { flexDirection: 'row', alignItems: 'center', padding: SPACING.md, gap: SPACING.md },
+  dangerText: { fontSize: FONTS.sizes.md, color: COLORS.error, fontWeight: '600' },
 });

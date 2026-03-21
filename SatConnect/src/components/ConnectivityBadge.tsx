@@ -1,61 +1,52 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 import { ConnectionType } from '../types';
 
-interface ConnectivityBadgeProps {
-  connectionType: ConnectionType;
-  signalStrength: number;
-  pendingSync: number;
-  isSyncing: boolean;
-}
-
 const CONNECTION_ICONS: Record<ConnectionType, string> = {
+  satellite: 'satellite-variant',
   wifi: 'wifi',
   cellular: 'signal-cellular-3',
-  roaming: 'earth',
-  satellite: 'satellite-variant',
+  roaming: 'airplane',
   esim: 'sim-outline',
   bluetooth: 'bluetooth',
   none: 'wifi-off',
 };
 
 const CONNECTION_COLORS: Record<ConnectionType, string> = {
+  satellite: COLORS.satellite,
   wifi: COLORS.success,
   cellular: COLORS.info,
-  roaming: '#F59E0B',
-  satellite: COLORS.satellite,
+  roaming: COLORS.warning,
   esim: COLORS.accent,
   bluetooth: COLORS.info,
   none: COLORS.error,
 };
 
-export function ConnectivityBadge({
-  connectionType,
-  signalStrength,
-  pendingSync,
-  isSyncing,
-}: ConnectivityBadgeProps) {
-  const color = CONNECTION_COLORS[connectionType];
+interface Props {
+  connectionType: ConnectionType;
+  signalStrength: number;
+  pendingSync: number;
+  isSyncing: boolean;
+}
+
+export function ConnectivityBadge({ connectionType, signalStrength, pendingSync, isSyncing }: Props) {
   const icon = CONNECTION_ICONS[connectionType];
+  const color = CONNECTION_COLORS[connectionType];
 
   return (
-    <View style={[styles.container, { borderColor: color }]}>
-      <MaterialCommunityIcons
-        name={icon as keyof typeof MaterialCommunityIcons.glyphMap}
-        size={16}
-        color={color}
-      />
-      <View style={[styles.signalDot, { backgroundColor: color }]} />
-      {signalStrength > 0 && (
-        <Text style={[styles.signal, { color }]}>{signalStrength}%</Text>
+    <View style={styles.badge}>
+      <MaterialCommunityIcons name={icon as keyof typeof MaterialCommunityIcons.glyphMap} size={16} color={color} />
+      <Text style={[styles.signal, { color }]}>{signalStrength}%</Text>
+      {isSyncing && (
+        <View style={styles.syncDot}>
+          <MaterialCommunityIcons name="sync" size={10} color={COLORS.warning} />
+        </View>
       )}
-      {pendingSync > 0 && (
-        <View style={styles.syncBadge}>
-          <Text style={styles.syncText}>
-            {isSyncing ? '...' : pendingSync}
-          </Text>
+      {pendingSync > 0 && !isSyncing && (
+        <View style={styles.pendingDot}>
+          <Text style={styles.pendingText}>{pendingSync}</Text>
         </View>
       )}
     </View>
@@ -63,37 +54,9 @@ export function ConnectivityBadge({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: SPACING.xs,
-    borderRadius: RADIUS.full,
-    borderWidth: 1,
-    gap: 4,
-  },
-  signalDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-  },
-  signal: {
-    fontSize: FONTS.sizes.xs,
-    fontWeight: '600',
-  },
-  syncBadge: {
-    backgroundColor: COLORS.warning,
-    borderRadius: RADIUS.full,
-    minWidth: 16,
-    height: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 3,
-  },
-  syncText: {
-    color: COLORS.white,
-    fontSize: 9,
-    fontWeight: '700',
-  },
+  badge: { ...GLASS.panel, borderRadius: RADIUS.full, flexDirection: 'row', alignItems: 'center', paddingHorizontal: SPACING.sm, paddingVertical: 6, gap: 4 },
+  signal: { fontSize: FONTS.sizes.xs, fontWeight: '700' },
+  syncDot: { marginLeft: 2 },
+  pendingDot: { backgroundColor: COLORS.warning, borderRadius: 8, width: 16, height: 16, alignItems: 'center', justifyContent: 'center', marginLeft: 2 },
+  pendingText: { fontSize: 8, fontWeight: '800', color: COLORS.primary },
 });

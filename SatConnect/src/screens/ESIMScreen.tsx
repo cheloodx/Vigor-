@@ -1,675 +1,291 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
-  TouchableOpacity,
-  Alert,
   TextInput,
+  TouchableOpacity,
   ActivityIndicator,
+  Alert,
+  Animated,
+  Dimensions,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 import {
   esimProvisioning,
   ESIMCountry,
   ESIMCountryPlan,
+  ProvisioningResult,
 } from '../services/esimProvisioning';
 
-type ScreenState = 'countries' | 'plans' | 'activating' | 'success';
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
+type Step = 'country' | 'plans' | 'activating' | 'success';
 
 export function ESIMScreen() {
-  const [screen, setScreen] = useState<ScreenState>('countries');
+  const [step, setStep] = useState<Step>('country');
   const [search, setSearch] = useState('');
   const [countries, setCountries] = useState<ESIMCountry[]>([]);
-  const [filteredCountries, setFilteredCountries] = useState<ESIMCountry[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<ESIMCountry | null>(null);
   const [plans, setPlans] = useState<ESIMCountryPlan[]>([]);
+  const [selectedPlan, setSelectedPlan] = useState<ESIMCountryPlan | null>(null);
+  const [result, setResult] = useState<ProvisioningResult | null>(null);
   const [loadingPlans, setLoadingPlans] = useState(false);
-  const [activatingPlan, setActivatingPlan] = useState<ESIMCountryPlan | null>(null);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
-    const all = esimProvisioning.getCountries();
-    setCountries(all);
-    setFilteredCountries(all);
+    esimProvisioning.initialize().then(() => {
+      setCountries(esimProvisioning.getCountries());
+    });
   }, []);
 
-  const handleSearch = useCallback(
-    (query: string) => {
-      setSearch(query);
-      if (!query.trim()) {
-        setFilteredCountries(countries);
-      } else {
-        setFilteredCountries(esimProvisioning.searchCountries(query));
-      }
-    },
-    [countries],
-  );
+  const filteredCountries = search
+    ? countries.filter(
+        (c) =>
+          c.name.toLowerCase().includes(search.toLowerCase()) ||
+          c.code.toLowerCase().includes(search.toLowerCase()),
+      )
+    : countries;
+  const popularCountries = countries.filter((c) => c.popular);
 
-  const handleSelectCountry = useCallback(async (country: ESIMCountry) => {
+  const animateStep = (nextStep: Step) => {
+    Animated.timing(fadeAnim, { toValue: 0, duration: 150, useNativeDriver: true }).start(() => {
+      setStep(nextStep);
+      Animated.timing(fadeAnim, { toValue: 1, duration: 200, useNativeDriver: true }).start();
+    });
+  };
+
+  const handleSelectCountry = async (country: ESIMCountry) => {
     setSelectedCountry(country);
     setLoadingPlans(true);
-    setScreen('plans');
+    animateStep('plans');
     try {
-      const countryPlans = await esimProvisioning.getPlansForCountry(country.code);
-      setPlans(countryPlans);
+      const p = await esimProvisioning.getPlansForCountry(country.code);
+      setPlans(p);
     } catch {
-      Alert.alert('Eroare', 'Nu am putut încărca planurile. Încearcă din nou.');
-      setScreen('countries');
+      setPlans([]);
     } finally {
       setLoadingPlans(false);
     }
-  }, []);
+  };
 
-  const handleSelectPlan = useCallback(
-    (plan: ESIMCountryPlan) => {
-      if (!selectedCountry) return;
-      Alert.alert(
-        `Internet pentru ${selectedCountry.name}`,
-        `${plan.dataLabel} • ${plan.validDays} zile • €${plan.price.toFixed(2)}\n\nActivare în aproximativ 2 minute.`,
-        [
-          { text: 'Anulează', style: 'cancel' },
-          {
-            text: 'Activează acum',
-            onPress: async () => {
-              setActivatingPlan(plan);
-              setScreen('activating');
-              try {
-                const result = await esimProvisioning.provisionESIM(plan.id);
-                if (result.success) {
-                  setScreen('success');
-                } else {
-                  Alert.alert('Eroare', result.error || 'Activarea a eșuat.');
-                  setScreen('plans');
-                }
-              } catch {
-                Alert.alert('Eroare', 'Activarea a eșuat. Încearcă din nou.');
-                setScreen('plans');
-              }
-            },
-          },
-        ],
-      );
-    },
-    [selectedCountry],
-  );
-
-  const handleBack = useCallback(() => {
-    if (screen === 'plans') {
-      setScreen('countries');
-      setSelectedCountry(null);
-      setPlans([]);
-    } else if (screen === 'success') {
-      setScreen('countries');
-      setSelectedCountry(null);
-      setPlans([]);
-      setActivatingPlan(null);
+  const handleSelectPlan = async (plan: ESIMCountryPlan) => {
+    setSelectedPlan(plan);
+    animateStep('activating');
+    try {
+      const res = await esimProvisioning.provisionESIM(plan.id);
+      setResult(res);
+      if (res.success) {
+        setTimeout(() => animateStep('success'), 1500);
+      } else {
+        Alert.alert('Eroare', res.error || 'Nu s-a putut activa eSIM-ul.');
+        animateStep('plans');
+      }
+    } catch {
+      Alert.alert('Eroare', 'Nu s-a putut activa eSIM-ul. Incercati din nou.');
+      animateStep('plans');
     }
-  }, [screen]);
+  };
 
-  const handleNewESIM = useCallback(() => {
-    setScreen('countries');
+  const handleReset = () => {
     setSelectedCountry(null);
+    setSelectedPlan(null);
+    setResult(null);
     setPlans([]);
-    setActivatingPlan(null);
     setSearch('');
-    setFilteredCountries(countries);
-  }, [countries]);
+    animateStep('country');
+  };
 
-  // ------- COUNTRY SELECTION SCREEN -------
-  if (screen === 'countries') {
-    const popularCountries = countries.filter((c) => c.popular);
-    const regionGroups: Record<string, ESIMCountry[]> = {};
-    for (const c of filteredCountries) {
-      if (!regionGroups[c.region]) regionGroups[c.region] = [];
-      regionGroups[c.region].push(c);
-    }
-
+  // Country selection
+  if (step === 'country') {
     return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={styles.title}>Unde mergi?</Text>
-          <Text style={styles.subtitle}>
-            Alege destinația și activează internetul în 2 minute
-          </Text>
-        </View>
+      <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.screenTitle}>eSIM Global</Text>
+          <Text style={styles.screenSub}>Alege tara si activeaza instant</Text>
 
-        {/* Search */}
-        <View style={styles.searchContainer}>
-          <MaterialCommunityIcons name="magnify" size={20} color={COLORS.textLight} />
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Caută țara..."
-            placeholderTextColor={COLORS.textLight}
-            value={search}
-            onChangeText={handleSearch}
-            autoCorrect={false}
-          />
-          {search.length > 0 && (
-            <TouchableOpacity onPress={() => handleSearch('')}>
-              <MaterialCommunityIcons name="close-circle" size={18} color={COLORS.textLight} />
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {/* Popular countries (only when not searching) */}
-        {!search && (
-          <>
-            <Text style={styles.sectionTitle}>Destinații populare</Text>
-            <View style={styles.popularGrid}>
-              {popularCountries.map((country) => (
-                <TouchableOpacity
-                  key={country.code}
-                  style={styles.popularItem}
-                  onPress={() => handleSelectCountry(country)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.popularFlag}>{country.flag}</Text>
-                  <Text style={styles.popularName} numberOfLines={1}>
-                    {country.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </>
-        )}
-
-        {/* All countries by region */}
-        {Object.entries(regionGroups).map(([region, regionCountries]) => (
-          <View key={region}>
-            <Text style={styles.sectionTitle}>{region}</Text>
-            {regionCountries.map((country) => (
-              <TouchableOpacity
-                key={country.code}
-                style={styles.countryRow}
-                onPress={() => handleSelectCountry(country)}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.countryFlag}>{country.flag}</Text>
-                <Text style={styles.countryName}>{country.name}</Text>
-                <MaterialCommunityIcons
-                  name="chevron-right"
-                  size={20}
-                  color={COLORS.textLight}
-                />
+          {/* Search */}
+          <View style={styles.searchWrap}>
+            <MaterialCommunityIcons name="magnify" size={20} color={COLORS.textLight} />
+            <TextInput
+              style={styles.searchInput}
+              placeholder="Cauta tara..."
+              placeholderTextColor={COLORS.textLight}
+              value={search}
+              onChangeText={setSearch}
+            />
+            {search.length > 0 && (
+              <TouchableOpacity onPress={() => setSearch('')}>
+                <MaterialCommunityIcons name="close-circle" size={18} color={COLORS.textLight} />
               </TouchableOpacity>
-            ))}
+            )}
           </View>
-        ))}
 
-        {filteredCountries.length === 0 && (
-          <View style={styles.emptyState}>
-            <MaterialCommunityIcons name="earth-off" size={48} color={COLORS.textLight} />
-            <Text style={styles.emptyText}>Nu am găsit nicio țară</Text>
-            <Text style={styles.emptySubtext}>Încearcă altă căutare</Text>
-          </View>
-        )}
+          {/* Popular countries */}
+          {!search && (
+            <>
+              <Text style={styles.sectionLabel}>Populare</Text>
+              <View style={styles.popularGrid}>
+                {popularCountries.slice(0, 9).map((c) => (
+                  <TouchableOpacity key={c.code} style={styles.popularCard} onPress={() => handleSelectCountry(c)}>
+                    <Text style={styles.popularFlag}>{c.flag}</Text>
+                    <Text style={styles.popularName}>{c.name}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </>
+          )}
 
-        {/* Info */}
-        <View style={styles.infoBox}>
-          <MaterialCommunityIcons name="information-outline" size={18} color={COLORS.primary} />
-          <Text style={styles.infoText}>
-            eSIM-ul virtual îți permite internet în 175+ țări fără cartelă fizică. Fiecare țară
-            are propriul plan și provider optimizat.
-          </Text>
-        </View>
-      </ScrollView>
+          {/* All countries */}
+          <Text style={styles.sectionLabel}>{search ? 'Rezultate' : 'Toate tarile'}</Text>
+          {filteredCountries.map((c) => (
+            <TouchableOpacity key={c.code} style={styles.countryRow} onPress={() => handleSelectCountry(c)}>
+              <Text style={styles.countryFlag}>{c.flag}</Text>
+              <Text style={styles.countryName}>{c.name}</Text>
+              <MaterialCommunityIcons name="chevron-right" size={20} color={COLORS.textLight} />
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+      </Animated.View>
     );
   }
 
-  // ------- PLANS FOR COUNTRY SCREEN -------
-  if (screen === 'plans' && selectedCountry) {
+  // Plans selection
+  if (step === 'plans') {
     return (
-      <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-        {/* Back button */}
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <MaterialCommunityIcons name="arrow-left" size={22} color={COLORS.text} />
-          <Text style={styles.backText}>Înapoi</Text>
-        </TouchableOpacity>
-
-        {/* Country header */}
-        <View style={styles.countryHeader}>
-          <Text style={styles.countryHeaderFlag}>{selectedCountry.flag}</Text>
-          <View>
-            <Text style={styles.countryHeaderName}>
-              Internet pentru {selectedCountry.name}
-            </Text>
-            <Text style={styles.countryHeaderSub}>Activ în 2 minute</Text>
+      <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <TouchableOpacity style={styles.backBtn} onPress={handleReset}>
+            <MaterialCommunityIcons name="arrow-left" size={20} color={COLORS.accent} />
+            <Text style={styles.backText}>Inapoi</Text>
+          </TouchableOpacity>
+          <View style={styles.countryHeader}>
+            <Text style={styles.countryHeaderFlag}>{selectedCountry?.flag}</Text>
+            <Text style={styles.countryHeaderName}>{selectedCountry?.name}</Text>
           </View>
-        </View>
-
-        {loadingPlans ? (
-          <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color={COLORS.primary} />
-            <Text style={styles.loadingText}>Se încarcă planurile...</Text>
-          </View>
-        ) : (
-          <>
-            <Text style={styles.sectionTitle}>Alege planul</Text>
-            {plans.map((plan) => (
+          <Text style={styles.sectionLabel}>Alege planul</Text>
+          {loadingPlans ? (
+            <View style={styles.loadingWrap}>
+              <ActivityIndicator size="large" color={COLORS.accent} />
+              <Text style={styles.loadingText}>Se incarca planurile...</Text>
+            </View>
+          ) : (
+            plans.map((plan) => (
               <TouchableOpacity
                 key={plan.id}
                 style={[styles.planCard, plan.popular && styles.planCardPopular]}
                 onPress={() => handleSelectPlan(plan)}
-                activeOpacity={0.8}
               >
                 {plan.popular && (
                   <View style={styles.popularBadge}>
                     <Text style={styles.popularBadgeText}>POPULAR</Text>
                   </View>
                 )}
-                <View style={styles.planCardRow}>
-                  <View style={styles.planCardInfo}>
-                    <Text style={styles.planDataLabel}>{plan.dataLabel}</Text>
-                    <Text style={styles.planValidDays}>{plan.validDays} zile</Text>
+                <View style={styles.planHeader}>
+                  <Text style={styles.planData}>{plan.dataLabel}</Text>
+                  <Text style={styles.planPrice}>{plan.currency === 'EUR' ? '\u20ac' : '$'}{plan.price.toFixed(2)}</Text>
+                </View>
+                <Text style={styles.planValidity}>{plan.validDays} zile</Text>
+                <View style={styles.planFeatures}>
+                  <View style={styles.planFeature}>
+                    <MaterialCommunityIcons name="check-circle" size={14} color={COLORS.accent} />
+                    <Text style={styles.planFeatureText}>Activare instant</Text>
                   </View>
-                  <View style={styles.planCardPrice}>
-                    <Text style={styles.planPrice}>€{plan.price.toFixed(2)}</Text>
+                  <View style={styles.planFeature}>
+                    <MaterialCommunityIcons name="check-circle" size={14} color={COLORS.accent} />
+                    <Text style={styles.planFeatureText}>Date 4G/5G</Text>
                   </View>
                 </View>
               </TouchableOpacity>
-            ))}
+            ))
+          )}
+        </ScrollView>
+      </Animated.View>
+    );
+  }
 
-            {plans.length === 0 && (
-              <View style={styles.emptyState}>
-                <MaterialCommunityIcons name="sim-off-outline" size={48} color={COLORS.textLight} />
-                <Text style={styles.emptyText}>Nu sunt planuri disponibile</Text>
-              </View>
-            )}
-          </>
-        )}
-
-        {/* Info */}
-        <View style={styles.infoBox}>
-          <MaterialCommunityIcons name="shield-check-outline" size={18} color={COLORS.accent} />
-          <Text style={styles.infoText}>
-            Plata securizată. Instalare automată pe iPhone. Fără cartelă fizică necesară.
-          </Text>
+  // Activating
+  if (step === 'activating') {
+    return (
+      <Animated.View style={[styles.container, styles.centerContent, { opacity: fadeAnim }]}>
+        <View style={styles.activatingCard}>
+          <ActivityIndicator size="large" color={COLORS.accent} />
+          <Text style={styles.activatingTitle}>Se activeaza eSIM...</Text>
+          <Text style={styles.activatingSub}>Asteptati cateva secunde</Text>
         </View>
-      </ScrollView>
+      </Animated.View>
     );
   }
 
-  // ------- ACTIVATING SCREEN -------
-  if (screen === 'activating') {
-    return (
-      <View style={[styles.container, styles.centerContent]}>
-        <ActivityIndicator size="large" color={COLORS.accent} />
-        <Text style={styles.activatingTitle}>Se activează eSIM...</Text>
-        <Text style={styles.activatingSubtitle}>
-          {selectedCountry?.flag} Internet pentru {selectedCountry?.name}
-        </Text>
-        {activatingPlan && (
-          <Text style={styles.activatingPlan}>
-            {activatingPlan.dataLabel} • €{activatingPlan.price.toFixed(2)}
-          </Text>
-        )}
-        <Text style={styles.activatingWait}>Durează aproximativ 2 minute</Text>
-      </View>
-    );
-  }
-
-  // ------- SUCCESS SCREEN -------
-  if (screen === 'success') {
-    return (
-      <View style={[styles.container, styles.centerContent]}>
+  // Success
+  return (
+    <Animated.View style={[styles.container, styles.centerContent, { opacity: fadeAnim }]}>
+      <View style={styles.successCard}>
         <View style={styles.successIcon}>
-          <MaterialCommunityIcons name="check-circle" size={64} color={COLORS.success} />
+          <MaterialCommunityIcons name="check-circle" size={48} color={COLORS.success} />
         </View>
         <Text style={styles.successTitle}>eSIM Activat!</Text>
-        <Text style={styles.successSubtitle}>
-          {selectedCountry?.flag} Internet pentru {selectedCountry?.name}
-        </Text>
-        {activatingPlan && (
-          <Text style={styles.successPlan}>
-            {activatingPlan.dataLabel} • {activatingPlan.validDays} zile
-          </Text>
+        <Text style={styles.successSub}>{selectedPlan?.dataLabel} - {selectedCountry?.name}</Text>
+        {result?.profile && (
+          <View style={styles.orderInfo}>
+            <Text style={styles.orderLabel}>ICCID</Text>
+            <Text style={styles.orderValue}>{result.profile.iccid}</Text>
+          </View>
         )}
-        <Text style={styles.successMessage}>
-          Poți folosi internetul imediat. Conexiunea se va activa automat când ajungi la destinație.
-        </Text>
-
-        <TouchableOpacity style={styles.successButton} onPress={handleNewESIM}>
-          <MaterialCommunityIcons name="plus" size={20} color={COLORS.white} />
-          <Text style={styles.successButtonText}>Adaugă altă destinație</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.successBackButton} onPress={handleBack}>
-          <Text style={styles.successBackText}>Înapoi la destinații</Text>
+        <TouchableOpacity style={styles.doneBtn} onPress={handleReset}>
+          <Text style={styles.doneBtnText}>Gata</Text>
         </TouchableOpacity>
       </View>
-    );
-  }
-
-  return null;
+    </Animated.View>
+  );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.surface,
-  },
-  content: {
-    paddingHorizontal: SPACING.lg,
-    paddingTop: 60,
-    paddingBottom: SPACING.xxxl,
-  },
-  centerContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: SPACING.xl,
-  },
-  header: {
-    marginBottom: SPACING.xl,
-  },
-  title: {
-    fontSize: FONTS.sizes.xxxl,
-    fontWeight: '800',
-    color: COLORS.text,
-    marginBottom: SPACING.xs,
-  },
-  subtitle: {
-    fontSize: FONTS.sizes.md,
-    color: COLORS.textSecondary,
-    lineHeight: 22,
-  },
-
-  // Search
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    borderRadius: RADIUS.lg,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    marginBottom: SPACING.xl,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    gap: SPACING.sm,
-    ...SHADOWS.sm,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: FONTS.sizes.md,
-    color: COLORS.text,
-    paddingVertical: 4,
-  },
-
-  // Section
-  sectionTitle: {
-    fontSize: FONTS.sizes.lg,
-    fontWeight: '700',
-    color: COLORS.text,
-    marginBottom: SPACING.md,
-    marginTop: SPACING.md,
-  },
-
-  // Popular grid
-  popularGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: SPACING.sm,
-    marginBottom: SPACING.lg,
-  },
-  popularItem: {
-    width: '30%',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    borderRadius: RADIUS.lg,
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.xs,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    ...SHADOWS.sm,
-  },
-  popularFlag: {
-    fontSize: 28,
-    marginBottom: 4,
-  },
-  popularName: {
-    fontSize: FONTS.sizes.xs,
-    fontWeight: '600',
-    color: COLORS.text,
-    textAlign: 'center',
-  },
-
-  // Country list
-  countryRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.white,
-    borderRadius: RADIUS.md,
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.md,
-    marginBottom: SPACING.xs,
-    gap: SPACING.md,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-  },
-  countryFlag: {
-    fontSize: 24,
-  },
-  countryName: {
-    flex: 1,
-    fontSize: FONTS.sizes.md,
-    color: COLORS.text,
-    fontWeight: '500',
-  },
-
-  // Empty state
-  emptyState: {
-    alignItems: 'center',
-    paddingVertical: SPACING.xxl,
-    gap: SPACING.sm,
-  },
-  emptyText: {
-    fontSize: FONTS.sizes.md,
-    fontWeight: '600',
-    color: COLORS.textSecondary,
-  },
-  emptySubtext: {
-    fontSize: FONTS.sizes.sm,
-    color: COLORS.textLight,
-  },
-
-  // Info box
-  infoBox: {
-    flexDirection: 'row',
-    gap: SPACING.sm,
-    backgroundColor: COLORS.primary + '10',
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-    alignItems: 'flex-start',
-    marginTop: SPACING.xl,
-  },
-  infoText: {
-    flex: 1,
-    fontSize: FONTS.sizes.xs,
-    color: COLORS.textSecondary,
-    lineHeight: 18,
-  },
-
-  // Back button
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.xs,
-    marginBottom: SPACING.lg,
-  },
-  backText: {
-    fontSize: FONTS.sizes.md,
-    color: COLORS.text,
-    fontWeight: '600',
-  },
-
-  // Country header (plans screen)
-  countryHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.primaryDark,
-    borderRadius: RADIUS.xl,
-    padding: SPACING.lg,
-    marginBottom: SPACING.xl,
-    gap: SPACING.md,
-  },
-  countryHeaderFlag: {
-    fontSize: 40,
-  },
-  countryHeaderName: {
-    fontSize: FONTS.sizes.lg,
-    fontWeight: '700',
-    color: COLORS.white,
-  },
-  countryHeaderSub: {
-    fontSize: FONTS.sizes.sm,
-    color: COLORS.accent,
-    fontWeight: '600',
-    marginTop: 2,
-  },
-
-  // Loading
-  loadingContainer: {
-    alignItems: 'center',
-    paddingVertical: SPACING.xxl,
-    gap: SPACING.md,
-  },
-  loadingText: {
-    fontSize: FONTS.sizes.md,
-    color: COLORS.textSecondary,
-  },
-
-  // Plan cards
-  planCard: {
-    backgroundColor: COLORS.white,
-    borderRadius: RADIUS.xl,
-    padding: SPACING.lg,
-    marginBottom: SPACING.md,
-    borderWidth: 1.5,
-    borderColor: COLORS.border,
-    ...SHADOWS.md,
-  },
-  planCardPopular: {
-    borderColor: COLORS.accent,
-    backgroundColor: '#F0FDFB',
-  },
-  popularBadge: {
-    position: 'absolute',
-    top: -10,
-    right: SPACING.lg,
-    backgroundColor: COLORS.accent,
-    paddingHorizontal: SPACING.sm,
-    paddingVertical: 3,
-    borderRadius: RADIUS.sm,
-  },
-  popularBadgeText: {
-    fontSize: 10,
-    fontWeight: '800',
-    color: COLORS.white,
-    letterSpacing: 0.5,
-  },
-  planCardRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  planCardInfo: {
-    gap: 2,
-  },
-  planDataLabel: {
-    fontSize: FONTS.sizes.xl,
-    fontWeight: '800',
-    color: COLORS.text,
-  },
-  planValidDays: {
-    fontSize: FONTS.sizes.sm,
-    color: COLORS.textSecondary,
-  },
-  planCardPrice: {
-    alignItems: 'flex-end',
-  },
-  planPrice: {
-    fontSize: FONTS.sizes.xxl,
-    fontWeight: '800',
-    color: COLORS.primary,
-  },
-
-  // Activating screen
-  activatingTitle: {
-    fontSize: FONTS.sizes.xl,
-    fontWeight: '700',
-    color: COLORS.text,
-    marginTop: SPACING.xl,
-  },
-  activatingSubtitle: {
-    fontSize: FONTS.sizes.lg,
-    color: COLORS.textSecondary,
-    marginTop: SPACING.sm,
-  },
-  activatingPlan: {
-    fontSize: FONTS.sizes.md,
-    color: COLORS.accent,
-    fontWeight: '600',
-    marginTop: SPACING.sm,
-  },
-  activatingWait: {
-    fontSize: FONTS.sizes.sm,
-    color: COLORS.textLight,
-    marginTop: SPACING.lg,
-  },
-
-  // Success screen
-  successIcon: {
-    marginBottom: SPACING.lg,
-  },
-  successTitle: {
-    fontSize: FONTS.sizes.xxl,
-    fontWeight: '800',
-    color: COLORS.success,
-  },
-  successSubtitle: {
-    fontSize: FONTS.sizes.lg,
-    color: COLORS.text,
-    marginTop: SPACING.sm,
-  },
-  successPlan: {
-    fontSize: FONTS.sizes.md,
-    color: COLORS.accent,
-    fontWeight: '600',
-    marginTop: SPACING.xs,
-  },
-  successMessage: {
-    fontSize: FONTS.sizes.sm,
-    color: COLORS.textSecondary,
-    textAlign: 'center',
-    lineHeight: 20,
-    marginTop: SPACING.lg,
-    paddingHorizontal: SPACING.lg,
-  },
-  successButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-    backgroundColor: COLORS.primary,
-    paddingHorizontal: SPACING.xl,
-    paddingVertical: SPACING.md,
-    borderRadius: RADIUS.full,
-    marginTop: SPACING.xl,
-    ...SHADOWS.md,
-  },
-  successButtonText: {
-    fontSize: FONTS.sizes.md,
-    fontWeight: '700',
-    color: COLORS.white,
-  },
-  successBackButton: {
-    marginTop: SPACING.md,
-    paddingVertical: SPACING.sm,
-  },
-  successBackText: {
-    fontSize: FONTS.sizes.sm,
-    color: COLORS.textSecondary,
-    fontWeight: '600',
-  },
+  container: { flex: 1, backgroundColor: COLORS.surface },
+  content: { paddingHorizontal: SPACING.lg, paddingTop: 60, paddingBottom: SPACING.xxxl },
+  centerContent: { justifyContent: 'center', alignItems: 'center' },
+  screenTitle: { fontSize: FONTS.sizes.xxxl, fontWeight: '800', color: COLORS.text, letterSpacing: -0.5 },
+  screenSub: { fontSize: FONTS.sizes.md, color: COLORS.textSecondary, marginTop: 4, marginBottom: SPACING.xl },
+  searchWrap: { ...GLASS.card, borderRadius: RADIUS.lg, flexDirection: 'row', alignItems: 'center', paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, gap: SPACING.sm, marginBottom: SPACING.xl },
+  searchInput: { flex: 1, fontSize: FONTS.sizes.md, color: COLORS.text },
+  sectionLabel: { fontSize: FONTS.sizes.sm, fontWeight: '700', color: COLORS.textSecondary, textTransform: 'uppercase', letterSpacing: 1, marginBottom: SPACING.md },
+  popularGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: SPACING.sm, marginBottom: SPACING.xl },
+  popularCard: { width: '30%', ...GLASS.card, borderRadius: RADIUS.lg, padding: SPACING.md, alignItems: 'center', gap: 6 },
+  popularFlag: { fontSize: 28 },
+  popularName: { fontSize: FONTS.sizes.xs, color: COLORS.text, fontWeight: '600', textAlign: 'center' },
+  countryRow: { ...GLASS.panel, borderRadius: RADIUS.md, flexDirection: 'row', alignItems: 'center', padding: SPACING.md, marginBottom: SPACING.sm, gap: SPACING.md },
+  countryFlag: { fontSize: 24 },
+  countryName: { flex: 1, fontSize: FONTS.sizes.md, color: COLORS.text, fontWeight: '500' },
+  backBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: SPACING.lg },
+  backText: { fontSize: FONTS.sizes.md, color: COLORS.accent, fontWeight: '600' },
+  countryHeader: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md, marginBottom: SPACING.xl },
+  countryHeaderFlag: { fontSize: 40 },
+  countryHeaderName: { fontSize: FONTS.sizes.xxl, fontWeight: '800', color: COLORS.text },
+  loadingWrap: { alignItems: 'center', paddingVertical: SPACING.xxl, gap: SPACING.md },
+  loadingText: { fontSize: FONTS.sizes.md, color: COLORS.textSecondary },
+  planCard: { ...GLASS.card, borderRadius: RADIUS.xl, padding: SPACING.lg, marginBottom: SPACING.md, position: 'relative' as const },
+  planCardPopular: { ...GLASS.cardActive, borderColor: COLORS.accent + '40' },
+  popularBadge: { position: 'absolute' as const, top: SPACING.md, right: SPACING.md, backgroundColor: 'rgba(0,212,170,0.15)', paddingHorizontal: SPACING.sm, paddingVertical: 2, borderRadius: RADIUS.full, borderWidth: 1, borderColor: 'rgba(0,212,170,0.3)' },
+  popularBadgeText: { fontSize: 9, fontWeight: '800', color: COLORS.accent, letterSpacing: 1 },
+  planHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 },
+  planData: { fontSize: FONTS.sizes.xl, fontWeight: '800', color: COLORS.text },
+  planPrice: { fontSize: FONTS.sizes.xl, fontWeight: '800', color: COLORS.accent },
+  planValidity: { fontSize: FONTS.sizes.sm, color: COLORS.textSecondary, marginBottom: SPACING.md },
+  planFeatures: { gap: 6 },
+  planFeature: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  planFeatureText: { fontSize: FONTS.sizes.sm, color: COLORS.textSecondary },
+  activatingCard: { ...GLASS.card, borderRadius: RADIUS.xxl, padding: SPACING.xxl, alignItems: 'center', gap: SPACING.lg, width: SCREEN_WIDTH * 0.8 },
+  activatingTitle: { fontSize: FONTS.sizes.xl, fontWeight: '700', color: COLORS.text },
+  activatingSub: { fontSize: FONTS.sizes.md, color: COLORS.textSecondary },
+  successCard: { ...GLASS.card, borderRadius: RADIUS.xxl, padding: SPACING.xxl, alignItems: 'center', gap: SPACING.md, width: SCREEN_WIDTH * 0.85 },
+  successIcon: { marginBottom: SPACING.sm },
+  successTitle: { fontSize: FONTS.sizes.xxl, fontWeight: '800', color: COLORS.success },
+  successSub: { fontSize: FONTS.sizes.md, color: COLORS.textSecondary },
+  orderInfo: { ...GLASS.panel, borderRadius: RADIUS.md, padding: SPACING.md, width: '100%', alignItems: 'center', marginTop: SPACING.sm },
+  orderLabel: { fontSize: FONTS.sizes.xs, color: COLORS.textLight, marginBottom: 4 },
+  orderValue: { fontSize: FONTS.sizes.sm, color: COLORS.text, fontWeight: '600' },
+  doneBtn: { backgroundColor: COLORS.accent, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, paddingHorizontal: SPACING.xxl, marginTop: SPACING.lg },
+  doneBtnText: { fontSize: FONTS.sizes.md, fontWeight: '700', color: COLORS.primary },
 });

@@ -1,148 +1,76 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Animated, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useRef, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Alert } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
-import { Button } from './Button';
 
-interface SOSButtonProps {
+interface Props {
   onActivate: () => void;
-  disabled?: boolean;
 }
 
-export function SOSButton({ onActivate, disabled = false }: SOSButtonProps) {
-  const [isHolding, setIsHolding] = useState(false);
-  const [holdProgress, setHoldProgress] = useState(0);
+export function SOSButton({ onActivate }: Props) {
   const pulseAnim = useRef(new Animated.Value(1)).current;
-  const holdTimer = useRef<ReturnType<typeof setInterval> | null>(null);
-  const progressRef = useRef(0);
+  const [pressing, setPressing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const pulse = Animated.loop(
+    Animated.loop(
       Animated.sequence([
-        Animated.timing(pulseAnim, {
-          toValue: 1.15,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseAnim, {
-          toValue: 1,
-          duration: 1000,
-          useNativeDriver: true,
-        }),
+        Animated.timing(pulseAnim, { toValue: 1.15, duration: 1200, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 1200, useNativeDriver: true }),
       ])
-    );
-    pulse.start();
-    return () => {
-      pulse.stop();
-      if (holdTimer.current) clearInterval(holdTimer.current);
-    };
+    ).start();
   }, [pulseAnim]);
 
-  const startHold = () => {
-    if (disabled) return;
-    if (holdTimer.current) clearInterval(holdTimer.current);
-    setIsHolding(true);
-    progressRef.current = 0;
-    setHoldProgress(0);
-
-    holdTimer.current = setInterval(() => {
-      progressRef.current += 2;
-      setHoldProgress(progressRef.current);
-
-      if (progressRef.current >= 100) {
-        if (holdTimer.current) clearInterval(holdTimer.current);
-        holdTimer.current = null;
-        setIsHolding(false);
-        setHoldProgress(0);
+  const startPress = () => {
+    setPressing(true);
+    setProgress(0);
+    let p = 0;
+    timerRef.current = setInterval(() => {
+      p += 0.033;
+      setProgress(p);
+      if (p >= 1) {
+        if (timerRef.current) clearInterval(timerRef.current);
+        setPressing(false);
+        setProgress(0);
+        Alert.alert('SOS Activat', 'Semnal de urgenta trimis!');
         onActivate();
-        Alert.alert(
-          'SOS Activat!',
-          'Alerta de urgență a fost trimisă. Locația ta va fi partajată cu contactele de urgență.',
-          [{ text: 'OK' }]
-        );
       }
-    }, 60); // 3 seconds total to fill
+    }, 100);
   };
 
-  const cancelHold = () => {
-    if (holdTimer.current) clearInterval(holdTimer.current);
-    setIsHolding(false);
-    setHoldProgress(0);
-    progressRef.current = 0;
+  const endPress = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    setPressing(false);
+    setProgress(0);
   };
 
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.pulseRing, { transform: [{ scale: pulseAnim }] }]} />
-      <View
-        style={styles.buttonWrapper}
-        onTouchStart={startHold}
-        onTouchEnd={cancelHold}
-        onTouchCancel={cancelHold}
+      <TouchableOpacity
+        style={[styles.button, pressing && styles.buttonActive]}
+        onPressIn={startPress}
+        onPressOut={endPress}
+        activeOpacity={0.8}
       >
-        <View style={[styles.button, disabled && styles.disabled]}>
-          {isHolding && (
-            <View style={[styles.progressOverlay, { height: `${holdProgress}%` }]} />
-          )}
-          <Ionicons name="warning" size={40} color={COLORS.white} />
-          <Text style={styles.sosText}>SOS</Text>
-        </View>
-      </View>
-      <Text style={styles.hint}>
-        {isHolding ? `Ține apăsat... ${Math.round(holdProgress)}%` : 'Ține apăsat 3 secunde'}
-      </Text>
+        <MaterialCommunityIcons name="alert-circle" size={28} color={COLORS.white} />
+        <Text style={styles.label}>SOS</Text>
+        {pressing && (
+          <View style={[styles.progressOverlay, { height: `${progress * 100}%` }]} />
+        )}
+      </TouchableOpacity>
+      <Text style={styles.hint}>Tineti apasat 3s pentru SOS</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    gap: SPACING.sm,
-  },
-  pulseRing: {
-    position: 'absolute',
-    width: 160,
-    height: 160,
-    borderRadius: 80,
-    backgroundColor: COLORS.sosLight,
-    opacity: 0.4,
-  },
-  buttonWrapper: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    overflow: 'hidden',
-  },
-  button: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    backgroundColor: COLORS.sos,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  progressOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-  },
-  sosText: {
-    color: COLORS.white,
-    fontSize: FONTS.sizes.xxl,
-    fontWeight: '900',
-    letterSpacing: 3,
-    marginTop: 4,
-  },
-  hint: {
-    color: COLORS.textSecondary,
-    fontSize: FONTS.sizes.sm,
-    textAlign: 'center',
-  },
+  container: { alignItems: 'center', gap: SPACING.sm },
+  pulseRing: { position: 'absolute', width: 88, height: 88, borderRadius: 44, borderWidth: 2, borderColor: 'rgba(220,38,38,0.25)' },
+  button: { width: 72, height: 72, borderRadius: 36, backgroundColor: COLORS.sos, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
+  buttonActive: { backgroundColor: '#B91C1C' },
+  label: { fontSize: 11, fontWeight: '900', color: COLORS.white, letterSpacing: 2, marginTop: 2 },
+  progressOverlay: { position: 'absolute', bottom: 0, left: 0, right: 0, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 36 },
+  hint: { fontSize: FONTS.sizes.xs, color: COLORS.textLight },
 });
