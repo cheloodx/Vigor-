@@ -19,7 +19,7 @@ import {
   ESIMCountryPlan,
   ProvisioningResult,
 } from '../services/esimProvisioning';
-import { createCheckoutSession, openCheckout } from '../services/stripeService';
+import { createCheckoutSession, openCheckout, getPaymentStatus } from '../services/stripeService';
 import { runtimeConfig } from '../services/runtimeConfig';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -35,6 +35,9 @@ export function ESIMScreen() {
   const [selectedPlan, setSelectedPlan] = useState<ESIMCountryPlan | null>(null);
   const [result, setResult] = useState<ProvisioningResult | null>(null);
   const [loadingPlans, setLoadingPlans] = useState(false);
+  const [checkoutSessionId, setCheckoutSessionId] = useState<string | null>(null);
+  const [paymentSent, setPaymentSent] = useState(false);
+  const [verifyingPayment, setVerifyingPayment] = useState(false);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -111,11 +114,30 @@ export function ESIMScreen() {
         validDays: selectedPlan.validDays,
       });
       if (checkout.url) {
+        setCheckoutSessionId(checkout.sessionId);
+        setPaymentSent(true);
         await openCheckout(checkout.url);
       }
     } catch {
       Alert.alert('Eroare', 'Nu s-a putut initia plata. Incercati din nou.');
       animateStep('plans');
+    }
+  };
+
+  const handleVerifyPayment = async () => {
+    if (!checkoutSessionId) return;
+    setVerifyingPayment(true);
+    try {
+      const status = await getPaymentStatus(checkoutSessionId);
+      if (status.status === 'paid') {
+        handleProvisionAfterPayment();
+      } else {
+        Alert.alert('Plata in asteptare', 'Plata nu a fost confirmata inca. Finalizati plata in browser si incercati din nou.');
+      }
+    } catch {
+      Alert.alert('Eroare', 'Nu s-a putut verifica plata. Incercati din nou.');
+    } finally {
+      setVerifyingPayment(false);
     }
   };
 
@@ -291,10 +313,26 @@ export function ESIMScreen() {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.payBtn} onPress={handlePayment}>
-              <MaterialCommunityIcons name="lock" size={18} color={COLORS.primary} />
-              <Text style={styles.payBtnText}>Plateste securizat</Text>
-            </TouchableOpacity>
+            {!paymentSent ? (
+              <TouchableOpacity style={styles.payBtn} onPress={handlePayment}>
+                <MaterialCommunityIcons name="lock" size={18} color={COLORS.primary} />
+                <Text style={styles.payBtnText}>Plateste securizat</Text>
+              </TouchableOpacity>
+            ) : (
+              <>
+                <TouchableOpacity style={styles.payBtn} onPress={handleVerifyPayment} disabled={verifyingPayment}>
+                  {verifyingPayment ? (
+                    <ActivityIndicator size="small" color={COLORS.primary} />
+                  ) : (
+                    <MaterialCommunityIcons name="check-circle-outline" size={18} color={COLORS.primary} />
+                  )}
+                  <Text style={styles.payBtnText}>{verifyingPayment ? 'Se verifica...' : 'Am platit - Verifica'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.retryPayBtn} onPress={handlePayment}>
+                  <Text style={styles.retryPayBtnText}>Deschide Stripe din nou</Text>
+                </TouchableOpacity>
+              </>
+            )}
 
             <View style={styles.paymentSecure}>
               <MaterialCommunityIcons name="shield-check" size={14} color={COLORS.textLight} />
@@ -401,6 +439,8 @@ const styles = StyleSheet.create({
   paymentTotalValue: { fontSize: FONTS.sizes.xl, color: COLORS.accent, fontWeight: '800' as const },
   payBtn: { flexDirection: 'row' as const, alignItems: 'center' as const, justifyContent: 'center' as const, backgroundColor: COLORS.accent, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, paddingHorizontal: SPACING.xxl, gap: SPACING.sm, width: '100%' as unknown as number },
   payBtnText: { fontSize: FONTS.sizes.md, fontWeight: '700' as const, color: COLORS.primary },
+  retryPayBtn: { marginTop: SPACING.sm, paddingVertical: SPACING.sm },
+  retryPayBtnText: { fontSize: FONTS.sizes.sm, color: COLORS.accent, fontWeight: '600' as const, textDecorationLine: 'underline' as const },
   paymentSecure: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 6, marginTop: SPACING.md },
   paymentSecureText: { fontSize: FONTS.sizes.xs, color: COLORS.textLight },
 });

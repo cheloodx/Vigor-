@@ -57,10 +57,11 @@ function getBackendUrl(): string {
  */
 export async function createCheckoutSession(plan: CheckoutRequest): Promise<CheckoutResponse> {
   const backendUrl = getBackendUrl();
+  // Only send planId — backend does server-side price lookup to prevent manipulation
   const response = await fetch(`${backendUrl}/api/stripe/create-checkout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(plan),
+    body: JSON.stringify({ planId: plan.planId }),
   });
 
   if (!response.ok) {
