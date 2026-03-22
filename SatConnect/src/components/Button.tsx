@@ -1,147 +1,68 @@
 import React from 'react';
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
-import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, View, ViewStyle } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 
-interface ButtonProps {
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'sos';
+type Size = 'sm' | 'md' | 'lg';
+
+interface Props {
   title: string;
   onPress: () => void;
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'sos';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: Variant;
+  size?: Size;
   loading?: boolean;
   disabled?: boolean;
-  icon?: React.ReactNode;
+  icon?: string | React.ReactElement;
   style?: ViewStyle;
-  textStyle?: TextStyle;
 }
 
-export function Button({
-  title,
-  onPress,
-  variant = 'primary',
-  size = 'md',
-  loading = false,
-  disabled = false,
-  icon,
-  style,
-  textStyle,
-}: ButtonProps) {
-  const buttonStyles = [
-    styles.base,
-    styles[variant],
-    styles[`size_${size}`],
-    disabled && styles.disabled,
-    style,
-  ];
+const VARIANT_STYLES: Record<Variant, { bg: string; text: string; border?: string }> = {
+  primary: { bg: COLORS.accent, text: COLORS.primary },
+  secondary: { bg: 'rgba(255,255,255,0.08)', text: COLORS.text, border: 'rgba(255,255,255,0.12)' },
+  ghost: { bg: 'transparent', text: COLORS.accent },
+  danger: { bg: 'rgba(248,113,113,0.15)', text: COLORS.error, border: 'rgba(248,113,113,0.2)' },
+  sos: { bg: COLORS.sos, text: COLORS.white },
+};
 
-  const textStyles = [
-    styles.text,
-    styles[`text_${variant}`],
-    styles[`textSize_${size}`],
-    disabled && styles.textDisabled,
-    textStyle,
-  ];
+const SIZE_STYLES: Record<Size, { py: number; px: number; font: number }> = {
+  sm: { py: 8, px: 12, font: FONTS.sizes.sm },
+  md: { py: 12, px: 20, font: FONTS.sizes.md },
+  lg: { py: 16, px: 28, font: FONTS.sizes.lg },
+};
+
+export function Button({ title, onPress, variant = 'primary', size = 'md', loading, disabled, icon, style }: Props) {
+  const v = VARIANT_STYLES[variant];
+  const s = SIZE_STYLES[size];
 
   return (
     <TouchableOpacity
-      style={buttonStyles}
+      style={[
+        styles.button,
+        { backgroundColor: v.bg, paddingVertical: s.py, paddingHorizontal: s.px },
+        v.border ? { borderWidth: 1, borderColor: v.border } : undefined,
+        disabled && styles.disabled,
+        style,
+      ]}
       onPress={onPress}
       disabled={disabled || loading}
       activeOpacity={0.7}
     >
       {loading ? (
-        <ActivityIndicator
-          color={variant === 'ghost' || variant === 'secondary' ? COLORS.primary : COLORS.white}
-          size="small"
-        />
+        <ActivityIndicator color={v.text} />
       ) : (
-        <>
-          {icon}
-          <Text style={textStyles}>{title}</Text>
-        </>
+        <View style={styles.content}>
+          {icon && (typeof icon === 'string' ? <MaterialCommunityIcons name={icon as keyof typeof MaterialCommunityIcons.glyphMap} size={s.font + 2} color={v.text} /> : icon)}
+          {title ? <Text style={[styles.text, { color: v.text, fontSize: s.font }]}>{title}</Text> : null}
+        </View>
       )}
     </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  base: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: RADIUS.lg,
-    gap: SPACING.sm,
-  },
-  primary: {
-    backgroundColor: COLORS.primary,
-  },
-  secondary: {
-    backgroundColor: COLORS.white,
-    borderWidth: 1.5,
-    borderColor: COLORS.primary,
-  },
-  ghost: {
-    backgroundColor: 'transparent',
-  },
-  danger: {
-    backgroundColor: COLORS.error,
-  },
-  sos: {
-    backgroundColor: COLORS.sos,
-    borderRadius: RADIUS.full,
-  },
-  size_sm: {
-    paddingVertical: SPACING.sm,
-    paddingHorizontal: SPACING.md,
-  },
-  size_md: {
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.xl,
-  },
-  size_lg: {
-    paddingVertical: SPACING.lg,
-    paddingHorizontal: SPACING.xxl,
-  },
-  disabled: {
-    opacity: 0.5,
-  },
-  text: {
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  text_primary: {
-    color: COLORS.white,
-  },
-  text_secondary: {
-    color: COLORS.primary,
-  },
-  text_ghost: {
-    color: COLORS.primary,
-  },
-  text_danger: {
-    color: COLORS.white,
-  },
-  text_sos: {
-    color: COLORS.white,
-    fontWeight: '800',
-    letterSpacing: 1,
-  },
-  textSize_sm: {
-    fontSize: FONTS.sizes.sm,
-  },
-  textSize_md: {
-    fontSize: FONTS.sizes.md,
-  },
-  textSize_lg: {
-    fontSize: FONTS.sizes.lg,
-  },
-  textDisabled: {
-    opacity: 0.7,
-  },
+  button: { borderRadius: RADIUS.lg, alignItems: 'center', justifyContent: 'center' },
+  content: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  text: { fontWeight: '700' },
+  disabled: { opacity: 0.5 },
 });

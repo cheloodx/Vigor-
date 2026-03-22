@@ -1,11 +1,14 @@
 // ============================================================================
-// SatConnect MVP Backend - Express Server
+// SatConnect Backend - Express Server
 // ============================================================================
 // Endpoints:
 //   GET  /plans              - List available eSIM plans (public)
 //   POST /orders/esim        - Create eSIM order + provision via Airalo (auth)
 //   GET  /my-esims           - List user's eSIM profiles (auth)
 //   GET  /subscription/status - Check premium subscription (auth)
+//   POST /api/stripe/create-checkout - Create Stripe checkout session
+//   POST /api/stripe/webhook - Handle Stripe payment webhooks
+//   GET  /api/stripe/session/:id - Check payment status
 //   GET  /health             - Health check (public)
 // ============================================================================
 
@@ -22,10 +25,14 @@ import plansRouter from './routes/plans';
 import ordersRouter from './routes/orders';
 import esimsRouter from './routes/esims';
 import subscriptionsRouter from './routes/subscriptions';
+import { stripeRouter } from './routes/stripe';
 import { hasAiraloCredentials } from './services/airalo';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Stripe webhook needs raw body, so we handle it before other middleware
+app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
 // Middleware
 app.use(helmet());
@@ -38,6 +45,7 @@ app.use('/plans', plansRouter);
 app.use('/orders', ordersRouter);
 app.use('/my-esims', esimsRouter);
 app.use('/subscription', subscriptionsRouter);
+app.use('/api/stripe', stripeRouter);
 
 // Health check
 app.get('/health', (_req, res) => {
@@ -46,6 +54,7 @@ app.get('/health', (_req, res) => {
     service: 'satconnect-backend',
     version: '1.0.0',
     airalo: hasAiraloCredentials() ? 'configured' : 'mock',
+    stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured',
     timestamp: new Date().toISOString(),
   });
 });
@@ -59,6 +68,7 @@ app.use((_req, res) => {
 app.listen(PORT, () => {
   console.log(`SatConnect backend running on port ${PORT}`);
   console.log(`Airalo: ${hasAiraloCredentials() ? 'REAL (API configured)' : 'MOCK (no credentials)'}`);
+  console.log(`Stripe: ${process.env.STRIPE_SECRET_KEY ? 'configured' : 'NOT configured'}`);
   console.log(`Supabase: ${process.env.SUPABASE_URL ? 'configured' : 'NOT configured'}`);
 });
 

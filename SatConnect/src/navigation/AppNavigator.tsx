@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { COLORS, FONTS } from '../constants/theme';
+import { COLORS, GLASS, FONTS } from '../constants/theme';
 import { storage } from '../services/storage';
 import { supabaseAuth } from '../services/supabaseAuth';
 
@@ -40,14 +40,15 @@ function MainTabs({ onLogout, onOpenChat, onOpenOverlay }: {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: COLORS.primary,
+        tabBarActiveTintColor: COLORS.accent,
         tabBarInactiveTintColor: COLORS.textLight,
         tabBarStyle: {
-          borderTopColor: COLORS.border,
-          paddingBottom: 8,
-          paddingTop: 4,
-          height: 64,
-        },
+            ...GLASS.tabBar,
+            position: 'absolute',
+            height: 85,
+            paddingBottom: 20,
+            paddingTop: 8,
+          },
         tabBarLabelStyle: {
           fontSize: FONTS.sizes.xs,
           fontWeight: '600',
@@ -161,10 +162,10 @@ export function AppNavigator() {
         await storage.setUser({ id: session.user.id, name: session.user.name, email: session.user.email, plan: 'standard' });
         setCurrentScreen('main');
       } else {
-        const token = await storage.getAuthToken();
-        if (token) {
-          setCurrentScreen('main');
-        } else if (onboardingDone) {
+        // Session expired or invalid — clear any stale auth token
+        await storage.removeAuthToken();
+        await storage.removeUser();
+        if (onboardingDone) {
           setCurrentScreen('login');
         } else {
           setCurrentScreen('onboarding');
@@ -303,6 +304,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.surface,
   },
 });
