@@ -130,7 +130,7 @@ export function ESIMScreen() {
     try {
       const status = await getPaymentStatus(checkoutSessionId);
       if (status.status === 'paid') {
-        handleProvisionAfterPayment();
+        await handleProvisionAfterPayment();
       } else {
         Alert.alert('Plata in asteptare', 'Plata nu a fost confirmata inca. Finalizati plata in browser si incercati din nou.');
       }
@@ -165,6 +165,8 @@ export function ESIMScreen() {
     setResult(null);
     setPlans([]);
     setSearch('');
+    setPaymentSent(false);
+    setCheckoutSessionId(null);
     animateStep('country');
   };
 
