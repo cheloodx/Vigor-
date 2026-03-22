@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import Stripe from 'stripe';
+import { getPlanById } from '../data/planCatalog';
 
 const router = Router();
 
@@ -22,18 +23,25 @@ function getStripe(): Stripe {
 // ---------------------------------------------------------------------------
 router.post('/create-checkout', async (req: Request, res: Response) => {
   try {
-    const { planId, planName, countryName, countryFlag, dataLabel, price, currency, validDays } = req.body;
+    const { planId } = req.body;
 
-    if (!planId || !price || !planName) {
-      res.status(400).json({ error: 'Missing required fields: planId, price, planName' });
+    if (!planId) {
+      res.status(400).json({ error: 'Missing required field: planId' });
+      return;
+    }
+
+    // Server-side price lookup — never trust client-provided prices
+    const plan = getPlanById(planId);
+    if (!plan) {
+      res.status(400).json({ error: 'Invalid plan ID' });
       return;
     }
 
     const stripe = getStripe();
 
     // Price in cents (Stripe expects smallest currency unit)
-    const unitAmount = Math.round(price * 100);
-    const curr = (currency || 'EUR').toLowerCase();
+    const unitAmount = Math.round(plan.price * 100);
+    const curr = plan.currency.toLowerCase();
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -42,13 +50,14 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
           price_data: {
             currency: curr,
             product_data: {
-              name: `eSIM ${dataLabel} - ${countryName}`,
-              description: `${countryFlag} Internet ${dataLabel} pentru ${countryName} (${validDays} zile)`,
+              name: `eSIM ${plan.dataLabel} - ${plan.countryName}`,
+              description: `${plan.countryFlag} Internet ${plan.dataLabel} pentru ${plan.countryName} (${plan.validDays} zile)`,
               metadata: {
-                planId,
-                countryName,
-                dataLabel,
-                validDays: String(validDays),
+                planId: plan.id,
+                countryCode: plan.countryCode,
+                countryName: plan.countryName,
+                dataLabel: plan.dataLabel,
+                validDays: String(plan.validDays),
               },
             },
             unit_amount: unitAmount,
@@ -57,13 +66,15 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL || 'http://localhost:8082'}/payment-success?session_id={CHECKOUT_SESSION_ID}&plan_id=${planId}`,
+      success_url: `${process.env.FRONTEND_URL || 'http://localhost:8082'}/payment-success?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`,
       cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:8082'}/payment-cancel`,
       metadata: {
-        planId,
-        countryName,
-        dataLabel,
-        validDays: String(validDays),
+        planId: plan.id,
+        countryCode: plan.countryCode,
+        countryName: plan.countryName,
+        dataLabel: plan.dataLabel,
+        validDays: String(plan.validDays),
+        price: String(plan.price),
       },
     });
 
