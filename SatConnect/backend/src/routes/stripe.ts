@@ -14,7 +14,7 @@ function getStripe(): Stripe {
   if (!stripeSecretKey) {
     throw new Error('STRIPE_SECRET_KEY is not configured');
   }
-  return new Stripe(stripeSecretKey, { apiVersion: '2024-04-10' });
+  return new Stripe(stripeSecretKey, { apiVersion: '2023-10-16' });
 }
 
 // ---------------------------------------------------------------------------
