@@ -19,10 +19,12 @@ import {
   ESIMCountryPlan,
   ProvisioningResult,
 } from '../services/esimProvisioning';
+import { createCheckoutSession, openCheckout } from '../services/stripeService';
+import { runtimeConfig } from '../services/runtimeConfig';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-type Step = 'country' | 'plans' | 'activating' | 'success';
+type Step = 'country' | 'plans' | 'payment' | 'activating' | 'success';
 
 export function ESIMScreen() {
   const [step, setStep] = useState<Step>('country');
@@ -73,9 +75,55 @@ export function ESIMScreen() {
 
   const handleSelectPlan = async (plan: ESIMCountryPlan) => {
     setSelectedPlan(plan);
+    // If backend is configured, show payment step; otherwise provision directly (demo mode)
+    if (runtimeConfig.backendUrl) {
+      animateStep('payment');
+    } else {
+      // Demo mode: skip payment, provision directly
+      animateStep('activating');
+      try {
+        const res = await esimProvisioning.provisionESIM(plan.id);
+        setResult(res);
+        if (res.success) {
+          setTimeout(() => animateStep('success'), 1500);
+        } else {
+          Alert.alert('Eroare', res.error || 'Nu s-a putut activa eSIM-ul.');
+          animateStep('plans');
+        }
+      } catch {
+        Alert.alert('Eroare', 'Nu s-a putut activa eSIM-ul. Incercati din nou.');
+        animateStep('plans');
+      }
+    }
+  };
+
+  const handlePayment = async () => {
+    if (!selectedPlan || !selectedCountry) return;
+    try {
+      const checkout = await createCheckoutSession({
+        planId: selectedPlan.id,
+        planName: `eSIM ${selectedPlan.dataLabel}`,
+        countryName: selectedCountry.name,
+        countryFlag: selectedCountry.flag,
+        dataLabel: selectedPlan.dataLabel,
+        price: selectedPlan.price,
+        currency: selectedPlan.currency,
+        validDays: selectedPlan.validDays,
+      });
+      if (checkout.url) {
+        await openCheckout(checkout.url);
+      }
+    } catch {
+      Alert.alert('Eroare', 'Nu s-a putut initia plata. Incercati din nou.');
+      animateStep('plans');
+    }
+  };
+
+  const handleProvisionAfterPayment = async () => {
+    if (!selectedPlan) return;
     animateStep('activating');
     try {
-      const res = await esimProvisioning.provisionESIM(plan.id);
+      const res = await esimProvisioning.provisionESIM(selectedPlan.id);
       setResult(res);
       if (res.success) {
         setTimeout(() => animateStep('success'), 1500);
@@ -206,6 +254,58 @@ export function ESIMScreen() {
     );
   }
 
+  // Payment confirmation
+  if (step === 'payment') {
+    return (
+      <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <TouchableOpacity style={styles.backBtn} onPress={() => animateStep('plans')}>
+            <MaterialCommunityIcons name="arrow-left" size={20} color={COLORS.accent} />
+            <Text style={styles.backText}>Inapoi</Text>
+          </TouchableOpacity>
+
+          <View style={styles.paymentCard}>
+            <View style={styles.paymentIcon}>
+              <MaterialCommunityIcons name="credit-card-outline" size={40} color={COLORS.accent} />
+            </View>
+            <Text style={styles.paymentTitle}>Confirma plata</Text>
+
+            <View style={styles.paymentDetails}>
+              <View style={styles.paymentRow}>
+                <Text style={styles.paymentLabel}>Plan</Text>
+                <Text style={styles.paymentValue}>{selectedPlan?.dataLabel}</Text>
+              </View>
+              <View style={styles.paymentRow}>
+                <Text style={styles.paymentLabel}>Tara</Text>
+                <Text style={styles.paymentValue}>{selectedCountry?.flag} {selectedCountry?.name}</Text>
+              </View>
+              <View style={styles.paymentRow}>
+                <Text style={styles.paymentLabel}>Validitate</Text>
+                <Text style={styles.paymentValue}>{selectedPlan?.validDays} zile</Text>
+              </View>
+              <View style={[styles.paymentRow, styles.paymentRowTotal]}>
+                <Text style={styles.paymentTotalLabel}>Total</Text>
+                <Text style={styles.paymentTotalValue}>
+                  {selectedPlan?.currency === 'EUR' ? '\u20ac' : '$'}{selectedPlan?.price.toFixed(2)}
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity style={styles.payBtn} onPress={handlePayment}>
+              <MaterialCommunityIcons name="lock" size={18} color={COLORS.primary} />
+              <Text style={styles.payBtnText}>Plateste securizat</Text>
+            </TouchableOpacity>
+
+            <View style={styles.paymentSecure}>
+              <MaterialCommunityIcons name="shield-check" size={14} color={COLORS.textLight} />
+              <Text style={styles.paymentSecureText}>Plata procesata securizat prin Stripe</Text>
+            </View>
+          </View>
+        </ScrollView>
+      </Animated.View>
+    );
+  }
+
   // Activating
   if (step === 'activating') {
     return (
@@ -288,4 +388,19 @@ const styles = StyleSheet.create({
   orderValue: { fontSize: FONTS.sizes.sm, color: COLORS.text, fontWeight: '600' },
   doneBtn: { backgroundColor: COLORS.accent, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, paddingHorizontal: SPACING.xxl, marginTop: SPACING.lg },
   doneBtnText: { fontSize: FONTS.sizes.md, fontWeight: '700', color: COLORS.primary },
+  // Payment styles
+  paymentCard: { ...GLASS.card, borderRadius: RADIUS.xxl, padding: SPACING.xl, alignItems: 'center' as const, marginTop: SPACING.lg },
+  paymentIcon: { width: 72, height: 72, borderRadius: 36, backgroundColor: 'rgba(0,212,170,0.1)', justifyContent: 'center' as const, alignItems: 'center' as const, marginBottom: SPACING.lg },
+  paymentTitle: { fontSize: FONTS.sizes.xxl, fontWeight: '800' as const, color: COLORS.text, marginBottom: SPACING.xl },
+  paymentDetails: { width: '100%' as unknown as number, gap: SPACING.md, marginBottom: SPACING.xl },
+  paymentRow: { flexDirection: 'row' as const, justifyContent: 'space-between' as const, paddingVertical: SPACING.sm, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.06)' },
+  paymentRowTotal: { borderBottomWidth: 0, paddingTop: SPACING.md, marginTop: SPACING.sm, borderTopWidth: 1, borderTopColor: 'rgba(255,255,255,0.1)' },
+  paymentLabel: { fontSize: FONTS.sizes.md, color: COLORS.textSecondary },
+  paymentValue: { fontSize: FONTS.sizes.md, color: COLORS.text, fontWeight: '600' as const },
+  paymentTotalLabel: { fontSize: FONTS.sizes.lg, color: COLORS.text, fontWeight: '700' as const },
+  paymentTotalValue: { fontSize: FONTS.sizes.xl, color: COLORS.accent, fontWeight: '800' as const },
+  payBtn: { flexDirection: 'row' as const, alignItems: 'center' as const, justifyContent: 'center' as const, backgroundColor: COLORS.accent, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, paddingHorizontal: SPACING.xxl, gap: SPACING.sm, width: '100%' as unknown as number },
+  payBtnText: { fontSize: FONTS.sizes.md, fontWeight: '700' as const, color: COLORS.primary },
+  paymentSecure: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 6, marginTop: SPACING.md },
+  paymentSecureText: { fontSize: FONTS.sizes.xs, color: COLORS.textLight },
 });
