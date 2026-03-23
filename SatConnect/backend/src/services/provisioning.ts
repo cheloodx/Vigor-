@@ -101,19 +101,21 @@ async function doProvision(stripeSessionId: string): Promise<ProvisionResult> {
     return { success: false, error: 'Database not configured' };
   }
 
-  // 1. Verify Stripe payment before provisioning
+  // 1. Verify Stripe payment before provisioning (mandatory — never provision without payment)
   const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-  if (stripeSecretKey) {
-    try {
-      const stripe = new Stripe(stripeSecretKey, { apiVersion: '2023-10-16' });
-      const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
-      if (session.payment_status !== 'paid') {
-        return { success: false, error: 'Payment not confirmed — cannot provision eSIM' };
-      }
-    } catch (err) {
-      console.error('Failed to verify Stripe payment:', err);
-      return { success: false, error: 'Failed to verify payment status' };
+  if (!stripeSecretKey) {
+    return { success: false, error: 'Stripe is not configured — cannot verify payment' };
+  }
+
+  try {
+    const stripe = new Stripe(stripeSecretKey, { apiVersion: '2023-10-16' });
+    const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
+    if (session.payment_status !== 'paid') {
+      return { success: false, error: 'Payment not confirmed — cannot provision eSIM' };
     }
+  } catch (err) {
+    console.error('Failed to verify Stripe payment:', err);
+    return { success: false, error: 'Failed to verify payment status' };
   }
 
   // 2. Get the order

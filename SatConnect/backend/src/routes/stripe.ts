@@ -75,10 +75,14 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
       },
     });
 
-    // Create order record in Supabase (non-blocking — don't fail checkout if DB is down)
-    createOrderForSession(session.id, plan.id).catch((err) =>
-      console.error('Non-blocking: failed to create order record:', err),
-    );
+    // Create order record in Supabase (blocking — if this fails, don't let user pay)
+    try {
+      await createOrderForSession(session.id, plan.id);
+    } catch (orderErr) {
+      console.error('Failed to create order record:', orderErr);
+      res.status(500).json({ error: 'Failed to initialize order. Please try again.' });
+      return;
+    }
 
     res.json({
       sessionId: session.id,

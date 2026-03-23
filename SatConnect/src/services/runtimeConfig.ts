@@ -17,7 +17,7 @@ function clean(value: string | undefined): string | undefined {
 export const runtimeConfig = {
   supabaseUrl: clean(rawSupabaseUrl),
   supabaseAnonKey: clean(rawSupabaseAnonKey),
-  airaloBaseUrl: clean(rawAiraloBaseUrl) ?? 'https://sandbox-partners-api.airalo.com',
+  airaloBaseUrl: (clean(rawAiraloBaseUrl) ?? 'https://sandbox-partners-api.airalo.com').replace(/\/v2\/?$/, ''),
   airaloClientId: clean(rawAiraloClientId),
   airaloClientSecret: clean(rawAiraloClientSecret),
   airaloMode: clean(rawAiraloMode) ?? 'sandbox',
