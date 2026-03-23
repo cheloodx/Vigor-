@@ -13,7 +13,7 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { hasAiraloConfig, runtimeConfig } from './runtimeConfig';
+import { hasAiraloConfig } from './runtimeConfig';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -367,8 +367,6 @@ function generateDefaultPlans(country: ESIMCountry): ESIMCountryPlan[] {
 // Airalo API helpers
 // ---------------------------------------------------------------------------
 
-const AIRALO_TOKEN_KEY = '@satconnect_airalo_token';
-const AIRALO_TOKEN_EXPIRES_KEY = '@satconnect_airalo_token_exp';
 const PROFILES_KEY = '@satconnect_esim_profiles';
 
 function delay(ms: number): Promise<void> {
@@ -385,58 +383,15 @@ function parseDataToMB(dataStr: string): number {
   return num;
 }
 
-async function getAiraloToken(): Promise<string | null> {
-  if (!hasAiraloConfig) return null;
+// Airalo API calls are handled exclusively by the backend server.
+// The frontend never has Airalo credentials — hasAiraloConfig is always false.
+// The functions below are stubs that return null; the real Airalo integration
+// lives in backend/src/services/airalo.ts.
 
-  const cached = await AsyncStorage.getItem(AIRALO_TOKEN_KEY);
-  const expiresStr = await AsyncStorage.getItem(AIRALO_TOKEN_EXPIRES_KEY);
-  if (cached && expiresStr && Date.now() < Number(expiresStr)) {
-    return cached;
-  }
-
-  try {
-    const form = new URLSearchParams();
-    form.append('client_id', runtimeConfig.airaloClientId!);
-    form.append('client_secret', runtimeConfig.airaloClientSecret!);
-    form.append('grant_type', 'client_credentials');
-
-    const res = await fetch(`${runtimeConfig.airaloBaseUrl}/v2/token`, {
-      method: 'POST',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: form.toString(),
-    });
-
-    if (!res.ok) return null;
-
-    const json = (await res.json()) as {
-      data: { access_token: string; expires_in: number; token_type: string };
-    };
-
-    const token = json.data.access_token;
-    const expiresAt = Date.now() + json.data.expires_in * 1000 - 60_000;
-    await AsyncStorage.setItem(AIRALO_TOKEN_KEY, token);
-    await AsyncStorage.setItem(AIRALO_TOKEN_EXPIRES_KEY, String(expiresAt));
-    return token;
-  } catch {
-    return null;
-  }
+async function airaloFetch<T>(_path: string, _options: RequestInit = {}): Promise<T | null> {
+  // Client-side Airalo calls are disabled for security.
+  return null;
 }
-
-async function airaloFetch<T>(path: string, options: RequestInit = {}): Promise<T | null> {
-  const token = await getAiraloToken();
-  if (!token) return null;
-
-  try {
-    const res = await fetch(`${runtimeConfig.airaloBaseUrl}${path}`, {
-      ...options,
-      headers: {
-        Accept: 'application/json',
-        Authorization: `Bearer ${token}`,
-        ...(options.headers ?? {}),
-      },
-    });
-
-    if (!res.ok) return null;
     return (await res.json()) as T;
   } catch {
     return null;

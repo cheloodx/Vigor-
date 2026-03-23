@@ -2,10 +2,8 @@
 // We must access them as static member expressions for the transform to work.
 const rawSupabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL;
 const rawSupabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
-const rawAiraloBaseUrl = process.env.EXPO_PUBLIC_AIRALO_BASE_URL;
-const rawAiraloClientId = process.env.EXPO_PUBLIC_AIRALO_CLIENT_ID;
-const rawAiraloClientSecret = process.env.EXPO_PUBLIC_AIRALO_CLIENT_SECRET;
-const rawAiraloMode = process.env.EXPO_PUBLIC_AIRALO_MODE;
+// NOTE: Airalo credentials are intentionally NOT exposed to the client.
+// All Airalo API calls go through the backend server.
 const rawBackendUrl = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 function clean(value: string | undefined): string | undefined {
@@ -17,10 +15,6 @@ function clean(value: string | undefined): string | undefined {
 export const runtimeConfig = {
   supabaseUrl: clean(rawSupabaseUrl),
   supabaseAnonKey: clean(rawSupabaseAnonKey),
-  airaloBaseUrl: (clean(rawAiraloBaseUrl) ?? 'https://sandbox-partners-api.airalo.com').replace(/\/v2\/?$/, ''),
-  airaloClientId: clean(rawAiraloClientId),
-  airaloClientSecret: clean(rawAiraloClientSecret),
-  airaloMode: clean(rawAiraloMode) ?? 'sandbox',
   backendUrl: clean(rawBackendUrl),
 };
 
@@ -28,6 +22,5 @@ export const hasSupabaseConfig = Boolean(
   runtimeConfig.supabaseUrl && runtimeConfig.supabaseAnonKey,
 );
 
-export const hasAiraloConfig = Boolean(
-  runtimeConfig.airaloClientId && runtimeConfig.airaloClientSecret,
-);
+// Airalo config is backend-only; the frontend never has these credentials.
+export const hasAiraloConfig = false;

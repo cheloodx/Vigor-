@@ -80,25 +80,14 @@ export function ESIMScreen() {
 
   const handleSelectPlan = async (plan: ESIMCountryPlan) => {
     setSelectedPlan(plan);
-    // If backend is configured, show payment step; otherwise provision directly (demo mode)
     if (runtimeConfig.backendUrl) {
       animateStep('payment');
     } else {
-      // Demo mode: skip payment, provision directly
-      animateStep('activating');
-      try {
-        const res = await esimProvisioning.provisionESIM(plan.id);
-        setResult(res);
-        if (res.success) {
-          setTimeout(() => animateStep('success'), 1500);
-        } else {
-          Alert.alert('Eroare', res.error || 'Nu s-a putut activa eSIM-ul.');
-          animateStep('plans');
-        }
-      } catch {
-        Alert.alert('Eroare', 'Nu s-a putut activa eSIM-ul. Incercati din nou.');
-        animateStep('plans');
-      }
+      // Backend not configured — show error instead of allowing free provisioning
+      Alert.alert(
+        'Configurare incompleta',
+        'Backend-ul nu este configurat. Contacteaza suportul tehnic.',
+      );
     }
   };
 
