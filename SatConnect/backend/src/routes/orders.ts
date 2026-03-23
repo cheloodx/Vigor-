@@ -14,12 +14,15 @@ import { OrderEsimRequest, ApiResponse, Plan, Order, UserEsim } from '../types';
 import { provisionForSession } from '../services/provisioning';
 import { getOrderBySessionId } from '../services/supabase';
 
-const router = Router();
+// Auth-based router (mounted at /orders)
+const authRouter = Router();
+// Stripe-based router (mounted at /api/orders)
+const stripeRouter = Router();
 
 // ---------------------------------------------------------------------------
 // POST /orders/esim — Auth-based eSIM order (iOS app flow)
 // ---------------------------------------------------------------------------
-router.post('/esim', requireAuth, async (req: Request, res: Response) => {
+authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
   try {
     const { plan_id, apple_transaction_id } = req.body as OrderEsimRequest;
     const userId = req.userId!;
@@ -167,7 +170,7 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
 // ---------------------------------------------------------------------------
 // POST /api/orders/provision — Stripe-based provisioning (web flow)
 // ---------------------------------------------------------------------------
-router.post('/provision', async (req: Request, res: Response) => {
+stripeRouter.post('/provision', async (req: Request, res: Response) => {
   try {
     const { sessionId } = req.body;
 
@@ -208,7 +211,7 @@ router.post('/provision', async (req: Request, res: Response) => {
 // ---------------------------------------------------------------------------
 // GET /api/orders/:sessionId — Get order by Stripe session ID
 // ---------------------------------------------------------------------------
-router.get('/:sessionId', async (req: Request, res: Response) => {
+stripeRouter.get('/:sessionId', async (req: Request, res: Response) => {
   try {
     const order = await getOrderBySessionId(req.params.sessionId);
 
@@ -240,5 +243,5 @@ router.get('/:sessionId', async (req: Request, res: Response) => {
   }
 });
 
-export default router;
-export { router as ordersRouter };
+export default authRouter;
+export { stripeRouter as ordersRouter };

@@ -116,9 +116,9 @@ async function getToken(): Promise<string> {
 }
 
 /**
- * Authenticated fetch to Airalo API
+ * Authenticated fetch to Airalo API (retries once on 401 with a fresh token)
  */
-async function airaloFetch(path: string, options: { method?: string; body?: string; headers?: Record<string, string> } = {}): Promise<unknown> {
+async function airaloFetch(path: string, options: { method?: string; body?: string; headers?: Record<string, string> } = {}, _isRetry = false): Promise<unknown> {
   const token = await getToken();
 
   const response = await fetch(`${AIRALO_API_URL}${path}`, {
@@ -136,6 +136,10 @@ async function airaloFetch(path: string, options: { method?: string; body?: stri
     if (response.status === 401) {
       cachedToken = null;
       tokenExpiresAt = 0;
+      // Retry once with a fresh token
+      if (!_isRetry) {
+        return airaloFetch(path, options, true);
+      }
     }
     const text = await response.text();
     throw new Error(`Airalo API error (${response.status}): ${text}`);
@@ -155,14 +159,16 @@ export async function getAiraloPackages(countryCode: string): Promise<unknown> {
  * Create an eSIM order on Airalo (used by auth-based orders route)
  */
 export async function createAiraloOrder(packageId: string, quantity: number = 1): Promise<AiraloOrderResponse> {
+  const form = new URLSearchParams();
+  form.append('package_id', packageId);
+  form.append('quantity', String(quantity));
+  form.append('type', 'sim');
+  form.append('description', 'SatConnect eSIM order');
+
   const result = await airaloFetch('/orders', {
     method: 'POST',
-    body: JSON.stringify({
-      package_id: packageId,
-      quantity,
-      type: 'sim',
-      description: 'SatConnect eSIM order',
-    }),
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: form.toString(),
   });
 
   return result as AiraloOrderResponse;
