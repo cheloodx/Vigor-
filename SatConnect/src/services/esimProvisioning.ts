@@ -392,11 +392,6 @@ async function airaloFetch<T>(_path: string, _options: RequestInit = {}): Promis
   // Client-side Airalo calls are disabled for security.
   return null;
 }
-    return (await res.json()) as T;
-  } catch {
-    return null;
-  }
-}
 
 // ---------------------------------------------------------------------------
 // Airalo response types
