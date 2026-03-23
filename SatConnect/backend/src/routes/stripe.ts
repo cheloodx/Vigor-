@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import Stripe from 'stripe';
 import { getPlanById } from '../data/planCatalog';
+import { createOrderForSession, provisionForSession } from '../services/provisioning';
 
 const router = Router();
 
@@ -78,6 +79,11 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
       },
     });
 
+    // Create order record in Supabase (non-blocking — don't fail checkout if DB is down)
+    createOrderForSession(session.id, plan.id).catch((err) =>
+      console.error('Non-blocking: failed to create order record:', err),
+    );
+
     res.json({
       sessionId: session.id,
       url: session.url,
@@ -122,9 +128,17 @@ router.post('/webhook', async (req: Request, res: Response) => {
       console.log('Plan:', session.metadata?.planId);
       console.log('Country:', session.metadata?.countryName);
 
-      // TODO: Provision eSIM via Airalo API here
-      // const planId = session.metadata?.planId;
-      // await esimProvisioning.provisionESIM(planId);
+      // Auto-provision eSIM after payment
+      try {
+        const provResult = await provisionForSession(session.id);
+        if (provResult.success) {
+          console.log('Auto-provisioned eSIM:', provResult.order?.iccid);
+        } else {
+          console.error('Auto-provision failed:', provResult.error);
+        }
+      } catch (provErr) {
+        console.error('Auto-provision error:', provErr);
+      }
 
       break;
     }
