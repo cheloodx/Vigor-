@@ -57,10 +57,11 @@ function getBackendUrl(): string {
  */
 export async function createCheckoutSession(plan: CheckoutRequest): Promise<CheckoutResponse> {
   const backendUrl = getBackendUrl();
+  // Only send planId — backend does server-side price lookup to prevent manipulation
   const response = await fetch(`${backendUrl}/api/stripe/create-checkout`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(plan),
+    body: JSON.stringify({ planId: plan.planId }),
   });
 
   if (!response.ok) {
@@ -102,4 +103,42 @@ export async function getPaymentStatus(sessionId: string): Promise<PaymentStatus
   }
 
   return response.json();
+}
+
+// ---------------------------------------------------------------------------
+// Provisioning
+// ---------------------------------------------------------------------------
+
+export interface ProvisionedOrder {
+  id: string;
+  status: string;
+  planId: string;
+  countryName: string;
+  dataLabel: string;
+  iccid: string;
+  qrcodeUrl: string;
+  lpa: string;
+  matchingId: string;
+  directAppleInstallUrl: string;
+}
+
+/**
+ * Provision an eSIM after payment is confirmed.
+ * Calls the backend which orchestrates Airalo ordering + DB storage.
+ */
+export async function provisionAfterPayment(sessionId: string): Promise<ProvisionedOrder> {
+  const backendUrl = getBackendUrl();
+  const response = await fetch(`${backendUrl}/api/orders/provision`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ sessionId }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: 'Network error' }));
+    throw new Error(error.error || 'Failed to provision eSIM');
+  }
+
+  const data = await response.json();
+  return data.order as ProvisionedOrder;
 }

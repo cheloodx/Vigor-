@@ -1,13 +1,9 @@
 // ============================================================================
-// POST /orders/esim - Create an eSIM order
+// Orders Routes
 // ============================================================================
-// Requires auth. Flow:
-// 1. Validate plan exists
-// 2. Create order in DB (status: pending)
-// 3. Call Airalo API to provision eSIM
-// 4. Store eSIM details (ICCID, QR code, activation code) in user_esims
-// 5. Update order status to completed
-// 6. Return QR code + activation details to user
+// Two flows:
+// 1. Auth-based: POST /orders/esim (requires auth, used by iOS app)
+// 2. Stripe-based: POST /api/orders/provision + GET /api/orders/:sessionId
 // ============================================================================
 
 import { Router, Request, Response } from 'express';
@@ -15,22 +11,25 @@ import { supabase } from '../config/database';
 import { requireAuth } from '../middleware/auth';
 import { hasAiraloCredentials, createAiraloOrder } from '../services/airalo';
 import { OrderEsimRequest, ApiResponse, Plan, Order, UserEsim } from '../types';
+import { provisionForSession } from '../services/provisioning';
+import { getOrderBySessionId } from '../services/supabase';
 
 const router = Router();
 
+// ---------------------------------------------------------------------------
+// POST /orders/esim — Auth-based eSIM order (iOS app flow)
+// ---------------------------------------------------------------------------
 router.post('/esim', requireAuth, async (req: Request, res: Response) => {
   try {
     const { plan_id, apple_transaction_id } = req.body as OrderEsimRequest;
     const userId = req.userId!;
 
-    // 1. Validate request
     if (!plan_id) {
       const response: ApiResponse<null> = { success: false, error: 'plan_id is required' };
       res.status(400).json(response);
       return;
     }
 
-    // 2. Fetch the plan
     const { data: plan, error: planError } = await supabase
       .from('esim_plans')
       .select('*')
@@ -46,7 +45,6 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
 
     const planData = plan as Plan;
 
-    // 3. Create order (status: pending)
     const { data: order, error: orderError } = await supabase
       .from('esim_orders')
       .insert({
@@ -68,7 +66,6 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
 
     const orderData = order as Order;
 
-    // 4. Provision eSIM via Airalo (or mock)
     let esimData: {
       iccid: string;
       activation_code: string;
@@ -79,7 +76,6 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
     };
 
     if (hasAiraloCredentials()) {
-      // Real Airalo API call
       try {
         const airaloResult = await createAiraloOrder(planData.slug);
         const sim = airaloResult.data.sims[0];
@@ -93,7 +89,6 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
           airalo_esim_id: String(sim.id),
         };
       } catch (airaloErr) {
-        // If Airalo fails, mark order as failed
         await supabase
           .from('esim_orders')
           .update({ status: 'failed', error_message: String(airaloErr) })
@@ -105,7 +100,6 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
         return;
       }
     } else {
-      // Mock eSIM for development/demo
       const mockIccid = `8940${Date.now()}${Math.floor(Math.random() * 1000)}`;
       esimData = {
         iccid: mockIccid,
@@ -117,7 +111,6 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
       };
     }
 
-    // 5. Create user_esim record
     const { data: userEsim, error: esimError } = await supabase
       .from('user_esims')
       .insert({
@@ -139,7 +132,6 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
       .single();
 
     if (esimError || !userEsim) {
-      // Mark order as failed and record the error
       await supabase
         .from('esim_orders')
         .update({ status: 'failed', error_message: esimError?.message || 'Failed to create eSIM record', airalo_order_id: esimData.airalo_order_id })
@@ -150,7 +142,6 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
       return;
     }
 
-    // 6. Update order to completed
     const { error: updateError } = await supabase
       .from('esim_orders')
       .update({ status: 'completed', airalo_order_id: esimData.airalo_order_id })
@@ -160,7 +151,6 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
       console.error(`Failed to mark order ${orderData.id} as completed: ${updateError.message}`);
     }
 
-    // 7. Return success with QR code
     const response: ApiResponse<UserEsim> = {
       success: true,
       data: userEsim as UserEsim,
@@ -174,4 +164,81 @@ router.post('/esim', requireAuth, async (req: Request, res: Response) => {
   }
 });
 
+// ---------------------------------------------------------------------------
+// POST /api/orders/provision — Stripe-based provisioning (web flow)
+// ---------------------------------------------------------------------------
+router.post('/provision', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.body;
+
+    if (!sessionId) {
+      res.status(400).json({ error: 'Missing required field: sessionId' });
+      return;
+    }
+
+    const result = await provisionForSession(sessionId);
+
+    if (!result.success) {
+      res.status(500).json({ error: result.error || 'Provisioning failed' });
+      return;
+    }
+
+    res.json({
+      success: true,
+      order: {
+        id: result.order?.id,
+        status: result.order?.status,
+        planId: result.order?.plan_id,
+        countryName: result.order?.country_name,
+        dataLabel: result.order?.data_label,
+        iccid: result.order?.iccid,
+        qrcodeUrl: result.order?.qrcode_url,
+        lpa: result.order?.lpa,
+        matchingId: result.order?.matching_id,
+        directAppleInstallUrl: result.order?.direct_apple_install_url,
+      },
+    });
+  } catch (err) {
+    console.error('Provision error:', err);
+    const message = err instanceof Error ? err.message : 'Failed to provision eSIM';
+    res.status(500).json({ error: message });
+  }
+});
+
+// ---------------------------------------------------------------------------
+// GET /api/orders/:sessionId — Get order by Stripe session ID
+// ---------------------------------------------------------------------------
+router.get('/:sessionId', async (req: Request, res: Response) => {
+  try {
+    const order = await getOrderBySessionId(req.params.sessionId);
+
+    if (!order) {
+      res.status(404).json({ error: 'Order not found' });
+      return;
+    }
+
+    res.json({
+      id: order.id,
+      status: order.status,
+      planId: order.plan_id,
+      countryCode: order.country_code,
+      countryName: order.country_name,
+      dataLabel: order.data_label,
+      validDays: order.valid_days,
+      price: order.price,
+      currency: order.currency,
+      iccid: order.iccid,
+      qrcodeUrl: order.qrcode_url,
+      lpa: order.lpa,
+      matchingId: order.matching_id,
+      directAppleInstallUrl: order.direct_apple_install_url,
+      createdAt: order.created_at,
+    });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Failed to get order';
+    res.status(500).json({ error: message });
+  }
+});
+
 export default router;
+export { router as ordersRouter };

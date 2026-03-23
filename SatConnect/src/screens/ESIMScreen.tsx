@@ -19,7 +19,7 @@ import {
   ESIMCountryPlan,
   ProvisioningResult,
 } from '../services/esimProvisioning';
-import { createCheckoutSession, openCheckout } from '../services/stripeService';
+import { createCheckoutSession, openCheckout, getPaymentStatus, provisionAfterPayment, ProvisionedOrder } from '../services/stripeService';
 import { runtimeConfig } from '../services/runtimeConfig';
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -34,7 +34,11 @@ export function ESIMScreen() {
   const [plans, setPlans] = useState<ESIMCountryPlan[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<ESIMCountryPlan | null>(null);
   const [result, setResult] = useState<ProvisioningResult | null>(null);
+  const [provisionedOrder, setProvisionedOrder] = useState<ProvisionedOrder | null>(null);
   const [loadingPlans, setLoadingPlans] = useState(false);
+  const [checkoutSessionId, setCheckoutSessionId] = useState<string | null>(null);
+  const [paymentSent, setPaymentSent] = useState(false);
+  const [verifyingPayment, setVerifyingPayment] = useState(false);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -111,6 +115,8 @@ export function ESIMScreen() {
         validDays: selectedPlan.validDays,
       });
       if (checkout.url) {
+        setCheckoutSessionId(checkout.sessionId);
+        setPaymentSent(true);
         await openCheckout(checkout.url);
       }
     } catch {
@@ -119,20 +125,52 @@ export function ESIMScreen() {
     }
   };
 
-  const handleProvisionAfterPayment = async () => {
-    if (!selectedPlan) return;
-    animateStep('activating');
+  const handleVerifyPayment = async () => {
+    if (!checkoutSessionId) return;
+    setVerifyingPayment(true);
     try {
-      const res = await esimProvisioning.provisionESIM(selectedPlan.id);
-      setResult(res);
-      if (res.success) {
-        setTimeout(() => animateStep('success'), 1500);
+      const status = await getPaymentStatus(checkoutSessionId);
+      if (status.status === 'paid') {
+        await handleProvisionAfterPayment();
       } else {
-        Alert.alert('Eroare', res.error || 'Nu s-a putut activa eSIM-ul.');
-        animateStep('plans');
+        Alert.alert('Plata in asteptare', 'Plata nu a fost confirmata inca. Finalizati plata in browser si incercati din nou.');
       }
     } catch {
-      Alert.alert('Eroare', 'Nu s-a putut activa eSIM-ul. Incercati din nou.');
+      Alert.alert('Eroare', 'Nu s-a putut verifica plata. Incercati din nou.');
+    } finally {
+      setVerifyingPayment(false);
+    }
+  };
+
+  const handleProvisionAfterPayment = async () => {
+    if (!selectedPlan || !checkoutSessionId) return;
+    animateStep('activating');
+    try {
+      // Call backend to provision eSIM (backend handles Airalo + DB)
+      const order = await provisionAfterPayment(checkoutSessionId);
+      setProvisionedOrder(order);
+      setResult({
+        success: true,
+        profile: {
+          id: order.id,
+          iccid: order.iccid,
+          activationCode: order.lpa || '',
+          carrier: 'Airalo',
+          region: order.countryName,
+          countries: [],
+          dataLimitMB: 0,
+          dataUsedMB: 0,
+          validFrom: new Date().toISOString(),
+          validUntil: '',
+          status: 'active',
+          qrCodeUrl: order.qrcodeUrl,
+          directAppleInstallUrl: order.directAppleInstallUrl,
+        },
+      });
+      setTimeout(() => animateStep('success'), 1500);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Nu s-a putut activa eSIM-ul.';
+      Alert.alert('Eroare', message);
       animateStep('plans');
     }
   };
@@ -143,6 +181,9 @@ export function ESIMScreen() {
     setResult(null);
     setPlans([]);
     setSearch('');
+    setPaymentSent(false);
+    setCheckoutSessionId(null);
+    setProvisionedOrder(null);
     animateStep('country');
   };
 
@@ -291,10 +332,26 @@ export function ESIMScreen() {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.payBtn} onPress={handlePayment}>
-              <MaterialCommunityIcons name="lock" size={18} color={COLORS.primary} />
-              <Text style={styles.payBtnText}>Plateste securizat</Text>
-            </TouchableOpacity>
+            {!paymentSent ? (
+              <TouchableOpacity style={styles.payBtn} onPress={handlePayment}>
+                <MaterialCommunityIcons name="lock" size={18} color={COLORS.primary} />
+                <Text style={styles.payBtnText}>Plateste securizat</Text>
+              </TouchableOpacity>
+            ) : (
+              <>
+                <TouchableOpacity style={styles.payBtn} onPress={handleVerifyPayment} disabled={verifyingPayment}>
+                  {verifyingPayment ? (
+                    <ActivityIndicator size="small" color={COLORS.primary} />
+                  ) : (
+                    <MaterialCommunityIcons name="check-circle-outline" size={18} color={COLORS.primary} />
+                  )}
+                  <Text style={styles.payBtnText}>{verifyingPayment ? 'Se verifica...' : 'Am platit - Verifica'}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.retryPayBtn} onPress={handlePayment}>
+                  <Text style={styles.retryPayBtnText}>Deschide Stripe din nou</Text>
+                </TouchableOpacity>
+              </>
+            )}
 
             <View style={styles.paymentSecure}>
               <MaterialCommunityIcons name="shield-check" size={14} color={COLORS.textLight} />
@@ -321,23 +378,45 @@ export function ESIMScreen() {
 
   // Success
   return (
-    <Animated.View style={[styles.container, styles.centerContent, { opacity: fadeAnim }]}>
-      <View style={styles.successCard}>
-        <View style={styles.successIcon}>
-          <MaterialCommunityIcons name="check-circle" size={48} color={COLORS.success} />
-        </View>
-        <Text style={styles.successTitle}>eSIM Activat!</Text>
-        <Text style={styles.successSub}>{selectedPlan?.dataLabel} - {selectedCountry?.name}</Text>
-        {result?.profile && (
-          <View style={styles.orderInfo}>
-            <Text style={styles.orderLabel}>ICCID</Text>
-            <Text style={styles.orderValue}>{result.profile.iccid}</Text>
+    <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+      <ScrollView contentContainerStyle={[styles.content, styles.centerContent]}>
+        <View style={styles.successCard}>
+          <View style={styles.successIcon}>
+            <MaterialCommunityIcons name="check-circle" size={48} color={COLORS.success} />
           </View>
-        )}
-        <TouchableOpacity style={styles.doneBtn} onPress={handleReset}>
-          <Text style={styles.doneBtnText}>Gata</Text>
-        </TouchableOpacity>
-      </View>
+          <Text style={styles.successTitle}>eSIM Activat!</Text>
+          <Text style={styles.successSub}>{selectedPlan?.dataLabel} - {selectedCountry?.name}</Text>
+          {result?.profile && (
+            <>
+              <View style={styles.orderInfo}>
+                <Text style={styles.orderLabel}>ICCID</Text>
+                <Text style={styles.orderValue}>{result.profile.iccid}</Text>
+              </View>
+              {result.profile.activationCode ? (
+                <View style={styles.orderInfo}>
+                  <Text style={styles.orderLabel}>LPA / Cod Activare</Text>
+                  <Text style={styles.orderValue}>{result.profile.activationCode}</Text>
+                </View>
+              ) : null}
+              {result.profile.qrCodeUrl ? (
+                <View style={styles.orderInfo}>
+                  <Text style={styles.orderLabel}>QR Code</Text>
+                  <Text style={[styles.orderValue, { color: COLORS.accent }]}>Disponibil - scanati pentru activare</Text>
+                </View>
+              ) : null}
+            </>
+          )}
+          <View style={styles.activationSteps}>
+            <Text style={styles.activationStepsTitle}>Pasi de activare:</Text>
+            <Text style={styles.activationStep}>1. Setari {'>'} Celular {'>'} Adauga plan eSIM</Text>
+            <Text style={styles.activationStep}>2. Scanati codul QR sau introduceti LPA manual</Text>
+            <Text style={styles.activationStep}>3. Activati planul de date</Text>
+          </View>
+          <TouchableOpacity style={styles.doneBtn} onPress={handleReset}>
+            <Text style={styles.doneBtnText}>Gata</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </Animated.View>
   );
 }
@@ -386,6 +465,9 @@ const styles = StyleSheet.create({
   orderInfo: { ...GLASS.panel, borderRadius: RADIUS.md, padding: SPACING.md, width: '100%', alignItems: 'center', marginTop: SPACING.sm },
   orderLabel: { fontSize: FONTS.sizes.xs, color: COLORS.textLight, marginBottom: 4 },
   orderValue: { fontSize: FONTS.sizes.sm, color: COLORS.text, fontWeight: '600' },
+  activationSteps: { ...GLASS.panel, borderRadius: RADIUS.md, padding: SPACING.md, width: '100%', marginTop: SPACING.md },
+  activationStepsTitle: { fontSize: FONTS.sizes.sm, fontWeight: '700', color: COLORS.text, marginBottom: SPACING.sm },
+  activationStep: { fontSize: FONTS.sizes.sm, color: COLORS.textSecondary, marginBottom: 4 },
   doneBtn: { backgroundColor: COLORS.accent, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, paddingHorizontal: SPACING.xxl, marginTop: SPACING.lg },
   doneBtnText: { fontSize: FONTS.sizes.md, fontWeight: '700', color: COLORS.primary },
   // Payment styles
@@ -401,6 +483,8 @@ const styles = StyleSheet.create({
   paymentTotalValue: { fontSize: FONTS.sizes.xl, color: COLORS.accent, fontWeight: '800' as const },
   payBtn: { flexDirection: 'row' as const, alignItems: 'center' as const, justifyContent: 'center' as const, backgroundColor: COLORS.accent, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, paddingHorizontal: SPACING.xxl, gap: SPACING.sm, width: '100%' as unknown as number },
   payBtnText: { fontSize: FONTS.sizes.md, fontWeight: '700' as const, color: COLORS.primary },
+  retryPayBtn: { marginTop: SPACING.sm, paddingVertical: SPACING.sm },
+  retryPayBtnText: { fontSize: FONTS.sizes.sm, color: COLORS.accent, fontWeight: '600' as const, textDecorationLine: 'underline' as const },
   paymentSecure: { flexDirection: 'row' as const, alignItems: 'center' as const, gap: 6, marginTop: SPACING.md },
   paymentSecureText: { fontSize: FONTS.sizes.xs, color: COLORS.textLight },
 });

@@ -4,6 +4,8 @@
 // Endpoints:
 //   GET  /plans              - List available eSIM plans (public)
 //   POST /orders/esim        - Create eSIM order + provision via Airalo (auth)
+//   POST /api/orders/provision - Provision eSIM after Stripe payment (web)
+//   GET  /api/orders/:id     - Get order status by Stripe session ID
 //   GET  /my-esims           - List user's eSIM profiles (auth)
 //   GET  /subscription/status - Check premium subscription (auth)
 //   POST /api/stripe/create-checkout - Create Stripe checkout session
@@ -26,7 +28,9 @@ import ordersRouter from './routes/orders';
 import esimsRouter from './routes/esims';
 import subscriptionsRouter from './routes/subscriptions';
 import { stripeRouter } from './routes/stripe';
+import { ordersRouter as stripeOrdersRouter } from './routes/orders';
 import { hasAiraloCredentials } from './services/airalo';
+import { isSupabaseConfigured } from './services/supabase';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -46,6 +50,7 @@ app.use('/orders', ordersRouter);
 app.use('/my-esims', esimsRouter);
 app.use('/subscription', subscriptionsRouter);
 app.use('/api/stripe', stripeRouter);
+app.use('/api/orders', stripeOrdersRouter);
 
 // Health check
 app.get('/health', (_req, res) => {
@@ -53,9 +58,12 @@ app.get('/health', (_req, res) => {
     status: 'ok',
     service: 'satconnect-backend',
     version: '1.0.0',
-    airalo: hasAiraloCredentials() ? 'configured' : 'mock',
-    stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured',
     timestamp: new Date().toISOString(),
+    services: {
+      airalo: hasAiraloCredentials() ? 'configured' : 'mock',
+      stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured',
+      supabase: isSupabaseConfigured() ? 'configured' : 'not configured',
+    },
   });
 });
 
@@ -67,9 +75,9 @@ app.use((_req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`SatConnect backend running on port ${PORT}`);
-  console.log(`Airalo: ${hasAiraloCredentials() ? 'REAL (API configured)' : 'MOCK (no credentials)'}`);
-  console.log(`Stripe: ${process.env.STRIPE_SECRET_KEY ? 'configured' : 'NOT configured'}`);
-  console.log(`Supabase: ${process.env.SUPABASE_URL ? 'configured' : 'NOT configured'}`);
+  console.log(`  Airalo: ${hasAiraloCredentials() ? 'REAL (API configured)' : 'MOCK (no credentials)'}`);
+  console.log(`  Stripe: ${process.env.STRIPE_SECRET_KEY ? 'configured' : 'NOT configured'}`);
+  console.log(`  Supabase: ${isSupabaseConfigured() ? 'configured' : 'NOT configured'}`);
 });
 
 export default app;
