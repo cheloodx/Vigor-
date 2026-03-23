@@ -382,15 +382,15 @@ async function getAiraloToken(): Promise<string | null> {
   }
 
   try {
-    const form = new FormData();
+    const form = new URLSearchParams();
     form.append('client_id', runtimeConfig.airaloClientId!);
     form.append('client_secret', runtimeConfig.airaloClientSecret!);
     form.append('grant_type', 'client_credentials');
 
     const res = await fetch(`${runtimeConfig.airaloBaseUrl}/v2/token`, {
       method: 'POST',
-      headers: { Accept: 'application/json' },
-      body: form,
+      headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form.toString(),
     });
 
     if (!res.ok) return null;
@@ -609,14 +609,15 @@ class ESIMProvisioningService {
   async provisionESIM(planId: string): Promise<ProvisioningResult> {
     if (!this.initialized) await this.initialize();
     if (hasAiraloConfig) {
-      const form = new FormData();
+      const form = new URLSearchParams();
       form.append('package_id', planId);
       form.append('quantity', '1');
       form.append('type', 'sim');
       form.append('description', `SatConnect order ${Date.now()}`);
       const json = await airaloFetch<AiraloOrderResponse>('/v2/orders', {
         method: 'POST',
-        body: form,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: form.toString(),
       });
       if (json?.data?.sims?.[0]) {
         const sim = json.data.sims[0];
