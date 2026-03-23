@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: RADIUS.sm,
   },
   bubbleOther: {
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: 'rgba(255,255,255,0.08)',
     borderBottomLeftRadius: RADIUS.sm,
   },
   text: {

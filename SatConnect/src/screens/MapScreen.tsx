@@ -8,7 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 import { Button } from '../components/Button';
 
 interface LocationEntry {
@@ -246,17 +246,14 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   mapContainer: {
-    backgroundColor: COLORS.white,
+    ...GLASS.card,
     borderRadius: RADIUS.xl,
     marginBottom: SPACING.xl,
-    borderWidth: 1,
-    borderColor: COLORS.border,
     overflow: 'hidden',
-    ...SHADOWS.md,
   },
   mapGrid: {
     height: 280,
-    backgroundColor: '#E8F4E8',
+    backgroundColor: 'rgba(0,212,170,0.06)',
     position: 'relative',
   },
   gridLineH: {
@@ -297,7 +294,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: SPACING.sm,
     left: SPACING.sm,
-    backgroundColor: COLORS.white + 'E0',
+    backgroundColor: 'rgba(10,22,40,0.85)',
     paddingHorizontal: SPACING.sm,
     paddingVertical: SPACING.xs,
     borderRadius: RADIUS.sm,
@@ -317,7 +314,7 @@ const styles = StyleSheet.create({
     gap: SPACING.lg,
     padding: SPACING.sm,
     borderTopWidth: 1,
-    borderTopColor: COLORS.border,
+    borderTopColor: 'rgba(255,255,255,0.08)',
   },
   legendItem: {
     flexDirection: 'row',
@@ -343,11 +340,10 @@ const styles = StyleSheet.create({
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: COLORS.white,
+    ...GLASS.panel,
     borderRadius: RADIUS.lg,
     padding: SPACING.lg,
     marginBottom: SPACING.xl,
-    ...SHADOWS.sm,
   },
   stat: {
     alignItems: 'center',
@@ -371,12 +367,11 @@ const styles = StyleSheet.create({
   locationItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
+    ...GLASS.panel,
     borderRadius: RADIUS.md,
     padding: SPACING.md,
     marginBottom: SPACING.sm,
     gap: SPACING.md,
-    ...SHADOWS.sm,
   },
   locationIcon: {
     width: 32,

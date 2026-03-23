@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 import { MOCK_MESSAGES, MOCK_CONVERSATIONS } from '../constants/data';
 import { MessageBubble } from '../components/MessageBubble';
 import { Message } from '../types';
@@ -149,12 +149,12 @@ export function ChatScreen({ conversationId, contactName, onBack }: ChatScreenPr
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.surface,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.primaryLight,
     paddingTop: 50,
     paddingBottom: SPACING.md,
     paddingHorizontal: SPACING.md,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     borderTopColor: COLORS.border,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.primaryLight,
   },
   inputRow: {
     flexDirection: 'row',
@@ -223,26 +223,24 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: COLORS.gray[50],
+    ...GLASS.panel,
     borderRadius: RADIUS.xl,
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.sm,
     fontSize: FONTS.sizes.md,
     color: COLORS.text,
     maxHeight: 100,
-    borderWidth: 1,
-    borderColor: COLORS.border,
   },
   sendButton: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.accent,
     alignItems: 'center',
     justifyContent: 'center',
   },
   sendDisabled: {
-    backgroundColor: COLORS.gray[300],
+    backgroundColor: 'rgba(255,255,255,0.1)',
   },
   sizeEstimate: {
     fontSize: FONTS.sizes.xs,

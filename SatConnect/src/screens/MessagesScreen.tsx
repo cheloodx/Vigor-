@@ -8,7 +8,7 @@ import {
   TextInput,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 import { MOCK_CONVERSATIONS, MOCK_CONTACTS } from '../constants/data';
 import { Conversation, Contact } from '../types';
 
@@ -159,7 +159,7 @@ export function MessagesScreen({ onOpenChat }: MessagesScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.surface,
   },
   header: {
     flexDirection: 'row',
@@ -168,19 +168,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingTop: 60,
     paddingBottom: SPACING.md,
-    backgroundColor: COLORS.white,
   },
   searchContainer: {
     paddingHorizontal: SPACING.lg,
     paddingBottom: SPACING.sm,
-    backgroundColor: COLORS.white,
     borderBottomWidth: 1,
     borderBottomColor: COLORS.border,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.gray[50],
+    ...GLASS.panel,
     borderRadius: RADIUS.lg,
     paddingHorizontal: SPACING.md,
     gap: SPACING.sm,
@@ -224,12 +222,12 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: COLORS.primary,
+    ...GLASS.card,
     alignItems: 'center',
     justifyContent: 'center',
   },
   avatarText: {
-    color: COLORS.white,
+    color: COLORS.accent,
     fontSize: FONTS.sizes.lg,
     fontWeight: '700',
   },
@@ -242,7 +240,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     backgroundColor: COLORS.success,
     borderWidth: 2,
-    borderColor: COLORS.white,
+    borderColor: COLORS.surface,
   },
   conversationContent: {
     flex: 1,
@@ -275,7 +273,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   unreadBadge: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.accent,
     borderRadius: RADIUS.full,
     minWidth: 20,
     height: 20,
@@ -284,13 +282,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   unreadText: {
-    color: COLORS.white,
+    color: COLORS.primary,
     fontSize: 11,
     fontWeight: '700',
   },
   separator: {
     height: 1,
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: COLORS.border,
     marginLeft: 80,
   },
   empty: {

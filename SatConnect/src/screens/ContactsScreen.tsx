@@ -10,7 +10,7 @@ import {
   Modal,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING, SHADOWS } from '../constants/theme';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 import { MOCK_CONTACTS } from '../constants/data';
 import { Contact } from '../types';
 
@@ -227,13 +227,12 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
+    ...GLASS.panel,
     marginHorizontal: SPACING.lg,
     marginBottom: SPACING.md,
     borderRadius: RADIUS.lg,
     paddingHorizontal: SPACING.md,
     gap: SPACING.sm,
-    ...SHADOWS.sm,
   },
   searchInput: {
     flex: 1,
@@ -248,12 +247,11 @@ const styles = StyleSheet.create({
   contactItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.white,
+    ...GLASS.panel,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     marginBottom: SPACING.sm,
     gap: SPACING.md,
-    ...SHADOWS.sm,
   },
   avatar: {
     width: 48,
@@ -276,7 +274,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: COLORS.success,
     borderWidth: 2,
-    borderColor: COLORS.white,
+    borderColor: COLORS.surface,
   },
   contactInfo: {
     flex: 1,
@@ -309,7 +307,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContent: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.primaryLight,
     borderTopLeftRadius: RADIUS.xl,
     borderTopRightRadius: RADIUS.xl,
     padding: SPACING.xl,
@@ -330,10 +328,8 @@ const styles = StyleSheet.create({
     color: COLORS.text,
   },
   formInput: {
-    backgroundColor: COLORS.gray[50],
+    ...GLASS.panel,
     borderRadius: RADIUS.lg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.md,
     fontSize: FONTS.sizes.md,
@@ -351,7 +347,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelBtn: {
-    backgroundColor: COLORS.gray[100],
+    backgroundColor: 'rgba(255,255,255,0.08)',
   },
   cancelBtnText: {
     fontSize: FONTS.sizes.md,
@@ -364,6 +360,6 @@ const styles = StyleSheet.create({
   saveBtnText: {
     fontSize: FONTS.sizes.md,
     fontWeight: '600',
-    color: COLORS.white,
+    color: COLORS.primary,
   },
 });

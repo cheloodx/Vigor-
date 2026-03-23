@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 
 interface TermsScreenProps {
   onBack: () => void;
@@ -100,7 +100,7 @@ function Section({ title, children }: { title: string; children: string }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.surface,
   },
   header: {
     flexDirection: 'row',
