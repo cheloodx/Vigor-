@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
-import { Button } from '../components/Button';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 import { supabaseAuth } from '../services/supabaseAuth';
 
 interface RegisterScreenProps {
@@ -26,13 +27,6 @@ export function RegisterScreen({ onRegister, onGoToLogin }: RegisterScreenProps)
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
 
   const handleRegister = async () => {
     if (!name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
@@ -67,107 +61,81 @@ export function RegisterScreen({ onRegister, onGoToLogin }: RegisterScreenProps)
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <View style={styles.iconCircle}>
-            <MaterialCommunityIcons name="satellite-variant" size={40} color={COLORS.white} />
+            <MaterialCommunityIcons name="satellite-variant" size={40} color={COLORS.accent} />
           </View>
-          <Text style={styles.title}>Creează cont</Text>
-          <Text style={styles.subtitle}>Conectează-te la rețeaua globală</Text>
+          <Text style={styles.title}>Creeaza cont</Text>
+          <Text style={styles.subtitle}>Conecteaza-te la reteaua globala</Text>
         </View>
 
         <View style={styles.form}>
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Nume complet</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="account-outline" size={20} color={COLORS.textLight} />
-              <TextInput
-                style={styles.input}
-                placeholder="Ion Popescu"
-                placeholderTextColor={COLORS.textLight}
-                value={name}
-                onChangeText={setName}
-                autoCapitalize="words"
-              />
-            </View>
+          <View style={styles.inputWrap}>
+            <MaterialCommunityIcons name="account-outline" size={20} color={COLORS.textLight} />
+            <TextInput
+              style={styles.input}
+              placeholder="Nume complet"
+              placeholderTextColor={COLORS.textLight}
+              value={name}
+              onChangeText={setName}
+              autoCapitalize="words"
+            />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="email-outline" size={20} color={COLORS.textLight} />
-              <TextInput
-                style={styles.input}
-                placeholder="email@exemplu.com"
-                placeholderTextColor={COLORS.textLight}
-                value={email}
-                onChangeText={setEmail}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-            </View>
+          <View style={styles.inputWrap}>
+            <MaterialCommunityIcons name="email-outline" size={20} color={COLORS.textLight} />
+            <TextInput
+              style={styles.input}
+              placeholder="Email"
+              placeholderTextColor={COLORS.textLight}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Parolă</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="lock-outline" size={20} color={COLORS.textLight} />
-              <TextInput
-                style={styles.input}
-                placeholder="Minim 6 caractere"
-                placeholderTextColor={COLORS.textLight}
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <Button
-                title=""
-                onPress={() => setShowPassword(!showPassword)}
-                variant="ghost"
-                icon={
-                  <MaterialCommunityIcons
-                    name={showPassword ? 'eye-off' : 'eye'}
-                    size={20}
-                    color={COLORS.textLight}
-                  />
-                }
-              />
-            </View>
+          <View style={styles.inputWrap}>
+            <MaterialCommunityIcons name="lock-outline" size={20} color={COLORS.textLight} />
+            <TextInput
+              style={styles.input}
+              placeholder="Parola (minim 6 caractere)"
+              placeholderTextColor={COLORS.textLight}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+              <MaterialCommunityIcons name={showPassword ? 'eye-off' : 'eye'} size={20} color={COLORS.textLight} />
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Confirmă parola</Text>
-            <View style={styles.inputWrapper}>
-              <MaterialCommunityIcons name="lock-check-outline" size={20} color={COLORS.textLight} />
-              <TextInput
-                style={styles.input}
-                placeholder="Repetă parola"
-                placeholderTextColor={COLORS.textLight}
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                secureTextEntry={!showPassword}
-              />
-            </View>
+          <View style={styles.inputWrap}>
+            <MaterialCommunityIcons name="lock-check-outline" size={20} color={COLORS.textLight} />
+            <TextInput
+              style={styles.input}
+              placeholder="Confirma parola"
+              placeholderTextColor={COLORS.textLight}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={!showPassword}
+            />
           </View>
 
-          <Button
-            title="Creează cont"
-            onPress={handleRegister}
-            variant="primary"
-            size="lg"
-            loading={loading}
-            style={styles.registerButton}
-          />
+          <TouchableOpacity style={styles.registerBtn} onPress={handleRegister} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color={COLORS.primary} />
+            ) : (
+              <Text style={styles.registerBtnText}>Creeaza cont</Text>
+            )}
+          </TouchableOpacity>
 
-          <View style={styles.loginRow}>
-            <Text style={styles.loginText}>Ai deja cont? </Text>
-            <Button title="Conectează-te" onPress={onGoToLogin} variant="ghost" size="sm" />
-          </View>
+          <TouchableOpacity style={styles.loginBtn} onPress={onGoToLogin} disabled={loading}>
+            <Text style={styles.loginBtnText}>Am deja cont - Conectare</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -175,77 +143,17 @@ export function RegisterScreen({ onRegister, onGoToLogin }: RegisterScreenProps)
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.white,
-  },
-  scroll: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: SPACING.xl,
-    paddingVertical: SPACING.xxxl,
-  },
-  header: {
-    alignItems: 'center',
-    marginBottom: SPACING.xxl,
-  },
-  iconCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: SPACING.md,
-  },
-  title: {
-    fontSize: FONTS.sizes.xxl,
-    fontWeight: '800',
-    color: COLORS.primary,
-    marginBottom: SPACING.xs,
-  },
-  subtitle: {
-    fontSize: FONTS.sizes.md,
-    color: COLORS.textSecondary,
-  },
-  form: {
-    gap: SPACING.md,
-  },
-  inputGroup: {
-    gap: SPACING.xs,
-  },
-  label: {
-    fontSize: FONTS.sizes.sm,
-    fontWeight: '600',
-    color: COLORS.text,
-    marginLeft: SPACING.xs,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.gray[50],
-    borderRadius: RADIUS.lg,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    paddingHorizontal: SPACING.md,
-    gap: SPACING.sm,
-  },
-  input: {
-    flex: 1,
-    paddingVertical: SPACING.md,
-    fontSize: FONTS.sizes.md,
-    color: COLORS.text,
-  },
-  registerButton: {
-    marginTop: SPACING.md,
-  },
-  loginRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  loginText: {
-    fontSize: FONTS.sizes.md,
-    color: COLORS.textSecondary,
-  },
+  container: { flex: 1, backgroundColor: COLORS.surface },
+  scroll: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: SPACING.xl, paddingVertical: SPACING.xxxl },
+  header: { alignItems: 'center', marginBottom: SPACING.xxl },
+  iconCircle: { width: 72, height: 72, borderRadius: 36, ...GLASS.card, alignItems: 'center', justifyContent: 'center', marginBottom: SPACING.md },
+  title: { fontSize: FONTS.sizes.xxl, fontWeight: '800', color: COLORS.text, marginBottom: SPACING.xs },
+  subtitle: { fontSize: FONTS.sizes.md, color: COLORS.textSecondary },
+  form: { gap: SPACING.md },
+  inputWrap: { ...GLASS.card, borderRadius: RADIUS.lg, flexDirection: 'row', alignItems: 'center', paddingHorizontal: SPACING.md, paddingVertical: SPACING.sm, gap: SPACING.sm },
+  input: { flex: 1, fontSize: FONTS.sizes.md, color: COLORS.text, paddingVertical: SPACING.xs },
+  registerBtn: { backgroundColor: COLORS.accent, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, alignItems: 'center', marginTop: SPACING.sm },
+  registerBtnText: { fontSize: FONTS.sizes.md, fontWeight: '700', color: COLORS.primary },
+  loginBtn: { ...GLASS.panel, borderRadius: RADIUS.lg, paddingVertical: SPACING.md, alignItems: 'center' },
+  loginBtnText: { fontSize: FONTS.sizes.md, fontWeight: '600', color: COLORS.text },
 });

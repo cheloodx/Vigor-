@@ -154,8 +154,10 @@ export const ESIM_COUNTRIES: ESIMCountry[] = [
 // Always 10-20% cheaper than Airalo/Nomad retail
 // ---------------------------------------------------------------------------
 
-function makePlan(id: string, cc: string, cn: string, cf: string, mb: number, dl: string, vd: number, pr: number, pop: boolean): ESIMCountryPlan {
-  return { id, countryCode: cc, countryName: cn, countryFlag: cf, dataLimitMB: mb, dataLabel: dl, validDays: vd, price: pr, currency: 'EUR', popular: pop };
+function makePlan(id: string, cc: string, cn: string, _cf: string, mb: number, dl: string, vd: number, pr: number, pop: boolean): ESIMCountryPlan {
+  // Generate flag programmatically from country code for iOS compatibility
+  // (hardcoded emoji strings get corrupted during file encoding on iOS)
+  return { id, countryCode: cc, countryName: cn, countryFlag: countryFlag(cc), dataLimitMB: mb, dataLabel: dl, validDays: vd, price: pr, currency: 'EUR', popular: pop };
 }
 
 const COUNTRY_PLANS: Record<string, ESIMCountryPlan[]> = {

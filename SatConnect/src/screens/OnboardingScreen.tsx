@@ -8,7 +8,7 @@ import {
   Animated,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { COLORS, FONTS, RADIUS, SPACING } from '../constants/theme';
+import { COLORS, FONTS, RADIUS, SPACING, GLASS } from '../constants/theme';
 import { ONBOARDING_SLIDES } from '../constants/data';
 import { Button } from '../components/Button';
 
@@ -51,7 +51,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
         <MaterialCommunityIcons
           name={iconMap[item.icon] || 'satellite-variant'}
           size={64}
-          color={COLORS.white}
+          color={COLORS.accent}
         />
       </View>
       <Text style={styles.title}>{item.title}</Text>
@@ -117,7 +117,7 @@ export function OnboardingScreen({ onComplete }: OnboardingScreenProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.surface,
   },
   skipContainer: {
     alignItems: 'flex-end',
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: COLORS.primary,
+    ...GLASS.card,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: SPACING.xxl,
@@ -168,11 +168,11 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   dotActive: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.accent,
     width: 28,
   },
   dotInactive: {
-    backgroundColor: COLORS.gray[200],
+    backgroundColor: 'rgba(255,255,255,0.15)',
   },
   nextButton: {
     width: '100%',
