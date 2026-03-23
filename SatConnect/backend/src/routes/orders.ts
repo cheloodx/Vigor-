@@ -81,6 +81,9 @@ authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
     if (hasAiraloCredentials()) {
       try {
         const airaloResult = await createAiraloOrder(planData.slug);
+        if (!airaloResult.data.sims || airaloResult.data.sims.length === 0) {
+          throw new Error('Airalo order returned no SIM profiles');
+        }
         const sim = airaloResult.data.sims[0];
 
         esimData = {
