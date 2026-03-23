@@ -79,7 +79,9 @@ export async function createCheckoutSession(plan: CheckoutRequest): Promise<Chec
  */
 export async function openCheckout(url: string): Promise<void> {
   if (Platform.OS === 'web') {
-    window.location.href = url;
+    // Open in new tab so the app state (sessionId, paymentSent) is preserved
+    // for the "Am platit - Verifica" verification step when user returns.
+    window.open(url, '_blank');
   } else {
     const supported = await Linking.canOpenURL(url);
     if (supported) {
