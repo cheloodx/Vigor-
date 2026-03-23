@@ -5,17 +5,13 @@ import { createOrderForSession, provisionForSession } from '../services/provisio
 
 const router = Router();
 
-// Initialize Stripe with secret key
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
-if (!stripeSecretKey) {
-  console.warn('STRIPE_SECRET_KEY not set — Stripe endpoints will fail');
-}
-
+// Lazy Stripe init — reads env at call time so dotenv.config() has already run
 function getStripe(): Stripe {
-  if (!stripeSecretKey) {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
     throw new Error('STRIPE_SECRET_KEY is not configured');
   }
-  return new Stripe(stripeSecretKey, { apiVersion: '2023-10-16' });
+  return new Stripe(key, { apiVersion: '2023-10-16' });
 }
 
 // ---------------------------------------------------------------------------
