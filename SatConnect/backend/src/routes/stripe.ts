@@ -137,17 +137,18 @@ router.post('/webhook', async (req: Request, res: Response) => {
       console.log('Plan:', session.metadata?.planId);
       console.log('Country:', session.metadata?.countryName);
 
-      // Auto-provision eSIM after payment
-      try {
-        const provResult = await provisionForSession(session.id);
-        if (provResult.success) {
-          console.log('Auto-provisioned eSIM:', provResult.order?.iccid);
-        } else {
-          console.error('Auto-provision failed:', provResult.error);
-        }
-      } catch (provErr) {
-        console.error('Auto-provision error:', provErr);
-      }
+      // Auto-provision eSIM after payment (non-blocking — respond to Stripe immediately)
+      provisionForSession(session.id)
+        .then((provResult) => {
+          if (provResult.success) {
+            console.log('Auto-provisioned eSIM:', provResult.order?.iccid);
+          } else {
+            console.error('Auto-provision failed:', provResult.error);
+          }
+        })
+        .catch((provErr) => {
+          console.error('Auto-provision error:', provErr);
+        });
 
       break;
     }

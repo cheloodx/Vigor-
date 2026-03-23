@@ -38,6 +38,7 @@ export function ESIMScreen() {
   const [loadingPlans, setLoadingPlans] = useState(false);
   const [checkoutSessionId, setCheckoutSessionId] = useState<string | null>(null);
   const [paymentSent, setPaymentSent] = useState(false);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [verifyingPayment, setVerifyingPayment] = useState(false);
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -116,6 +117,7 @@ export function ESIMScreen() {
       });
       if (checkout.url) {
         setCheckoutSessionId(checkout.sessionId);
+        setCheckoutUrl(checkout.url);
         setPaymentSent(true);
         await openCheckout(checkout.url);
       } else {
@@ -186,6 +188,7 @@ export function ESIMScreen() {
     setSearch('');
     setPaymentSent(false);
     setCheckoutSessionId(null);
+    setCheckoutUrl(null);
     setProvisionedOrder(null);
     animateStep('country');
   };
@@ -350,7 +353,7 @@ export function ESIMScreen() {
                   )}
                   <Text style={styles.payBtnText}>{verifyingPayment ? 'Se verifica...' : 'Am platit - Verifica'}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.retryPayBtn} onPress={handlePayment}>
+                <TouchableOpacity style={styles.retryPayBtn} onPress={() => checkoutUrl && openCheckout(checkoutUrl)}>
                   <Text style={styles.retryPayBtnText}>Deschide Stripe din nou</Text>
                 </TouchableOpacity>
               </>
