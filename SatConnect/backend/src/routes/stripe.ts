@@ -81,11 +81,14 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
     try {
       const orderRecord = await createOrderForSession(session.id, plan.id);
       if (!orderRecord) {
+        // Expire the orphaned Stripe session so it doesn't linger for 24h
+        await stripe.checkout.sessions.expire(session.id).catch(() => {});
         res.status(500).json({ error: 'Failed to initialize order. Please try again.' });
         return;
       }
     } catch (orderErr) {
       console.error('Failed to create order record:', orderErr);
+      await stripe.checkout.sessions.expire(session.id).catch(() => {});
       res.status(500).json({ error: 'Failed to initialize order. Please try again.' });
       return;
     }

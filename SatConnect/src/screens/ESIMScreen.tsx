@@ -118,6 +118,9 @@ export function ESIMScreen() {
         setCheckoutSessionId(checkout.sessionId);
         setPaymentSent(true);
         await openCheckout(checkout.url);
+      } else {
+        Alert.alert('Eroare', 'Nu s-a putut genera linkul de plata. Incercati din nou.');
+        animateStep('plans');
       }
     } catch {
       Alert.alert('Eroare', 'Nu s-a putut initia plata. Incercati din nou.');
