@@ -76,8 +76,14 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
     });
 
     // Create order record in Supabase (blocking — if this fails, don't let user pay)
+    // Note: createOrderForSession returns null on internal errors instead of throwing,
+    // so we check both null return AND exceptions.
     try {
-      await createOrderForSession(session.id, plan.id);
+      const orderRecord = await createOrderForSession(session.id, plan.id);
+      if (!orderRecord) {
+        res.status(500).json({ error: 'Failed to initialize order. Please try again.' });
+        return;
+      }
     } catch (orderErr) {
       console.error('Failed to create order record:', orderErr);
       res.status(500).json({ error: 'Failed to initialize order. Please try again.' });
