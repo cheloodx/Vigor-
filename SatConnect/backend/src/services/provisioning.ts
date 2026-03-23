@@ -5,6 +5,7 @@
  * Called from both webhook (auto) and manual verification endpoint.
  */
 
+import Stripe from 'stripe';
 import { isAiraloConfigured, findPackage, orderESIM } from './airalo';
 import {
   isSupabaseConfigured,
@@ -14,6 +15,11 @@ import {
   Order,
 } from './supabase';
 import { getPlanById } from '../data/planCatalog';
+
+// ---------------------------------------------------------------------------
+// In-memory lock to prevent concurrent provisioning for the same session
+// ---------------------------------------------------------------------------
+const provisionLocks = new Map<string, Promise<ProvisionResult>>();
 
 // ---------------------------------------------------------------------------
 // Types
@@ -73,12 +79,44 @@ export async function createOrderForSession(
  * Idempotent: if already provisioned, returns the existing order.
  */
 export async function provisionForSession(stripeSessionId: string): Promise<ProvisionResult> {
+  // Concurrency guard: if another call is already provisioning this session, wait for it
+  const existing = provisionLocks.get(stripeSessionId);
+  if (existing) {
+    return existing;
+  }
+
+  const promise = doProvision(stripeSessionId);
+  provisionLocks.set(stripeSessionId, promise);
+
+  try {
+    return await promise;
+  } finally {
+    provisionLocks.delete(stripeSessionId);
+  }
+}
+
+async function doProvision(stripeSessionId: string): Promise<ProvisionResult> {
   // Check if we have Supabase configured
   if (!isSupabaseConfigured()) {
     return { success: false, error: 'Database not configured' };
   }
 
-  // 1. Get the order
+  // 1. Verify Stripe payment before provisioning
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  if (stripeSecretKey) {
+    try {
+      const stripe = new Stripe(stripeSecretKey, { apiVersion: '2023-10-16' });
+      const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
+      if (session.payment_status !== 'paid') {
+        return { success: false, error: 'Payment not confirmed — cannot provision eSIM' };
+      }
+    } catch (err) {
+      console.error('Failed to verify Stripe payment:', err);
+      return { success: false, error: 'Failed to verify payment status' };
+    }
+  }
+
+  // 2. Get the order
   let order = await getOrderBySessionId(stripeSessionId);
   if (!order) {
     return { success: false, error: 'Order not found for this session' };
@@ -94,7 +132,12 @@ export async function provisionForSession(stripeSessionId: string): Promise<Prov
     console.log(`Retrying provisioning for order ${order.id}`);
   }
 
-  // 2. Mark as provisioning
+  // Already being provisioned by another call? Wait and re-check
+  if (order.status === 'provisioning') {
+    return { success: false, error: 'Provisioning already in progress' };
+  }
+
+  // 3. Mark as provisioning
   await updateOrderStatus(stripeSessionId, 'provisioning');
 
   // 3. Check if Airalo is configured
