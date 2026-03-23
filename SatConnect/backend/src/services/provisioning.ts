@@ -5,6 +5,7 @@
  * Called from both webhook (auto) and manual verification endpoint.
  */
 
+import Stripe from 'stripe';
 import { isAiraloConfigured, findPackage, orderESIM } from './airalo';
 import {
   isSupabaseConfigured,
@@ -78,7 +79,24 @@ export async function provisionForSession(stripeSessionId: string): Promise<Prov
     return { success: false, error: 'Database not configured' };
   }
 
-  // 1. Get the order
+  // 1. Verify Stripe payment before provisioning (mandatory — never provision without payment)
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  if (!stripeSecretKey) {
+    return { success: false, error: 'Stripe is not configured — cannot verify payment' };
+  }
+
+  try {
+    const stripe = new Stripe(stripeSecretKey, { apiVersion: '2023-10-16' });
+    const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
+    if (session.payment_status !== 'paid') {
+      return { success: false, error: 'Payment not confirmed — cannot provision eSIM' };
+    }
+  } catch (err) {
+    console.error('Failed to verify Stripe payment:', err);
+    return { success: false, error: 'Failed to verify payment status' };
+  }
+
+  // 2. Get the order
   let order = await getOrderBySessionId(stripeSessionId);
   if (!order) {
     return { success: false, error: 'Order not found for this session' };
