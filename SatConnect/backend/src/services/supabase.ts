@@ -96,8 +96,8 @@ export async function updateOrderStatus(
   const { data, error } = await db
     .from('orders')
     .update({
-      status,
       ...extra,
+      status,
       updated_at: new Date().toISOString(),
     })
     .eq('stripe_session_id', stripeSessionId)

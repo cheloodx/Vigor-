@@ -17,6 +17,11 @@ import {
 import { getPlanById } from '../data/planCatalog';
 
 // ---------------------------------------------------------------------------
+// In-memory lock to prevent concurrent provisioning for the same session
+// ---------------------------------------------------------------------------
+const provisionLocks = new Map<string, Promise<ProvisionResult>>();
+
+// ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
@@ -74,6 +79,23 @@ export async function createOrderForSession(
  * Idempotent: if already provisioned, returns the existing order.
  */
 export async function provisionForSession(stripeSessionId: string): Promise<ProvisionResult> {
+  // Concurrency guard: if another call is already provisioning this session, wait for it
+  const existing = provisionLocks.get(stripeSessionId);
+  if (existing) {
+    return existing;
+  }
+
+  const promise = doProvision(stripeSessionId);
+  provisionLocks.set(stripeSessionId, promise);
+
+  try {
+    return await promise;
+  } finally {
+    provisionLocks.delete(stripeSessionId);
+  }
+}
+
+async function doProvision(stripeSessionId: string): Promise<ProvisionResult> {
   // Check if we have Supabase configured
   if (!isSupabaseConfigured()) {
     return { success: false, error: 'Database not configured' };
@@ -112,7 +134,17 @@ export async function provisionForSession(stripeSessionId: string): Promise<Prov
     console.log(`Retrying provisioning for order ${order.id}`);
   }
 
-  // 2. Mark as provisioning
+  // Already being provisioned by another call? Check for stale status
+  if (order.status === 'provisioning') {
+    const updatedAt = order.updated_at ? new Date(order.updated_at).getTime() : 0;
+    const staleThresholdMs = 5 * 60 * 1000; // 5 minutes
+    if (Date.now() - updatedAt < staleThresholdMs) {
+      return { success: false, error: 'Provisioning already in progress' };
+    }
+    console.log(`Order ${order.id} stuck in provisioning for > 5 min, retrying`);
+  }
+
+  // 3. Mark as provisioning
   await updateOrderStatus(stripeSessionId, 'provisioning');
 
   // 3. Check if Airalo is configured
@@ -154,7 +186,7 @@ export async function provisionForSession(stripeSessionId: string): Promise<Prov
     const sim = airaloOrder.sims[0];
 
     // 6. Store eSIM details
-    const updatedOrder = await updateOrderStatus(stripeSessionId, 'provisioned', {
+    const esimDetails = {
       airalo_order_id: airaloOrder.orderId,
       airalo_order_code: airaloOrder.orderCode,
       iccid: sim.iccid,
@@ -162,10 +194,26 @@ export async function provisionForSession(stripeSessionId: string): Promise<Prov
       lpa: sim.lpa,
       matching_id: sim.matching_id,
       direct_apple_install_url: sim.direct_apple_installation_url,
-    });
+    };
+    const updatedOrder = await updateOrderStatus(stripeSessionId, 'provisioned', esimDetails);
 
     console.log(`eSIM provisioned: ICCID=${sim.iccid}, Order=${airaloOrder.orderCode}`);
-    return { success: true, order: updatedOrder ?? order };
+
+    if (!updatedOrder) {
+      // DB update failed but eSIM was ordered — include details in response for
+      // the frontend to display, and log for manual recovery.
+      console.error(
+        `CRITICAL: Airalo eSIM ordered but DB update failed. Session=${stripeSessionId}, ICCID=${sim.iccid}, Order=${airaloOrder.orderCode}`,
+      );
+      const fallbackOrder: Order = {
+        ...order,
+        status: 'provisioned',
+        ...esimDetails,
+      };
+      return { success: true, order: fallbackOrder };
+    }
+
+    return { success: true, order: updatedOrder };
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown provisioning error';
     console.error('Provisioning failed:', message);

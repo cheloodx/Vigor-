@@ -81,11 +81,14 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
     try {
       const orderRecord = await createOrderForSession(session.id, plan.id);
       if (!orderRecord) {
+        // Expire the orphaned Stripe session so it doesn't linger for 24h
+        await stripe.checkout.sessions.expire(session.id).catch(() => {});
         res.status(500).json({ error: 'Failed to initialize order. Please try again.' });
         return;
       }
     } catch (orderErr) {
       console.error('Failed to create order record:', orderErr);
+      await stripe.checkout.sessions.expire(session.id).catch(() => {});
       res.status(500).json({ error: 'Failed to initialize order. Please try again.' });
       return;
     }
@@ -134,17 +137,18 @@ router.post('/webhook', async (req: Request, res: Response) => {
       console.log('Plan:', session.metadata?.planId);
       console.log('Country:', session.metadata?.countryName);
 
-      // Auto-provision eSIM after payment
-      try {
-        const provResult = await provisionForSession(session.id);
-        if (provResult.success) {
-          console.log('Auto-provisioned eSIM:', provResult.order?.iccid);
-        } else {
-          console.error('Auto-provision failed:', provResult.error);
-        }
-      } catch (provErr) {
-        console.error('Auto-provision error:', provErr);
-      }
+      // Auto-provision eSIM after payment (non-blocking — respond to Stripe immediately)
+      provisionForSession(session.id)
+        .then((provResult) => {
+          if (provResult.success) {
+            console.log('Auto-provisioned eSIM:', provResult.order?.iccid);
+          } else {
+            console.error('Auto-provision failed:', provResult.error);
+          }
+        })
+        .catch((provErr) => {
+          console.error('Auto-provision error:', provErr);
+        });
 
       break;
     }
