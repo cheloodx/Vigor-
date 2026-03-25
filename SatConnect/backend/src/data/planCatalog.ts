@@ -167,8 +167,9 @@ const PLAN_LIST: PlanEntry[] = [
   p('global-50gb', 'GLOBAL', 'Global (175 țări)', '🌍', 51200, '50 GB', 30, 34.99),
 ];
 
-// Default pricing for dynamically-generated country plans (30+ countries)
+// Default pricing for dynamically-generated country plans
 const DEFAULT_TIERS = [
+  { suffix: '500mb', mb: 512, dl: '500 MB', vd: 7, pr: 1.49 },
   { suffix: '1gb', mb: 1024, dl: '1 GB', vd: 7, pr: 1.99 },
   { suffix: '3gb', mb: 3072, dl: '3 GB', vd: 15, pr: 3.99 },
   { suffix: '5gb', mb: 5120, dl: '5 GB', vd: 30, pr: 5.49 },
@@ -193,8 +194,8 @@ export function getPlanById(planId: string): PlanEntry | undefined {
   const explicit = PLAN_INDEX.get(planId);
   if (explicit) return explicit;
 
-  // Check if it matches a default-tier pattern: {cc}-{tier}
-  const match = planId.match(/^([a-z]{2})-(\d+gb)$/);
+  // Check if it matches a default-tier pattern: {cc}-{tier} (e.g. 'nl-10gb', 'jp-500mb')
+  const match = planId.match(/^([a-z]{2})-(\d+(?:gb|mb))$/);
   if (!match) return undefined;
 
   const tier = DEFAULT_TIERS.find(t => t.suffix === match[2]);

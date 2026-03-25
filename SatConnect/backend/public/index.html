@@ -339,7 +339,7 @@
   <div class="container">
     <header>
       <h1>SatConnect eSIM</h1>
-      <p>Internet mobil instant in 22+ tari. Activare automata.</p>
+      <p>Internet mobil instant in 200+ tari. Activare automata.</p>
     </header>
 
     <div class="search-bar">
@@ -380,14 +380,7 @@
     let allPlans = {};
     let selectedPlan = null;
 
-    // Region mapping
-    const REGION_MAP = {
-      'europa': ['RO','FR','DE','IT','ES','GB','GR','TR','AT','BE','NL','PT','CH','PL','CZ','SE','NO','DK','FI','IE','HU','HR'],
-      'asia': ['JP','KR','TH','IN','CN','SG','MY','ID','VN','PH','TW','HK'],
-      'americas': ['US','CA','MX','BR','AR','CL','CO','PE'],
-      'africa': ['ZA','EG','MA','NG','KE','AE','IL','SA','QA'],
-      'oceania': ['AU','NZ','FJ']
-    };
+    // Region mapping - no longer hardcoded, uses region from API response
 
     // Load plans from backend
     async function loadPlans() {
@@ -408,8 +401,9 @@
     }
 
     function getRegion(countryCode) {
-      for (const [region, codes] of Object.entries(REGION_MAP)) {
-        if (codes.includes(countryCode)) return region;
+      const country = allPlans[countryCode];
+      if (country && country.region) {
+        return country.region.toLowerCase();
       }
       return 'other';
     }
@@ -425,10 +419,17 @@
 
       let filtered = entries;
 
-      // Filter by region
+      // Filter by region (uses region field from API)
       if (region !== 'all') {
-        const regionCodes = REGION_MAP[region] || [];
-        filtered = filtered.filter(([code]) => regionCodes.includes(code));
+        const regionMap = {
+          'europa': 'Europa',
+          'asia': 'Asia',
+          'americas': 'Americas',
+          'africa': 'Africa & ME',
+          'oceania': 'Oceania',
+        };
+        const regionName = regionMap[region] || region;
+        filtered = filtered.filter(([code, data]) => data.region === regionName);
       }
 
       // Filter by search
