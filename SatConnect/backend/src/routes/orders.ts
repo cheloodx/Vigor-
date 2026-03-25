@@ -142,7 +142,7 @@ authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
         data_label: planData.data_label,
         valid_days: planData.valid_days,
         status: 'pending',
-        esim_tran_no: esimData.esim_tran_no,
+        airalo_esim_id: esimData.esim_tran_no,
       })
       .select()
       .single();
@@ -150,7 +150,7 @@ authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
     if (esimError || !userEsim) {
       await supabase
         .from('esim_orders')
-        .update({ status: 'failed', error_message: esimError?.message || 'Failed to create eSIM record', esim_order_no: esimData.esim_order_no })
+        .update({ status: 'failed', error_message: esimError?.message || 'Failed to create eSIM record', airalo_order_id: esimData.esim_order_no })
         .eq('id', orderData.id);
 
       const response: ApiResponse<null> = { success: false, error: 'Failed to create eSIM record' };
@@ -160,7 +160,7 @@ authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
 
     const { error: updateError } = await supabase
       .from('esim_orders')
-      .update({ status: 'completed', esim_order_no: esimData.esim_order_no })
+      .update({ status: 'completed', airalo_order_id: esimData.esim_order_no })
       .eq('id', orderData.id);
 
     if (updateError) {
