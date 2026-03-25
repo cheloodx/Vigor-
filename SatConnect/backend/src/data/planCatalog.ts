@@ -195,7 +195,7 @@ export function getPlanById(planId: string): PlanEntry | undefined {
   if (explicit) return explicit;
 
   // Check if it matches a default-tier pattern: {cc}-{tier} (e.g. 'nl-10gb', 'jp-500mb')
-  const match = planId.match(/^([a-z]{2})-(\d+(?:gb|mb))$/);
+  const match = planId.match(/^([a-z]{2})-(\d+(?:\.\d+)?(?:gb|mb))$/);
   if (!match) return undefined;
 
   const tier = DEFAULT_TIERS.find(t => t.suffix === match[2]);
