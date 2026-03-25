@@ -184,12 +184,16 @@ export async function findPackage(
 
   for (const pkg of packages) {
     // Only match country-specific packages (not regional/global)
-    // locationCode should be 2-letter country code, not EU-42 or !GL etc.
     const isCountrySpecific = pkg.locationCode.length === 2;
     if (!isCountrySpecific && pkg.locationCode.toUpperCase() !== countryCode.toUpperCase()) {
-      // Skip regional packages unless explicitly matching
       continue;
     }
+
+    // Apply same quality filters as storefront (plans.ts transformPackagesToPlans)
+    if (pkg.duration <= 1) continue; // Skip daily packages
+    if (pkg.name.includes('FUP') || pkg.name.includes('nonhkip')) continue; // Skip throttled/variant
+    const volumeMB = Math.round(pkg.volume / (1024 * 1024));
+    if (volumeMB < 500) continue; // Skip very small packages
 
     const diff = Math.abs(pkg.volume - targetBytes);
     if (diff < bestDiff) {
@@ -205,6 +209,12 @@ export async function findPackage(
   // Fallback: if no country-specific match, try any package that includes this country
   if (!bestMatch) {
     for (const pkg of packages) {
+      // Same quality filters in fallback loop
+      if (pkg.duration <= 1) continue;
+      if (pkg.name.includes('FUP') || pkg.name.includes('nonhkip')) continue;
+      const volumeMB = Math.round(pkg.volume / (1024 * 1024));
+      if (volumeMB < 500) continue;
+
       const diff = Math.abs(pkg.volume - targetBytes);
       if (diff < bestDiff) {
         bestDiff = diff;
