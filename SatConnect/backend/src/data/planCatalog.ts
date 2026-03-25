@@ -174,6 +174,7 @@ const DEFAULT_TIERS = [
   { suffix: '3gb', mb: 3072, dl: '3 GB', vd: 15, pr: 3.99 },
   { suffix: '5gb', mb: 5120, dl: '5 GB', vd: 30, pr: 5.49 },
   { suffix: '10gb', mb: 10240, dl: '10 GB', vd: 30, pr: 7.49 },
+  { suffix: '15gb', mb: 15360, dl: '15 GB', vd: 30, pr: 9.99 },
   { suffix: '20gb', mb: 20480, dl: '20 GB', vd: 30, pr: 11.99 },
   { suffix: '50gb', mb: 51200, dl: '50 GB', vd: 30, pr: 22.99 },
 ];

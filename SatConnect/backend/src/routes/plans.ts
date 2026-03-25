@@ -161,6 +161,10 @@ function transformPackagesToPlans(packages: EsimAccessPackage[]): Record<string,
     // Skip very small packages (< 500MB)
     if (volumeMB < 500) continue;
 
+    // Only keep volumes that match supported tiers (avoids unbuyable plans)
+    const SUPPORTED_MB = [512, 1024, 3072, 5120, 10240, 15360, 20480, 51200];
+    if (!SUPPORTED_MB.some(s => Math.abs(volumeMB - s) < 100)) continue;
+
     // Skip daily packages (duration <= 1 day)
     if (pkg.duration <= 1) continue;
 
@@ -315,5 +319,17 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(500).json(response);
   }
 });
+
+// ---------------------------------------------------------------------------
+// Export cache accessor for use by stripe checkout (price consistency)
+// ---------------------------------------------------------------------------
+export function getCachedApiPlan(planId: string): PlanLike | undefined {
+  if (!cachedPlans) return undefined;
+  for (const country of Object.values(cachedPlans.data)) {
+    const found = country.plans.find(p => p.id === planId);
+    if (found) return found;
+  }
+  return undefined;
+}
 
 export default router;

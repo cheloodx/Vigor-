@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import Stripe from 'stripe';
-import { getPlanById } from '../data/planCatalog';
+import { getPlanById, PlanEntry } from '../data/planCatalog';
+import { getCachedApiPlan } from './plans';
 import { createOrderForSession, provisionForSession } from '../services/provisioning';
 
 const router = Router();
@@ -28,10 +29,29 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
     }
 
     // Server-side price lookup — never trust client-provided prices
-    const plan = getPlanById(planId);
-    if (!plan) {
-      res.status(400).json({ error: 'Invalid plan ID' });
-      return;
+    // First check the cached API plans (same prices shown on the storefront),
+    // then fall back to the static catalog for legacy plan IDs.
+    const apiPlan = getCachedApiPlan(planId);
+    let plan: PlanEntry;
+    if (apiPlan) {
+      plan = {
+        id: apiPlan.id,
+        countryCode: apiPlan.country_code,
+        countryName: apiPlan.country_name,
+        countryFlag: '',
+        dataLimitMB: apiPlan.data_limit_mb,
+        dataLabel: apiPlan.data_label,
+        validDays: apiPlan.valid_days,
+        price: apiPlan.price,
+        currency: apiPlan.currency,
+      };
+    } else {
+      const catalogPlan = getPlanById(planId);
+      if (!catalogPlan) {
+        res.status(400).json({ error: 'Invalid plan ID' });
+        return;
+      }
+      plan = catalogPlan;
     }
 
     const stripe = getStripe();
