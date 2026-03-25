@@ -107,7 +107,7 @@ const REGION_MAP: Record<string, string[]> = {
   'Europa': ['AD','AL','AT','BA','BE','BG','BY','CH','CY','CZ','DE','DK','EE','ES','FI','FO','FR','GB','GG','GI','GR','HR','HU','IE','IM','IS','IT','JE','LI','LT','LU','LV','MC','MD','ME','MK','MT','NL','NO','PL','PT','RO','RS','RU','SE','SI','SK','TR','UA'],
   'Asia': ['AF','AM','AZ','BD','BH','BN','BT','CN','GE','HK','ID','IL','IN','IQ','IR','JO','JP','KG','KH','KR','KW','KZ','LA','LB','LK','MM','MN','MO','MV','MY','NP','OM','PH','PK','PS','QA','SA','SG','TH','TJ','TM','TW','UZ','VN'],
   'Americas': ['AG','AI','AR','AW','BB','BM','BO','BR','BS','BZ','CA','CL','CO','CR','CU','CW','DM','DO','EC','FK','GD','GF','GP','GT','GU','GY','HN','HT','JM','KN','KY','LC','MQ','MX','MS','NI','PA','PE','PR','PY','SR','SV','SX','TC','TT','US','UY','VC','VE','VG'],
-  'Africa & ME': ['AE','AO','BF','BJ','BW','CD','CF','CG','CI','CM','CV','DJ','DZ','EG','ET','GA','GH','GM','GN','GQ','GW','KE','LR','LS','MA','MG','ML','MR','MU','MW','MZ','NA','NE','NG','RE','RW','SC','SD','SL','SN','SO','SR','SS','SZ','TD','TG','TN','TZ','UG','ZA','ZM','ZW'],
+  'Africa & ME': ['AE','AO','BF','BJ','BW','CD','CF','CG','CI','CM','CV','DJ','DZ','EG','ET','GA','GH','GM','GN','GQ','GW','KE','LR','LS','MA','MG','ML','MR','MU','MW','MZ','NA','NE','NG','RE','RW','SC','SD','SL','SN','SO','SS','SZ','TD','TG','TN','TZ','UG','ZA','ZM','ZW'],
   'Oceania': ['AU','FJ','NC','NZ','PF','PG','TO','VU','WS'],
 };
 

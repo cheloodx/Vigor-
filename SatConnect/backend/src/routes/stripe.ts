@@ -258,7 +258,7 @@ router.get('/checkout-redirect', async (req: Request, res: Response) => {
 
     // Validate returnUrl against allowed origin to prevent open redirect
     const allowedOrigin = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
-    const baseUrl = (returnUrl && returnUrl.startsWith(allowedOrigin)) ? returnUrl : allowedOrigin;
+    const baseUrl = (returnUrl && returnUrl.startsWith(allowedOrigin + '/')) ? returnUrl : allowedOrigin;
     const successUrl = `${baseUrl}/payment-success.html?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`;
     const cancelUrl = `${baseUrl}/payment-cancel.html`;
 
