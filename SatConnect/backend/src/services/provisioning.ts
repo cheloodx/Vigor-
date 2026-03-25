@@ -207,11 +207,15 @@ async function doProvision(stripeSessionId: string): Promise<ProvisionResult> {
     const profile = profiles[0];
 
     // 8. Store eSIM details
+    // Extract matching ID from the LPA activation code (format: LPA:1$smdpAddress$matchingId)
+    const acParts = (profile.ac || '').split('$');
+    const matchingId = acParts.length >= 3 ? acParts[2] : profile.esimTranNo;
+
     const esimDetails = {
       iccid: profile.iccid,
       qrcode_url: profile.qrCodeUrl || '',
       lpa: profile.ac || '',
-      matching_id: profile.esimTranNo,
+      matching_id: matchingId,
       direct_apple_install_url: profile.appleInstallUrl || '',
     };
     const updatedOrder = await updateOrderStatus(stripeSessionId, 'provisioned', esimDetails);
