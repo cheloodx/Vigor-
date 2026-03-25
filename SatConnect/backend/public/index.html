@@ -370,7 +370,7 @@
   <!-- Plan Selection Modal -->
   <div class="modal-overlay" id="plan-modal">
     <div class="modal">
-      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <button class="modal-close" id="modal-close-btn">&times;</button>
       <div id="modal-content"></div>
     </div>
   </div>
@@ -450,7 +450,7 @@
         if (plans.length === 0) return '';
         const cheapest = plans.reduce((min, p) => p.price < min.price ? p : min, plans[0]);
         return `
-          <div class="country-card" onclick="openCountry('${code}')">
+          <div class="country-card" data-country="${code}">
             <div class="country-header">
               <span class="country-flag">${getFlag(code)}</span>
               <div>
@@ -485,7 +485,7 @@
         <div class="modal-subtitle">Alege planul potrivit pentru tine</div>
         <div id="plans-list">
           ${plans.map((p, i) => `
-            <div class="plan-card" id="plan-${i}" onclick="selectPlan(${i}, '${code}')">
+            <div class="plan-card" id="plan-${i}" data-plan-index="${i}" data-plan-country="${code}">
               <div class="plan-info">
                 <h3>${p.data_label}</h3>
                 <p>${p.valid_days} zile valabilitate</p>
@@ -497,12 +497,20 @@
             </div>
           `).join('')}
         </div>
-        <button class="buy-btn" id="buy-btn" disabled onclick="buyPlan()">
+        <button class="buy-btn" id="buy-btn" disabled>
           Selecteaza un plan
         </button>
       `;
 
       document.getElementById('plan-modal').classList.add('active');
+
+      // Attach event listeners for dynamically created elements
+      document.querySelectorAll('.plan-card[data-plan-index]').forEach(el => {
+        el.addEventListener('click', () => {
+          selectPlan(parseInt(el.getAttribute('data-plan-index')), el.getAttribute('data-plan-country'));
+        });
+      });
+      document.getElementById('buy-btn').addEventListener('click', buyPlan);
     }
 
     function selectPlan(index, countryCode) {
@@ -588,6 +596,15 @@
     // Close modal on overlay click
     document.getElementById('plan-modal').addEventListener('click', (e) => {
       if (e.target === document.getElementById('plan-modal')) closeModal();
+    });
+
+    // Close modal button
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+
+    // Delegate click on country cards
+    document.getElementById('countries-grid').addEventListener('click', (e) => {
+      const card = e.target.closest('.country-card[data-country]');
+      if (card) openCountry(card.getAttribute('data-country'));
     });
 
     // Init
