@@ -256,8 +256,9 @@ router.get('/checkout-redirect', async (req: Request, res: Response) => {
     const unitAmount = Math.round(plan.price * 100);
     const curr = plan.currency.toLowerCase();
 
-    // Use returnUrl or FRONTEND_URL for success/cancel redirects
-    const baseUrl = returnUrl || process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+    // Validate returnUrl against allowed origin to prevent open redirect
+    const allowedOrigin = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+    const baseUrl = (returnUrl && returnUrl.startsWith(allowedOrigin)) ? returnUrl : allowedOrigin;
     const successUrl = `${baseUrl}/payment-success.html?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`;
     const cancelUrl = `${baseUrl}/payment-cancel.html`;
 
@@ -289,9 +290,14 @@ router.get('/checkout-redirect', async (req: Request, res: Response) => {
       },
     });
 
-    // Create order record
+    // Create order record (check null return AND exceptions)
     try {
-      await createOrderForSession(session.id, plan.id);
+      const orderRecord = await createOrderForSession(session.id, plan.id);
+      if (!orderRecord) {
+        await stripe.checkout.sessions.expire(session.id).catch(() => {});
+        res.status(500).send('Failed to initialize order');
+        return;
+      }
     } catch (orderErr) {
       console.error('Failed to create order:', orderErr);
       await stripe.checkout.sessions.expire(session.id).catch(() => {});
