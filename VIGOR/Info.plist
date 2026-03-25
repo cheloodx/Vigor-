@@ -25,19 +25,6 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 
-	<!-- eSIM / Cellular Plan Entitlements -->
-	<key>com.apple.developer.networking.cellular-provider</key>
-	<true/>
-	<key>CarrierDescriptors</key>
-	<array>
-		<dict>
-			<key>APNs</key>
-			<array>
-				<string>globaldata</string>
-			</array>
-		</dict>
-	</array>
-
 	<!-- Network Usage Description -->
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>SatConnect needs network access to activate and manage your eSIM data plans.</string>

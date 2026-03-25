@@ -56,14 +56,14 @@ Perfect for frequent travelers, digital nomads, and business professionals who n
 
 	<!-- Privacy Policy URL (REQUIRED for apps with account features) -->
 	<key>PrivacyPolicyURL</key>
-	<string>https://satconnect.app/privacy</string>
+	<string>https://chatnow-app-qxe3w67o.devinapps.com/privacy/</string>
 
 	<!-- Support URL -->
 	<key>SupportURL</key>
-	<string>https://satconnect.app/support</string>
+	<string>https://chatnow-app-qxe3w67o.devinapps.com/support/</string>
 
 	<!-- Marketing URL -->
 	<key>MarketingURL</key>
-	<string>https://satconnect.app</string>
+	<string>https://chatnow-app-qxe3w67o.devinapps.com</string>
 </dict>
 </plist>
