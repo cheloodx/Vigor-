@@ -248,6 +248,7 @@ stripeRouter.get('/:sessionId', async (req: Request, res: Response) => {
       lpa: order.lpa,
       matchingId: order.matching_id,
       directAppleInstallUrl: order.direct_apple_install_url,
+      error: order.error_message || undefined,
       createdAt: order.created_at,
     });
   } catch (err) {

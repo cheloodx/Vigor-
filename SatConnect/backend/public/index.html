@@ -369,6 +369,7 @@
 
       grid.innerHTML = filtered.map(([code, data]) => {
         const plans = data.plans || [];
+        if (plans.length === 0) return '';
         const cheapest = plans.reduce((min, p) => p.price < min.price ? p : min, plans[0]);
         return `
           <div class="country-card" onclick="openCountry('${code}')">
