@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- App Store Connect Metadata for SatConnect -->
+
+	<!-- App Name -->
+	<key>AppName</key>
+	<string>SatConnect</string>
+
+	<!-- Subtitle (max 30 characters) -->
+	<key>Subtitle</key>
+	<string>Instant eSIM for 50+ Countries</string>
+
+	<!-- Keywords (max 100 characters, comma-separated) -->
+	<key>Keywords</key>
+	<string>eSIM,travel,data,roaming,international,SIM,mobile,connectivity,global,prepaid</string>
+
+	<!-- Promotional Text (can be updated without new app version) -->
+	<key>PromotionalText</key>
+	<string>Travel smarter with instant eSIM activation. Choose from 50+ countries, affordable data plans, and secure payments. No physical SIM needed - activate in 2 minutes!</string>
+
+	<!-- Description -->
+	<key>Description</key>
+	<string>SatConnect is your ultimate travel companion for staying connected worldwide. Get instant eSIM activation for 50+ countries with affordable data plans and secure payments. No physical SIM card needed — activate your eSIM in just 2 minutes!
+
+Key Features:
+• Instant eSIM activation — no physical SIM swap required
+• Coverage in 50+ countries worldwide
+• Affordable and transparent data plans
+• Secure payment processing
+• Real-time data usage monitoring
+• 24/7 customer support
+• Satellite tracker integration
+• Easy plan management from your device
+
+Perfect for frequent travelers, digital nomads, and business professionals who need reliable connectivity abroad without expensive roaming charges.</string>
+
+	<!-- Category -->
+	<key>PrimaryCategory</key>
+	<string>Travel</string>
+	<key>SecondaryCategory</key>
+	<string>Utilities</string>
+
+	<!-- Age Rating -->
+	<key>AgeRating</key>
+	<string>4+</string>
+
+	<!-- Bundle Identifier -->
+	<key>BundleIdentifier</key>
+	<string>com.satconnect.esim</string>
+
+	<!-- Copyright -->
+	<key>Copyright</key>
+	<string>© 2026 SatConnect. All rights reserved.</string>
+
+	<!-- Privacy Policy URL (REQUIRED for apps with account features) -->
+	<key>PrivacyPolicyURL</key>
+	<string>https://satconnect.app/privacy</string>
+
+	<!-- Support URL -->
+	<key>SupportURL</key>
+	<string>https://satconnect.app/support</string>
+
+	<!-- Marketing URL -->
+	<key>MarketingURL</key>
+	<string>https://satconnect.app</string>
+</dict>
+</plist>
