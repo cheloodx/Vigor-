@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SatConnect - Instant eSIM for Global Travel | 50+ Countries</title>
+    <meta name="description" content="Travel smarter with instant eSIM activation. Choose from 50+ countries, affordable data plans starting at $4.50, and secure Stripe payments. No physical SIM needed.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#060e1a;--bg-card:#0a1628;--accent:#00d4aa;--accent-glow:rgba(0,212,170,0.15);--text:#e8ecf1;--text-dim:#7a8ba0;--text-muted:#4a5a6a;--glass-border:rgba(255,255,255,0.06);--gradient-accent:linear-gradient(135deg,#00d4aa 0%,#00b894 50%,#0984e3 100%)}
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+        @keyframes pulse-glow{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:.8;transform:scale(1.05)}}
+        @keyframes slide-in-left{from{opacity:0;transform:translateX(-60px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes slide-in-right{from{opacity:0;transform:translateX(60px)}to{opacity:1;transform:translateX(0)}}
+        @keyframes orbit{0%{transform:rotate(0deg) translateX(140px) rotate(0deg)}100%{transform:rotate(360deg) translateX(140px) rotate(-360deg)}}
+        @keyframes orbit2{0%{transform:rotate(120deg) translateX(100px) rotate(-120deg)}100%{transform:rotate(480deg) translateX(100px) rotate(-480deg)}}
+        .animate{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.16,1,.3,1)}.animate.visible{opacity:1;transform:translateY(0)}
+        .animate-delay-1{transition-delay:.1s}.animate-delay-2{transition-delay:.2s}.animate-delay-3{transition-delay:.3s}
+        nav{position:fixed;top:0;left:0;right:0;z-index:1000;transition:all .4s}
+        nav.scrolled{background:rgba(6,14,26,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--glass-border)}
+        .nav-inner{max-width:1200px;margin:0 auto;padding:20px 32px;display:flex;justify-content:space-between;align-items:center}
+        .logo{font-size:24px;font-weight:900;color:#fff;text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:10px}
+        .logo-icon{width:36px;height:36px;background:var(--gradient-accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff}
+        .logo span{color:var(--accent)}
+        .nav-links{display:flex;gap:32px;align-items:center}
+        .nav-links a{color:var(--text-dim);text-decoration:none;font-size:14px;font-weight:500;transition:color .3s;position:relative}
+        .nav-links a:not(.nav-cta):hover{color:#fff}
+        .nav-links a:not(.nav-cta)::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--accent);transition:width .3s}
+        .nav-links a:not(.nav-cta):hover::after{width:100%}
+        .nav-cta{background:var(--accent)!important;color:#060e1a!important;padding:10px 24px;border-radius:10px;font-weight:700!important;transition:all .3s!important;box-shadow:0 0 20px rgba(0,212,170,.2)}
+        .nav-cta:hover{box-shadow:0 0 30px rgba(0,212,170,.4);transform:translateY(-1px)}.nav-cta::after{display:none!important}
+        .hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;z-index:1001}
+        .hamburger span{display:block;width:24px;height:2px;background:#fff;margin:6px 0;border-radius:2px}
+        .mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(6,14,26,.98);backdrop-filter:blur(20px);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:32px}
+        .mobile-menu.open{display:flex}.mobile-menu a{color:#fff;text-decoration:none;font-size:20px;font-weight:600}
+        .hero{min-height:100vh;display:flex;align-items:center;padding:140px 32px 100px;position:relative;z-index:1}
+        .hero-bg{position:absolute;top:0;left:0;right:0;bottom:0;overflow:hidden;pointer-events:none;z-index:0}
+        .hero-bg .glow-1{position:absolute;top:-20%;right:-10%;width:800px;height:800px;background:radial-gradient(circle,rgba(0,212,170,.08) 0%,transparent 70%);animation:pulse-glow 8s ease-in-out infinite}
+        .hero-bg .glow-2{position:absolute;bottom:-30%;left:-15%;width:600px;height:600px;background:radial-gradient(circle,rgba(9,132,227,.06) 0%,transparent 70%);animation:pulse-glow 10s ease-in-out infinite 2s}
+        .hero-bg .grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at 50% 50%,black 30%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 50% 50%,black 30%,transparent 70%)}
+        #three-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+        .hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:2}
+        .hero-content{animation:slide-in-left 1s cubic-bezier(.16,1,.3,1) forwards}
+        .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:24px;padding:8px 18px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:28px}
+        .hero-badge-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse-glow 2s ease-in-out infinite}
+        .hero h1{font-size:clamp(40px,5.5vw,62px);font-weight:900;color:#fff;line-height:1.08;margin-bottom:24px;letter-spacing:-1.5px}
+        .hero h1 .accent{background:var(--gradient-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-desc{font-size:18px;color:var(--text-dim);max-width:480px;line-height:1.7;margin-bottom:40px}
+        .hero-buttons{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:48px}
+        .btn-primary{background:var(--accent);color:#060e1a;padding:16px 36px;border-radius:14px;font-weight:700;font-size:16px;text-decoration:none;transition:all .3s;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;box-shadow:0 4px 24px rgba(0,212,170,.25)}
+        .btn-primary:hover{box-shadow:0 8px 40px rgba(0,212,170,.35);transform:translateY(-2px)}
+        .btn-secondary{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#fff;padding:16px 36px;border-radius:14px;font-weight:600;font-size:16px;text-decoration:none;transition:all .3s;display:inline-flex;align-items:center;gap:8px}
+        .btn-secondary:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+        .hero-trust{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+        .hero-trust-item{display:flex;align-items:center;gap:8px;color:var(--text-dim);font-size:14px;font-weight:500}
+        .hero-trust-item svg{width:18px;height:18px;color:var(--accent)}
+        .hero-visual{position:relative;display:flex;justify-content:center;align-items:center;animation:slide-in-right 1s cubic-bezier(.16,1,.3,1) .2s forwards}
+        .phone-mockup{width:280px;height:560px;background:var(--bg-card);border-radius:40px;border:3px solid rgba(255,255,255,.1);position:relative;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.5),0 0 60px rgba(0,212,170,.1)}
+        .phone-notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:28px;background:#000;border-radius:0 0 16px 16px;z-index:10}
+        .phone-screen{position:absolute;top:12px;left:12px;right:12px;bottom:12px;border-radius:28px;background:linear-gradient(180deg,#0a1628,#060e1a);overflow:hidden;padding:48px 20px 20px}
+        .phone-status{display:flex;justify-content:space-between;margin-bottom:24px;font-size:11px;color:var(--text-dim)}
+        .phone-title{color:#fff;font-size:20px;font-weight:800;margin-bottom:4px}
+        .phone-subtitle{color:var(--text-dim);font-size:12px;margin-bottom:20px}
+        .phone-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;margin-bottom:12px}
+        .phone-card-row{display:flex;justify-content:space-between;align-items:center}
+        .phone-card-label{font-size:12px;color:var(--text-dim)}.phone-card-value{font-size:14px;color:#fff;font-weight:700}.phone-card-accent{color:var(--accent)}
+        .phone-progress{height:4px;background:rgba(255,255,255,.06);border-radius:4px;margin-top:10px;overflow:hidden}
+        .phone-progress-bar{height:100%;width:72%;background:var(--gradient-accent);border-radius:4px}
+        .phone-nav{position:absolute;bottom:20px;left:20px;right:20px;display:flex;justify-content:space-around;padding:12px;background:rgba(255,255,255,.03);border-radius:16px;border:1px solid rgba(255,255,255,.05)}
+        .phone-nav-item{font-size:10px;color:var(--text-dim);text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px}
+        .phone-nav-item.active{color:var(--accent)}
+        .phone-nav-dot{width:20px;height:20px;border-radius:6px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:10px}
+        .phone-nav-item.active .phone-nav-dot{background:var(--accent-glow)}
+        .orbit-container{position:absolute;top:50%;left:50%;width:0;height:0}
+        .orbit-dot{position:absolute;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 8px 24px rgba(0,0,0,.3)}
+        .orbit-dot-1{animation:orbit 12s linear infinite;background:rgba(0,212,170,.15);border:1px solid rgba(0,212,170,.3)}
+        .orbit-dot-2{animation:orbit2 15s linear infinite;background:rgba(9,132,227,.15);border:1px solid rgba(9,132,227,.3)}
+        .orbit-dot-3{animation:orbit 18s linear infinite reverse;background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.3)}
+        .stats-bar{padding:0 32px;margin-top:-40px;position:relative;z-index:2}
+        .stats-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);background:var(--bg-card);border:1px solid var(--glass-border);border-radius:20px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+        .stat{text-align:center;padding:36px 20px;position:relative}
+        .stat:not(:last-child)::after{content:'';position:absolute;right:0;top:20%;height:60%;width:1px;background:var(--glass-border)}
+        .stat-number{font-size:40px;font-weight:900;background:var(--gradient-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1}
+        .stat-label{font-size:13px;color:var(--text-dim);margin-top:6px;font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+        section{padding:120px 32px}.section-inner{max-width:1200px;margin:0 auto}
+        .section-header{text-align:center;margin-bottom:64px}
+        .section-label{display:inline-flex;align-items:center;gap:8px;color:var(--accent);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+        .section-label::before,.section-label::after{content:'';width:24px;height:1px;background:var(--accent)}
+        .section-title{font-size:clamp(30px,4vw,46px);font-weight:900;color:#fff;margin-bottom:18px;line-height:1.15;letter-spacing:-1px}
+        .section-subtitle{font-size:17px;color:var(--text-dim);max-width:580px;margin:0 auto;line-height:1.7}
+        .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .feature-card{background:var(--bg-card);border:1px solid var(--glass-border);border-radius:20px;padding:36px;transition:all .4s cubic-bezier(.16,1,.3,1);position:relative;overflow:hidden}
+        .feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gradient-accent);opacity:0;transition:opacity .4s}
+        .feature-card:hover{border-color:rgba(0,212,170,.2);transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,.2)}
+        .feature-card:hover::before{opacity:1}
+        .feature-icon{width:52px;height:52px;border-radius:14px;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:24px;border:1px solid rgba(0,212,170,.1)}
+        .feature-card h3{font-size:19px;font-weight:700;color:#fff;margin-bottom:12px}
+        .feature-card p{font-size:15px;color:var(--text-dim);line-height:1.7}
+        .how-section{background:var(--bg-card)}
+        .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;position:relative}
+        .steps::before{content:'';position:absolute;top:44px;left:calc(16.67% + 28px);right:calc(16.67% + 28px);height:2px;background:linear-gradient(90deg,var(--accent),rgba(0,212,170,.2))}
+        .step{text-align:center;position:relative}
+        .step-number{width:56px;height:56px;border-radius:50%;background:var(--bg);border:2px solid var(--accent);color:var(--accent);font-size:20px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;position:relative;z-index:1;transition:all .3s}
+        .step:hover .step-number{background:var(--accent);color:var(--bg);box-shadow:0 0 30px rgba(0,212,170,.3)}
+        .step h3{font-size:19px;font-weight:700;color:#fff;margin-bottom:10px}
+        .step p{font-size:15px;color:var(--text-dim);max-width:260px;margin:0 auto;line-height:1.6}
+        .countries-section{position:relative;overflow:hidden}
+        .country-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;max-width:900px;margin:0 auto}
+        .country-tag{background:var(--bg-card);border:1px solid var(--glass-border);padding:10px 18px;border-radius:10px;font-size:14px;color:var(--text);transition:all .3s;cursor:default;display:flex;align-items:center;gap:8px;font-weight:500}
+        .country-tag:hover{border-color:rgba(0,212,170,.3);background:rgba(0,212,170,.05);transform:translateY(-2px)}
+        .country-tag .flag{font-size:18px}
+        .country-more{background:var(--accent-glow);border-color:rgba(0,212,170,.2);color:var(--accent);font-weight:700}
+        .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:960px;margin:0 auto}
+        .price-card{background:var(--bg-card);border:1px solid var(--glass-border);border-radius:24px;padding:40px 32px;text-align:center;transition:all .4s;position:relative}
+        .price-card.popular{border-color:var(--accent);background:linear-gradient(180deg,rgba(0,212,170,.06),var(--bg-card));box-shadow:0 0 40px rgba(0,212,170,.08)}
+        .price-card.popular::before{content:'MOST POPULAR';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:var(--gradient-accent);color:#060e1a;padding:6px 20px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:1.5px;white-space:nowrap}
+        .price-card:hover{transform:translateY(-8px);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+        .price-tier{font-size:14px;color:var(--accent);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+        .price-data{font-size:15px;color:var(--text-dim);margin-bottom:12px}
+        .price-amount{font-size:48px;font-weight:900;color:#fff;margin-bottom:4px;letter-spacing:-2px}
+        .price-amount .currency{font-size:24px;vertical-align:super;font-weight:700;color:var(--text-dim)}
+        .price-period{font-size:14px;color:var(--text-muted);margin-bottom:28px}
+        .price-divider{height:1px;background:var(--glass-border);margin:0 -8px 24px}
+        .price-features{list-style:none;padding:0;margin-bottom:32px;text-align:left}
+        .price-features li{font-size:14px;color:var(--text-dim);padding:8px 0 8px 28px;position:relative}
+        .price-features li::before{content:'';position:absolute;left:0;top:12px;width:16px;height:16px;border-radius:50%;background:var(--accent-glow);border:1.5px solid var(--accent)}
+        .price-features li::after{content:'\2713';position:absolute;left:3px;top:10px;color:var(--accent);font-size:10px;font-weight:900}
+        .btn-price{display:block;text-align:center;padding:14px 32px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none;transition:all .3s}
+        .btn-price-primary{background:var(--accent);color:#060e1a;box-shadow:0 4px 20px rgba(0,212,170,.2)}
+        .btn-price-primary:hover{box-shadow:0 8px 30px rgba(0,212,170,.35);transform:translateY(-2px)}
+        .btn-price-secondary{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:#fff}
+        .btn-price-secondary:hover{background:rgba(255,255,255,.08)}
+        .testimonials{background:var(--bg-card)}
+        .testimonial-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+        .testimonial-card{background:var(--bg);border:1px solid var(--glass-border);border-radius:20px;padding:32px;transition:all .3s}
+        .testimonial-card:hover{border-color:rgba(0,212,170,.15);transform:translateY(-4px)}
+        .testimonial-stars{color:#ffd700;font-size:16px;margin-bottom:16px;letter-spacing:2px}
+        .testimonial-text{font-size:15px;color:var(--text);line-height:1.7;margin-bottom:20px;font-style:italic}
+        .testimonial-author{display:flex;align-items:center;gap:12px}
+        .testimonial-avatar{width:40px;height:40px;border-radius:50%;background:var(--gradient-accent);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#060e1a}
+        .testimonial-name{font-size:14px;font-weight:700;color:#fff}.testimonial-role{font-size:12px;color:var(--text-dim)}
+        .faq-section{position:relative}
+        .faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+        .faq-info{position:sticky;top:120px}
+        .faq-list{display:flex;flex-direction:column}
+        .faq-item{border-bottom:1px solid var(--glass-border)}
+        .faq-item summary{padding:24px 0;font-size:16px;font-weight:600;color:#fff;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;transition:color .3s}
+        .faq-item summary::-webkit-details-marker{display:none}
+        .faq-item summary::after{content:'+';font-size:24px;color:var(--accent);font-weight:300;transition:transform .3s}
+        .faq-item[open] summary::after{transform:rotate(45deg)}.faq-item[open] summary{color:var(--accent)}
+        .faq-item p{padding:0 0 24px;font-size:15px;color:var(--text-dim);line-height:1.7}
+        .cta-section{text-align:center;position:relative;overflow:hidden}
+        .cta-section::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(0,212,170,.08),transparent 70%);pointer-events:none}
+        .cta-inner{position:relative;z-index:1}
+        .cta-section h2{font-size:clamp(32px,5vw,52px);font-weight:900;color:#fff;margin-bottom:20px;letter-spacing:-1px}
+        .cta-section h2 .accent{background:var(--gradient-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .cta-desc{font-size:18px;color:var(--text-dim);margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto}
+        .cta-badges{display:flex;justify-content:center;gap:16px;margin-top:24px;flex-wrap:wrap}
+        .cta-badge{display:flex;align-items:center;gap:8px;color:var(--text-dim);font-size:14px;font-weight:500}
+        .cta-badge svg{color:var(--accent)}
+        footer{padding:64px 32px 32px;border-top:1px solid var(--glass-border);background:var(--bg)}
+        .footer-inner{max-width:1200px;margin:0 auto}
+        .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px}
+        .footer-brand{max-width:300px}.footer-brand-desc{font-size:14px;color:var(--text-dim);line-height:1.7;margin-top:16px}
+        .footer-col h4{font-size:13px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px}
+        .footer-col a{display:block;color:var(--text-dim);text-decoration:none;font-size:14px;padding:6px 0;transition:color .2s}
+        .footer-col a:hover{color:var(--accent)}
+        .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:32px;border-top:1px solid var(--glass-border);flex-wrap:wrap;gap:16px}
+        .footer-copy{color:var(--text-muted);font-size:13px}
+        @media(max-width:1024px){.hero-inner{grid-template-columns:1fr;text-align:center;gap:60px}.hero-desc{margin-left:auto;margin-right:auto}.hero-buttons{justify-content:center}.hero-trust{justify-content:center}.features-grid{grid-template-columns:repeat(2,1fr)}.pricing-grid{grid-template-columns:repeat(2,1fr)}.pricing-grid .price-card:last-child{grid-column:1/-1;max-width:400px;margin:0 auto}.testimonial-grid{grid-template-columns:1fr 1fr}.testimonial-grid .testimonial-card:last-child{grid-column:1/-1;max-width:500px;margin:0 auto}.faq-grid{grid-template-columns:1fr}.faq-info{position:static;text-align:center}.footer-top{grid-template-columns:1fr 1fr}}
+        @media(max-width:768px){.nav-links{display:none}.hamburger{display:block}.hero{padding:120px 24px 80px}.hero h1{font-size:36px;letter-spacing:-.5px}.stats-inner{grid-template-columns:repeat(2,1fr)}.stat:nth-child(2)::after{display:none}section{padding:80px 24px}.features-grid{grid-template-columns:1fr}.steps{grid-template-columns:1fr;gap:48px}.steps::before{display:none}.pricing-grid{grid-template-columns:1fr}.pricing-grid .price-card:last-child{max-width:none}.testimonial-grid{grid-template-columns:1fr}.testimonial-grid .testimonial-card:last-child{max-width:none}.phone-mockup{width:240px;height:480px}.footer-top{grid-template-columns:1fr;gap:32px}.footer-bottom{justify-content:center;text-align:center}}
+    </style>
+</head>
+<body>
+    <nav id="navbar"><div class="nav-inner">
+        <a href="#" class="logo"><div class="logo-icon">&#9670;</div>Sat<span>Connect</span></a>
+        <div class="nav-links">
+            <a href="#features">Features</a><a href="#how">How It Works</a><a href="#countries">Countries</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+            <a href="#download" class="nav-cta">Download App</a>
+        </div>
+        <button class="hamburger" onclick="document.getElementById('mm').classList.toggle('open')" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div></nav>
+    <div id="mm" class="mobile-menu">
+        <a href="#features" onclick="document.getElementById('mm').classList.remove('open')">Features</a>
+        <a href="#how" onclick="document.getElementById('mm').classList.remove('open')">How It Works</a>
+        <a href="#countries" onclick="document.getElementById('mm').classList.remove('open')">Countries</a>
+        <a href="#pricing" onclick="document.getElementById('mm').classList.remove('open')">Pricing</a>
+        <a href="#faq" onclick="document.getElementById('mm').classList.remove('open')">FAQ</a>
+        <a href="#download" class="btn-primary" onclick="document.getElementById('mm').classList.remove('open')">Download App</a>
+    </div>
+    <canvas id="three-canvas"></canvas>
+    <section class="hero">
+        <div class="hero-bg"><div class="glow-1"></div><div class="glow-2"></div><div class="grid-overlay"></div></div>
+        <div class="hero-inner">
+            <div class="hero-content">
+                <div class="hero-badge"><div class="hero-badge-dot"></div> Now available in 50+ countries</div>
+                <h1>Stay Connected<br><span class="accent">Anywhere</span> You Travel</h1>
+                <p class="hero-desc">Instant eSIM activation for 50+ countries. Affordable data plans, secure payments powered by Stripe. No physical SIM needed.</p>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn-primary"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>Download Free</a>
+                    <a href="#how" class="btn-secondary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/></svg>See How It Works</a>
+                </div>
+                <div class="hero-trust">
+                    <div class="hero-trust-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>Secure &amp; Encrypted</div>
+                    <div class="hero-trust-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm6.93 6h-2.95a15.65 15.65 0 00-1.38-3.56c1.84.63 3.37 1.91 4.33 3.56zM12 4.04c.83 1.2 1.48 2.53 1.91 3.96h-3.82c.43-1.43 1.08-2.76 1.91-3.96z"/></svg>50+ Countries</div>
+                    <div class="hero-trust-item"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>From $4.50</div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="orbit-container"><div class="orbit-dot orbit-dot-1">&#127758;</div><div class="orbit-dot orbit-dot-2">&#128225;</div><div class="orbit-dot orbit-dot-3">&#128752;</div></div>
+                <div class="phone-mockup"><div class="phone-notch"></div>
+                    <div class="phone-screen">
+                        <div class="phone-status"><span>9:41</span><span>5G &#9679; 100%</span></div>
+                        <div class="phone-title">Sat.Connect</div><div class="phone-subtitle">Your eSIM Dashboard</div>
+                        <div class="phone-card"><div class="phone-card-row"><span class="phone-card-label">Active Plan</span><span class="phone-card-value phone-card-accent">France 5GB</span></div><div class="phone-progress"><div class="phone-progress-bar"></div></div><div class="phone-card-row" style="margin-top:8px"><span class="phone-card-label">3.6 GB used</span><span class="phone-card-label">5.0 GB</span></div></div>
+                        <div class="phone-card"><div class="phone-card-row"><span class="phone-card-label">Signal</span><span class="phone-card-value phone-card-accent">Excellent</span></div><div class="phone-card-row" style="margin-top:6px"><span class="phone-card-label">Speed</span><span class="phone-card-value">85 Mbps</span></div></div>
+                        <div class="phone-card" style="background:rgba(0,212,170,.06);border-color:rgba(0,212,170,.15)"><div class="phone-card-row"><span class="phone-card-label">Expires</span><span class="phone-card-value">22 days left</span></div></div>
+                        <div class="phone-nav"><div class="phone-nav-item active"><div class="phone-nav-dot">&#127968;</div>Home</div><div class="phone-nav-item"><div class="phone-nav-dot">&#127758;</div>Plans</div><div class="phone-nav-item"><div class="phone-nav-dot">&#128225;</div>Map</div><div class="phone-nav-item"><div class="phone-nav-dot">&#9881;</div>More</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="stats-bar animate"><div class="stats-inner">
+        <div class="stat"><div class="stat-number">50+</div><div class="stat-label">Countries</div></div>
+        <div class="stat"><div class="stat-number">130+</div><div class="stat-label">Data Plans</div></div>
+        <div class="stat"><div class="stat-number">2 min</div><div class="stat-label">Activation</div></div>
+        <div class="stat"><div class="stat-number">24/7</div><div class="stat-label">Support</div></div>
+    </div></div>
+    <section id="features"><div class="section-inner">
+        <div class="section-header animate"><div class="section-label">Features</div><div class="section-title">Everything you need to<br>stay connected abroad</div><div class="section-subtitle">No more expensive roaming, physical SIM swaps, or searching for Wi-Fi. SatConnect handles it all.</div></div>
+        <div class="features-grid">
+            <div class="feature-card animate animate-delay-1"><div class="feature-icon">&#9889;</div><h3>Instant Activation</h3><p>Activate your eSIM in under 2 minutes. Scan a QR code and you are online. No store visits, no waiting.</p></div>
+            <div class="feature-card animate animate-delay-2"><div class="feature-icon">&#127758;</div><h3>Global Coverage</h3><p>Coverage across Europe, Asia, Americas, Africa, and Oceania. One app for all your travel data needs.</p></div>
+            <div class="feature-card animate animate-delay-3"><div class="feature-icon">&#128176;</div><h3>Affordable Plans</h3><p>Plans starting from just $4.50. Save up to 90% compared to traditional roaming charges.</p></div>
+            <div class="feature-card animate animate-delay-1"><div class="feature-icon">&#128274;</div><h3>Secure Payments</h3><p>All payments processed securely through Stripe. 256-bit encryption. Apple Pay supported.</p></div>
+            <div class="feature-card animate animate-delay-2"><div class="feature-icon">&#128202;</div><h3>Real-Time Monitoring</h3><p>Track your data usage live. Get smart alerts before you run out so you are never disconnected.</p></div>
+            <div class="feature-card animate animate-delay-3"><div class="feature-icon">&#128752;</div><h3>Satellite Tracker</h3><p>Visualize satellite coverage in your area. See signal strength, GPS precision, and coverage zones.</p></div>
+        </div>
+    </div></section>
+    <section id="how" class="how-section"><div class="section-inner">
+        <div class="section-header animate"><div class="section-label">How It Works</div><div class="section-title">Get online in 3 simple steps</div><div class="section-subtitle">No contracts. No hidden fees. No physical SIM card needed. Just fast, reliable data wherever you go.</div></div>
+        <div class="steps">
+            <div class="step animate animate-delay-1"><div class="step-number">1</div><h3>Choose Your Destination</h3><p>Select your country and pick the data plan that fits your trip - from 1GB to 20GB.</p></div>
+            <div class="step animate animate-delay-2"><div class="step-number">2</div><h3>Pay Securely</h3><p>Complete your purchase with credit card or Apple Pay. Instant confirmation, no hidden fees.</p></div>
+            <div class="step animate animate-delay-3"><div class="step-number">3</div><h3>Scan &amp; Connect</h3><p>Scan the QR code in your phone settings. Your eSIM activates instantly - you are online!</p></div>
+        </div>
+    </div></section>
+    <section id="countries" class="countries-section"><div class="section-inner">
+        <div class="section-header animate"><div class="section-label">Coverage</div><div class="section-title">Available in 50+ countries</div><div class="section-subtitle">And we are adding more every month. Popular destinations include:</div></div>
+        <div class="country-grid animate">
+            <span class="country-tag"><span class="flag">&#127482;&#127480;</span> United States</span><span class="country-tag"><span class="flag">&#127468;&#127463;</span> United Kingdom</span>
+            <span class="country-tag"><span class="flag">&#127467;&#127479;</span> France</span><span class="country-tag"><span class="flag">&#127465;&#127466;</span> Germany</span>
+            <span class="country-tag"><span class="flag">&#127466;&#127480;</span> Spain</span><span class="country-tag"><span class="flag">&#127470;&#127481;</span> Italy</span>
+            <span class="country-tag"><span class="flag">&#127471;&#127477;</span> Japan</span><span class="country-tag"><span class="flag">&#127472;&#127479;</span> South Korea</span>
+            <span class="country-tag"><span class="flag">&#127481;&#127469;</span> Thailand</span><span class="country-tag"><span class="flag">&#127462;&#127482;</span> Australia</span>
+            <span class="country-tag"><span class="flag">&#127464;&#127462;</span> Canada</span><span class="country-tag"><span class="flag">&#127463;&#127479;</span> Brazil</span>
+            <span class="country-tag"><span class="flag">&#127474;&#127485;</span> Mexico</span><span class="country-tag"><span class="flag">&#127481;&#127479;</span> Turkey</span>
+            <span class="country-tag"><span class="flag">&#127468;&#127479;</span> Greece</span><span class="country-tag"><span class="flag">&#127477;&#127481;</span> Portugal</span>
+            <span class="country-tag"><span class="flag">&#127475;&#127473;</span> Netherlands</span><span class="country-tag"><span class="flag">&#127480;&#127466;</span> Sweden</span>
+            <span class="country-tag"><span class="flag">&#127464;&#127469;</span> Switzerland</span><span class="country-tag"><span class="flag">&#127462;&#127481;</span> Austria</span>
+            <span class="country-tag"><span class="flag">&#127470;&#127475;</span> India</span><span class="country-tag"><span class="flag">&#127480;&#127468;</span> Singapore</span>
+            <span class="country-tag"><span class="flag">&#127462;&#127466;</span> UAE</span><span class="country-tag"><span class="flag">&#127487;&#127462;</span> South Africa</span>
+            <span class="country-tag country-more">+ 26 more countries</span>
+        </div>
+    </div></section>
+    <section id="pricing"><div class="section-inner">
+        <div class="section-header animate"><div class="section-label">Pricing</div><div class="section-title">Simple, transparent pricing</div><div class="section-subtitle">No contracts, no hidden fees. Pay only for what you need. All plans include instant activation.</div></div>
+        <div class="pricing-grid">
+            <div class="price-card animate animate-delay-1"><div class="price-tier">Starter</div><div class="price-data">1 GB &middot; 7 days</div><div class="price-amount"><span class="currency">$</span>4.50</div><div class="price-period">one-time payment</div><div class="price-divider"></div><ul class="price-features"><li>Perfect for short trips</li><li>Email &amp; messaging</li><li>Maps &amp; navigation</li><li>Light browsing</li></ul><a href="#download" class="btn-price btn-price-secondary">Get Started</a></div>
+            <div class="price-card popular animate animate-delay-2"><div class="price-tier">Traveler</div><div class="price-data">5 GB &middot; 30 days</div><div class="price-amount"><span class="currency">$</span>14.00</div><div class="price-period">one-time payment</div><div class="price-divider"></div><ul class="price-features"><li>Great for vacations</li><li>Video calls &amp; streaming</li><li>Social media</li><li>All apps work normally</li></ul><a href="#download" class="btn-price btn-price-primary">Get Started</a></div>
+            <div class="price-card animate animate-delay-3"><div class="price-tier">Explorer</div><div class="price-data">20 GB &middot; 30 days</div><div class="price-amount"><span class="currency">$</span>42.00</div><div class="price-period">one-time payment</div><div class="price-divider"></div><ul class="price-features"><li>For heavy data users</li><li>HD video streaming</li><li>Remote work ready</li><li>Hotspot sharing</li></ul><a href="#download" class="btn-price btn-price-secondary">Get Started</a></div>
+        </div>
+    </div></section>
+    <section class="testimonials"><div class="section-inner">
+        <div class="section-header animate"><div class="section-label">Reviews</div><div class="section-title">Loved by travelers worldwide</div><div class="section-subtitle">Join thousands of satisfied travelers who stay connected with SatConnect.</div></div>
+        <div class="testimonial-grid">
+            <div class="testimonial-card animate animate-delay-1"><div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="testimonial-text">"Used SatConnect on my trip to Japan. Activated in 2 minutes at the airport. Fast speeds the entire trip. Way cheaper than my carrier's roaming."</p><div class="testimonial-author"><div class="testimonial-avatar">A</div><div><div class="testimonial-name">Alex M.</div><div class="testimonial-role">Business Traveler</div></div></div></div>
+            <div class="testimonial-card animate animate-delay-2"><div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="testimonial-text">"The satellite tracker feature is amazing! I could see exactly where I had coverage. The 5GB plan lasted my entire 2-week vacation in Europe."</p><div class="testimonial-author"><div class="testimonial-avatar">S</div><div><div class="testimonial-name">Sarah K.</div><div class="testimonial-role">Digital Nomad</div></div></div></div>
+            <div class="testimonial-card animate animate-delay-3"><div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><p class="testimonial-text">"No more hunting for SIM cards at airports! The QR code activation is seamless. I recommend SatConnect to everyone who travels internationally."</p><div class="testimonial-author"><div class="testimonial-avatar">R</div><div><div class="testimonial-name">Radu P.</div><div class="testimonial-role">Frequent Flyer</div></div></div></div>
+        </div>
+    </div></section>
+    <section id="faq" class="faq-section"><div class="section-inner"><div class="faq-grid">
+        <div class="faq-info animate"><div class="section-label" style="justify-content:flex-start">FAQ</div><div class="section-title" style="text-align:left">Frequently Asked<br>Questions</div><p class="section-subtitle" style="text-align:left;margin:0">Everything you need to know about SatConnect. Can not find the answer? <a href="./support/" style="color:var(--accent);text-decoration:none;font-weight:600">Contact support</a>.</p></div>
+        <div class="faq-list animate animate-delay-2">
+            <details class="faq-item"><summary>What is an eSIM?</summary><p>An eSIM (embedded SIM) is a digital SIM that allows you to activate a cellular plan without a physical SIM card. It is built into most modern smartphones including iPhone XS and newer.</p></details>
+            <details class="faq-item"><summary>Is my phone compatible?</summary><p>SatConnect works with any eSIM-compatible device running iOS 16.0 or later. This includes iPhone XS, XR, 11, 12, 13, 14, 15, 16, 17 and all Pro/Max variants.</p></details>
+            <details class="faq-item"><summary>Can I keep my regular phone number?</summary><p>Yes! Your eSIM works alongside your regular SIM (Dual SIM). Keep your number for calls and texts while using SatConnect for affordable data abroad.</p></details>
+            <details class="faq-item"><summary>How fast is the data?</summary><p>SatConnect uses local carrier networks providing 4G/LTE and 5G speeds. Typical speeds range from 20-100 Mbps depending on your location.</p></details>
+            <details class="faq-item"><summary>What happens when my data runs out?</summary><p>You will receive a notification when running low. Purchase additional data directly in the app at any time - activation is instant.</p></details>
+            <details class="faq-item"><summary>Is there a refund policy?</summary><p>If your eSIM has not been activated, you are eligible for a full refund. Once activated, refunds are handled case-by-case. Contact our support team.</p></details>
+            <details class="faq-item"><summary>Do I need Wi-Fi to activate?</summary><p>Yes, you need an internet connection (Wi-Fi or existing cellular data) to download and activate your eSIM. After activation, you are good to go!</p></details>
+        </div>
+    </div></div></section>
+    <section id="download" class="cta-section"><div class="section-inner cta-inner animate">
+        <h2>Ready to travel<br><span class="accent">connected</span>?</h2>
+        <p class="cta-desc">Download SatConnect for free and get your first eSIM in under 2 minutes. Available on the App Store.</p>
+        <div style="display:flex;justify-content:center"><a href="https://apps.apple.com" class="btn-primary" target="_blank" rel="noopener"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>Download on App Store</a></div>
+        <div class="cta-badges"><div class="cta-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>Secure &amp; Private</div><div class="cta-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>Free to Download</div><div class="cta-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>2 Min Setup</div></div>
+    </div></section>
+    <footer><div class="footer-inner">
+        <div class="footer-top">
+            <div class="footer-brand"><a href="#" class="logo"><div class="logo-icon">&#9670;</div>Sat<span>Connect</span></a><p class="footer-brand-desc">Stay connected anywhere you travel. Instant eSIM activation for 50+ countries with affordable data plans and secure payments.</p></div>
+            <div class="footer-col"><h4>Product</h4><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#countries">Countries</a><a href="#download">Download</a></div>
+            <div class="footer-col"><h4>Support</h4><a href="./support/">Help Center</a><a href="#faq">FAQ</a><a href="mailto:support@satconnect.app">Contact Us</a></div>
+            <div class="footer-col"><h4>Legal</h4><a href="./privacy/">Privacy Policy</a><a href="./support/">Terms of Service</a></div>
+        </div>
+        <div class="footer-bottom"><span class="footer-copy">&copy; 2026 SatConnect. All rights reserved.</span></div>
+    </div></footer>
+    <script>
+        const n=document.getElementById('navbar');window.addEventListener('scroll',()=>{n.classList.toggle('scrolled',window.scrollY>50)});
+        const o=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
+        document.querySelectorAll('.animate').forEach(el=>o.observe(el));
+        document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+    </script>
+    <script>
+    (function(){
+        const canvas=document.getElementById('three-canvas');
+        const scene=new THREE.Scene();
+        const camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+        camera.position.z=6;
+        const renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:true});
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+        renderer.setClearColor(0x000000,0);
+
+        /* Earth sphere with wireframe */
+        const earthGeo=new THREE.SphereGeometry(1.8,64,64);
+        const earthMat=new THREE.MeshPhongMaterial({color:0x0a1628,emissive:0x001a12,transparent:true,opacity:0.6,shininess:25});
+        const earth=new THREE.Mesh(earthGeo,earthMat);
+        scene.add(earth);
+
+        /* Wireframe overlay on earth */
+        const wireGeo=new THREE.SphereGeometry(1.82,32,32);
+        const wireMat=new THREE.MeshBasicMaterial({color:0x00d4aa,wireframe:true,transparent:true,opacity:0.08});
+        const wireframe=new THREE.Mesh(wireGeo,wireMat);
+        scene.add(wireframe);
+
+        /* Glowing atmosphere ring */
+        const atmosGeo=new THREE.SphereGeometry(1.95,64,64);
+        const atmosMat=new THREE.MeshBasicMaterial({color:0x00d4aa,transparent:true,opacity:0.04,side:THREE.BackSide});
+        const atmosphere=new THREE.Mesh(atmosGeo,atmosMat);
+        scene.add(atmosphere);
+
+        /* Continent-like dots on sphere */
+        const dotGroup=new THREE.Group();
+        const dotGeo=new THREE.SphereGeometry(0.02,6,6);
+        const dotMat=new THREE.MeshBasicMaterial({color:0x00d4aa,transparent:true,opacity:0.5});
+        for(let i=0;i<300;i++){
+            const phi=Math.acos(-1+2*Math.random());
+            const theta=Math.random()*Math.PI*2;
+            const r=1.83;
+            const dot=new THREE.Mesh(dotGeo,dotMat);
+            dot.position.set(r*Math.sin(phi)*Math.cos(theta),r*Math.sin(phi)*Math.sin(theta),r*Math.cos(phi));
+            dotGroup.add(dot);
+        }
+        scene.add(dotGroup);
+
+        /* Orbit rings */
+        function createOrbitRing(radius,tiltX,tiltZ,color,opacity){
+            const ringGeo=new THREE.RingGeometry(radius-0.005,radius+0.005,128);
+            const ringMat=new THREE.MeshBasicMaterial({color:color,transparent:true,opacity:opacity,side:THREE.DoubleSide});
+            const ring=new THREE.Mesh(ringGeo,ringMat);
+            ring.rotation.x=tiltX;
+            ring.rotation.z=tiltZ;
+            return ring;
+        }
+        scene.add(createOrbitRing(2.8,Math.PI/2.2,0.3,0x00d4aa,0.15));
+        scene.add(createOrbitRing(3.2,Math.PI/1.8,-0.2,0x0984e3,0.1));
+        scene.add(createOrbitRing(3.6,Math.PI/2.5,0.5,0x00b894,0.07));
+
+        /* Satellites */
+        const satellites=[];
+        function createSatellite(orbitR,speed,tiltX,tiltZ,startAngle){
+            const group=new THREE.Group();
+            /* Satellite body */
+            const bodyGeo=new THREE.BoxGeometry(0.06,0.06,0.04);
+            const bodyMat=new THREE.MeshPhongMaterial({color:0xcccccc,emissive:0x222222});
+            const body=new THREE.Mesh(bodyGeo,bodyMat);
+            /* Solar panels */
+            const panelGeo=new THREE.BoxGeometry(0.18,0.04,0.005);
+            const panelMat=new THREE.MeshPhongMaterial({color:0x0984e3,emissive:0x041a40});
+            const panelL=new THREE.Mesh(panelGeo,panelMat);
+            panelL.position.x=-0.12;
+            const panelR=new THREE.Mesh(panelGeo,panelMat);
+            panelR.position.x=0.12;
+            group.add(body,panelL,panelR);
+            /* Glow point */
+            const glowGeo=new THREE.SphereGeometry(0.03,8,8);
+            const glowMat=new THREE.MeshBasicMaterial({color:0x00d4aa,transparent:true,opacity:0.8});
+            const glow=new THREE.Mesh(glowGeo,glowMat);
+            glow.position.y=0.05;
+            group.add(glow);
+            scene.add(group);
+            satellites.push({mesh:group,orbitR:orbitR,speed:speed,tiltX:tiltX,tiltZ:tiltZ,angle:startAngle,glow:glow});
+        }
+        createSatellite(2.8,0.4,Math.PI/2.2,0.3,0);
+        createSatellite(3.2,0.3,Math.PI/1.8,-0.2,Math.PI*0.7);
+        createSatellite(3.6,0.2,Math.PI/2.5,0.5,Math.PI*1.3);
+        createSatellite(2.8,0.35,Math.PI/2.2,0.3,Math.PI);
+
+        /* Connection beams between satellites and earth */
+        const beamMat=new THREE.LineBasicMaterial({color:0x00d4aa,transparent:true,opacity:0.12});
+
+        /* Particle field (stars) */
+        const starGeo=new THREE.BufferGeometry();
+        const starCount=800;
+        const starPos=new Float32Array(starCount*3);
+        for(let i=0;i<starCount*3;i++)starPos[i]=(Math.random()-0.5)*30;
+        starGeo.setAttribute('position',new THREE.BufferAttribute(starPos,3));
+        const starMat=new THREE.PointsMaterial({color:0xffffff,size:0.015,transparent:true,opacity:0.4});
+        const stars=new THREE.Points(starGeo,starMat);
+        scene.add(stars);
+
+        /* Lighting */
+        const ambLight=new THREE.AmbientLight(0x334455,0.6);
+        scene.add(ambLight);
+        const dirLight=new THREE.DirectionalLight(0x00d4aa,0.8);
+        dirLight.position.set(5,3,5);
+        scene.add(dirLight);
+        const pointLight=new THREE.PointLight(0x0984e3,0.5,20);
+        pointLight.position.set(-5,-3,3);
+        scene.add(pointLight);
+
+        /* Mouse interaction */
+        let mouseX=0,mouseY=0;
+        document.addEventListener('mousemove',function(e){
+            mouseX=(e.clientX/window.innerWidth-0.5)*2;
+            mouseY=(e.clientY/window.innerHeight-0.5)*2;
+        });
+
+        /* Scroll fade */
+        let scrollOpacity=1;
+        window.addEventListener('scroll',function(){
+            scrollOpacity=Math.max(0,1-window.scrollY/(window.innerHeight*0.8));
+            canvas.style.opacity=scrollOpacity;
+        });
+
+        /* Animation loop */
+        let time=0;
+        function animate(){
+            requestAnimationFrame(animate);
+            time+=0.005;
+
+            /* Rotate earth slowly */
+            earth.rotation.y+=0.002;
+            wireframe.rotation.y+=0.002;
+            dotGroup.rotation.y+=0.002;
+
+            /* Slight camera movement with mouse */
+            camera.position.x+=(mouseX*0.3-camera.position.x)*0.02;
+            camera.position.y+=(-mouseY*0.3-camera.position.y)*0.02;
+            camera.lookAt(0,0,0);
+
+            /* Animate satellites along orbits */
+            satellites.forEach(function(s){
+                s.angle+=s.speed*0.01;
+                const x=s.orbitR*Math.cos(s.angle);
+                const z=s.orbitR*Math.sin(s.angle);
+                /* Apply orbit tilt */
+                const cosX=Math.cos(s.tiltX),sinX=Math.sin(s.tiltX);
+                const cosZ=Math.cos(s.tiltZ),sinZ=Math.sin(s.tiltZ);
+                let px=x,py=0,pz=z;
+                /* Rotate around X */
+                let ty=py*cosX-pz*sinX;
+                let tz=py*sinX+pz*cosX;
+                py=ty;pz=tz;
+                /* Rotate around Z */
+                let tx=px*cosZ-py*sinZ;
+                ty=px*sinZ+py*cosZ;
+                px=tx;py=ty;
+                s.mesh.position.set(px,py,pz);
+                s.mesh.lookAt(0,0,0);
+                /* Pulse glow */
+                s.glow.material.opacity=0.5+0.3*Math.sin(time*10+s.angle);
+            });
+
+            /* Pulse atmosphere */
+            atmosphere.material.opacity=0.03+0.015*Math.sin(time*3);
+
+            /* Rotate stars very slowly */
+            stars.rotation.y+=0.0003;
+            stars.rotation.x+=0.0001;
+
+            renderer.render(scene,camera);
+        }
+        animate();
+
+        /* Resize handler */
+        window.addEventListener('resize',function(){
+            camera.aspect=window.innerWidth/window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth,window.innerHeight);
+        });
+    })();
+    </script>
+</body>
+</html>
