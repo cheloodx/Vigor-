@@ -40,10 +40,10 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
     const unitAmount = Math.round(plan.price * 100);
     const curr = plan.currency.toLowerCase();
 
-    // Use client-provided URLs if available, otherwise fall back to FRONTEND_URL or origin
-    const baseUrl = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
-    const finalSuccessUrl = successUrl || `${baseUrl}/payment-success.html?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`;
-    const finalCancelUrl = cancelUrl || `${baseUrl}/payment-cancel.html`;
+    // Use client-provided URLs only if they match our allowed origin (prevent open redirect)
+    const allowedOrigin = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+    const finalSuccessUrl = (successUrl && successUrl.startsWith(allowedOrigin + '/')) ? successUrl : `${allowedOrigin}/payment-success.html?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`;
+    const finalCancelUrl = (cancelUrl && cancelUrl.startsWith(allowedOrigin + '/')) ? cancelUrl : `${allowedOrigin}/payment-cancel.html`;
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
