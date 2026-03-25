@@ -143,7 +143,7 @@ async function esimAccessFetch<T>(path: string, body: Record<string, unknown> = 
   const json = await response.json() as T & { success: boolean; errorCode: string | null; errorMsg: string | null };
 
   if (!json.success) {
-    throw new Error(`eSIM Access API error: ${json.errorMsg || json.errorCode || 'Unknown error'}`);
+    throw new Error(`eSIM Access API error [${json.errorCode || 'UNKNOWN'}]: ${json.errorMsg || 'Unknown error'}`);
   }
 
   return json;
