@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SatConnect - eSIM Store</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0d0d3d 100%);
+      color: #fff;
+      min-height: 100vh;
+    }
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+    
+    /* Header */
+    header {
+      text-align: center;
+      padding: 40px 0 20px;
+    }
+    header h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+    }
+    header p { color: #8e8ea0; font-size: 1.1rem; }
+
+    /* Search & Filters */
+    .search-bar {
+      display: flex;
+      gap: 12px;
+      margin: 24px 0;
+      flex-wrap: wrap;
+    }
+    .search-bar input {
+      flex: 1;
+      min-width: 200px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .search-bar input:focus { border-color: #00d4ff; }
+    .search-bar input::placeholder { color: #666; }
+
+    /* Region Tabs */
+    .region-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .region-tab {
+      padding: 10px 20px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: #aaa;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s;
+    }
+    .region-tab:hover { border-color: #00d4ff; color: #fff; }
+    .region-tab.active {
+      background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    /* Country Grid */
+    .countries-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+    .country-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .country-card:hover {
+      border-color: #00d4ff;
+      background: rgba(0,212,255,0.05);
+      transform: translateY(-2px);
+    }
+    .country-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .country-flag { font-size: 2rem; }
+    .country-name { font-size: 1.2rem; font-weight: 600; }
+    .country-plans-count { color: #8e8ea0; font-size: 0.85rem; }
+    .plan-preview {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .plan-chip {
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(0,212,255,0.1);
+      color: #00d4ff;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    /* Plan Selection Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-overlay.active { display: flex; }
+    .modal {
+      background: #1a1a3e;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 520px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-title {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+    .modal-subtitle { color: #8e8ea0; margin-bottom: 24px; }
+    .modal-close {
+      float: right;
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .modal-close:hover { color: #fff; }
+
+    /* Plan Cards */
+    .plan-card {
+      background: rgba(255,255,255,0.03);
+      border: 2px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .plan-card:hover { border-color: #00d4ff; background: rgba(0,212,255,0.05); }
+    .plan-card.selected { border-color: #7b2ff7; background: rgba(123,47,247,0.1); }
+    .plan-info h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .plan-info p { color: #8e8ea0; font-size: 0.85rem; }
+    .plan-price {
+      text-align: right;
+    }
+    .plan-price .amount {
+      font-size: 1.4rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #00d4ff, #7b2ff7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .plan-price .currency { color: #8e8ea0; font-size: 0.8rem; }
+
+    /* Buy Button */
+    .buy-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.3s;
+    }
+    .buy-btn:hover { transform: scale(1.02); box-shadow: 0 8px 30px rgba(123,47,247,0.3); }
+    .buy-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 60px 0;
+      color: #8e8ea0;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: #00d4ff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Status Banner */
+    .status-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      z-index: 200;
+      display: none;
+    }
+    .status-banner.error { display: block; background: #e74c3c; }
+    .status-banner.success { display: block; background: #27ae60; }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      color: #555;
+      font-size: 0.85rem;
+    }
+    footer a { color: #00d4ff; text-decoration: none; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.6rem; }
+      .countries-grid { grid-template-columns: 1fr; }
+      .modal { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="status-banner" class="status-banner"></div>
+  
+  <div class="container">
+    <header>
+      <h1>SatConnect eSIM</h1>
+      <p>Internet mobil instant in 22+ tari. Activare automata.</p>
+    </header>
+
+    <div class="search-bar">
+      <input type="text" id="search" placeholder="Cauta tara (ex: Romania, Franta, SUA...)">
+    </div>
+
+    <div class="region-tabs" id="region-tabs">
+      <button class="region-tab active" data-region="all">Toate</button>
+      <button class="region-tab" data-region="europa">Europa</button>
+      <button class="region-tab" data-region="asia">Asia</button>
+      <button class="region-tab" data-region="americas">Americas</button>
+      <button class="region-tab" data-region="africa">Africa & ME</button>
+      <button class="region-tab" data-region="oceania">Oceania</button>
+    </div>
+
+    <div id="countries-grid" class="countries-grid">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Se incarca planurile...</p>
+      </div>
+    </div>
+
+    <footer>
+      <p>SatConnect &copy; 2026 &mdash; <a href="https://chatnow-app-qxe3w67o.devinapps.com" target="_blank">satconnect.ro</a></p>
+    </footer>
+  </div>
+
+  <!-- Plan Selection Modal -->
+  <div class="modal-overlay" id="plan-modal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin;
+    let allPlans = {};
+    let selectedPlan = null;
+
+    // Region mapping
+    const REGION_MAP = {
+      'europa': ['RO','FR','DE','IT','ES','GB','GR','TR','AT','BE','NL','PT','CH','PL','CZ','SE','NO','DK','FI','IE','HU','HR'],
+      'asia': ['JP','KR','TH','IN','CN','SG','MY','ID','VN','PH','TW','HK'],
+      'americas': ['US','CA','MX','BR','AR','CL','CO','PE'],
+      'africa': ['ZA','EG','MA','NG','KE','AE','IL','SA','QA'],
+      'oceania': ['AU','NZ','FJ']
+    };
+
+    // Load plans from backend
+    async function loadPlans() {
+      try {
+        const res = await fetch(`${API_BASE}/plans`);
+        const data = await res.json();
+        
+        if (data.success && data.data) {
+          allPlans = data.data;
+          renderCountries();
+        } else {
+          showError('Nu s-au putut incarca planurile');
+        }
+      } catch (err) {
+        showError('Eroare de conexiune la server');
+        console.error(err);
+      }
+    }
+
+    function getRegion(countryCode) {
+      for (const [region, codes] of Object.entries(REGION_MAP)) {
+        if (codes.includes(countryCode)) return region;
+      }
+      return 'other';
+    }
+
+    function renderCountries(filter = '', region = 'all') {
+      const grid = document.getElementById('countries-grid');
+      const entries = Object.entries(allPlans);
+      
+      if (entries.length === 0) {
+        grid.innerHTML = '<div class="loading"><p>Nu sunt planuri disponibile</p></div>';
+        return;
+      }
+
+      let filtered = entries;
+
+      // Filter by region
+      if (region !== 'all') {
+        const regionCodes = REGION_MAP[region] || [];
+        filtered = filtered.filter(([code]) => regionCodes.includes(code));
+      }
+
+      // Filter by search
+      if (filter) {
+        const q = filter.toLowerCase();
+        filtered = filtered.filter(([code, data]) => 
+          code.toLowerCase().includes(q) || 
+          data.country_name.toLowerCase().includes(q)
+        );
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="loading"><p>Nicio tara gasita</p></div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(([code, data]) => {
+        const plans = data.plans || [];
+        const cheapest = plans.reduce((min, p) => p.price < min.price ? p : min, plans[0]);
+        return `
+          <div class="country-card" onclick="openCountry('${code}')">
+            <div class="country-header">
+              <span class="country-flag">${getFlag(code)}</span>
+              <div>
+                <div class="country-name">${data.country_name}</div>
+                <div class="country-plans-count">${plans.length} planuri &middot; de la ${cheapest.price} ${cheapest.currency}</div>
+              </div>
+            </div>
+            <div class="plan-preview">
+              ${plans.slice(0, 4).map(p => `<span class="plan-chip">${p.data_label}</span>`).join('')}
+              ${plans.length > 4 ? `<span class="plan-chip">+${plans.length - 4}</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getFlag(code) {
+      // Convert country code to flag emoji
+      const codePoints = [...code.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65);
+      return String.fromCodePoint(...codePoints);
+    }
+
+    function openCountry(code) {
+      const country = allPlans[code];
+      if (!country) return;
+
+      const plans = country.plans || [];
+      selectedPlan = null;
+
+      document.getElementById('modal-content').innerHTML = `
+        <div class="modal-title">${getFlag(code)} ${country.country_name}</div>
+        <div class="modal-subtitle">Alege planul potrivit pentru tine</div>
+        <div id="plans-list">
+          ${plans.map((p, i) => `
+            <div class="plan-card" id="plan-${i}" onclick="selectPlan(${i}, '${code}')">
+              <div class="plan-info">
+                <h3>${p.data_label}</h3>
+                <p>${p.valid_days} zile valabilitate</p>
+              </div>
+              <div class="plan-price">
+                <div class="amount">${p.price}</div>
+                <div class="currency">${p.currency}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <button class="buy-btn" id="buy-btn" disabled onclick="buyPlan()">
+          Selecteaza un plan
+        </button>
+      `;
+
+      document.getElementById('plan-modal').classList.add('active');
+    }
+
+    function selectPlan(index, countryCode) {
+      const plans = allPlans[countryCode].plans;
+      selectedPlan = plans[index];
+
+      // Update UI
+      document.querySelectorAll('.plan-card').forEach((el, i) => {
+        el.classList.toggle('selected', i === index);
+      });
+
+      const btn = document.getElementById('buy-btn');
+      btn.disabled = false;
+      btn.textContent = `Cumpara ${selectedPlan.data_label} - ${selectedPlan.price} ${selectedPlan.currency}`;
+    }
+
+    function closeModal() {
+      document.getElementById('plan-modal').classList.remove('active');
+      selectedPlan = null;
+    }
+
+    async function buyPlan() {
+      if (!selectedPlan) return;
+
+      const btn = document.getElementById('buy-btn');
+      btn.disabled = true;
+      btn.textContent = 'Se proceseaza...';
+
+      try {
+        const planId = `${selectedPlan.country_code.toLowerCase()}-${selectedPlan.data_label.toLowerCase().replace(/\s+/g, '')}`;
+        
+        const res = await fetch(`${API_BASE}/api/stripe/create-checkout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            planId,
+            successUrl: `${window.location.origin}/payment-success.html?session_id={CHECKOUT_SESSION_ID}&plan_id=${planId}`,
+            cancelUrl: `${window.location.origin}/payment-cancel.html`,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.url) {
+          // Redirect to Stripe Checkout
+          window.location.href = data.url;
+        } else {
+          showError(data.error || 'Eroare la crearea sesiunii de plata');
+          btn.disabled = false;
+          btn.textContent = `Cumpara ${selectedPlan.data_label} - ${selectedPlan.price} ${selectedPlan.currency}`;
+        }
+      } catch (err) {
+        showError('Eroare de conexiune');
+        console.error(err);
+        btn.disabled = false;
+        btn.textContent = `Cumpara ${selectedPlan.data_label} - ${selectedPlan.price} ${selectedPlan.currency}`;
+      }
+    }
+
+    function showError(msg) {
+      const banner = document.getElementById('status-banner');
+      banner.textContent = msg;
+      banner.className = 'status-banner error';
+      setTimeout(() => { banner.className = 'status-banner'; }, 5000);
+    }
+
+    // Search
+    document.getElementById('search').addEventListener('input', (e) => {
+      const activeRegion = document.querySelector('.region-tab.active')?.dataset.region || 'all';
+      renderCountries(e.target.value, activeRegion);
+    });
+
+    // Region tabs
+    document.getElementById('region-tabs').addEventListener('click', (e) => {
+      if (e.target.classList.contains('region-tab')) {
+        document.querySelectorAll('.region-tab').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        const search = document.getElementById('search').value;
+        renderCountries(search, e.target.dataset.region);
+      }
+    });
+
+    // Close modal on overlay click
+    document.getElementById('plan-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('plan-modal')) closeModal();
+    });
+
+    // Init
+    loadPlans();
+  </script>
+</body>
+</html>

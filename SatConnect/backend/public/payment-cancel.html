@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SatConnect - Plata Anulata</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0d0d3d 100%);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      max-width: 480px;
+      margin: 20px;
+    }
+    .icon {
+      width: 80px; height: 80px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: rgba(241,196,15,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+    h1 { font-size: 1.5rem; margin-bottom: 8px; }
+    p { color: #8e8ea0; margin-bottom: 24px; line-height: 1.6; }
+    .back-btn {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    .back-btn:hover { transform: scale(1.03); box-shadow: 0 8px 30px rgba(123,47,247,0.3); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">&#9888;</div>
+    <h1>Plata anulata</h1>
+    <p>Nu s-a efectuat nicio plata. Poti reveni oricand pentru a cumpara un eSIM.</p>
+    <a href="/" class="back-btn">Inapoi la planuri</a>
+  </div>
+</body>
+</html>

@@ -20,7 +20,7 @@ function getStripe(): Stripe {
 // ---------------------------------------------------------------------------
 router.post('/create-checkout', async (req: Request, res: Response) => {
   try {
-    const { planId } = req.body;
+    const { planId, successUrl, cancelUrl } = req.body;
 
     if (!planId) {
       res.status(400).json({ error: 'Missing required field: planId' });
@@ -40,6 +40,11 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
     const unitAmount = Math.round(plan.price * 100);
     const curr = plan.currency.toLowerCase();
 
+    // Use client-provided URLs if available, otherwise fall back to FRONTEND_URL or origin
+    const baseUrl = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+    const finalSuccessUrl = successUrl || `${baseUrl}/payment-success.html?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`;
+    const finalCancelUrl = cancelUrl || `${baseUrl}/payment-cancel.html`;
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -48,7 +53,7 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
             currency: curr,
             product_data: {
               name: `eSIM ${plan.dataLabel} - ${plan.countryName}`,
-              description: `${plan.countryFlag} Internet ${plan.dataLabel} pentru ${plan.countryName} (${plan.validDays} zile)`,
+              description: `Internet ${plan.dataLabel} pentru ${plan.countryName} (${plan.validDays} zile)`,
               metadata: {
                 planId: plan.id,
                 countryCode: plan.countryCode,
@@ -63,8 +68,8 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
         },
       ],
       mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL || 'http://localhost:8082'}/payment-success?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`,
-      cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:8082'}/payment-cancel`,
+      success_url: finalSuccessUrl,
+      cancel_url: finalCancelUrl,
       metadata: {
         planId: plan.id,
         countryCode: plan.countryCode,

@@ -19,6 +19,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import path from 'path';
 
 // Load env vars before importing modules that use them
 dotenv.config();
@@ -39,10 +40,24 @@ const PORT = process.env.PORT || 3001;
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
 // Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.esimaccess.com", "https://checkout.stripe.com"],
+      frameSrc: ["'self'", "https://checkout.stripe.com"],
+    },
+  },
+}));
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
+
+// Serve static web checkout pages
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Routes
 app.use('/plans', plansRouter);
@@ -67,9 +82,13 @@ app.get('/health', (_req, res) => {
   });
 });
 
-// 404 handler
-app.use((_req, res) => {
-  res.status(404).json({ success: false, error: 'Endpoint not found' });
+// SPA fallback: serve index.html for non-API routes
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/') || req.path.startsWith('/plans') || req.path.startsWith('/orders') || req.path.startsWith('/health') || req.path.startsWith('/my-esims') || req.path.startsWith('/subscription')) {
+    res.status(404).json({ success: false, error: 'Endpoint not found' });
+  } else {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+  }
 });
 
 // Start server
