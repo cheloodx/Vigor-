@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         *{margin:0;padding:0;box-sizing:border-box}
         :root{--bg:#060e1a;--bg-card:#0a1628;--accent:#00d4aa;--accent-glow:rgba(0,212,170,0.15);--text:#e8ecf1;--text-dim:#7a8ba0;--text-muted:#4a5a6a;--glass-border:rgba(255,255,255,0.06);--gradient-accent:linear-gradient(135deg,#00d4aa 0%,#00b894 50%,#0984e3 100%)}
@@ -42,6 +43,7 @@
         .hero-bg .glow-1{position:absolute;top:-20%;right:-10%;width:800px;height:800px;background:radial-gradient(circle,rgba(0,212,170,.08) 0%,transparent 70%);animation:pulse-glow 8s ease-in-out infinite}
         .hero-bg .glow-2{position:absolute;bottom:-30%;left:-15%;width:600px;height:600px;background:radial-gradient(circle,rgba(9,132,227,.06) 0%,transparent 70%);animation:pulse-glow 10s ease-in-out infinite 2s}
         .hero-bg .grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at 50% 50%,black 30%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse at 50% 50%,black 30%,transparent 70%)}
+        #three-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
         .hero-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:1}
         .hero-content{animation:slide-in-left 1s cubic-bezier(.16,1,.3,1)}
         .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,212,170,.08);border:1px solid rgba(0,212,170,.2);border-radius:24px;padding:8px 18px;font-size:13px;color:var(--accent);font-weight:600;margin-bottom:28px}
@@ -192,6 +194,7 @@
         <a href="#download" class="btn-primary" onclick="document.getElementById('mm').classList.remove('open')">Download App</a>
     </div>
     <section class="hero">
+        <canvas id="three-canvas"></canvas>
         <div class="hero-bg"><div class="glow-1"></div><div class="glow-2"></div><div class="grid-overlay"></div></div>
         <div class="hero-inner">
             <div class="hero-content">
@@ -314,6 +317,187 @@
         const o=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:.1,rootMargin:'0px 0px -50px 0px'});
         document.querySelectorAll('.animate').forEach(el=>o.observe(el));
         document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+    </script>
+    <script>
+    (function(){
+        const canvas=document.getElementById('three-canvas');
+        const scene=new THREE.Scene();
+        const camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,1000);
+        camera.position.z=6;
+        const renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:true});
+        renderer.setSize(window.innerWidth,window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+        renderer.setClearColor(0x000000,0);
+
+        /* Earth sphere with wireframe */
+        const earthGeo=new THREE.SphereGeometry(1.8,64,64);
+        const earthMat=new THREE.MeshPhongMaterial({color:0x0a1628,emissive:0x001a12,transparent:true,opacity:0.6,shininess:25});
+        const earth=new THREE.Mesh(earthGeo,earthMat);
+        scene.add(earth);
+
+        /* Wireframe overlay on earth */
+        const wireGeo=new THREE.SphereGeometry(1.82,32,32);
+        const wireMat=new THREE.MeshBasicMaterial({color:0x00d4aa,wireframe:true,transparent:true,opacity:0.08});
+        const wireframe=new THREE.Mesh(wireGeo,wireMat);
+        scene.add(wireframe);
+
+        /* Glowing atmosphere ring */
+        const atmosGeo=new THREE.SphereGeometry(1.95,64,64);
+        const atmosMat=new THREE.MeshBasicMaterial({color:0x00d4aa,transparent:true,opacity:0.04,side:THREE.BackSide});
+        const atmosphere=new THREE.Mesh(atmosGeo,atmosMat);
+        scene.add(atmosphere);
+
+        /* Continent-like dots on sphere */
+        const dotGroup=new THREE.Group();
+        const dotGeo=new THREE.SphereGeometry(0.02,6,6);
+        const dotMat=new THREE.MeshBasicMaterial({color:0x00d4aa,transparent:true,opacity:0.5});
+        for(let i=0;i<300;i++){
+            const phi=Math.acos(-1+2*Math.random());
+            const theta=Math.random()*Math.PI*2;
+            const r=1.83;
+            const dot=new THREE.Mesh(dotGeo,dotMat);
+            dot.position.set(r*Math.sin(phi)*Math.cos(theta),r*Math.sin(phi)*Math.sin(theta),r*Math.cos(phi));
+            dotGroup.add(dot);
+        }
+        scene.add(dotGroup);
+
+        /* Orbit rings */
+        function createOrbitRing(radius,tiltX,tiltZ,color,opacity){
+            const ringGeo=new THREE.RingGeometry(radius-0.005,radius+0.005,128);
+            const ringMat=new THREE.MeshBasicMaterial({color:color,transparent:true,opacity:opacity,side:THREE.DoubleSide});
+            const ring=new THREE.Mesh(ringGeo,ringMat);
+            ring.rotation.x=tiltX;
+            ring.rotation.z=tiltZ;
+            return ring;
+        }
+        scene.add(createOrbitRing(2.8,Math.PI/2.2,0.3,0x00d4aa,0.15));
+        scene.add(createOrbitRing(3.2,Math.PI/1.8,-0.2,0x0984e3,0.1));
+        scene.add(createOrbitRing(3.6,Math.PI/2.5,0.5,0x00b894,0.07));
+
+        /* Satellites */
+        const satellites=[];
+        function createSatellite(orbitR,speed,tiltX,tiltZ,startAngle){
+            const group=new THREE.Group();
+            /* Satellite body */
+            const bodyGeo=new THREE.BoxGeometry(0.06,0.06,0.04);
+            const bodyMat=new THREE.MeshPhongMaterial({color:0xcccccc,emissive:0x222222});
+            const body=new THREE.Mesh(bodyGeo,bodyMat);
+            /* Solar panels */
+            const panelGeo=new THREE.BoxGeometry(0.18,0.04,0.005);
+            const panelMat=new THREE.MeshPhongMaterial({color:0x0984e3,emissive:0x041a40});
+            const panelL=new THREE.Mesh(panelGeo,panelMat);
+            panelL.position.x=-0.12;
+            const panelR=new THREE.Mesh(panelGeo,panelMat);
+            panelR.position.x=0.12;
+            group.add(body,panelL,panelR);
+            /* Glow point */
+            const glowGeo=new THREE.SphereGeometry(0.03,8,8);
+            const glowMat=new THREE.MeshBasicMaterial({color:0x00d4aa,transparent:true,opacity:0.8});
+            const glow=new THREE.Mesh(glowGeo,glowMat);
+            glow.position.y=0.05;
+            group.add(glow);
+            scene.add(group);
+            satellites.push({mesh:group,orbitR:orbitR,speed:speed,tiltX:tiltX,tiltZ:tiltZ,angle:startAngle,glow:glow});
+        }
+        createSatellite(2.8,0.4,Math.PI/2.2,0.3,0);
+        createSatellite(3.2,0.3,Math.PI/1.8,-0.2,Math.PI*0.7);
+        createSatellite(3.6,0.2,Math.PI/2.5,0.5,Math.PI*1.3);
+        createSatellite(2.8,0.35,Math.PI/2.2,0.3,Math.PI);
+
+        /* Connection beams between satellites and earth */
+        const beamMat=new THREE.LineBasicMaterial({color:0x00d4aa,transparent:true,opacity:0.12});
+
+        /* Particle field (stars) */
+        const starGeo=new THREE.BufferGeometry();
+        const starCount=800;
+        const starPos=new Float32Array(starCount*3);
+        for(let i=0;i<starCount*3;i++)starPos[i]=(Math.random()-0.5)*30;
+        starGeo.setAttribute('position',new THREE.BufferAttribute(starPos,3));
+        const starMat=new THREE.PointsMaterial({color:0xffffff,size:0.015,transparent:true,opacity:0.4});
+        const stars=new THREE.Points(starGeo,starMat);
+        scene.add(stars);
+
+        /* Lighting */
+        const ambLight=new THREE.AmbientLight(0x334455,0.6);
+        scene.add(ambLight);
+        const dirLight=new THREE.DirectionalLight(0x00d4aa,0.8);
+        dirLight.position.set(5,3,5);
+        scene.add(dirLight);
+        const pointLight=new THREE.PointLight(0x0984e3,0.5,20);
+        pointLight.position.set(-5,-3,3);
+        scene.add(pointLight);
+
+        /* Mouse interaction */
+        let mouseX=0,mouseY=0;
+        document.addEventListener('mousemove',function(e){
+            mouseX=(e.clientX/window.innerWidth-0.5)*2;
+            mouseY=(e.clientY/window.innerHeight-0.5)*2;
+        });
+
+        /* Scroll fade */
+        let scrollOpacity=1;
+        window.addEventListener('scroll',function(){
+            scrollOpacity=Math.max(0,1-window.scrollY/(window.innerHeight*0.8));
+            canvas.style.opacity=scrollOpacity;
+        });
+
+        /* Animation loop */
+        let time=0;
+        function animate(){
+            requestAnimationFrame(animate);
+            time+=0.005;
+
+            /* Rotate earth slowly */
+            earth.rotation.y+=0.002;
+            wireframe.rotation.y+=0.002;
+            dotGroup.rotation.y+=0.002;
+
+            /* Slight camera movement with mouse */
+            camera.position.x+=(mouseX*0.3-camera.position.x)*0.02;
+            camera.position.y+=(-mouseY*0.3-camera.position.y)*0.02;
+            camera.lookAt(0,0,0);
+
+            /* Animate satellites along orbits */
+            satellites.forEach(function(s){
+                s.angle+=s.speed*0.01;
+                const x=s.orbitR*Math.cos(s.angle);
+                const z=s.orbitR*Math.sin(s.angle);
+                /* Apply orbit tilt */
+                const cosX=Math.cos(s.tiltX),sinX=Math.sin(s.tiltX);
+                const cosZ=Math.cos(s.tiltZ),sinZ=Math.sin(s.tiltZ);
+                let px=x,py=0,pz=z;
+                /* Rotate around X */
+                let ty=py*cosX-pz*sinX;
+                let tz=py*sinX+pz*cosX;
+                py=ty;pz=tz;
+                /* Rotate around Z */
+                let tx=px*cosZ-py*sinZ;
+                ty=px*sinZ+py*cosZ;
+                px=tx;py=ty;
+                s.mesh.position.set(px,py,pz);
+                s.mesh.lookAt(0,0,0);
+                /* Pulse glow */
+                s.glow.material.opacity=0.5+0.3*Math.sin(time*10+s.angle);
+            });
+
+            /* Pulse atmosphere */
+            atmosphere.material.opacity=0.03+0.015*Math.sin(time*3);
+
+            /* Rotate stars very slowly */
+            stars.rotation.y+=0.0003;
+            stars.rotation.x+=0.0001;
+
+            renderer.render(scene,camera);
+        }
+        animate();
+
+        /* Resize handler */
+        window.addEventListener('resize',function(){
+            camera.aspect=window.innerWidth/window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth,window.innerHeight);
+        });
+    })();
     </script>
 </body>
 </html>
