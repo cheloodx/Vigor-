@@ -29,7 +29,7 @@ import esimsRouter from './routes/esims';
 import subscriptionsRouter from './routes/subscriptions';
 import { stripeRouter } from './routes/stripe';
 import { ordersRouter as stripeOrdersRouter } from './routes/orders';
-import { hasAiraloCredentials } from './services/airalo';
+import { hasEsimAccessCredentials } from './services/esimAccess';
 import { isSupabaseConfigured } from './services/supabase';
 
 const app = express();
@@ -60,7 +60,7 @@ app.get('/health', (_req, res) => {
     version: '1.0.0',
     timestamp: new Date().toISOString(),
     services: {
-      airalo: hasAiraloCredentials() ? 'configured' : 'mock',
+      esimaccess: hasEsimAccessCredentials() ? 'configured' : 'mock',
       stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured',
       supabase: isSupabaseConfigured() ? 'configured' : 'not configured',
     },
@@ -75,7 +75,7 @@ app.use((_req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`SatConnect backend running on port ${PORT}`);
-  console.log(`  Airalo: ${hasAiraloCredentials() ? 'REAL (API configured)' : 'MOCK (no credentials)'}`);
+  console.log(`  eSIM Access: ${hasEsimAccessCredentials() ? 'REAL (API configured)' : 'MOCK (no credentials)'}`);
   console.log(`  Stripe: ${process.env.STRIPE_SECRET_KEY ? 'configured' : 'NOT configured'}`);
   console.log(`  Supabase: ${isSupabaseConfigured() ? 'configured' : 'NOT configured'}`);
 });
