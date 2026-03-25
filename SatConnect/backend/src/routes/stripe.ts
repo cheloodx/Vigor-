@@ -213,4 +213,102 @@ router.get('/session/:sessionId', async (req: Request, res: Response) => {
   }
 });
 
+// ---------------------------------------------------------------------------
+// GET /api/stripe/checkout-redirect
+// Browser-navigation checkout: creates session and 302-redirects to Stripe.
+// Used by static frontends that cannot make cross-origin POST requests.
+// ---------------------------------------------------------------------------
+router.get('/checkout-redirect', async (req: Request, res: Response) => {
+  try {
+    const planId = req.query.planId as string;
+    const returnUrl = req.query.returnUrl as string;
+
+    if (!planId) {
+      res.status(400).send('Missing planId parameter');
+      return;
+    }
+
+    // Server-side price lookup
+    const apiPlan = getCachedApiPlan(planId);
+    let plan: PlanEntry;
+    if (apiPlan) {
+      plan = {
+        id: apiPlan.id,
+        countryCode: apiPlan.country_code,
+        countryName: apiPlan.country_name,
+        countryFlag: '',
+        dataLimitMB: apiPlan.data_limit_mb,
+        dataLabel: apiPlan.data_label,
+        validDays: apiPlan.valid_days,
+        price: apiPlan.price,
+        currency: apiPlan.currency,
+      };
+    } else {
+      const catalogPlan = getPlanById(planId);
+      if (!catalogPlan) {
+        res.status(400).send('Invalid plan ID');
+        return;
+      }
+      plan = catalogPlan;
+    }
+
+    const stripe = getStripe();
+    const unitAmount = Math.round(plan.price * 100);
+    const curr = plan.currency.toLowerCase();
+
+    // Use returnUrl or FRONTEND_URL for success/cancel redirects
+    const baseUrl = returnUrl || process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+    const successUrl = `${baseUrl}/payment-success.html?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`;
+    const cancelUrl = `${baseUrl}/payment-cancel.html`;
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      line_items: [
+        {
+          price_data: {
+            currency: curr,
+            product_data: {
+              name: `eSIM ${plan.dataLabel} - ${plan.countryName}`,
+              description: `Internet ${plan.dataLabel} pentru ${plan.countryName} (${plan.validDays} zile)`,
+            },
+            unit_amount: unitAmount,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      success_url: successUrl,
+      cancel_url: cancelUrl,
+      metadata: {
+        planId: plan.id,
+        countryCode: plan.countryCode,
+        countryName: plan.countryName,
+        dataLabel: plan.dataLabel,
+        validDays: String(plan.validDays),
+        price: String(plan.price),
+      },
+    });
+
+    // Create order record
+    try {
+      await createOrderForSession(session.id, plan.id);
+    } catch (orderErr) {
+      console.error('Failed to create order:', orderErr);
+      await stripe.checkout.sessions.expire(session.id).catch(() => {});
+      res.status(500).send('Failed to initialize order');
+      return;
+    }
+
+    // Redirect to Stripe Checkout
+    if (session.url) {
+      res.redirect(303, session.url);
+    } else {
+      res.status(500).send('Failed to get checkout URL');
+    }
+  } catch (err) {
+    console.error('Checkout redirect error:', err);
+    res.status(500).send('Checkout error');
+  }
+});
+
 export { router as stripeRouter };
