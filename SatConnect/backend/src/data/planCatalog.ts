@@ -170,6 +170,7 @@ const PLAN_LIST: PlanEntry[] = [
 // Default pricing for dynamically-generated country plans
 const DEFAULT_TIERS = [
   { suffix: '500mb', mb: 512, dl: '500 MB', vd: 7, pr: 1.49 },
+  { suffix: '512mb', mb: 512, dl: '512 MB', vd: 7, pr: 1.49 },
   { suffix: '1gb', mb: 1024, dl: '1 GB', vd: 7, pr: 1.99 },
   { suffix: '3gb', mb: 3072, dl: '3 GB', vd: 15, pr: 3.99 },
   { suffix: '5gb', mb: 5120, dl: '5 GB', vd: 30, pr: 5.49 },

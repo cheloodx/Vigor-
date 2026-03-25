@@ -14,7 +14,8 @@ import {
   getOrderBySessionId,
   Order,
 } from './supabase';
-import { getPlanById } from '../data/planCatalog';
+import { getPlanById, PlanEntry } from '../data/planCatalog';
+import { getCachedApiPlan } from '../routes/plans';
 
 // ---------------------------------------------------------------------------
 // In-memory lock to prevent concurrent provisioning for the same session
@@ -39,8 +40,26 @@ export async function createOrderForSession(
   stripeSessionId: string,
   planId: string,
 ): Promise<Order | null> {
-  const plan = getPlanById(planId);
-  if (!plan) return null;
+  // Check cached API plans first (same prices as storefront), then static catalog
+  const apiPlan = getCachedApiPlan(planId);
+  let plan: PlanEntry;
+  if (apiPlan) {
+    plan = {
+      id: apiPlan.id,
+      countryCode: apiPlan.country_code,
+      countryName: apiPlan.country_name,
+      countryFlag: '',
+      dataLimitMB: apiPlan.data_limit_mb,
+      dataLabel: apiPlan.data_label,
+      validDays: apiPlan.valid_days,
+      price: apiPlan.price,
+      currency: apiPlan.currency,
+    };
+  } else {
+    const catalogPlan = getPlanById(planId);
+    if (!catalogPlan) return null;
+    plan = catalogPlan;
+  }
 
   if (!isSupabaseConfigured()) {
     console.warn('Supabase not configured — skipping order creation');
