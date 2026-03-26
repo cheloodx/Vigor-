@@ -119,17 +119,19 @@ function getRegionForCountry(code: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Pricing: convert eSIM Access cost (in thousandths of USD) to retail EUR price
-// e.g. 7000 = $7.00
+// Pricing: convert eSIM Access cost to retail EUR price
+// API price is in hundredths of a cent (ten-thousandths of USD):
+// e.g. 7000 = $0.70, 47000 = $4.70
 // ---------------------------------------------------------------------------
 const USD_TO_EUR = 0.92;
 const MARKUP = 1.25; // 25% margin over wholesale
 
-function calculateRetailPrice(costInThousandths: number): number {
-  const costUsd = costInThousandths / 1000;
+function calculateRetailPrice(costRaw: number): number {
+  const costUsd = costRaw / 10000;
   const retailEur = costUsd * MARKUP * USD_TO_EUR;
-  if (retailEur < 1) return 0.99;
-  if (retailEur < 3) return Math.ceil(retailEur * 2) / 2;
+  if (retailEur < 0.50) return 0.49;
+  if (retailEur < 1) return Math.ceil(retailEur * 10) / 10; // round to nearest €0.10
+  if (retailEur < 5) return Math.ceil(retailEur * 2) / 2;   // round to nearest €0.50
   return Math.round(retailEur * 2) / 2;
 }
 
