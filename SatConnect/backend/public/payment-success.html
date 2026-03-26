@@ -445,6 +445,10 @@
           showEsimDetails(order);
           return;
         }
+        if (order && order.status === 'failed') {
+          showError('Activare esuata', order.error || 'eSIM-ul nu a putut fi activat. Contacteaza suportul.');
+          return;
+        }
       }
     }
 
