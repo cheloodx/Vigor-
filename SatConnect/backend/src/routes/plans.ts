@@ -123,7 +123,7 @@ function getRegionForCountry(code: string): string {
 // e.g. 7000 = $7.00
 // ---------------------------------------------------------------------------
 const USD_TO_EUR = 0.92;
-const MARKUP = 1.4; // 40% margin over wholesale
+const MARKUP = 1.25; // 25% margin over wholesale
 
 function calculateRetailPrice(costInThousandths: number): number {
   const costUsd = costInThousandths / 1000;
