@@ -416,7 +416,7 @@
       const amount = sd.amountTotal ? (sd.amountTotal / 100).toFixed(2) : '';
       const curr = escapeHtml((sd.currency || '').toUpperCase());
 
-      updateStatus('success', 'Plata confirmata!', country && data ? `${country} — ${data}` : 'eSIM-ul tau este in curs de activare');
+      updateStatus('success', 'Plata confirmata!', (sd.countryName && sd.dataLabel) ? `${sd.countryName} — ${sd.dataLabel}` : 'eSIM-ul tau este in curs de activare');
 
       let html = '<div class="esim-details">';
       if (country) html += `<div class="detail-row"><span class="detail-label">Tara</span><span class="detail-value">${country}</span></div>`;
