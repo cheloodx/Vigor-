@@ -72,8 +72,8 @@
     .hero { text-align: center; padding: 64px 0 48px; }
     .hero-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; border-radius: 24px; background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2); color: var(--primary-light); font-size: 0.82rem; font-weight: 600; margin-bottom: 24px; backdrop-filter: blur(12px); animation: fadeInUp 0.6s ease; }
     .hero h1 { font-size: 3.5rem; font-weight: 900; line-height: 1.06; margin-bottom: 20px; letter-spacing: -0.03em; animation: fadeInUp 0.6s ease 0.1s both; }
-    .hero h1 .gradient-text { background: linear-gradient(135deg, #818cf8 0%, #22d3ee 40%, #a78bfa 70%, #6366f1 100%); background-size: 300% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: shimmer 6s ease-in-out infinite; }
-    @keyframes shimmer { 0%, 100% { background-position: 0% center; } 50% { background-position: 300% center; } }
+    .hero h1 .gradient-text { background: linear-gradient(90deg, #818cf8, #22d3ee, #a78bfa, #f472b6, #6366f1, #22d3ee, #818cf8); background-size: 400% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: gradientFlow 8s linear infinite; }
+    @keyframes gradientFlow { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
     .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 540px; margin: 0 auto 36px; line-height: 1.7; animation: fadeInUp 0.6s ease 0.2s both; }
 
     .hero-cta { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 40px; animation: fadeInUp 0.6s ease 0.3s both; flex-wrap: wrap; }
@@ -276,6 +276,87 @@
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
+
+    /* PREMIUM: Parallax depth layers */
+    .parallax-layer { transition: transform 0.1s ease-out; will-change: transform; }
+    .hero-pill { transform-style: preserve-3d; }
+    .hero h1 { transform-style: preserve-3d; }
+
+    /* PREMIUM: Cinematic stagger animations */
+    @keyframes cinematicReveal { 
+      0% { opacity: 0; transform: translateY(40px) scale(0.95); filter: blur(8px); } 
+      60% { filter: blur(0); }
+      100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } 
+    }
+    @keyframes letterReveal {
+      0% { opacity: 0; transform: translateY(20px) rotateX(-40deg); }
+      100% { opacity: 1; transform: translateY(0) rotateX(0); }
+    }
+    .cinematic-in { animation: cinematicReveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.25s; }
+    .stagger-3 { animation-delay: 0.4s; }
+    .stagger-4 { animation-delay: 0.55s; }
+    .stagger-5 { animation-delay: 0.7s; }
+    .stagger-6 { animation-delay: 0.85s; }
+
+    /* PREMIUM: Word-by-word hero reveal */
+    .hero-word { display: inline-block; opacity: 0; transform: translateY(30px); animation: wordPop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes wordPop {
+      0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* PREMIUM: Animated counter */
+    .stat-num { transition: all 0.3s; }
+    .stat-num.counting { transform: scale(1.1); }
+
+    /* PREMIUM: How-card stagger on reveal */
+    .how-card { opacity: 0; transform: translateY(30px); transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); }
+    .how-section.visible .how-card { opacity: 1; transform: translateY(0); }
+    .how-section.visible .how-card:nth-child(1) { transition-delay: 0.1s; }
+    .how-section.visible .how-card:nth-child(2) { transition-delay: 0.3s; }
+    .how-section.visible .how-card:nth-child(3) { transition-delay: 0.5s; }
+
+    /* PREMIUM: Feature card stagger */
+    .feature-card { opacity: 0; transform: translateY(20px); transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+    .features-section.visible .feature-card { opacity: 1; transform: translateY(0); }
+    .features-section.visible .feature-card:nth-child(1) { transition-delay: 0.05s; }
+    .features-section.visible .feature-card:nth-child(2) { transition-delay: 0.15s; }
+    .features-section.visible .feature-card:nth-child(3) { transition-delay: 0.25s; }
+    .features-section.visible .feature-card:nth-child(4) { transition-delay: 0.35s; }
+
+    /* PREMIUM: Glowing pulse on how-step numbers */
+    .how-step { position: relative; }
+    .how-step::after { content: ''; position: absolute; inset: -4px; border-radius: 18px; background: linear-gradient(135deg, var(--primary), #7c3aed); opacity: 0; filter: blur(12px); animation: stepPulse 3s ease-in-out infinite; z-index: -1; }
+    @keyframes stepPulse { 0%, 100% { opacity: 0; transform: scale(0.8); } 50% { opacity: 0.5; transform: scale(1.2); } }
+
+    /* INTERACTIVE GLOBE: Tooltip */
+    .globe-tooltip { position: fixed; z-index: 55; background: rgba(13,13,36,0.95); border: 1px solid rgba(99,102,241,0.3); border-radius: 10px; padding: 10px 16px; color: #f1f5f9; font-size: 0.85rem; font-weight: 600; pointer-events: none; opacity: 0; transform: translateY(8px); transition: all 0.2s; backdrop-filter: blur(16px); box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 20px rgba(99,102,241,0.15); white-space: nowrap; }
+    .globe-tooltip.visible { opacity: 1; transform: translateY(0); }
+    .globe-tooltip .tt-flag { margin-right: 6px; font-size: 1.1rem; }
+    .globe-tooltip .tt-plans { font-size: 0.72rem; color: #94a3b8; font-weight: 500; margin-top: 2px; }
+
+    /* INTERACTIVE GLOBE: Click ripple */
+    .globe-click-ring { position: fixed; z-index: 54; width: 40px; height: 40px; border-radius: 50%; border: 2px solid rgba(99,102,241,0.6); pointer-events: none; animation: clickRing 0.6s ease-out forwards; }
+    @keyframes clickRing { 0% { transform: translate(-50%,-50%) scale(0.5); opacity: 1; } 100% { transform: translate(-50%,-50%) scale(2.5); opacity: 0; } }
+
+    /* PREMIUM: Floating particles around stats */
+    .stats-row { position: relative; }
+    .stat-particle { position: absolute; width: 4px; height: 4px; border-radius: 50%; background: var(--primary-light); opacity: 0; animation: floatParticle 4s ease-in-out infinite; pointer-events: none; }
+    @keyframes floatParticle { 0%, 100% { opacity: 0; transform: translateY(0); } 50% { opacity: 0.6; transform: translateY(-20px); } }
+
+    /* PREMIUM: Magnetic hover on CTA buttons */
+    .cta-primary, .cta-secondary { position: relative; overflow: hidden; }
+    .cta-primary::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.15), transparent 60%); opacity: 0; transition: opacity 0.3s; }
+    .cta-primary:hover::before { opacity: 1; }
+
+    /* PREMIUM: Section divider glow lines */
+    .section-divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(99,102,241,0.3), rgba(6,182,212,0.3), rgba(99,102,241,0.3), transparent); margin: 0; border: none; opacity: 0.6; }
+
+    /* PREMIUM: Typing cursor for hero subtitle */
+    .typing-cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--primary-light); margin-left: 4px; animation: blink 1s step-end infinite; vertical-align: text-bottom; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
   </style>
 </head>
 <body>
@@ -346,13 +427,15 @@
         <div class="trust-badge"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span data-i18n="trust_fast">Activare in secunde</span></div>
         <div class="trust-badge"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>Visa, Mastercard, Apple Pay</div>
       </div>
-      <div class="stats-row">
-        <div class="stat-item"><div class="stat-num" id="stat-countries">179+</div><div class="stat-label" data-i18n="stat_countries">Tari acoperite</div></div>
-        <div class="stat-item"><div class="stat-num">30s</div><div class="stat-label" data-i18n="stat_activation">Activare medie</div></div>
-        <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label" data-i18n="stat_availability">Disponibilitate</div></div>
+      <div class="stats-row" id="stats-row">
+        <div class="stat-item"><div class="stat-num" id="stat-countries" data-count-to="179" data-count-suffix="+">0</div><div class="stat-label" data-i18n="stat_countries">Tari acoperite</div></div>
+        <div class="stat-item"><div class="stat-num" data-count-to="50000" data-count-suffix="+" data-count-format="k">0</div><div class="stat-label" data-i18n="stat_clients">Clienti activi</div></div>
+        <div class="stat-item"><div class="stat-num" data-count-to="30" data-count-suffix="s">0</div><div class="stat-label" data-i18n="stat_activation">Activare medie</div></div>
+        <div class="stat-item"><div class="stat-num" data-count-to="99" data-count-suffix="%" data-count-decimals="1">0</div><div class="stat-label" data-i18n="stat_uptime">Uptime garantat</div></div>
       </div>
     </section>
 
+    <hr class="section-divider">
     <!-- HOW IT WORKS -->
     <section class="how-section reveal" id="how-it-works">
       <div style="text-align:center">
@@ -388,6 +471,7 @@
       </div>
     </section>
 
+    <hr class="section-divider">
     <!-- FEATURES -->
     <section class="features-section reveal">
       <div class="features-grid">
@@ -491,6 +575,9 @@
     </footer>
   </div>
 
+  <!-- GLOBE TOOLTIP -->
+  <div class="globe-tooltip" id="globe-tooltip"><span class="tt-flag"></span><span class="tt-name"></span><div class="tt-plans"></div></div>
+
   <!-- MODAL -->
   <div class="modal-overlay" id="plan-modal">
     <div class="modal">
@@ -545,6 +632,76 @@
     function animate(){requestAnimationFrame(animate);globe.rotation.y+=0.001;dots.rotation.y+=0.001;scene.rotation.y+=(mx-scene.rotation.y)*0.02;scene.rotation.x+=(-my*0.3-scene.rotation.x)*0.02;renderer.render(scene,camera);}
     animate();
     window.addEventListener('resize',function(){camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
+
+    /* INTERACTIVE GLOBE: Raycasting for city clicks */
+    var cityNames=['RO','FR','GB','ES','IT','DE','RU','RU','JP','KR','CN','HK','SG','TH','IN','AE','AU','NZ','US','US','MX','BR','AR','NG','KE','MA','TN','ZA','EG','TR','FI','SE','DK','CZ','HU','SI','BG','RS','PT','IE','IS'];
+    var raycaster=new THREE.Raycaster();
+    raycaster.params.Points.threshold=0.08;
+    var mouse2=new THREE.Vector2();
+    var tooltip=document.getElementById('globe-tooltip');
+    var hoveredCity=-1;
+
+    canvas.style.pointerEvents='auto';
+    canvas.style.cursor='default';
+
+    canvas.addEventListener('mousemove',function(e){
+      mouse2.x=(e.clientX/window.innerWidth)*2-1;
+      mouse2.y=-(e.clientY/window.innerHeight)*2+1;
+      raycaster.setFromCamera(mouse2,camera);
+      var intersects=raycaster.intersectObject(dots);
+      if(intersects.length>0){
+        var idx=intersects[0].index;
+        if(idx!==hoveredCity){
+          hoveredCity=idx;
+          var cc=cityNames[idx]||'';
+          var countryData=window._allPlansRef?window._allPlansRef[cc]:null;
+          var ttFlag=tooltip.querySelector('.tt-flag');
+          var ttName=tooltip.querySelector('.tt-name');
+          var ttPlans=tooltip.querySelector('.tt-plans');
+          if(cc){
+            ttFlag.textContent=String.fromCodePoint.apply(null,cc.toUpperCase().split('').map(function(c){return 0x1F1E6+c.charCodeAt(0)-65;}));
+            ttName.textContent=countryData?countryData.country_name:cc;
+            ttPlans.textContent=countryData?(countryData.plans||[]).length+' plans available':'';
+            tooltip.classList.add('visible');
+          }
+        }
+        tooltip.style.left=(e.clientX+16)+'px';
+        tooltip.style.top=(e.clientY-10)+'px';
+        canvas.style.cursor='pointer';
+      } else {
+        if(hoveredCity!==-1){hoveredCity=-1;tooltip.classList.remove('visible');}
+        canvas.style.cursor='default';
+      }
+    });
+
+    canvas.addEventListener('click',function(e){
+      mouse2.x=(e.clientX/window.innerWidth)*2-1;
+      mouse2.y=-(e.clientY/window.innerHeight)*2+1;
+      raycaster.setFromCamera(mouse2,camera);
+      var intersects=raycaster.intersectObject(dots);
+      if(intersects.length>0){
+        var idx=intersects[0].index;
+        var cc=cityNames[idx]||'';
+        if(cc&&window._allPlansRef&&window._allPlansRef[cc]){
+          /* Click ripple effect */
+          var ring=document.createElement('div');
+          ring.className='globe-click-ring';
+          ring.style.left=e.clientX+'px';
+          ring.style.top=e.clientY+'px';
+          document.body.appendChild(ring);
+          setTimeout(function(){ring.remove();},700);
+          /* Open country modal */
+          tooltip.classList.remove('visible');
+          if(typeof openCountry==='function')openCountry(cc);
+        }
+      }
+    });
+
+    canvas.addEventListener('mouseleave',function(){
+      hoveredCity=-1;
+      tooltip.classList.remove('visible');
+      canvas.style.cursor='default';
+    });
   })();
   </script>
 
@@ -647,6 +804,8 @@
         stat_countries: 'Tari acoperite',
         stat_activation: 'Activare medie',
         stat_availability: 'Disponibilitate',
+        stat_clients: 'Clienti activi',
+        stat_uptime: 'Uptime garantat',
         how_label: 'Simplu si rapid',
         how_title: 'Cum functioneaza',
         how_subtitle: '3 pasi simpli pentru internet mobil oriunde in lume',
@@ -716,6 +875,8 @@
         stat_countries: 'Countries covered',
         stat_activation: 'Avg. activation',
         stat_availability: 'Availability',
+        stat_clients: 'Active clients',
+        stat_uptime: 'Guaranteed uptime',
         how_label: 'Simple and fast',
         how_title: 'How it works',
         how_subtitle: '3 simple steps for mobile internet anywhere in the world',
@@ -785,6 +946,8 @@
         stat_countries: 'Abgedeckte Lander',
         stat_activation: 'Durchschn. Aktivierung',
         stat_availability: 'Verfugbarkeit',
+        stat_clients: 'Aktive Kunden',
+        stat_uptime: 'Garantierte Verfuegbarkeit',
         how_label: 'Einfach und schnell',
         how_title: 'So funktioniert es',
         how_subtitle: '3 einfache Schritte fur mobiles Internet uberall auf der Welt',
@@ -854,6 +1017,8 @@
         stat_countries: 'Pays couverts',
         stat_activation: 'Activation moy.',
         stat_availability: 'Disponibilite',
+        stat_clients: 'Clients actifs',
+        stat_uptime: 'Disponibilite garantie',
         how_label: 'Simple et rapide',
         how_title: 'Comment ca marche',
         how_subtitle: '3 etapes simples pour internet mobile partout dans le monde',
@@ -923,6 +1088,8 @@
         stat_countries: 'Paises cubiertos',
         stat_activation: 'Activacion media',
         stat_availability: 'Disponibilidad',
+        stat_clients: 'Clientes activos',
+        stat_uptime: 'Disponibilidad garantizada',
         how_label: 'Simple y rapido',
         how_title: 'Como funciona',
         how_subtitle: '3 pasos simples para internet movil en cualquier lugar del mundo',
@@ -992,6 +1159,8 @@
         stat_countries: 'Paesi coperti',
         stat_activation: 'Attivazione media',
         stat_availability: 'Disponibilita',
+        stat_clients: 'Clienti attivi',
+        stat_uptime: 'Uptime garantito',
         how_label: 'Semplice e veloce',
         how_title: 'Come funziona',
         how_subtitle: '3 semplici passaggi per internet mobile ovunque nel mondo',
@@ -1061,6 +1230,8 @@
         stat_countries: 'Paises cobertos',
         stat_activation: 'Ativacao media',
         stat_availability: 'Disponibilidade',
+        stat_clients: 'Clientes ativos',
+        stat_uptime: 'Uptime garantido',
         how_label: 'Simples e rapido',
         how_title: 'Como funciona',
         how_subtitle: '3 passos simples para internet movel em qualquer lugar do mundo',
@@ -1130,6 +1301,8 @@
         stat_countries: 'Landen gedekt',
         stat_activation: 'Gem. activering',
         stat_availability: 'Beschikbaarheid',
+        stat_clients: 'Actieve klanten',
+        stat_uptime: 'Gegarandeerde uptime',
         how_label: 'Eenvoudig en snel',
         how_title: 'Hoe het werkt',
         how_subtitle: '3 eenvoudige stappen voor mobiel internet overal ter wereld',
@@ -1199,6 +1372,8 @@
         stat_countries: 'Kraje objete',
         stat_activation: 'Srednia aktywacja',
         stat_availability: 'Dostepnosc',
+        stat_clients: 'Aktywni klienci',
+        stat_uptime: 'Gwarantowany uptime',
         how_label: 'Prosto i szybko',
         how_title: 'Jak to dziala',
         how_subtitle: '3 proste kroki do internetu mobilnego gdziekolwiek na swiecie',
@@ -1268,6 +1443,8 @@
         stat_countries: 'Kapsanan ulkeler',
         stat_activation: 'Ort. aktivasyon',
         stat_availability: 'Kullanilabilirlik',
+        stat_clients: 'Aktif musteriler',
+        stat_uptime: 'Garantili calisma suresi',
         how_label: 'Basit ve hizli',
         how_title: 'Nasil calisir',
         how_subtitle: 'Dunyanin her yerinde mobil internet icin 3 basit adim',
@@ -1337,6 +1514,8 @@
         stat_countries: '\u5BFE\u5FDC\u56FD',
         stat_activation: '\u5E73\u5747\u30A2\u30AF\u30C6\u30A3\u30D9\u30FC\u30C8',
         stat_availability: '\u53EF\u7528\u6027',
+        stat_clients: '\u30A2\u30AF\u30C6\u30A3\u30D6\u30E6\u30FC\u30B6\u30FC',
+        stat_uptime: '\u7A3C\u50CD\u4FDD\u8A3C',
         how_label: '\u7C21\u5358\u30FB\u9AD8\u901F',
         how_title: '\u4F7F\u3044\u65B9',
         how_subtitle: '\u4E16\u754C\u4E2D\u3067\u30E2\u30D0\u30A4\u30EB\u30A4\u30F3\u30BF\u30FC\u30CD\u30C3\u30C8\u3092\u5229\u7528\u3059\u308B3\u30B9\u30C6\u30C3\u30D7',
@@ -1406,6 +1585,8 @@
         stat_countries: '\uCEE4\uBC84 \uAD6D\uAC00',
         stat_activation: '\uD3C9\uADE0 \uD65C\uC131\uD654',
         stat_availability: '\uAC00\uC6A9\uC131',
+        stat_clients: '\uD65C\uC131 \uC0AC\uC6A9\uC790',
+        stat_uptime: '\uAC00\uB3D9 \uBCF4\uC7A5',
         how_label: '\uAC04\uB2E8\uD558\uACE0 \uBE60\uB974\uAC8C',
         how_title: '\uC0AC\uC6A9 \uBC29\uBC95',
         how_subtitle: '\uC804 \uC138\uACC4 \uBAA8\uBC14\uC77C \uC778\uD130\uB137\uC744 \uC704\uD55C 3\uB2E8\uACC4',
@@ -1475,6 +1656,8 @@
         stat_countries: '\u8986\u76D6\u56FD\u5BB6',
         stat_activation: '\u5E73\u5747\u6FC0\u6D3B',
         stat_availability: '\u53EF\u7528\u6027',
+        stat_clients: '\u6D3B\u8DC3\u7528\u6237',
+        stat_uptime: '\u7A33\u5B9A\u6027\u4FDD\u8BC1',
         how_label: '\u7B80\u5355\u5FEB\u901F',
         how_title: '\u5982\u4F55\u4F7F\u7528',
         how_subtitle: '\u5168\u7403\u79FB\u52A8\u4E92\u8054\u7F51\u53EA\u97003\u6B65',
@@ -1544,6 +1727,8 @@
         stat_countries: '\u062F\u0648\u0644 \u0645\u063A\u0637\u0627\u0629',
         stat_activation: '\u0645\u062A\u0648\u0633\u0637 \u0627\u0644\u062A\u0641\u0639\u064A\u0644',
         stat_availability: '\u0627\u0644\u062A\u0648\u0641\u0631',
+        stat_clients: '\u0639\u0645\u0644\u0627\u0621 \u0646\u0634\u0637\u0648\u0646',
+        stat_uptime: '\u0648\u0642\u062A \u0627\u0644\u062A\u0634\u063A\u064A\u0644 \u0645\u0636\u0645\u0648\u0646',
         how_label: '\u0628\u0633\u064A\u0637 \u0648\u0633\u0631\u064A\u0639',
         how_title: '\u0643\u064A\u0641 \u064A\u0639\u0645\u0644',
         how_subtitle: '3 \u062E\u0637\u0648\u0627\u062A \u0628\u0633\u064A\u0637\u0629 \u0644\u0625\u0646\u062A\u0631\u0646\u062A \u0645\u062D\u0645\u0648\u0644 \u0641\u064A \u0623\u064A \u0645\u0643\u0627\u0646',
@@ -1669,6 +1854,124 @@
     if (currentLang !== 'ro') {
       applyTranslations();
     }
+
+
+    /* ====== PREMIUM EFFECTS ====== */
+
+    /* Expose allPlans for globe interaction */
+    var origLoadPlans = loadPlans;
+    loadPlans = async function() {
+      await origLoadPlans();
+      window._allPlansRef = allPlans;
+    };
+
+    /* Animated Counters */
+    function animateCounters() {
+      var counters = document.querySelectorAll('[data-count-to]');
+      counters.forEach(function(el) {
+        if (el.dataset.counted) return;
+        var target = parseInt(el.getAttribute('data-count-to'));
+        var suffix = el.getAttribute('data-count-suffix') || '';
+        var fmt = el.getAttribute('data-count-format');
+        var decimals = parseInt(el.getAttribute('data-count-decimals')) || 0;
+        el.dataset.counted = '1';
+        var start = 0;
+        var duration = 2000;
+        var startTime = null;
+
+        function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
+
+        function step(ts) {
+          if (!startTime) startTime = ts;
+          var progress = Math.min((ts - startTime) / duration, 1);
+          var eased = easeOutExpo(progress);
+          var current = Math.round(eased * target);
+          
+          if (fmt === 'k' && current >= 1000) {
+            el.textContent = (current / 1000).toFixed(current >= target ? 0 : 1) + 'K' + suffix;
+          } else if (decimals > 0) {
+            el.textContent = (eased * target).toFixed(progress >= 1 ? 1 : 0) + suffix;
+          } else {
+            el.textContent = current + suffix;
+          }
+          
+          if (progress < 1) {
+            requestAnimationFrame(step);
+          } else {
+            /* Final value */
+            if (fmt === 'k') {
+              el.textContent = '50K' + suffix;
+            } else if (decimals > 0) {
+              el.textContent = target.toFixed(1) + suffix;
+            } else {
+              el.textContent = target + suffix;
+            }
+            el.classList.remove('counting');
+          }
+        }
+        el.classList.add('counting');
+        requestAnimationFrame(step);
+      });
+    }
+
+    /* Counter observer */
+    var statsRow = document.getElementById('stats-row');
+    if (statsRow) {
+      var counterObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            setTimeout(animateCounters, 200);
+            counterObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.5 });
+      counterObs.observe(statsRow);
+    }
+
+    /* Parallax on mouse move */
+    var heroSection = document.querySelector('.hero');
+    if (heroSection) {
+      document.addEventListener('mousemove', function(e) {
+        var cx = (e.clientX / window.innerWidth - 0.5) * 2;
+        var cy = (e.clientY / window.innerHeight - 0.5) * 2;
+        
+        var pill = document.querySelector('.hero-pill');
+        var h1 = document.querySelector('.hero h1');
+        var desc = document.querySelector('.hero p');
+        var cta = document.querySelector('.hero-cta');
+        
+        if (pill) pill.style.transform = 'translate(' + (cx * 8) + 'px, ' + (cy * 5) + 'px)';
+        if (h1) h1.style.transform = 'translate(' + (cx * 12) + 'px, ' + (cy * 8) + 'px)';
+        if (desc) desc.style.transform = 'translate(' + (cx * 6) + 'px, ' + (cy * 4) + 'px)';
+        if (cta) cta.style.transform = 'translate(' + (cx * 4) + 'px, ' + (cy * 3) + 'px)';
+      });
+    }
+
+    /* Magnetic button hover effect */
+    document.querySelectorAll('.cta-primary, .cta-secondary').forEach(function(btn) {
+      btn.addEventListener('mousemove', function(e) {
+        var rect = btn.getBoundingClientRect();
+        var x = ((e.clientX - rect.left) / rect.width) * 100;
+        var y = ((e.clientY - rect.top) / rect.height) * 100;
+        btn.style.setProperty('--mouse-x', x + '%');
+        btn.style.setProperty('--mouse-y', y + '%');
+      });
+    });
+
+    /* Floating particles around stats */
+    (function() {
+      var sr = document.getElementById('stats-row');
+      if (!sr) return;
+      for (var i = 0; i < 8; i++) {
+        var p = document.createElement('div');
+        p.className = 'stat-particle';
+        p.style.left = (Math.random() * 100) + '%';
+        p.style.top = (Math.random() * 100) + '%';
+        p.style.animationDelay = (Math.random() * 4) + 's';
+        p.style.animationDuration = (3 + Math.random() * 3) + 's';
+        sr.appendChild(p);
+      }
+    })();
 
     loadPlans();
   </script>
