@@ -164,8 +164,19 @@ function transformPackagesToPlans(packages: EsimAccessPackage[]): Record<string,
     if (volumeMB < 500) continue;
 
     // Only keep volumes that match supported tiers (avoids unbuyable plans)
-    const SUPPORTED_MB = [512, 1024, 3072, 5120, 10240, 15360, 20480, 51200];
-    if (!SUPPORTED_MB.some(s => Math.abs(volumeMB - s) < 100)) continue;
+    // Snap to the nearest supported tier so plan IDs always match DEFAULT_TIERS
+    const SUPPORTED_TIERS = [
+      { mb: 500,   label: '500 MB' },
+      { mb: 1024,  label: '1 GB' },
+      { mb: 3072,  label: '3 GB' },
+      { mb: 5120,  label: '5 GB' },
+      { mb: 10240, label: '10 GB' },
+      { mb: 15360, label: '15 GB' },
+      { mb: 20480, label: '20 GB' },
+      { mb: 51200, label: '50 GB' },
+    ];
+    const matchedTier = SUPPORTED_TIERS.find(s => Math.abs(volumeMB - s.mb) < 100);
+    if (!matchedTier) continue;
 
     // Skip daily packages (duration <= 1 day)
     if (pkg.duration <= 1) continue;
@@ -175,7 +186,8 @@ function transformPackagesToPlans(packages: EsimAccessPackage[]): Record<string,
 
     const countryName = COUNTRY_NAMES[cc] || getCountryNameFromPackage(pkg) || cc;
     const region = getRegionForCountry(cc);
-    const dataLabel = formatDataLabel(volumeBytes);
+    // Use the snapped tier label to ensure plan ID matches DEFAULT_TIERS suffixes
+    const dataLabel = matchedTier.label;
     const planId = `${cc.toLowerCase()}-${dataLabel.toLowerCase().replace(/\s+/g, '')}`;
 
     if (!grouped[cc]) {
@@ -195,7 +207,7 @@ function transformPackagesToPlans(packages: EsimAccessPackage[]): Record<string,
       id: planId,
       country_code: cc,
       country_name: countryName,
-      data_limit_mb: volumeMB,
+      data_limit_mb: matchedTier.mb,
       data_label: dataLabel,
       valid_days: pkg.duration,
       price: calculateRetailPrice(pkg.price),
