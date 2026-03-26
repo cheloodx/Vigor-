@@ -61,9 +61,8 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
     const curr = plan.currency.toLowerCase();
 
     // Use client-provided URLs only if they match our allowed origin (prevent open redirect)
-    // Prefer FRONTEND_URL env var; fall back to X-Forwarded headers from reverse proxy
-    const inferredOrigin = `${req.get('x-forwarded-proto') || req.protocol}://${req.get('x-forwarded-host') || req.get('host')}`;
-    const allowedOrigin = process.env.FRONTEND_URL || inferredOrigin;
+    // Prefer FRONTEND_URL env var; fall back to Express's req.protocol/host (respects trust proxy)
+    const allowedOrigin = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
     const finalSuccessUrl = (successUrl && process.env.FRONTEND_URL && successUrl.startsWith(allowedOrigin + '/')) ? successUrl : `${allowedOrigin}/payment-success.html?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`;
     const finalCancelUrl = (cancelUrl && process.env.FRONTEND_URL && cancelUrl.startsWith(allowedOrigin + '/')) ? cancelUrl : `${allowedOrigin}/payment-cancel.html`;
 
@@ -251,10 +250,18 @@ router.get('/checkout-redirect', async (req: Request, res: Response) => {
     const curr = plan.currency.toLowerCase();
 
     // Validate returnUrl against allowed origin to prevent open redirect
-    // Prefer FRONTEND_URL env var; fall back to X-Forwarded headers from reverse proxy
-    const inferredOrigin = `${req.get('x-forwarded-proto') || req.protocol}://${req.get('x-forwarded-host') || req.get('host')}`;
-    const allowedOrigin = process.env.FRONTEND_URL || inferredOrigin;
-    const baseUrl = (returnUrl && process.env.FRONTEND_URL && returnUrl.startsWith(allowedOrigin + '/')) ? returnUrl : allowedOrigin;
+    // Prefer FRONTEND_URL env var; fall back to Express's req.protocol/host (respects trust proxy)
+    const allowedOrigin = process.env.FRONTEND_URL || `${req.protocol}://${req.get('host')}`;
+    // Extract just the origin from returnUrl (strip any path) to prevent broken success/cancel URLs
+    let baseUrl = allowedOrigin;
+    if (returnUrl && process.env.FRONTEND_URL && returnUrl.startsWith(allowedOrigin + '/')) {
+      try {
+        const parsed = new URL(returnUrl);
+        baseUrl = parsed.origin;
+      } catch {
+        // Invalid URL — fall back to allowedOrigin
+      }
+    }
     const successUrl = `${baseUrl}/payment-success.html?session_id={CHECKOUT_SESSION_ID}&plan_id=${plan.id}`;
     const cancelUrl = `${baseUrl}/payment-cancel.html`;
 

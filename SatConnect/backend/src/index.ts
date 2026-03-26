@@ -36,6 +36,9 @@ import { isSupabaseConfigured } from './services/supabase';
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust first proxy (nginx) so req.protocol and req.get('host') use X-Forwarded-* headers
+app.set('trust proxy', 1);
+
 // Stripe webhook needs raw body, so we handle it before other middleware
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
