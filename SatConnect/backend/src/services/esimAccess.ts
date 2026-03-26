@@ -21,7 +21,7 @@ export interface EsimAccessPackage {
   packageCode: string;
   slug: string;
   name: string;
-  price: number;        // in thousandths of USD (e.g. 7000 = $7.00)
+  price: number;        // in ten-thousandths of USD (e.g. 7000 = $0.70, 47000 = $4.70)
   currencyCode: string;
   volume: number;       // bytes
   duration: number;
