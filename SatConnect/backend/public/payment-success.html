@@ -4,193 +4,305 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SatConnect - Plata Reusita</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --accent: #06b6d4;
+      --bg-dark: #0f0f23;
+      --bg-card: #161632;
+      --border: rgba(255,255,255,0.08);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #0a0a2e 0%, #1a1a4e 50%, #0d0d3d 100%);
-      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      -webkit-font-smoothing: antialiased;
     }
+
+    /* Background */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 50%);
+    }
+
     .container {
-      max-width: 560px;
+      max-width: 520px;
       width: 100%;
       padding: 20px;
+      position: relative;
+      z-index: 1;
     }
+
+    /* Nav mini */
+    .nav-mini {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .nav-logo {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .nav-name {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+    .nav-name span { color: var(--primary-light); }
+
     .card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      padding: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 36px 32px;
       text-align: center;
     }
-    .icon {
-      width: 80px; height: 80px;
+
+    /* Status icon */
+    .status-icon {
+      width: 64px; height: 64px;
       margin: 0 auto 20px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 2.5rem;
     }
-    .icon.success { background: rgba(39,174,96,0.2); }
-    .icon.loading { background: rgba(0,212,255,0.2); }
-    .icon.error { background: rgba(231,76,60,0.2); }
-    
-    h1 { font-size: 1.6rem; margin-bottom: 8px; }
-    .subtitle { color: #8e8ea0; margin-bottom: 24px; }
+    .status-icon.success {
+      background: rgba(16,185,129,0.12);
+      border: 2px solid rgba(16,185,129,0.3);
+    }
+    .status-icon.success svg { color: var(--success); }
+    .status-icon.loading {
+      background: rgba(99,102,241,0.1);
+      border: 2px solid rgba(99,102,241,0.2);
+    }
+    .status-icon.error {
+      background: rgba(239,68,68,0.1);
+      border: 2px solid rgba(239,68,68,0.2);
+    }
+    .status-icon.error svg { color: var(--danger); }
+    .status-icon svg { width: 28px; height: 28px; }
 
     .spinner {
-      width: 40px; height: 40px;
+      width: 28px; height: 28px;
       border: 3px solid rgba(255,255,255,0.1);
-      border-top-color: #00d4ff;
+      border-top-color: var(--primary-light);
       border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      margin: 0 auto;
+      animation: spin 0.7s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
+    h1 { font-size: 1.4rem; font-weight: 700; margin-bottom: 6px; }
+    .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+
     /* eSIM Details */
-    .esim-details {
-      text-align: left;
-      margin-top: 24px;
-    }
+    .esim-details { text-align: left; margin-top: 20px; }
     .detail-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
     }
     .detail-row:last-child { border-bottom: none; }
-    .detail-label { color: #8e8ea0; font-size: 0.9rem; }
-    .detail-value { font-weight: 600; font-size: 0.95rem; text-align: right; max-width: 60%; word-break: break-all; }
+    .detail-label { color: var(--text-dim); font-size: 0.82rem; font-weight: 500; }
+    .detail-value {
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-align: right;
+      max-width: 60%;
+      word-break: break-all;
+    }
 
     /* QR Code */
     .qr-section {
       margin-top: 24px;
       padding: 24px;
-      background: rgba(255,255,255,0.03);
-      border-radius: 16px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
       text-align: center;
     }
-    .qr-section h3 { margin-bottom: 16px; font-size: 1.1rem; }
+    .qr-section h3 {
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
     .qr-section img {
-      width: 200px; height: 200px;
-      border-radius: 12px;
+      width: 180px; height: 180px;
+      border-radius: var(--radius-md);
       background: #fff;
       padding: 8px;
     }
     .qr-instruction {
-      color: #8e8ea0;
-      font-size: 0.85rem;
+      color: var(--text-dim);
+      font-size: 0.8rem;
       margin-top: 12px;
       line-height: 1.5;
     }
 
     /* Apple Install Button */
     .apple-install-btn {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       margin-top: 16px;
-      padding: 14px 28px;
-      border-radius: 14px;
-      background: linear-gradient(135deg, #00d4ff, #7b2ff7);
+      padding: 12px 24px;
+      border-radius: var(--radius-md);
+      background: var(--primary);
       color: #fff;
       text-decoration: none;
       font-weight: 600;
-      font-size: 1rem;
-      transition: all 0.3s;
+      font-size: 0.9rem;
+      transition: all 0.2s;
     }
-    .apple-install-btn:hover { transform: scale(1.03); box-shadow: 0 8px 30px rgba(123,47,247,0.3); }
+    .apple-install-btn:hover {
+      background: #4f46e5;
+      box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+      transform: translateY(-1px);
+    }
+    .apple-install-btn svg { width: 18px; height: 18px; }
 
-    /* LPA Copy */
+    /* LPA Section */
     .lpa-section {
       margin-top: 20px;
       padding: 16px;
-      background: rgba(0,212,255,0.05);
-      border: 1px solid rgba(0,212,255,0.2);
-      border-radius: 12px;
+      background: rgba(99,102,241,0.05);
+      border: 1px solid rgba(99,102,241,0.15);
+      border-radius: var(--radius-md);
     }
-    .lpa-section h4 { font-size: 0.9rem; margin-bottom: 8px; color: #00d4ff; }
+    .lpa-section h4 {
+      font-size: 0.82rem;
+      margin-bottom: 8px;
+      color: var(--primary-light);
+      font-weight: 600;
+    }
     .lpa-code {
-      font-family: monospace;
-      font-size: 0.8rem;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.75rem;
       word-break: break-all;
-      color: #ccc;
+      color: var(--text-muted);
       background: rgba(0,0,0,0.3);
-      padding: 10px;
+      padding: 10px 12px;
       border-radius: 8px;
       cursor: pointer;
       position: relative;
+      transition: background 0.2s;
     }
     .lpa-code:hover { background: rgba(0,0,0,0.5); }
-    .lpa-code::after {
-      content: 'Click pentru copiere';
-      position: absolute;
-      top: -24px;
-      right: 0;
-      font-size: 0.7rem;
-      color: #8e8ea0;
-    }
+
     .copied-toast {
       display: none;
       position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: #27ae60;
+      background: var(--success);
       color: #fff;
       padding: 10px 24px;
       border-radius: 8px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(16,185,129,0.3);
     }
     .copied-toast.show { display: block; }
 
     .back-link {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       margin-top: 24px;
-      color: #00d4ff;
+      color: var(--primary-light);
       text-decoration: none;
-      font-size: 0.95rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s;
     }
-    .back-link:hover { text-decoration: underline; }
-
-    .status-text { color: #8e8ea0; font-size: 0.9rem; margin-top: 12px; }
-    .status-text.provisioning { color: #f39c12; }
+    .back-link:hover { color: var(--accent); }
+    .back-link svg { width: 16px; height: 16px; }
 
     /* Steps */
     .steps {
       text-align: left;
-      margin-top: 20px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .steps h3 {
+      margin-bottom: 14px;
+      font-size: 0.88rem;
+      font-weight: 600;
     }
     .step {
       display: flex;
       gap: 12px;
-      padding: 10px 0;
+      padding: 8px 0;
       align-items: flex-start;
     }
     .step-num {
-      width: 28px; height: 28px;
+      width: 24px; height: 24px;
       border-radius: 50%;
-      background: rgba(0,212,255,0.2);
-      color: #00d4ff;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.2);
+      color: var(--primary-light);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: 700;
       flex-shrink: 0;
     }
-    .step-text { color: #ccc; font-size: 0.9rem; line-height: 1.5; padding-top: 3px; }
+    .step-text {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      line-height: 1.5;
+      padding-top: 2px;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 20px; }
+      h1 { font-size: 1.2rem; }
+    }
   </style>
 </head>
 <body>
+  <div class="bg-layer"></div>
   <div class="container">
+    <div class="nav-mini">
+      <div class="nav-logo">S</div>
+      <div class="nav-name">Sat<span>Connect</span></div>
+    </div>
     <div class="card" id="card">
-      <div class="icon loading" id="status-icon">
+      <div class="status-icon loading" id="status-icon">
         <div class="spinner"></div>
       </div>
       <h1 id="title">Se proceseaza plata...</h1>
@@ -198,10 +310,13 @@
       <div id="content"></div>
     </div>
     <div style="text-align:center">
-      <a href="/" class="back-link" id="back-link" style="display:none">Inapoi la magazine</a>
+      <a href="/" class="back-link" id="back-link" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Inapoi la magazin
+      </a>
     </div>
   </div>
-  <div class="copied-toast" id="copied-toast">Copiat!</div>
+  <div class="copied-toast" id="copied-toast">Copiat in clipboard!</div>
 
   <script>
     function escapeHtml(str) {
@@ -222,7 +337,6 @@
 
     async function checkPaymentAndProvision() {
       try {
-        // 1. Check Stripe payment status
         const stripeRes = await fetch(`${API_BASE}/api/stripe/session/${sessionId}`);
         const stripeData = await stripeRes.json();
 
@@ -231,17 +345,14 @@
           return;
         }
 
-        // Payment confirmed - show processing
         updateStatus('loading', 'Plata confirmata!', 'Se activeaza eSIM-ul tau...');
 
-        // 2. Check if already provisioned
         let order = await checkOrder();
         if (order && order.status === 'provisioned' && order.iccid) {
           showEsimDetails(order);
           return;
         }
 
-        // 3. Trigger provisioning
         try {
           const provRes = await fetch(`${API_BASE}/api/orders/provision`, {
             method: 'POST',
@@ -249,7 +360,6 @@
             body: JSON.stringify({ sessionId }),
           });
           const provData = await provRes.json();
-
           if (provData.success && provData.order) {
             showEsimDetails(provData.order);
             return;
@@ -258,10 +368,8 @@
           console.log('Provision call failed, will poll:', e);
         }
 
-        // 4. Poll for provisioning completion
         updateStatus('loading', 'Se activeaza eSIM-ul...', 'Poate dura pana la 60 secunde');
         await pollForProvisioning();
-
       } catch (err) {
         console.error(err);
         showError('Eroare', 'A aparut o eroare. Te rugam sa contactezi suportul.');
@@ -280,7 +388,6 @@
       const maxAttempts = 15;
       for (let i = 0; i < maxAttempts; i++) {
         await new Promise(r => setTimeout(r, 4000));
-        
         const order = await checkOrder();
         if (order && order.status === 'provisioned' && order.iccid) {
           showEsimDetails(order);
@@ -290,118 +397,64 @@
           showError('Activare esuata', order.error || 'eSIM-ul nu a putut fi activat. Contacteaza suportul.');
           return;
         }
-
-        // Update progress
         const progress = Math.min(90, (i + 1) * 7);
         document.getElementById('subtitle').textContent = `Progres: ${progress}%... Te rugam sa astepti`;
       }
-
-      // Timeout
       showError('Timeout', 'Activarea dureaza mai mult decat de obicei. Verifica mai tarziu sau contacteaza suportul.');
     }
 
     function showEsimDetails(order) {
       updateStatus('success', 'eSIM Activat!', `${escapeHtml(order.countryName) || ''} ${escapeHtml(order.dataLabel) || ''}`);
-      
+
       let html = '<div class="esim-details">';
-      
       if (order.iccid) {
-        html += `
-          <div class="detail-row">
-            <span class="detail-label">ICCID</span>
-            <span class="detail-value">${escapeHtml(order.iccid)}</span>
-          </div>`;
+        html += `<div class="detail-row"><span class="detail-label">ICCID</span><span class="detail-value">${escapeHtml(order.iccid)}</span></div>`;
       }
       if (order.planId) {
-        html += `
-          <div class="detail-row">
-            <span class="detail-label">Plan</span>
-            <span class="detail-value">${escapeHtml(order.dataLabel || order.planId)}</span>
-          </div>`;
+        html += `<div class="detail-row"><span class="detail-label">Plan</span><span class="detail-value">${escapeHtml(order.dataLabel || order.planId)}</span></div>`;
       }
       if (order.countryName) {
-        html += `
-          <div class="detail-row">
-            <span class="detail-label">Tara</span>
-            <span class="detail-value">${escapeHtml(order.countryName)}</span>
-          </div>`;
+        html += `<div class="detail-row"><span class="detail-label">Tara</span><span class="detail-value">${escapeHtml(order.countryName)}</span></div>`;
       }
       html += '</div>';
 
-      // QR Code
       if (order.qrcodeUrl) {
-        html += `
-          <div class="qr-section">
-            <h3>Scaneaza codul QR</h3>
-            <img src="${escapeHtml(order.qrcodeUrl)}" alt="eSIM QR Code" />
-            <p class="qr-instruction">
-              Deschide <strong>Setari > Date mobile > Adauga eSIM</strong> pe iPhone si scaneaza codul QR de mai sus.
-            </p>
-          </div>`;
+        html += `<div class="qr-section"><h3>Scaneaza codul QR</h3><img src="${escapeHtml(order.qrcodeUrl)}" alt="eSIM QR Code" /><p class="qr-instruction">Deschide <strong>Setari &gt; Date mobile &gt; Adauga eSIM</strong> si scaneaza codul QR.</p></div>`;
       }
 
-      // Apple direct install
       if (order.directAppleInstallUrl) {
-        html += `
-          <div style="text-align:center; margin-top: 16px;">
-            <a href="${escapeHtml(order.directAppleInstallUrl)}" class="apple-install-btn">
-              Instaleaza pe iPhone
-            </a>
-          </div>`;
+        html += `<div style="text-align:center; margin-top: 16px;"><a href="${escapeHtml(order.directAppleInstallUrl)}" class="apple-install-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>Instaleaza pe iPhone</a></div>`;
       }
 
-      // LPA / Activation Code
       if (order.lpa) {
-        html += `
-          <div class="lpa-section">
-            <h4>Cod de activare (LPA)</h4>
-            <div class="lpa-code" data-lpa="${escapeHtml(order.lpa)}">${escapeHtml(order.lpa)}</div>
-          </div>`;
+        html += `<div class="lpa-section"><h4>Cod de activare (LPA)</h4><div class="lpa-code" data-lpa="${escapeHtml(order.lpa)}">${escapeHtml(order.lpa)}</div></div>`;
       }
 
-      // Installation steps
-      html += `
-        <div class="steps">
-          <h3 style="margin-bottom:12px; font-size:1rem;">Cum se instaleaza:</h3>
-          <div class="step">
-            <div class="step-num">1</div>
-            <div class="step-text">Deschide <strong>Setari</strong> pe iPhone/Android</div>
-          </div>
-          <div class="step">
-            <div class="step-num">2</div>
-            <div class="step-text">Mergi la <strong>Date mobile / Cellular</strong></div>
-          </div>
-          <div class="step">
-            <div class="step-num">3</div>
-            <div class="step-text">Apasa <strong>Adauga eSIM / Add eSIM</strong></div>
-          </div>
-          <div class="step">
-            <div class="step-num">4</div>
-            <div class="step-text">Scaneaza codul QR sau introdu codul de activare manual</div>
-          </div>
-        </div>`;
+      html += `<div class="steps"><h3>Cum se instaleaza:</h3>
+        <div class="step"><div class="step-num">1</div><div class="step-text">Deschide <strong>Setari</strong> pe telefon</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Mergi la <strong>Date mobile / Cellular</strong></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Apasa <strong>Adauga eSIM</strong></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Scaneaza codul QR sau introdu codul de activare</div></div>
+      </div>`;
 
       document.getElementById('content').innerHTML = html;
-      document.getElementById('back-link').style.display = 'inline-block';
+      document.getElementById('back-link').style.display = 'inline-flex';
 
-      // Attach click handler for LPA copy via data attribute
       const lpaEl = document.querySelector('.lpa-code[data-lpa]');
       if (lpaEl) {
-        lpaEl.addEventListener('click', function() {
-          copyLpa(this.getAttribute('data-lpa'));
-        });
+        lpaEl.addEventListener('click', function() { copyLpa(this.getAttribute('data-lpa')); });
       }
     }
 
     function updateStatus(type, title, subtitle) {
       const icon = document.getElementById('status-icon');
-      icon.className = `icon ${type}`;
+      icon.className = `status-icon ${type}`;
       if (type === 'success') {
-        icon.innerHTML = '&#10003;';
+        icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
       } else if (type === 'loading') {
         icon.innerHTML = '<div class="spinner"></div>';
       } else {
-        icon.innerHTML = '&#10007;';
+        icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
       }
       document.getElementById('title').textContent = title;
       document.getElementById('subtitle').textContent = subtitle;
@@ -409,7 +462,7 @@
 
     function showError(title, subtitle) {
       updateStatus('error', title, subtitle);
-      document.getElementById('back-link').style.display = 'inline-block';
+      document.getElementById('back-link').style.display = 'inline-flex';
     }
 
     function copyLpa(text) {
