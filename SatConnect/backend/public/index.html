@@ -801,6 +801,11 @@
     let allPlans = {};
     let selectedPlan = null;
 
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
     async function loadPlans() {
       try {
         const res = await fetch('/plans');
@@ -866,17 +871,17 @@
         if (plans.length === 0) return '';
         const cheapest = plans.reduce((min, p) => p.price < min.price ? p : min, plans[0]);
         return `
-          <div class="country-card" data-country="${code}">
+          <div class="country-card" data-country="${escapeHtml(code)}">
             <div class="country-header">
               <span class="country-flag">${getFlag(code)}</span>
               <div class="country-meta">
-                <div class="country-name">${data.country_name}</div>
+                <div class="country-name">${escapeHtml(data.country_name)}</div>
                 <div class="country-info">${plans.length} planuri disponibile</div>
               </div>
-              <span class="country-price-tag">de la ${cheapest.price} &euro;</span>
+              <span class="country-price-tag">de la ${escapeHtml(cheapest.price)} &euro;</span>
             </div>
             <div class="plan-chips">
-              ${plans.slice(0, 4).map(p => `<span class="plan-chip">${p.data_label}</span>`).join('')}
+              ${plans.slice(0, 4).map(p => `<span class="plan-chip">${escapeHtml(p.data_label)}</span>`).join('')}
               ${plans.length > 4 ? `<span class="plan-chip more">+${plans.length - 4}</span>` : ''}
             </div>
           </div>
@@ -901,18 +906,18 @@
       document.getElementById('modal-body').innerHTML = `
         <div id="plans-list">
           ${plans.map((p, i) => `
-            <div class="plan-card" id="plan-${i}" data-plan-index="${i}" data-plan-country="${code}">
+            <div class="plan-card" id="plan-${i}" data-plan-index="${i}" data-plan-country="${escapeHtml(code)}">
               <div class="plan-left">
                 <div class="plan-check">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
                 <div>
-                  <div class="plan-data">${p.data_label}</div>
-                  <div class="plan-validity">${p.valid_days} zile valabilitate</div>
+                  <div class="plan-data">${escapeHtml(p.data_label)}</div>
+                  <div class="plan-validity">${escapeHtml(p.valid_days)} zile valabilitate</div>
                 </div>
               </div>
               <div class="plan-price-col">
-                <div class="plan-amount">${p.price} <span class="plan-currency">${p.currency}</span></div>
+                <div class="plan-amount">${escapeHtml(p.price)} <span class="plan-currency">${escapeHtml(p.currency)}</span></div>
               </div>
             </div>
           `).join('')}
@@ -958,7 +963,7 @@
       btn.disabled = false;
       btn.innerHTML = `<span class="btn-secure">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        Cumpara ${selectedPlan.data_label} &mdash; ${selectedPlan.price} ${selectedPlan.currency}
+        Cumpara ${escapeHtml(selectedPlan.data_label)} &mdash; ${escapeHtml(selectedPlan.price)} ${escapeHtml(selectedPlan.currency)}
       </span>`;
     }
 
@@ -1005,9 +1010,9 @@
 
         if (matches.length > 0) {
           searchDropdown.innerHTML = matches.map(([code, data]) =>
-            `<div class="search-item" data-code="${code}">
+            `<div class="search-item" data-code="${escapeHtml(code)}">
               <span class="search-item-flag">${getFlag(code)}</span>
-              <span>${data.country_name}</span>
+              <span>${escapeHtml(data.country_name)}</span>
             </div>`
           ).join('');
           searchDropdown.classList.add('visible');
