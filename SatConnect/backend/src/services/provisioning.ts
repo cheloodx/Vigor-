@@ -1,12 +1,12 @@
 /**
  * eSIM Provisioning Service
  *
- * Orchestrates the full flow: payment confirmed → find Airalo package → order eSIM → store in DB.
+ * Orchestrates the full flow: payment confirmed → find eSIM Access package → order eSIM → store in DB.
  * Called from both webhook (auto) and manual verification endpoint.
  */
 
 import Stripe from 'stripe';
-import { isAiraloConfigured, findPackage, orderESIM } from './airalo';
+import { isEsimAccessConfigured, findPackage, orderEsim, queryProfiles } from './esimAccess';
 import {
   isSupabaseConfigured,
   createOrder,
@@ -14,7 +14,8 @@ import {
   getOrderBySessionId,
   Order,
 } from './supabase';
-import { getPlanById } from '../data/planCatalog';
+import { getPlanById, PlanEntry } from '../data/planCatalog';
+import { getCachedApiPlan } from '../routes/plans';
 
 // ---------------------------------------------------------------------------
 // In-memory lock to prevent concurrent provisioning for the same session
@@ -39,8 +40,26 @@ export async function createOrderForSession(
   stripeSessionId: string,
   planId: string,
 ): Promise<Order | null> {
-  const plan = getPlanById(planId);
-  if (!plan) return null;
+  // Check cached API plans first (same prices as storefront), then static catalog
+  const apiPlan = getCachedApiPlan(planId);
+  let plan: PlanEntry;
+  if (apiPlan) {
+    plan = {
+      id: apiPlan.id,
+      countryCode: apiPlan.country_code,
+      countryName: apiPlan.country_name,
+      countryFlag: '',
+      dataLimitMB: apiPlan.data_limit_mb,
+      dataLabel: apiPlan.data_label,
+      validDays: apiPlan.valid_days,
+      price: apiPlan.price,
+      currency: apiPlan.currency,
+    };
+  } else {
+    const catalogPlan = getPlanById(planId);
+    if (!catalogPlan) return null;
+    plan = catalogPlan;
+  }
 
   if (!isSupabaseConfigured()) {
     console.warn('Supabase not configured — skipping order creation');
@@ -72,9 +91,10 @@ export async function createOrderForSession(
 /**
  * Provision an eSIM for a given Stripe session.
  * 1. Look up the order in Supabase
- * 2. Find the matching Airalo package
- * 3. Order the eSIM from Airalo
- * 4. Store the eSIM details in Supabase
+ * 2. Find the matching eSIM Access package
+ * 3. Order the eSIM from eSIM Access
+ * 4. Poll for profile allocation
+ * 5. Store the eSIM details in Supabase
  *
  * Idempotent: if already provisioned, returns the existing order.
  */
@@ -147,8 +167,8 @@ async function doProvision(stripeSessionId: string): Promise<ProvisionResult> {
   // 3. Mark as provisioning
   await updateOrderStatus(stripeSessionId, 'provisioning');
 
-  // 3. Check if Airalo is configured
-  if (!isAiraloConfigured()) {
+  // 4. Check if eSIM Access is configured
+  if (!isEsimAccessConfigured()) {
     // Demo mode: create a mock eSIM
     const mockOrder = await updateOrderStatus(stripeSessionId, 'provisioned', {
       iccid: `DEMO-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
@@ -157,53 +177,54 @@ async function doProvision(stripeSessionId: string): Promise<ProvisionResult> {
       matching_id: 'DEMO-MATCH-' + Math.random().toString(36).slice(2, 8).toUpperCase(),
       direct_apple_install_url: '',
     });
-    console.log('Demo provisioning complete (Airalo not configured)');
+    console.log('Demo provisioning complete (eSIM Access not configured)');
     return { success: true, order: mockOrder ?? order };
   }
 
   try {
-    // 4. Find the best matching Airalo package
+    // 5. Find the best matching eSIM Access package
     const pkg = await findPackage(order.country_code, order.data_label);
     if (!pkg) {
       await updateOrderStatus(stripeSessionId, 'failed', {
-        error_message: `No Airalo package found for ${order.country_code} ${order.data_label}`,
+        error_message: `No eSIM Access package found for ${order.country_code} ${order.data_label}`,
       });
       return { success: false, error: 'No matching eSIM package available' };
     }
 
-    // 5. Order the eSIM
-    const airaloOrder = await orderESIM(pkg.packageId);
+    // 6. Order the eSIM
+    const esimOrder = await orderEsim(pkg.packageCode, pkg.price, `stripe-${stripeSessionId.slice(0, 40)}`);
 
-    if (!airaloOrder.sims || airaloOrder.sims.length === 0) {
+    // 7. Poll for profile allocation (up to 60 seconds)
+    const profiles = await queryProfiles(esimOrder.orderNo, 60000);
+
+    if (!profiles || profiles.length === 0) {
       await updateOrderStatus(stripeSessionId, 'failed', {
-        airalo_order_id: airaloOrder.orderId,
-        airalo_order_code: airaloOrder.orderCode,
-        error_message: 'Airalo order succeeded but no SIMs returned',
+        error_message: 'eSIM Access order succeeded but no profiles allocated',
       });
-      return { success: false, error: 'eSIM order failed — no SIMs returned' };
+      return { success: false, error: 'eSIM order failed — no profiles returned' };
     }
 
-    const sim = airaloOrder.sims[0];
+    const profile = profiles[0];
 
-    // 6. Store eSIM details
+    // 8. Store eSIM details
+    // Extract matching ID from the LPA activation code (format: LPA:1$smdpAddress$matchingId)
+    const acParts = (profile.ac || '').split('$');
+    const matchingId = acParts.length >= 3 ? acParts[2] : profile.esimTranNo;
+
     const esimDetails = {
-      airalo_order_id: airaloOrder.orderId,
-      airalo_order_code: airaloOrder.orderCode,
-      iccid: sim.iccid,
-      qrcode_url: sim.qrcode_url,
-      lpa: sim.lpa,
-      matching_id: sim.matching_id,
-      direct_apple_install_url: sim.direct_apple_installation_url,
+      iccid: profile.iccid,
+      qrcode_url: profile.qrCodeUrl || '',
+      lpa: profile.ac || '',
+      matching_id: matchingId,
+      direct_apple_install_url: profile.appleInstallUrl || '',
     };
     const updatedOrder = await updateOrderStatus(stripeSessionId, 'provisioned', esimDetails);
 
-    console.log(`eSIM provisioned: ICCID=${sim.iccid}, Order=${airaloOrder.orderCode}`);
+    console.log(`eSIM provisioned: ICCID=${profile.iccid}, Order=${esimOrder.orderNo}`);
 
     if (!updatedOrder) {
-      // DB update failed but eSIM was ordered — include details in response for
-      // the frontend to display, and log for manual recovery.
       console.error(
-        `CRITICAL: Airalo eSIM ordered but DB update failed. Session=${stripeSessionId}, ICCID=${sim.iccid}, Order=${airaloOrder.orderCode}`,
+        `CRITICAL: eSIM Access eSIM ordered but DB update failed. Session=${stripeSessionId}, ICCID=${profile.iccid}, Order=${esimOrder.orderNo}`,
       );
       const fallbackOrder: Order = {
         ...order,

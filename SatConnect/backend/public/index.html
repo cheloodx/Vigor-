@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SatConnect - eSIM Store | Internet mobil in 200+ tari</title>
+  <meta name="description" content="Cumpara eSIM instant pentru 200+ tari. Fara roaming, fara SIM fizic. Activare automata in cateva secunde.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --primary-dark: #4f46e5;
+      --accent: #06b6d4;
+      --accent-light: #22d3ee;
+      --bg-dark: #0f0f23;
+      --bg-card: rgba(255,255,255,0.04);
+      --bg-card-hover: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.08);
+      --border-hover: rgba(99,102,241,0.5);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-2xl: 24px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+      --shadow-glow: 0 0 40px rgba(99,102,241,0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== Background ===== */
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .bg-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+    .bg-gradient {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(99,102,241,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, rgba(6,182,212,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 10% 60%, rgba(99,102,241,0.06) 0%, transparent 50%);
+    }
+    .bg-noise {
+      position: absolute;
+      inset: 0;
+      opacity: 0.015;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 256px 256px;
+    }
+
+    /* ===== Container ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== Nav ===== */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .nav-name {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .nav-name span {
+      color: var(--primary-light);
+    }
+    .nav-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(16,185,129,0.1);
+      border: 1px solid rgba(16,185,129,0.2);
+      color: var(--success);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .nav-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      text-align: center;
+      padding: 56px 0 40px;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      background: rgba(99,102,241,0.1);
+      border: 1px solid rgba(99,102,241,0.2);
+      color: var(--primary-light);
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--primary-light), var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    /* Trust badges */
+    .trust-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+    .trust-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .trust-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .trust-icon svg { width: 18px; height: 18px; }
+
+    /* ===== Search ===== */
+    .search-section {
+      margin: 0 0 20px;
+    }
+    .search-wrapper {
+      position: relative;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .search-icon {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      pointer-events: none;
+    }
+    .search-icon svg { width: 18px; height: 18px; }
+    .search-input {
+      width: 100%;
+      padding: 14px 20px 14px 48px;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.2s;
+      backdrop-filter: blur(12px);
+    }
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+      background: rgba(255,255,255,0.06);
+    }
+    .search-input::placeholder { color: var(--text-dim); }
+
+    /* ===== Region Tabs ===== */
+    .tabs-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn:hover {
+      border-color: rgba(99,102,241,0.3);
+      color: var(--text);
+      background: rgba(99,102,241,0.05);
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+    }
+
+    /* Country count */
+    .results-info {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      font-weight: 500;
+    }
+    .results-info strong { color: var(--text-muted); }
+
+    /* ===== Country Grid ===== */
+    .countries-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 60px;
+    }
+    .country-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .country-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-lg);
+      opacity: 0;
+      background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(6,182,212,0.05));
+      transition: opacity 0.25s;
+    }
+    .country-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+    }
+    .country-card:hover::before { opacity: 1; }
+    .country-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .country-flag {
+      font-size: 2rem;
+      line-height: 1;
+    }
+    .country-meta { flex: 1; }
+    .country-name {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .country-info {
+      color: var(--text-dim);
+      font-size: 0.78rem;
+      font-weight: 500;
+    }
+    .country-price-tag {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--success);
+      background: rgba(16,185,129,0.1);
+      padding: 3px 10px;
+      border-radius: 12px;
+      position: relative;
+    }
+    .plan-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .plan-chip {
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: rgba(99,102,241,0.08);
+      color: var(--primary-light);
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid rgba(99,102,241,0.12);
+    }
+    .plan-chip.more {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-dim);
+      border-color: rgba(255,255,255,0.06);
+    }
+
+    /* ===== Modal ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      animation: fadeIn 0.2s ease;
+    }
+    .modal-overlay.active { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .modal {
+      background: #161632;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-2xl);
+      padding: 0;
+      max-width: 480px;
+      width: 100%;
+      max-height: 85vh;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp 0.3s ease;
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 28px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .modal-flag { font-size: 2rem; }
+    .modal-country-name {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .modal-subtitle {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-top: 2px;
+    }
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .modal-close:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      border-color: rgba(255,255,255,0.2);
+    }
+    .modal-body {
+      padding: 16px 28px 28px;
+      overflow-y: auto;
+      max-height: calc(85vh - 140px);
+    }
+
+    /* Plan Cards in Modal */
+    .plan-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: rgba(255,255,255,0.02);
+    }
+    .plan-card:hover {
+      border-color: rgba(99,102,241,0.3);
+      background: rgba(99,102,241,0.04);
+    }
+    .plan-card.selected {
+      border-color: var(--primary);
+      background: rgba(99,102,241,0.08);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+    }
+    .plan-card.selected .plan-check { opacity: 1; }
+    .plan-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .plan-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .plan-card.selected .plan-check {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+    .plan-check svg { width: 12px; height: 12px; color: #fff; opacity: 0; transition: opacity 0.2s; }
+    .plan-card.selected .plan-check svg { opacity: 1; }
+    .plan-data { font-size: 1rem; font-weight: 600; }
+    .plan-validity { color: var(--text-dim); font-size: 0.78rem; margin-top: 2px; }
+    .plan-price-col { text-align: right; }
+    .plan-amount {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .plan-currency {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    /* Buy Button */
+    .buy-btn {
+      width: 100%;
+      padding: 15px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: var(--primary);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .buy-btn:hover:not(:disabled) {
+      background: var(--primary-dark);
+      box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+      transform: translateY(-1px);
+    }
+    .buy-btn:active:not(:disabled) { transform: translateY(0); }
+    .buy-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .buy-btn .btn-secure {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .buy-btn .btn-secure svg { width: 16px; height: 16px; }
+
+    /* Payment badges under button */
+    .payment-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .payment-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-dim);
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+    .payment-badge svg { width: 14px; height: 14px; }
+
+    /* ===== Loading ===== */
+    .loading {
+      text-align: center;
+      padding: 60px 0;
+      color: var(--text-dim);
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== Status Banner ===== */
+    .status-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 10px 16px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 0.85rem;
+      z-index: 200;
+      display: none;
+      backdrop-filter: blur(12px);
+    }
+    .status-banner.error {
+      display: block;
+      background: rgba(239,68,68,0.9);
+    }
+    .status-banner.success {
+      display: block;
+      background: rgba(16,185,129,0.9);
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+    }
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .footer-link {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .footer-link:hover { color: var(--primary-light); }
+    .footer-copy {
+      color: var(--text-dim);
+      font-size: 0.75rem;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 768px) {
+      .hero { padding: 40px 0 28px; }
+      .hero h1 { font-size: 2rem; }
+      .hero p { font-size: 1rem; }
+      .trust-row { gap: 16px; }
+      .countries-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+      .nav-badge { display: none; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.7rem; }
+      .countries-grid { grid-template-columns: 1fr; }
+      .modal-body { padding: 16px 20px 24px; }
+      .modal-header { padding: 20px 20px 14px; }
+      .trust-row { gap: 12px; }
+      .trust-badge { font-size: 0.75rem; }
+    }
+
+    /* Autocomplete dropdown */
+    .search-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 4px;
+      background: #1e1e3f;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      max-height: 200px;
+      overflow-y: auto;
+      z-index: 50;
+      display: none;
+      box-shadow: var(--shadow-lg);
+    }
+    .search-dropdown.visible { display: block; }
+    .search-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 16px;
+      cursor: pointer;
+      transition: background 0.15s;
+      font-size: 0.9rem;
+    }
+    .search-item:hover { background: rgba(99,102,241,0.1); }
+    .search-item-flag { font-size: 1.2rem; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+  </style>
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-layer">
+    <div class="bg-grid"></div>
+    <div class="bg-gradient"></div>
+    <div class="bg-noise"></div>
+  </div>
+
+  <div id="status-banner" class="status-banner"></div>
+
+  <div class="container">
+    <!-- Nav -->
+    <nav class="nav">
+      <div class="nav-brand">
+        <div class="nav-logo">S</div>
+        <div class="nav-name">Sat<span>Connect</span></div>
+      </div>
+      <div class="nav-badge">
+        <span id="country-count-badge">200+ tari disponibile</span>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-pill">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        eSIM digital instant
+      </div>
+      <h1>Internet mobil in<br><span class="gradient-text">orice tara din lume</span></h1>
+      <p>Cumpara un eSIM in cateva secunde. Fara roaming scump, fara SIM fizic. Activare automata pe orice telefon compatibil.</p>
+      
+      <div class="trust-row">
+        <div class="trust-badge">
+          <span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+          Plata securizata
+        </div>
+        <div class="trust-badge">
+          <span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
+          Activare in secunde
+        </div>
+        <div class="trust-badge">
+          <span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+          Visa, Mastercard, Apple Pay
+        </div>
+      </div>
+    </section>
+
+    <!-- Search -->
+    <section class="search-section">
+      <div class="search-wrapper">
+        <div class="search-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <input type="text" id="search" class="search-input" placeholder="Cauta tara (ex: Romania, Franta, SUA...)">
+        <div class="search-dropdown" id="search-dropdown"></div>
+      </div>
+    </section>
+
+    <!-- Region Tabs -->
+    <div class="tabs-row" id="region-tabs">
+      <button class="tab-btn active" data-region="all">Toate</button>
+      <button class="tab-btn" data-region="europa">Europa</button>
+      <button class="tab-btn" data-region="asia">Asia</button>
+      <button class="tab-btn" data-region="americas">Americas</button>
+      <button class="tab-btn" data-region="africa">Africa &amp; ME</button>
+      <button class="tab-btn" data-region="oceania">Oceania</button>
+    </div>
+
+    <!-- Results count -->
+    <div class="results-info" id="results-info"></div>
+
+    <!-- Countries Grid -->
+    <div id="countries-grid" class="countries-grid">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Se incarca planurile...</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <a href="#" class="footer-link">Despre noi</a>
+        <a href="#" class="footer-link">Cum functioneaza</a>
+        <a href="#" class="footer-link">Contact</a>
+        <a href="#" class="footer-link">Termeni si conditii</a>
+      </div>
+      <p class="footer-copy">SatConnect &copy; 2026 &mdash; Toate drepturile rezervate</p>
+    </footer>
+  </div>
+
+  <!-- Plan Modal -->
+  <div class="modal-overlay" id="plan-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title-row">
+            <span class="modal-flag" id="modal-flag"></span>
+            <span class="modal-country-name" id="modal-country-name"></span>
+          </div>
+          <div class="modal-subtitle">Alege planul potrivit pentru tine</div>
+        </div>
+        <button class="modal-close" id="modal-close-btn">&times;</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <script>
+    const CHECKOUT_BASE = '';
+    let allPlans = {};
+    let selectedPlan = null;
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    async function loadPlans() {
+      try {
+        const res = await fetch('/plans');
+        const data = await res.json();
+        if (data.success && data.data) {
+          allPlans = data.data;
+          const count = Object.keys(allPlans).length;
+          document.getElementById('country-count-badge').textContent = count + '+ tari disponibile';
+          renderCountries();
+        } else {
+          showError('Nu s-au putut incarca planurile');
+        }
+      } catch (err) {
+        showError('Eroare de conexiune la server');
+        console.error(err);
+      }
+    }
+
+    function renderCountries(filter = '', region = 'all') {
+      const grid = document.getElementById('countries-grid');
+      const entries = Object.entries(allPlans);
+
+      if (entries.length === 0) {
+        grid.innerHTML = '<div class="loading"><p>Nu sunt planuri disponibile</p></div>';
+        document.getElementById('results-info').textContent = '';
+        return;
+      }
+
+      let filtered = entries;
+
+      if (region !== 'all') {
+        const regionMap = {
+          'europa': 'Europa',
+          'asia': 'Asia',
+          'americas': 'Americas',
+          'africa': 'Africa & ME',
+          'oceania': 'Oceania',
+        };
+        const regionName = regionMap[region] || region;
+        filtered = filtered.filter(([code, data]) => data.region === regionName);
+      }
+
+      if (filter) {
+        const q = filter.toLowerCase();
+        filtered = filtered.filter(([code, data]) =>
+          code.toLowerCase().includes(q) ||
+          data.country_name.toLowerCase().includes(q)
+        );
+      }
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="loading"><p>Nicio tara gasita</p></div>';
+        document.getElementById('results-info').textContent = '';
+        return;
+      }
+
+      document.getElementById('results-info').innerHTML = 
+        '<strong>' + filtered.length + '</strong> tari' + 
+        (region !== 'all' ? '' : ' disponibile');
+
+      grid.innerHTML = filtered.map(([code, data]) => {
+        const plans = data.plans || [];
+        if (plans.length === 0) return '';
+        const cheapest = plans.reduce((min, p) => p.price < min.price ? p : min, plans[0]);
+        return `
+          <div class="country-card" data-country="${escapeHtml(code)}">
+            <div class="country-header">
+              <span class="country-flag">${getFlag(code)}</span>
+              <div class="country-meta">
+                <div class="country-name">${escapeHtml(data.country_name)}</div>
+                <div class="country-info">${plans.length} planuri disponibile</div>
+              </div>
+              <span class="country-price-tag">de la ${escapeHtml(cheapest.price)} &euro;</span>
+            </div>
+            <div class="plan-chips">
+              ${plans.slice(0, 4).map(p => `<span class="plan-chip">${escapeHtml(p.data_label)}</span>`).join('')}
+              ${plans.length > 4 ? `<span class="plan-chip more">+${plans.length - 4}</span>` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getFlag(code) {
+      const codePoints = [...code.toUpperCase()].map(c => 0x1F1E6 + c.charCodeAt(0) - 65);
+      return String.fromCodePoint(...codePoints);
+    }
+
+    function openCountry(code) {
+      const country = allPlans[code];
+      if (!country) return;
+      const plans = country.plans || [];
+      selectedPlan = null;
+
+      document.getElementById('modal-flag').textContent = getFlag(code);
+      document.getElementById('modal-country-name').textContent = country.country_name;
+
+      document.getElementById('modal-body').innerHTML = `
+        <div id="plans-list">
+          ${plans.map((p, i) => `
+            <div class="plan-card" id="plan-${i}" data-plan-index="${i}" data-plan-country="${escapeHtml(code)}">
+              <div class="plan-left">
+                <div class="plan-check">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                </div>
+                <div>
+                  <div class="plan-data">${escapeHtml(p.data_label)}</div>
+                  <div class="plan-validity">${escapeHtml(p.valid_days)} zile valabilitate</div>
+                </div>
+              </div>
+              <div class="plan-price-col">
+                <div class="plan-amount">${escapeHtml(p.price)} <span class="plan-currency">${escapeHtml(p.currency)}</span></div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <button class="buy-btn" id="buy-btn" disabled>
+          <span class="btn-secure">Selecteaza un plan</span>
+        </button>
+        <div class="payment-info">
+          <span class="payment-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Plata securizata SSL
+          </span>
+          <span class="payment-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Activare instant
+          </span>
+          <span class="payment-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Stripe
+          </span>
+        </div>
+      `;
+
+      document.getElementById('plan-modal').classList.add('active');
+
+      document.querySelectorAll('.plan-card[data-plan-index]').forEach(el => {
+        el.addEventListener('click', () => {
+          selectPlan(parseInt(el.getAttribute('data-plan-index')), el.getAttribute('data-plan-country'));
+        });
+      });
+      document.getElementById('buy-btn').addEventListener('click', buyPlan);
+    }
+
+    function selectPlan(index, countryCode) {
+      const plans = allPlans[countryCode].plans;
+      selectedPlan = plans[index];
+
+      document.querySelectorAll('.plan-card').forEach((el, i) => {
+        el.classList.toggle('selected', i === index);
+      });
+
+      const btn = document.getElementById('buy-btn');
+      btn.disabled = false;
+      btn.innerHTML = `<span class="btn-secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Cumpara ${escapeHtml(selectedPlan.data_label)} &mdash; ${escapeHtml(selectedPlan.price)} ${escapeHtml(selectedPlan.currency)}
+      </span>`;
+    }
+
+    function closeModal() {
+      document.getElementById('plan-modal').classList.remove('active');
+      selectedPlan = null;
+    }
+
+    function buyPlan() {
+      if (!selectedPlan) return;
+      const btn = document.getElementById('buy-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="btn-secure">Se proceseaza...</span>';
+      const planId = selectedPlan.id;
+      const returnUrl = encodeURIComponent(window.location.origin);
+      window.location.href = `${CHECKOUT_BASE}/api/stripe/checkout-redirect?planId=${planId}&returnUrl=${returnUrl}`;
+    }
+
+    function showError(msg) {
+      const banner = document.getElementById('status-banner');
+      banner.textContent = msg;
+      banner.className = 'status-banner error';
+      setTimeout(() => { banner.className = 'status-banner'; }, 5000);
+    }
+
+    // Search with autocomplete
+    const searchInput = document.getElementById('search');
+    const searchDropdown = document.getElementById('search-dropdown');
+
+    searchInput.addEventListener('input', (e) => {
+      const val = e.target.value;
+      const activeRegion = document.querySelector('.tab-btn.active')?.dataset.region || 'all';
+      renderCountries(val, activeRegion);
+
+      // Show autocomplete
+      if (val.length >= 1) {
+        const q = val.toLowerCase();
+        const matches = Object.entries(allPlans)
+          .filter(([code, data]) =>
+            code.toLowerCase().includes(q) ||
+            data.country_name.toLowerCase().includes(q)
+          )
+          .slice(0, 5);
+
+        if (matches.length > 0) {
+          searchDropdown.innerHTML = matches.map(([code, data]) =>
+            `<div class="search-item" data-code="${escapeHtml(code)}">
+              <span class="search-item-flag">${getFlag(code)}</span>
+              <span>${escapeHtml(data.country_name)}</span>
+            </div>`
+          ).join('');
+          searchDropdown.classList.add('visible');
+        } else {
+          searchDropdown.classList.remove('visible');
+        }
+      } else {
+        searchDropdown.classList.remove('visible');
+      }
+    });
+
+    searchDropdown.addEventListener('click', (e) => {
+      const item = e.target.closest('.search-item');
+      if (item) {
+        const code = item.getAttribute('data-code');
+        searchDropdown.classList.remove('visible');
+        searchInput.value = allPlans[code].country_name;
+        renderCountries(searchInput.value, 'all');
+        // Set Toate tab active
+        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+        document.querySelector('.tab-btn[data-region="all"]').classList.add('active');
+        openCountry(code);
+      }
+    });
+
+    // Hide dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-wrapper')) {
+        searchDropdown.classList.remove('visible');
+      }
+    });
+
+    // Region tabs
+    document.getElementById('region-tabs').addEventListener('click', (e) => {
+      if (e.target.classList.contains('tab-btn')) {
+        document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+        e.target.classList.add('active');
+        const search = document.getElementById('search').value;
+        renderCountries(search, e.target.dataset.region);
+      }
+    });
+
+    // Close modal
+    document.getElementById('plan-modal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('plan-modal')) closeModal();
+    });
+    document.getElementById('modal-close-btn').addEventListener('click', closeModal);
+
+    // Country card click
+    document.getElementById('countries-grid').addEventListener('click', (e) => {
+      const card = e.target.closest('.country-card[data-country]');
+      if (card) openCountry(card.getAttribute('data-country'));
+    });
+
+    // Escape to close modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Init
+    loadPlans();
+  </script>
+</body>
+</html>

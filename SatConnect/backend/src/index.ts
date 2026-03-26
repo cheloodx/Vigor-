@@ -19,6 +19,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
+import path from 'path';
 
 // Load env vars before importing modules that use them
 dotenv.config();
@@ -29,20 +30,38 @@ import esimsRouter from './routes/esims';
 import subscriptionsRouter from './routes/subscriptions';
 import { stripeRouter } from './routes/stripe';
 import { ordersRouter as stripeOrdersRouter } from './routes/orders';
-import { hasAiraloCredentials } from './services/airalo';
+import { hasEsimAccessCredentials } from './services/esimAccess';
 import { isSupabaseConfigured } from './services/supabase';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust first proxy (nginx) so req.protocol and req.get('host') use X-Forwarded-* headers
+app.set('trust proxy', 1);
+
 // Stripe webhook needs raw body, so we handle it before other middleware
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
 // Middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.esimaccess.com", "https://checkout.stripe.com"],
+      frameSrc: ["'self'", "https://checkout.stripe.com"],
+    },
+  },
+}));
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
+
+// Serve static web checkout pages
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Routes
 app.use('/plans', plansRouter);
@@ -60,22 +79,26 @@ app.get('/health', (_req, res) => {
     version: '1.0.0',
     timestamp: new Date().toISOString(),
     services: {
-      airalo: hasAiraloCredentials() ? 'configured' : 'mock',
+      esimaccess: hasEsimAccessCredentials() ? 'configured' : 'mock',
       stripe: process.env.STRIPE_SECRET_KEY ? 'configured' : 'not configured',
       supabase: isSupabaseConfigured() ? 'configured' : 'not configured',
     },
   });
 });
 
-// 404 handler
-app.use((_req, res) => {
-  res.status(404).json({ success: false, error: 'Endpoint not found' });
+// SPA fallback: serve index.html for non-API routes
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api/') || req.path.startsWith('/plans') || req.path.startsWith('/orders') || req.path.startsWith('/health') || req.path.startsWith('/my-esims') || req.path.startsWith('/subscription')) {
+    res.status(404).json({ success: false, error: 'Endpoint not found' });
+  } else {
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+  }
 });
 
 // Start server
 app.listen(PORT, () => {
   console.log(`SatConnect backend running on port ${PORT}`);
-  console.log(`  Airalo: ${hasAiraloCredentials() ? 'REAL (API configured)' : 'MOCK (no credentials)'}`);
+  console.log(`  eSIM Access: ${hasEsimAccessCredentials() ? 'REAL (API configured)' : 'MOCK (no credentials)'}`);
   console.log(`  Stripe: ${process.env.STRIPE_SECRET_KEY ? 'configured' : 'NOT configured'}`);
   console.log(`  Supabase: ${isSupabaseConfigured() ? 'configured' : 'NOT configured'}`);
 });

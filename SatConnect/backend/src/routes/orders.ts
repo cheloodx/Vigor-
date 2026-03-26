@@ -9,7 +9,7 @@
 import { Router, Request, Response } from 'express';
 import { supabase } from '../config/database';
 import { requireAuth } from '../middleware/auth';
-import { hasAiraloCredentials, createAiraloOrder } from '../services/airalo';
+import { hasEsimAccessCredentials, orderEsim, queryProfiles, findPackage } from '../services/esimAccess';
 import { OrderEsimRequest, ApiResponse, Plan, Order, UserEsim } from '../types';
 import { provisionForSession } from '../services/provisioning';
 import { getOrderBySessionId } from '../services/supabase';
@@ -74,33 +74,43 @@ authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
       activation_code: string;
       qr_code_url: string;
       qr_code_data: string;
-      airalo_order_id: string;
-      airalo_esim_id: string;
+      esim_order_no: string;
+      esim_tran_no: string;
     };
 
-    if (hasAiraloCredentials()) {
+    if (hasEsimAccessCredentials()) {
       try {
-        const airaloResult = await createAiraloOrder(planData.slug);
-        if (!airaloResult.data.sims || airaloResult.data.sims.length === 0) {
-          throw new Error('Airalo order returned no SIM profiles');
+        // Find the matching eSIM Access package
+        const pkg = await findPackage(planData.country_code, planData.data_label);
+        if (!pkg) {
+          throw new Error(`No eSIM Access package found for ${planData.country_code} ${planData.data_label}`);
         }
-        const sim = airaloResult.data.sims[0];
+
+        // Order the eSIM
+        const esimOrder = await orderEsim(pkg.packageCode, pkg.price);
+
+        // Poll for profile allocation (up to 60 seconds)
+        const profiles = await queryProfiles(esimOrder.orderNo, 60000);
+        if (!profiles || profiles.length === 0) {
+          throw new Error('eSIM Access order succeeded but no profiles allocated');
+        }
+        const profile = profiles[0];
 
         esimData = {
-          iccid: sim.iccid,
-          activation_code: sim.confirmation_code,
-          qr_code_url: sim.qrcode_url,
-          qr_code_data: sim.lpa,
-          airalo_order_id: String(airaloResult.data.id),
-          airalo_esim_id: String(sim.id),
+          iccid: profile.iccid,
+          activation_code: profile.ac || '',
+          qr_code_url: profile.qrCodeUrl || '',
+          qr_code_data: profile.ac || '',
+          esim_order_no: esimOrder.orderNo,
+          esim_tran_no: profile.esimTranNo,
         };
-      } catch (airaloErr) {
+      } catch (esimErr) {
         await supabase
           .from('esim_orders')
-          .update({ status: 'failed', error_message: String(airaloErr) })
+          .update({ status: 'failed', error_message: String(esimErr) })
           .eq('id', orderData.id);
 
-        const message = airaloErr instanceof Error ? airaloErr.message : 'Airalo API error';
+        const message = esimErr instanceof Error ? esimErr.message : 'eSIM Access API error';
         const response: ApiResponse<null> = { success: false, error: message };
         res.status(502).json(response);
         return;
@@ -112,8 +122,8 @@ authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
         activation_code: `SC-${planData.country_code}-${Date.now().toString(36).toUpperCase()}`,
         qr_code_url: `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=LPA:1$smdp.io$${mockIccid}`,
         qr_code_data: `LPA:1$smdp.io$${mockIccid}`,
-        airalo_order_id: `mock-${Date.now()}`,
-        airalo_esim_id: `mock-esim-${Date.now()}`,
+        esim_order_no: `mock-${Date.now()}`,
+        esim_tran_no: `mock-esim-${Date.now()}`,
       };
     }
 
@@ -132,7 +142,7 @@ authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
         data_label: planData.data_label,
         valid_days: planData.valid_days,
         status: 'pending',
-        airalo_esim_id: esimData.airalo_esim_id,
+        airalo_esim_id: esimData.esim_tran_no,
       })
       .select()
       .single();
@@ -140,7 +150,7 @@ authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
     if (esimError || !userEsim) {
       await supabase
         .from('esim_orders')
-        .update({ status: 'failed', error_message: esimError?.message || 'Failed to create eSIM record', airalo_order_id: esimData.airalo_order_id })
+        .update({ status: 'failed', error_message: esimError?.message || 'Failed to create eSIM record', airalo_order_id: esimData.esim_order_no })
         .eq('id', orderData.id);
 
       const response: ApiResponse<null> = { success: false, error: 'Failed to create eSIM record' };
@@ -150,7 +160,7 @@ authRouter.post('/esim', requireAuth, async (req: Request, res: Response) => {
 
     const { error: updateError } = await supabase
       .from('esim_orders')
-      .update({ status: 'completed', airalo_order_id: esimData.airalo_order_id })
+      .update({ status: 'completed', airalo_order_id: esimData.esim_order_no })
       .eq('id', orderData.id);
 
     if (updateError) {
@@ -238,6 +248,7 @@ stripeRouter.get('/:sessionId', async (req: Request, res: Response) => {
       lpa: order.lpa,
       matchingId: order.matching_id,
       directAppleInstallUrl: order.direct_apple_install_url,
+      error: order.error_message || undefined,
       createdAt: order.created_at,
     });
   } catch (err) {
