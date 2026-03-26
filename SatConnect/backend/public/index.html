@@ -48,7 +48,7 @@
     .bg-color-wash { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(6,182,212,0.1) 25%, rgba(124,58,237,0.12) 50%, rgba(34,211,238,0.08) 75%, rgba(99,102,241,0.15) 100%); background-size: 400% 400%; animation: colorShift 20s ease-in-out infinite; mix-blend-mode: screen; }
     @keyframes bgPan { 0% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-5%, -3%) scale(1.05); } 100% { transform: translate(3%, -2%) scale(1.02); } }
     @keyframes colorShift { 0%, 100% { background-position: 0% 50%; } 25% { background-position: 100% 0%; } 50% { background-position: 100% 100%; } 75% { background-position: 0% 100%; } }
-    .bg-overlay { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, rgba(5,5,16,0.35) 0%, rgba(5,5,16,0.5) 25%, rgba(5,5,16,0.8) 55%, rgba(5,5,16,0.95) 75%, rgba(5,5,16,1) 100%), radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99,102,241,0.1) 0%, transparent 60%); }
+    .bg-overlay { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, rgba(5,5,16,0.15) 0%, rgba(5,5,16,0.3) 20%, rgba(5,5,16,0.6) 45%, rgba(5,5,16,0.88) 65%, rgba(5,5,16,0.98) 80%, rgba(5,5,16,1) 100%), radial-gradient(ellipse 80% 50% at 50% 0%, rgba(99,102,241,0.15) 0%, transparent 60%); }
 
     .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
 
@@ -224,6 +224,21 @@
     .footer-payment-icons { display: flex; align-items: center; gap: 12px; }
     .footer-payment-icons span { padding: 4px 10px; border-radius: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); color: var(--text-dim); font-size: 0.7rem; font-weight: 600; }
 
+
+    /* LANGUAGE SWITCHER */
+    .lang-switcher { position: relative; }
+    .lang-btn { display: flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: var(--text); font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.25s; font-family: inherit; backdrop-filter: blur(8px); }
+    .lang-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); }
+    .lang-btn svg { width: 16px; height: 16px; color: var(--text-muted); transition: transform 0.2s; }
+    .lang-switcher.open .lang-btn svg { transform: rotate(180deg); }
+    .lang-flag { font-size: 1rem; line-height: 1; }
+    .lang-dropdown { position: absolute; top: 100%; right: 0; margin-top: 6px; background: rgba(13,13,36,0.98); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); min-width: 160px; z-index: 60; display: none; box-shadow: 0 12px 40px rgba(0,0,0,0.5); backdrop-filter: blur(20px); overflow: hidden; }
+    .lang-switcher.open .lang-dropdown { display: block; }
+    .lang-option { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; transition: background 0.15s; font-size: 0.85rem; color: var(--text-muted); }
+    .lang-option:hover { background: rgba(99,102,241,0.1); color: var(--text); }
+    .lang-option.active { background: rgba(99,102,241,0.08); color: var(--primary-light); font-weight: 600; }
+    .lang-option .lang-flag { font-size: 1.1rem; }
+
     /* SCROLL ANIMATIONS */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -277,6 +292,21 @@
         <div class="nav-name">Sat<span>Connect</span></div>
       </div>
       <div class="nav-right">
+        <div class="lang-switcher" id="lang-switcher">
+          <button class="lang-btn" id="lang-btn">
+            <span class="lang-flag" id="lang-flag">&#x1F1F7;&#x1F1F4;</span>
+            <span id="lang-label">RO</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="lang-dropdown" id="lang-dropdown">
+            <div class="lang-option active" data-lang="ro"><span class="lang-flag">&#x1F1F7;&#x1F1F4;</span> Romana</div>
+            <div class="lang-option" data-lang="en"><span class="lang-flag">&#x1F1EC;&#x1F1E7;</span> English</div>
+            <div class="lang-option" data-lang="de"><span class="lang-flag">&#x1F1E9;&#x1F1EA;</span> Deutsch</div>
+            <div class="lang-option" data-lang="fr"><span class="lang-flag">&#x1F1EB;&#x1F1F7;</span> Francais</div>
+            <div class="lang-option" data-lang="es"><span class="lang-flag">&#x1F1EA;&#x1F1F8;</span> Espanol</div>
+            <div class="lang-option" data-lang="it"><span class="lang-flag">&#x1F1EE;&#x1F1F9;</span> Italiano</div>
+          </div>
+        </div>
         <div class="nav-badge"><span id="country-count-badge">200+ tari disponibile</span></div>
       </div>
     </nav>
@@ -287,38 +317,38 @@
     <section class="hero">
       <div class="hero-pill">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        eSIM digital instant
+        <span data-i18n="hero_pill">eSIM digital instant</span>
       </div>
-      <h1>Internet mobil in<br><span class="gradient-text">orice tara din lume</span></h1>
-      <p>Cumpara un eSIM in cateva secunde. Fara roaming scump, fara SIM fizic. Activare automata pe orice telefon compatibil.</p>
+      <h1><span data-i18n="hero_title1">Internet mobil in</span><br><span class="gradient-text" data-i18n="hero_title2">orice tara din lume</span></h1>
+      <p data-i18n="hero_desc">Cumpara un eSIM in cateva secunde. Fara roaming scump, fara SIM fizic. Activare automata pe orice telefon compatibil.</p>
       <div class="hero-cta">
         <a href="#search-area" class="cta-primary">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-          Cauta tara ta
+          <span data-i18n="cta_search">Cauta tara ta</span>
         </a>
         <a href="#how-it-works" class="cta-secondary">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
-          Cum functioneaza
+          <span data-i18n="cta_how">Cum functioneaza</span>
         </a>
       </div>
       <div class="trust-row">
-        <div class="trust-badge"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>Plata securizata</div>
-        <div class="trust-badge"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>Activare in secunde</div>
+        <div class="trust-badge"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span data-i18n="trust_secure">Plata securizata</span></div>
+        <div class="trust-badge"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span data-i18n="trust_fast">Activare in secunde</span></div>
         <div class="trust-badge"><span class="trust-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>Visa, Mastercard, Apple Pay</div>
       </div>
       <div class="stats-row">
-        <div class="stat-item"><div class="stat-num" id="stat-countries">179+</div><div class="stat-label">Tari acoperite</div></div>
-        <div class="stat-item"><div class="stat-num">30s</div><div class="stat-label">Activare medie</div></div>
-        <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Disponibilitate</div></div>
+        <div class="stat-item"><div class="stat-num" id="stat-countries">179+</div><div class="stat-label" data-i18n="stat_countries">Tari acoperite</div></div>
+        <div class="stat-item"><div class="stat-num">30s</div><div class="stat-label" data-i18n="stat_activation">Activare medie</div></div>
+        <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label" data-i18n="stat_availability">Disponibilitate</div></div>
       </div>
     </section>
 
     <!-- HOW IT WORKS -->
     <section class="how-section reveal" id="how-it-works">
       <div style="text-align:center">
-        <div class="section-label">Simplu si rapid</div>
-        <h2 class="section-title">Cum functioneaza</h2>
-        <p class="section-subtitle">3 pasi simpli pentru internet mobil oriunde in lume</p>
+        <div class="section-label" data-i18n="how_label">Simplu si rapid</div>
+        <h2 class="section-title" data-i18n="how_title">Cum functioneaza</h2>
+        <p class="section-subtitle" data-i18n="how_subtitle">3 pasi simpli pentru internet mobil oriunde in lume</p>
       </div>
       <div class="how-grid">
         <div class="how-card">
@@ -326,24 +356,24 @@
           <div class="how-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </div>
-          <h3>Alege tara</h3>
-          <p>Cauta destinatia ta din peste 179 de tari si alege planul de date potrivit.</p>
+          <h3 data-i18n="how_step1_title">Alege tara</h3>
+          <p data-i18n="how_step1_desc">Cauta destinatia ta din peste 179 de tari si alege planul de date potrivit.</p>
         </div>
         <div class="how-card">
           <div class="how-step">2</div>
           <div class="how-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           </div>
-          <h3>Plateste online</h3>
-          <p>Plata securizata cu Stripe. Acceptam Visa, Mastercard si Apple Pay.</p>
+          <h3 data-i18n="how_step2_title">Plateste online</h3>
+          <p data-i18n="how_step2_desc">Plata securizata cu Stripe. Acceptam Visa, Mastercard si Apple Pay.</p>
         </div>
         <div class="how-card">
           <div class="how-step">3</div>
           <div class="how-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
           </div>
-          <h3>Activeaza instant</h3>
-          <p>Primesti eSIM-ul instant. Scaneaza codul QR si esti conectat in secunde.</p>
+          <h3 data-i18n="how_step3_title">Activeaza instant</h3>
+          <p data-i18n="how_step3_desc">Primesti eSIM-ul instant. Scaneaza codul QR si esti conectat in secunde.</p>
         </div>
       </div>
     </section>
@@ -355,29 +385,29 @@
           <div class="feature-icon purple">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
           </div>
-          <h4>Securitate SSL</h4>
-          <p>Toate platile sunt criptate si securizate prin Stripe</p>
+          <h4 data-i18n="feat_ssl_title">Securitate SSL</h4>
+          <p data-i18n="feat_ssl_desc">Toate platile sunt criptate si securizate prin Stripe</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon cyan">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           </div>
-          <h4>Viteza 4G/5G</h4>
-          <p>Conexiune rapida la internet mobil in toata lumea</p>
+          <h4 data-i18n="feat_speed_title">Viteza 4G/5G</h4>
+          <p data-i18n="feat_speed_desc">Conexiune rapida la internet mobil in toata lumea</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon green">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
           </div>
-          <h4>Fara roaming</h4>
-          <p>Economisesti pana la 90% fata de roaming traditional</p>
+          <h4 data-i18n="feat_roaming_title">Fara roaming</h4>
+          <p data-i18n="feat_roaming_desc">Economisesti pana la 90% fata de roaming traditional</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon orange">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
-          <h4>Suport 24/7</h4>
-          <p>Asistenta disponibila non-stop pentru orice problema</p>
+          <h4 data-i18n="feat_support_title">Suport 24/7</h4>
+          <p data-i18n="feat_support_desc">Asistenta disponibila non-stop pentru orice problema</p>
         </div>
       </div>
     </section>
@@ -385,13 +415,13 @@
     <!-- SEARCH + GRID -->
     <section class="search-section" id="search-area">
       <div class="search-section-header">
-        <div class="section-label">Destinatii</div>
-        <h2 class="section-title">Alege destinatia ta</h2>
-        <p class="section-subtitle">Gaseste planul eSIM perfect pentru urmatoarea ta calatorie</p>
+        <div class="section-label" data-i18n="dest_label">Destinatii</div>
+        <h2 class="section-title" data-i18n="dest_title">Alege destinatia ta</h2>
+        <p class="section-subtitle" data-i18n="dest_subtitle">Gaseste planul eSIM perfect pentru urmatoarea ta calatorie</p>
       </div>
       <div class="search-wrapper">
         <div class="search-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
-        <input type="text" id="search" class="search-input" placeholder="Cauta tara (ex: Romania, Franta, SUA...)">
+        <input type="text" id="search" class="search-input" placeholder="Cauta tara (ex: Romania, Franta, SUA...)" data-i18n-placeholder="search_placeholder">
         <div class="search-dropdown" id="search-dropdown"></div>
       </div>
     </section>
@@ -405,7 +435,7 @@
     </div>
     <div class="results-info" id="results-info"></div>
     <div id="countries-grid" class="countries-grid">
-      <div class="loading"><div class="spinner"></div><p>Se incarca planurile...</p></div>
+      <div class="loading"><div class="spinner"></div><p data-i18n="loading">Se incarca planurile...</p></div>
     </div>
 
     <!-- FOOTER -->
@@ -416,31 +446,31 @@
             <div class="nav-logo" style="width:32px;height:32px;font-size:14px;border-radius:10px">S</div>
             <div class="nav-name">Sat<span>Connect</span></div>
           </div>
-          <p class="footer-brand-desc">Platforma ta de incredere pentru eSIM-uri internationale. Internet mobil rapid si accesibil in peste 179 de tari.</p>
+          <p class="footer-brand-desc" data-i18n="footer_desc">Platforma ta de incredere pentru eSIM-uri internationale. Internet mobil rapid si accesibil in peste 179 de tari.</p>
         </div>
         <div class="footer-col">
-          <h5>Companie</h5>
-          <a href="#">Despre noi</a>
-          <a href="#">Cum functioneaza</a>
-          <a href="#">Preturi</a>
-          <a href="#">Blog</a>
+          <h5 data-i18n="footer_company">Companie</h5>
+          <a href="#" data-i18n="footer_about">Despre noi</a>
+          <a href="#" data-i18n="footer_how">Cum functioneaza</a>
+          <a href="#" data-i18n="footer_prices">Preturi</a>
+          <a href="#" data-i18n="footer_blog">Blog</a>
         </div>
         <div class="footer-col">
-          <h5>Suport</h5>
-          <a href="#">Contact</a>
-          <a href="#">FAQ</a>
-          <a href="#">Ghid activare</a>
-          <a href="#">Status serviciu</a>
+          <h5 data-i18n="footer_support">Suport</h5>
+          <a href="#" data-i18n="footer_contact">Contact</a>
+          <a href="#" data-i18n="footer_faq">FAQ</a>
+          <a href="#" data-i18n="footer_guide">Ghid activare</a>
+          <a href="#" data-i18n="footer_status">Status serviciu</a>
         </div>
         <div class="footer-col">
-          <h5>Legal</h5>
-          <a href="#">Termeni si conditii</a>
-          <a href="#">Politica de confidentialitate</a>
-          <a href="#">Politica de retur</a>
+          <h5 data-i18n="footer_legal">Legal</h5>
+          <a href="#" data-i18n="footer_terms">Termeni si conditii</a>
+          <a href="#" data-i18n="footer_privacy">Politica de confidentialitate</a>
+          <a href="#" data-i18n="footer_refund">Politica de retur</a>
         </div>
       </div>
       <div class="footer-bottom">
-        <p class="footer-copy">SatConnect &copy; 2026 &mdash; Toate drepturile rezervate</p>
+        <p class="footer-copy">SatConnect &copy; 2026 &mdash; <span data-i18n="footer_rights">Toate drepturile rezervate</span></p>
         <div class="footer-payment-icons">
           <span>VISA</span>
           <span>MASTERCARD</span>
@@ -460,7 +490,7 @@
             <span class="modal-flag" id="modal-flag"></span>
             <span class="modal-country-name" id="modal-country-name"></span>
           </div>
-          <div class="modal-subtitle">Alege planul potrivit pentru tine</div>
+          <div class="modal-subtitle" data-i18n="modal_subtitle">Alege planul potrivit pentru tine</div>
         </div>
         <button class="modal-close" id="modal-close-btn">&times;</button>
       </div>
@@ -480,26 +510,26 @@
     var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 3.8;
     var globeGeo = new THREE.SphereGeometry(1.2, 48, 48);
-    var globeMat = new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.06 });
+    var globeMat = new THREE.MeshBasicMaterial({ color: 0x6366f1, wireframe: true, transparent: true, opacity: 0.18 });
     var globe = new THREE.Mesh(globeGeo, globeMat);
     scene.add(globe);
-    scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.18, 48, 48), new THREE.MeshBasicMaterial({ color: 0x0f0f23, transparent: true, opacity: 0.7 })));
-    scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.25, 48, 48), new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: 0.03, side: THREE.BackSide })));
+    scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.18, 48, 48), new THREE.MeshBasicMaterial({ color: 0x0f0f23, transparent: true, opacity: 0.35 })));
+    scene.add(new THREE.Mesh(new THREE.SphereGeometry(1.25, 48, 48), new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: 0.08, side: THREE.BackSide })));
     var dp = [];
     var cities = [[44.4,26.1],[48.9,2.35],[51.5,-0.12],[40.4,-3.7],[41.9,12.5],[52.5,13.4],[59.9,30.3],[55.8,37.6],[35.7,139.7],[37.6,127],[39.9,116.4],[22.3,114.2],[1.35,103.8],[13.8,100.5],[28.6,77.2],[25.2,55.3],[-33.9,151.2],[-36.8,174.8],[40.7,-74],[34.1,-118.2],[19.4,-99.1],[-23.6,-46.6],[-34.6,-58.4],[6.5,3.4],[-1.3,36.8],[33.6,-7.6],[36.8,10.2],[-26.2,28.0],[30.0,31.2],[41.0,29.0],[60.2,25.0],[59.3,18.1],[55.7,12.6],[50.1,14.4],[47.5,19.0],[46.1,14.5],[42.7,23.3],[44.8,20.5],[38.7,-9.1],[53.3,-6.3],[64.1,-21.9]];
     cities.forEach(function(c){var phi=(90-c[0])*(Math.PI/180);var theta=(c[1]+180)*(Math.PI/180);var r=1.21;dp.push(-r*Math.sin(phi)*Math.cos(theta),r*Math.cos(phi),r*Math.sin(phi)*Math.sin(theta));});
     var dg = new THREE.BufferGeometry();
     dg.setAttribute('position', new THREE.Float32BufferAttribute(dp, 3));
-    var dots = new THREE.Points(dg, new THREE.PointsMaterial({color:0x22d3ee,size:0.03,sizeAttenuation:true,transparent:true,opacity:0.8}));
+    var dots = new THREE.Points(dg, new THREE.PointsMaterial({color:0x22d3ee,size:0.045,sizeAttenuation:true,transparent:true,opacity:1.0}));
     scene.add(dots);
-    function createArc(a,b,c,d){function toVec(lat,lon){var p=(90-lat)*(Math.PI/180);var t=(lon+180)*(Math.PI/180);var r=1.21;return new THREE.Vector3(-r*Math.sin(p)*Math.cos(t),r*Math.cos(p),r*Math.sin(p)*Math.sin(t));}var s=toVec(a,b),e=toVec(c,d);var m=new THREE.Vector3().addVectors(s,e).multiplyScalar(0.5);m.normalize().multiplyScalar(1.21+s.distanceTo(e)*0.25);var curve=new THREE.QuadraticBezierCurve3(s,m,e);var geo=new THREE.BufferGeometry().setFromPoints(curve.getPoints(32));return new THREE.Line(geo,new THREE.LineBasicMaterial({color:0x6366f1,transparent:true,opacity:0.12}));}
+    function createArc(a,b,c,d){function toVec(lat,lon){var p=(90-lat)*(Math.PI/180);var t=(lon+180)*(Math.PI/180);var r=1.21;return new THREE.Vector3(-r*Math.sin(p)*Math.cos(t),r*Math.cos(p),r*Math.sin(p)*Math.sin(t));}var s=toVec(a,b),e=toVec(c,d);var m=new THREE.Vector3().addVectors(s,e).multiplyScalar(0.5);m.normalize().multiplyScalar(1.21+s.distanceTo(e)*0.25);var curve=new THREE.QuadraticBezierCurve3(s,m,e);var geo=new THREE.BufferGeometry().setFromPoints(curve.getPoints(32));return new THREE.Line(geo,new THREE.LineBasicMaterial({color:0x6366f1,transparent:true,opacity:0.30}));}
     var arcPairs=[[0,6],[1,4],[2,10],[3,12],[5,7],[8,11],[9,13],[14,15],[16,17],[18,19],[20,21],[22,23],[24,25],[0,18],[2,8],[10,16],[1,20],[14,12]];
     arcPairs.forEach(function(p){if(cities[p[0]]&&cities[p[1]]){scene.add(createArc(cities[p[0]][0],cities[p[0]][1],cities[p[1]][0],cities[p[1]][1]));}});
     var pc=200,pp=new Float32Array(pc*3);
     for(var i=0;i<pc;i++){pp[i*3]=(Math.random()-0.5)*8;pp[i*3+1]=(Math.random()-0.5)*8;pp[i*3+2]=(Math.random()-0.5)*4-2;}
     var pg=new THREE.BufferGeometry();
     pg.setAttribute('position',new THREE.Float32BufferAttribute(pp,3));
-    scene.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0x6366f1,size:0.012,sizeAttenuation:true,transparent:true,opacity:0.3})));
+    scene.add(new THREE.Points(pg,new THREE.PointsMaterial({color:0x6366f1,size:0.015,sizeAttenuation:true,transparent:true,opacity:0.5})));
     var mx=0,my=0;
     document.addEventListener('mousemove',function(e){mx=(e.clientX/window.innerWidth-0.5)*0.3;my=(e.clientY/window.innerHeight-0.5)*0.3;});
     function animate(){requestAnimationFrame(animate);globe.rotation.y+=0.001;dots.rotation.y+=0.001;scene.rotation.y+=(mx-scene.rotation.y)*0.02;scene.rotation.x+=(-my*0.3-scene.rotation.x)*0.02;renderer.render(scene,camera);}
@@ -516,25 +546,25 @@
     function escapeHtml(s){if(!s)return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
     async function loadPlans(){
       try{var r=await fetch('/plans');var d=await r.json();
-      if(d.success&&d.data){allPlans=d.data;var c=Object.keys(allPlans).length;document.getElementById('country-count-badge').textContent=c+'+ tari disponibile';document.getElementById('stat-countries').textContent=c+'+';renderCountries();}
-      else{showError('Nu s-au putut incarca planurile');}}
-      catch(e){showError('Eroare de conexiune la server');console.error(e);}
+      if(d.success&&d.data){allPlans=d.data;var c=Object.keys(allPlans).length;document.getElementById('country-count-badge').textContent=c+'+'+t('badge_suffix');document.getElementById('stat-countries').textContent=c+'+';applyTranslations();renderCountries();}
+      else{showError(t('error_load'));}}
+      catch(e){showError(t('error_conn'));console.error(e);}
     }
     function renderCountries(filter,region){
       filter=filter||'';region=region||'all';
       var grid=document.getElementById('countries-grid');
       var entries=Object.entries(allPlans);
-      if(entries.length===0){grid.innerHTML='<div class="loading"><p>Nu sunt planuri disponibile</p></div>';document.getElementById('results-info').textContent='';return;}
+      if(entries.length===0){grid.innerHTML='<div class="loading"><p>'+t('no_plans')+'</p></div>';document.getElementById('results-info').textContent='';return;}
       var filtered=entries;
       if(region!=='all'){var rm={'europa':'Europa','asia':'Asia','americas':'Americas','africa':'Africa & ME','oceania':'Oceania'};var rn=rm[region]||region;filtered=filtered.filter(function(e){return e[1].region===rn;});}
       if(filter){var q=filter.toLowerCase();filtered=filtered.filter(function(e){return e[0].toLowerCase().includes(q)||e[1].country_name.toLowerCase().includes(q);});}
-      if(filtered.length===0){grid.innerHTML='<div class="loading"><p>Nicio tara gasita</p></div>';document.getElementById('results-info').textContent='';return;}
-      document.getElementById('results-info').innerHTML='<strong>'+filtered.length+'</strong> tari'+(region!=='all'?'':' disponibile');
+      if(filtered.length===0){grid.innerHTML='<div class="loading"><p>'+t('no_country')+'</p></div>';document.getElementById('results-info').textContent='';return;}
+      document.getElementById('results-info').innerHTML='<strong>'+filtered.length+'</strong>'+(region!=='all'?t('results_suffix_filtered'):t('results_suffix'));
       grid.innerHTML=filtered.map(function(entry){
         var code=entry[0],data=entry[1],plans=data.plans||[];
         if(plans.length===0)return '';
         var ch=plans.reduce(function(min,p){return p.price<min.price?p:min;},plans[0]);
-        return '<div class="country-card" data-country="'+escapeHtml(code)+'">'+'<div class="country-header">'+'<span class="country-flag">'+getFlag(code)+'</span>'+'<div class="country-meta">'+'<div class="country-name">'+escapeHtml(data.country_name)+'</div>'+'<div class="country-info">'+plans.length+' planuri disponibile</div>'+'</div>'+'<span class="country-price-tag">de la '+escapeHtml(String(ch.price))+' &euro;</span>'+'</div>'+'<div class="plan-chips">'+plans.slice(0,4).map(function(p){return '<span class="plan-chip">'+escapeHtml(p.data_label)+'</span>';}).join('')+(plans.length>4?'<span class="plan-chip more">+'+(plans.length-4)+'</span>':'')+'</div>'+'</div>';
+        return '<div class="country-card" data-country="'+escapeHtml(code)+'">'+'<div class="country-header">'+'<span class="country-flag">'+getFlag(code)+'</span>'+'<div class="country-meta">'+'<div class="country-name">'+escapeHtml(data.country_name)+'</div>'+'<div class="country-info">'+plans.length+t('plans_available')+'</div>'+'</div>'+'<span class="country-price-tag">'+t('price_from')+escapeHtml(String(ch.price))+' &euro;</span>'+'</div>'+'<div class="plan-chips">'+plans.slice(0,4).map(function(p){return '<span class="plan-chip">'+escapeHtml(p.data_label)+'</span>';}).join('')+(plans.length>4?'<span class="plan-chip more">+'+(plans.length-4)+'</span>':'')+'</div>'+'</div>';
       }).join('');
     }
     function getFlag(code){var pts=code.toUpperCase().split('').map(function(c){return 0x1F1E6+c.charCodeAt(0)-65;});return String.fromCodePoint.apply(null,pts);}
@@ -544,9 +574,9 @@
       document.getElementById('modal-flag').textContent=getFlag(code);
       document.getElementById('modal-country-name').textContent=country.country_name;
       var ph=plans.map(function(p,i){
-        return '<div class="plan-card" data-plan-index="'+i+'" data-plan-country="'+escapeHtml(code)+'">'+'<div class="plan-left">'+'<div class="plan-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>'+'<div>'+'<div class="plan-data">'+escapeHtml(p.data_label)+'</div>'+'<div class="plan-validity">'+escapeHtml(String(p.valid_days))+' zile valabilitate</div>'+'</div>'+'</div>'+'<div class="plan-price-col">'+'<div class="plan-amount">'+escapeHtml(String(p.price))+' <span class="plan-currency">'+escapeHtml(p.currency)+'</span></div>'+'</div>'+'</div>';
+        return '<div class="plan-card" data-plan-index="'+i+'" data-plan-country="'+escapeHtml(code)+'">'+'<div class="plan-left">'+'<div class="plan-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>'+'<div>'+'<div class="plan-data">'+escapeHtml(p.data_label)+'</div>'+'<div class="plan-validity">'+escapeHtml(String(p.valid_days))+t('days_validity')+'</div>'+'</div>'+'</div>'+'<div class="plan-price-col">'+'<div class="plan-amount">'+escapeHtml(String(p.price))+' <span class="plan-currency">'+escapeHtml(p.currency)+'</span></div>'+'</div>'+'</div>';
       }).join('');
-      document.getElementById('modal-body').innerHTML='<div id="plans-list">'+ph+'</div>'+'<button class="buy-btn" id="buy-btn" disabled><span class="btn-secure">Selecteaza un plan</span></button>'+'<div class="payment-info">'+'<span class="payment-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Plata securizata SSL</span>'+'<span class="payment-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Activare instant</span>'+'<span class="payment-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Stripe</span>'+'</div>';
+      document.getElementById('modal-body').innerHTML='<div id="plans-list">'+ph+'</div>'+'<button class="buy-btn" id="buy-btn" disabled><span class="btn-secure">'+t('select_plan')+'</span></button>'+'<div class="payment-info">'+'<span class="payment-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'+t('pay_secure')+'</span>'+'<span class="payment-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'+t('pay_instant')+'</span>'+'<span class="payment-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Stripe</span>'+'</div>';
       document.getElementById('plan-modal').classList.add('active');
       document.querySelectorAll('.plan-card[data-plan-index]').forEach(function(el){el.addEventListener('click',function(){selectPlan(parseInt(el.getAttribute('data-plan-index')),el.getAttribute('data-plan-country'));});});
       document.getElementById('buy-btn').addEventListener('click',buyPlan);
@@ -555,11 +585,11 @@
       var plans=allPlans[countryCode].plans;selectedPlan=plans[index];
       document.querySelectorAll('.plan-card').forEach(function(el,i){el.classList.toggle('selected',i===index);});
       var btn=document.getElementById('buy-btn');btn.disabled=false;
-      btn.innerHTML='<span class="btn-secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Cumpara '+escapeHtml(selectedPlan.data_label)+' &mdash; '+escapeHtml(String(selectedPlan.price))+' '+escapeHtml(selectedPlan.currency)+'</span>';
+      btn.innerHTML='<span class="btn-secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'+t('buy_prefix')+escapeHtml(selectedPlan.data_label)+' &mdash; '+escapeHtml(String(selectedPlan.price))+' '+escapeHtml(selectedPlan.currency)+'</span>';
     }
     function closeModal(){document.getElementById('plan-modal').classList.remove('active');selectedPlan=null;}
     function buyPlan(){
-      if(!selectedPlan)return;var btn=document.getElementById('buy-btn');btn.disabled=true;btn.innerHTML='<span class="btn-secure">Se proceseaza...</span>';
+      if(!selectedPlan)return;var btn=document.getElementById('buy-btn');btn.disabled=true;btn.innerHTML='<span class="btn-secure">'+t('processing')+'</span>';
       var planId=selectedPlan.id;var returnUrl=encodeURIComponent(window.location.origin);
       window.location.href=CHECKOUT_BASE+'/api/stripe/checkout-redirect?planId='+planId+'&returnUrl='+returnUrl;
     }
@@ -590,6 +620,493 @@
     var reveals=document.querySelectorAll('.reveal');
     var revealObs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');revealObs.unobserve(e.target);}});},{threshold:0.15});
     reveals.forEach(function(el){revealObs.observe(el);});
+
+
+    /* ====== TRANSLATIONS ====== */
+    var LANGS = {
+      ro: {
+        flag: '\u{1F1F7}\u{1F1F4}', label: 'RO', name: 'Romana',
+        hero_pill: 'eSIM digital instant',
+        hero_title1: 'Internet mobil in',
+        hero_title2: 'orice tara din lume',
+        hero_desc: 'Cumpara un eSIM in cateva secunde. Fara roaming scump, fara SIM fizic. Activare automata pe orice telefon compatibil.',
+        cta_search: 'Cauta tara ta',
+        cta_how: 'Cum functioneaza',
+        trust_secure: 'Plata securizata',
+        trust_fast: 'Activare in secunde',
+        stat_countries: 'Tari acoperite',
+        stat_activation: 'Activare medie',
+        stat_availability: 'Disponibilitate',
+        how_label: 'Simplu si rapid',
+        how_title: 'Cum functioneaza',
+        how_subtitle: '3 pasi simpli pentru internet mobil oriunde in lume',
+        how_step1_title: 'Alege tara',
+        how_step1_desc: 'Cauta destinatia ta din peste 179 de tari si alege planul de date potrivit.',
+        how_step2_title: 'Plateste online',
+        how_step2_desc: 'Plata securizata cu Stripe. Acceptam Visa, Mastercard si Apple Pay.',
+        how_step3_title: 'Activeaza instant',
+        how_step3_desc: 'Primesti eSIM-ul instant. Scaneaza codul QR si esti conectat in secunde.',
+        feat_ssl_title: 'Securitate SSL',
+        feat_ssl_desc: 'Toate platile sunt criptate si securizate prin Stripe',
+        feat_speed_title: 'Viteza 4G/5G',
+        feat_speed_desc: 'Conexiune rapida la internet mobil in toata lumea',
+        feat_roaming_title: 'Fara roaming',
+        feat_roaming_desc: 'Economisesti pana la 90% fata de roaming traditional',
+        feat_support_title: 'Suport 24/7',
+        feat_support_desc: 'Asistenta disponibila non-stop pentru orice problema',
+        dest_label: 'Destinatii',
+        dest_title: 'Alege destinatia ta',
+        dest_subtitle: 'Gaseste planul eSIM perfect pentru urmatoarea ta calatorie',
+        search_placeholder: 'Cauta tara (ex: Romania, Franta, SUA...)',
+        loading: 'Se incarca planurile...',
+        badge_suffix: ' tari disponibile',
+        plans_available: ' planuri disponibile',
+        price_from: 'de la ',
+        tab_all: 'Toate',
+        no_plans: 'Nu sunt planuri disponibile',
+        no_country: 'Nicio tara gasita',
+        results_suffix: ' tari disponibile',
+        results_suffix_filtered: ' tari',
+        days_validity: ' zile valabilitate',
+        select_plan: 'Selecteaza un plan',
+        buy_prefix: 'Cumpara ',
+        processing: 'Se proceseaza...',
+        modal_subtitle: 'Alege planul potrivit pentru tine',
+        pay_secure: 'Plata securizata SSL',
+        pay_instant: 'Activare instant',
+        footer_desc: 'Platforma ta de incredere pentru eSIM-uri internationale. Internet mobil rapid si accesibil in peste 179 de tari.',
+        footer_company: 'Companie',
+        footer_about: 'Despre noi',
+        footer_how: 'Cum functioneaza',
+        footer_prices: 'Preturi',
+        footer_blog: 'Blog',
+        footer_support: 'Suport',
+        footer_contact: 'Contact',
+        footer_faq: 'FAQ',
+        footer_guide: 'Ghid activare',
+        footer_status: 'Status serviciu',
+        footer_legal: 'Legal',
+        footer_terms: 'Termeni si conditii',
+        footer_privacy: 'Politica de confidentialitate',
+        footer_refund: 'Politica de retur',
+        footer_rights: 'Toate drepturile rezervate',
+        error_load: 'Nu s-au putut incarca planurile',
+        error_conn: 'Eroare de conexiune la server'
+      },
+      en: {
+        flag: '\u{1F1EC}\u{1F1E7}', label: 'EN', name: 'English',
+        hero_pill: 'Instant digital eSIM',
+        hero_title1: 'Mobile internet in',
+        hero_title2: 'any country worldwide',
+        hero_desc: 'Buy an eSIM in seconds. No expensive roaming, no physical SIM. Automatic activation on any compatible phone.',
+        cta_search: 'Find your country',
+        cta_how: 'How it works',
+        trust_secure: 'Secure payment',
+        trust_fast: 'Activation in seconds',
+        stat_countries: 'Countries covered',
+        stat_activation: 'Avg. activation',
+        stat_availability: 'Availability',
+        how_label: 'Simple and fast',
+        how_title: 'How it works',
+        how_subtitle: '3 simple steps for mobile internet anywhere in the world',
+        how_step1_title: 'Choose country',
+        how_step1_desc: 'Search your destination from over 179 countries and choose the right data plan.',
+        how_step2_title: 'Pay online',
+        how_step2_desc: 'Secure payment via Stripe. We accept Visa, Mastercard and Apple Pay.',
+        how_step3_title: 'Activate instantly',
+        how_step3_desc: 'Get your eSIM instantly. Scan the QR code and you are connected in seconds.',
+        feat_ssl_title: 'SSL Security',
+        feat_ssl_desc: 'All payments are encrypted and secured via Stripe',
+        feat_speed_title: '4G/5G Speed',
+        feat_speed_desc: 'Fast mobile internet connection worldwide',
+        feat_roaming_title: 'No roaming',
+        feat_roaming_desc: 'Save up to 90% compared to traditional roaming',
+        feat_support_title: '24/7 Support',
+        feat_support_desc: 'Non-stop assistance available for any issue',
+        dest_label: 'Destinations',
+        dest_title: 'Choose your destination',
+        dest_subtitle: 'Find the perfect eSIM plan for your next trip',
+        search_placeholder: 'Search country (e.g. France, USA, Germany...)',
+        loading: 'Loading plans...',
+        badge_suffix: ' countries available',
+        plans_available: ' plans available',
+        price_from: 'from ',
+        tab_all: 'All',
+        no_plans: 'No plans available',
+        no_country: 'No country found',
+        results_suffix: ' countries available',
+        results_suffix_filtered: ' countries',
+        days_validity: ' days validity',
+        select_plan: 'Select a plan',
+        buy_prefix: 'Buy ',
+        processing: 'Processing...',
+        modal_subtitle: 'Choose the right plan for you',
+        pay_secure: 'SSL Secure Payment',
+        pay_instant: 'Instant Activation',
+        footer_desc: 'Your trusted platform for international eSIMs. Fast and affordable mobile internet in over 179 countries.',
+        footer_company: 'Company',
+        footer_about: 'About us',
+        footer_how: 'How it works',
+        footer_prices: 'Pricing',
+        footer_blog: 'Blog',
+        footer_support: 'Support',
+        footer_contact: 'Contact',
+        footer_faq: 'FAQ',
+        footer_guide: 'Activation guide',
+        footer_status: 'Service status',
+        footer_legal: 'Legal',
+        footer_terms: 'Terms & Conditions',
+        footer_privacy: 'Privacy Policy',
+        footer_refund: 'Refund Policy',
+        footer_rights: 'All rights reserved',
+        error_load: 'Could not load plans',
+        error_conn: 'Server connection error'
+      },
+      de: {
+        flag: '\u{1F1E9}\u{1F1EA}', label: 'DE', name: 'Deutsch',
+        hero_pill: 'Sofort digitale eSIM',
+        hero_title1: 'Mobiles Internet in',
+        hero_title2: 'jedem Land der Welt',
+        hero_desc: 'Kaufen Sie eine eSIM in Sekunden. Kein teures Roaming, keine physische SIM. Automatische Aktivierung auf jedem kompatiblen Telefon.',
+        cta_search: 'Land suchen',
+        cta_how: 'So funktioniert es',
+        trust_secure: 'Sichere Zahlung',
+        trust_fast: 'Aktivierung in Sekunden',
+        stat_countries: 'Abgedeckte Lander',
+        stat_activation: 'Durchschn. Aktivierung',
+        stat_availability: 'Verfugbarkeit',
+        how_label: 'Einfach und schnell',
+        how_title: 'So funktioniert es',
+        how_subtitle: '3 einfache Schritte fur mobiles Internet uberall auf der Welt',
+        how_step1_title: 'Land wahlen',
+        how_step1_desc: 'Suchen Sie Ihr Reiseziel aus uber 179 Landern und wahlen Sie den passenden Datentarif.',
+        how_step2_title: 'Online bezahlen',
+        how_step2_desc: 'Sichere Zahlung uber Stripe. Wir akzeptieren Visa, Mastercard und Apple Pay.',
+        how_step3_title: 'Sofort aktivieren',
+        how_step3_desc: 'Erhalten Sie Ihre eSIM sofort. Scannen Sie den QR-Code und Sie sind in Sekunden verbunden.',
+        feat_ssl_title: 'SSL-Sicherheit',
+        feat_ssl_desc: 'Alle Zahlungen sind verschlusselt und uber Stripe gesichert',
+        feat_speed_title: '4G/5G-Geschwindigkeit',
+        feat_speed_desc: 'Schnelle mobile Internetverbindung weltweit',
+        feat_roaming_title: 'Kein Roaming',
+        feat_roaming_desc: 'Sparen Sie bis zu 90% gegenuber herkommlichem Roaming',
+        feat_support_title: '24/7 Support',
+        feat_support_desc: 'Rund-um-die-Uhr-Hilfe fur jedes Problem verfugbar',
+        dest_label: 'Reiseziele',
+        dest_title: 'Wahlen Sie Ihr Reiseziel',
+        dest_subtitle: 'Finden Sie den perfekten eSIM-Tarif fur Ihre nachste Reise',
+        search_placeholder: 'Land suchen (z.B. Frankreich, USA, Spanien...)',
+        loading: 'Tarife werden geladen...',
+        badge_suffix: ' Lander verfugbar',
+        plans_available: ' Tarife verfugbar',
+        price_from: 'ab ',
+        tab_all: 'Alle',
+        no_plans: 'Keine Tarife verfugbar',
+        no_country: 'Kein Land gefunden',
+        results_suffix: ' Lander verfugbar',
+        results_suffix_filtered: ' Lander',
+        days_validity: ' Tage Gultigkeit',
+        select_plan: 'Tarif auswahlen',
+        buy_prefix: 'Kaufen ',
+        processing: 'Wird verarbeitet...',
+        modal_subtitle: 'Wahlen Sie den richtigen Tarif fur Sie',
+        pay_secure: 'SSL-sichere Zahlung',
+        pay_instant: 'Sofortige Aktivierung',
+        footer_desc: 'Ihre vertrauenswurdige Plattform fur internationale eSIMs. Schnelles und erschwingliches mobiles Internet in uber 179 Landern.',
+        footer_company: 'Unternehmen',
+        footer_about: 'Uber uns',
+        footer_how: 'So funktioniert es',
+        footer_prices: 'Preise',
+        footer_blog: 'Blog',
+        footer_support: 'Support',
+        footer_contact: 'Kontakt',
+        footer_faq: 'FAQ',
+        footer_guide: 'Aktivierungsanleitung',
+        footer_status: 'Servicestatus',
+        footer_legal: 'Rechtliches',
+        footer_terms: 'AGB',
+        footer_privacy: 'Datenschutzrichtlinie',
+        footer_refund: 'Ruckgaberichtlinie',
+        footer_rights: 'Alle Rechte vorbehalten',
+        error_load: 'Tarife konnten nicht geladen werden',
+        error_conn: 'Serververbindungsfehler'
+      },
+      fr: {
+        flag: '\u{1F1EB}\u{1F1F7}', label: 'FR', name: 'Francais',
+        hero_pill: 'eSIM numerique instantanee',
+        hero_title1: 'Internet mobile dans',
+        hero_title2: 'tous les pays du monde',
+        hero_desc: 'Achetez une eSIM en quelques secondes. Sans roaming couteux, sans SIM physique. Activation automatique sur tout telephone compatible.',
+        cta_search: 'Trouvez votre pays',
+        cta_how: 'Comment ca marche',
+        trust_secure: 'Paiement securise',
+        trust_fast: 'Activation en secondes',
+        stat_countries: 'Pays couverts',
+        stat_activation: 'Activation moy.',
+        stat_availability: 'Disponibilite',
+        how_label: 'Simple et rapide',
+        how_title: 'Comment ca marche',
+        how_subtitle: '3 etapes simples pour internet mobile partout dans le monde',
+        how_step1_title: 'Choisir le pays',
+        how_step1_desc: 'Recherchez votre destination parmi plus de 179 pays et choisissez le forfait adapte.',
+        how_step2_title: 'Payer en ligne',
+        how_step2_desc: 'Paiement securise via Stripe. Nous acceptons Visa, Mastercard et Apple Pay.',
+        how_step3_title: 'Activer instantanement',
+        how_step3_desc: 'Recevez votre eSIM instantanement. Scannez le QR code et vous etes connecte en secondes.',
+        feat_ssl_title: 'Securite SSL',
+        feat_ssl_desc: 'Tous les paiements sont cryptes et securises via Stripe',
+        feat_speed_title: 'Vitesse 4G/5G',
+        feat_speed_desc: 'Connexion internet mobile rapide dans le monde entier',
+        feat_roaming_title: 'Sans roaming',
+        feat_roaming_desc: 'Economisez jusqu\'a 90% par rapport au roaming traditionnel',
+        feat_support_title: 'Support 24/7',
+        feat_support_desc: 'Assistance disponible 24h/24 pour tout probleme',
+        dest_label: 'Destinations',
+        dest_title: 'Choisissez votre destination',
+        dest_subtitle: 'Trouvez le forfait eSIM parfait pour votre prochain voyage',
+        search_placeholder: 'Rechercher un pays (ex: France, USA, Espagne...)',
+        loading: 'Chargement des forfaits...',
+        badge_suffix: ' pays disponibles',
+        plans_available: ' forfaits disponibles',
+        price_from: 'des ',
+        tab_all: 'Tous',
+        no_plans: 'Aucun forfait disponible',
+        no_country: 'Aucun pays trouve',
+        results_suffix: ' pays disponibles',
+        results_suffix_filtered: ' pays',
+        days_validity: ' jours de validite',
+        select_plan: 'Selectionnez un forfait',
+        buy_prefix: 'Acheter ',
+        processing: 'Traitement en cours...',
+        modal_subtitle: 'Choisissez le forfait qui vous convient',
+        pay_secure: 'Paiement securise SSL',
+        pay_instant: 'Activation instantanee',
+        footer_desc: 'Votre plateforme de confiance pour les eSIM internationales. Internet mobile rapide et abordable dans plus de 179 pays.',
+        footer_company: 'Entreprise',
+        footer_about: 'A propos',
+        footer_how: 'Comment ca marche',
+        footer_prices: 'Tarifs',
+        footer_blog: 'Blog',
+        footer_support: 'Support',
+        footer_contact: 'Contact',
+        footer_faq: 'FAQ',
+        footer_guide: 'Guide d\'activation',
+        footer_status: 'Statut du service',
+        footer_legal: 'Mentions legales',
+        footer_terms: 'CGV',
+        footer_privacy: 'Politique de confidentialite',
+        footer_refund: 'Politique de remboursement',
+        footer_rights: 'Tous droits reserves',
+        error_load: 'Impossible de charger les forfaits',
+        error_conn: 'Erreur de connexion au serveur'
+      },
+      es: {
+        flag: '\u{1F1EA}\u{1F1F8}', label: 'ES', name: 'Espanol',
+        hero_pill: 'eSIM digital instantanea',
+        hero_title1: 'Internet movil en',
+        hero_title2: 'cualquier pais del mundo',
+        hero_desc: 'Compra una eSIM en segundos. Sin roaming costoso, sin SIM fisica. Activacion automatica en cualquier telefono compatible.',
+        cta_search: 'Busca tu pais',
+        cta_how: 'Como funciona',
+        trust_secure: 'Pago seguro',
+        trust_fast: 'Activacion en segundos',
+        stat_countries: 'Paises cubiertos',
+        stat_activation: 'Activacion media',
+        stat_availability: 'Disponibilidad',
+        how_label: 'Simple y rapido',
+        how_title: 'Como funciona',
+        how_subtitle: '3 pasos simples para internet movil en cualquier lugar del mundo',
+        how_step1_title: 'Elige el pais',
+        how_step1_desc: 'Busca tu destino entre mas de 179 paises y elige el plan de datos adecuado.',
+        how_step2_title: 'Paga online',
+        how_step2_desc: 'Pago seguro con Stripe. Aceptamos Visa, Mastercard y Apple Pay.',
+        how_step3_title: 'Activa al instante',
+        how_step3_desc: 'Recibe tu eSIM al instante. Escanea el codigo QR y estaras conectado en segundos.',
+        feat_ssl_title: 'Seguridad SSL',
+        feat_ssl_desc: 'Todos los pagos estan encriptados y asegurados por Stripe',
+        feat_speed_title: 'Velocidad 4G/5G',
+        feat_speed_desc: 'Conexion rapida de internet movil en todo el mundo',
+        feat_roaming_title: 'Sin roaming',
+        feat_roaming_desc: 'Ahorra hasta un 90% respecto al roaming tradicional',
+        feat_support_title: 'Soporte 24/7',
+        feat_support_desc: 'Asistencia disponible las 24 horas para cualquier problema',
+        dest_label: 'Destinos',
+        dest_title: 'Elige tu destino',
+        dest_subtitle: 'Encuentra el plan eSIM perfecto para tu proximo viaje',
+        search_placeholder: 'Buscar pais (ej: Francia, EEUU, Alemania...)',
+        loading: 'Cargando planes...',
+        badge_suffix: ' paises disponibles',
+        plans_available: ' planes disponibles',
+        price_from: 'desde ',
+        tab_all: 'Todos',
+        no_plans: 'No hay planes disponibles',
+        no_country: 'No se encontro ningun pais',
+        results_suffix: ' paises disponibles',
+        results_suffix_filtered: ' paises',
+        days_validity: ' dias de validez',
+        select_plan: 'Selecciona un plan',
+        buy_prefix: 'Comprar ',
+        processing: 'Procesando...',
+        modal_subtitle: 'Elige el plan adecuado para ti',
+        pay_secure: 'Pago seguro SSL',
+        pay_instant: 'Activacion instantanea',
+        footer_desc: 'Tu plataforma de confianza para eSIMs internacionales. Internet movil rapido y asequible en mas de 179 paises.',
+        footer_company: 'Empresa',
+        footer_about: 'Sobre nosotros',
+        footer_how: 'Como funciona',
+        footer_prices: 'Precios',
+        footer_blog: 'Blog',
+        footer_support: 'Soporte',
+        footer_contact: 'Contacto',
+        footer_faq: 'FAQ',
+        footer_guide: 'Guia de activacion',
+        footer_status: 'Estado del servicio',
+        footer_legal: 'Legal',
+        footer_terms: 'Terminos y condiciones',
+        footer_privacy: 'Politica de privacidad',
+        footer_refund: 'Politica de devolucion',
+        footer_rights: 'Todos los derechos reservados',
+        error_load: 'No se pudieron cargar los planes',
+        error_conn: 'Error de conexion al servidor'
+      },
+      it: {
+        flag: '\u{1F1EE}\u{1F1F9}', label: 'IT', name: 'Italiano',
+        hero_pill: 'eSIM digitale istantanea',
+        hero_title1: 'Internet mobile in',
+        hero_title2: 'qualsiasi paese del mondo',
+        hero_desc: 'Acquista una eSIM in pochi secondi. Nessun roaming costoso, nessuna SIM fisica. Attivazione automatica su qualsiasi telefono compatibile.',
+        cta_search: 'Cerca il tuo paese',
+        cta_how: 'Come funziona',
+        trust_secure: 'Pagamento sicuro',
+        trust_fast: 'Attivazione in secondi',
+        stat_countries: 'Paesi coperti',
+        stat_activation: 'Attivazione media',
+        stat_availability: 'Disponibilita',
+        how_label: 'Semplice e veloce',
+        how_title: 'Come funziona',
+        how_subtitle: '3 semplici passaggi per internet mobile ovunque nel mondo',
+        how_step1_title: 'Scegli il paese',
+        how_step1_desc: 'Cerca la tua destinazione tra oltre 179 paesi e scegli il piano dati giusto.',
+        how_step2_title: 'Paga online',
+        how_step2_desc: 'Pagamento sicuro tramite Stripe. Accettiamo Visa, Mastercard e Apple Pay.',
+        how_step3_title: 'Attiva istantaneamente',
+        how_step3_desc: 'Ricevi la tua eSIM istantaneamente. Scansiona il codice QR e sei connesso in pochi secondi.',
+        feat_ssl_title: 'Sicurezza SSL',
+        feat_ssl_desc: 'Tutti i pagamenti sono crittografati e protetti tramite Stripe',
+        feat_speed_title: 'Velocita 4G/5G',
+        feat_speed_desc: 'Connessione internet mobile veloce in tutto il mondo',
+        feat_roaming_title: 'Niente roaming',
+        feat_roaming_desc: 'Risparmia fino al 90% rispetto al roaming tradizionale',
+        feat_support_title: 'Supporto 24/7',
+        feat_support_desc: 'Assistenza disponibile 24 ore su 24 per qualsiasi problema',
+        dest_label: 'Destinazioni',
+        dest_title: 'Scegli la tua destinazione',
+        dest_subtitle: 'Trova il piano eSIM perfetto per il tuo prossimo viaggio',
+        search_placeholder: 'Cerca paese (es: Francia, USA, Spagna...)',
+        loading: 'Caricamento piani...',
+        badge_suffix: ' paesi disponibili',
+        plans_available: ' piani disponibili',
+        price_from: 'da ',
+        tab_all: 'Tutti',
+        no_plans: 'Nessun piano disponibile',
+        no_country: 'Nessun paese trovato',
+        results_suffix: ' paesi disponibili',
+        results_suffix_filtered: ' paesi',
+        days_validity: ' giorni di validita',
+        select_plan: 'Seleziona un piano',
+        buy_prefix: 'Acquista ',
+        processing: 'Elaborazione...',
+        modal_subtitle: 'Scegli il piano giusto per te',
+        pay_secure: 'Pagamento sicuro SSL',
+        pay_instant: 'Attivazione istantanea',
+        footer_desc: 'La tua piattaforma di fiducia per eSIM internazionali. Internet mobile veloce e conveniente in oltre 179 paesi.',
+        footer_company: 'Azienda',
+        footer_about: 'Chi siamo',
+        footer_how: 'Come funziona',
+        footer_prices: 'Prezzi',
+        footer_blog: 'Blog',
+        footer_support: 'Supporto',
+        footer_contact: 'Contatto',
+        footer_faq: 'FAQ',
+        footer_guide: 'Guida attivazione',
+        footer_status: 'Stato del servizio',
+        footer_legal: 'Legale',
+        footer_terms: 'Termini e condizioni',
+        footer_privacy: 'Informativa sulla privacy',
+        footer_refund: 'Politica di rimborso',
+        footer_rights: 'Tutti i diritti riservati',
+        error_load: 'Impossibile caricare i piani',
+        error_conn: 'Errore di connessione al server'
+      }
+    };
+
+    var currentLang = localStorage.getItem('satconnect_lang') || 'ro';
+
+    function t(key) {
+      var lang = LANGS[currentLang] || LANGS.ro;
+      return lang[key] || LANGS.ro[key] || key;
+    }
+
+    function applyTranslations() {
+      document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        var val = t(key);
+        if (val) el.textContent = val;
+      });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n-placeholder');
+        var val = t(key);
+        if (val) el.placeholder = val;
+      });
+      /* Update badge */
+      var c = Object.keys(allPlans).length;
+      if (c > 0) {
+        document.getElementById('country-count-badge').textContent = c + '+' + t('badge_suffix');
+        document.getElementById('stat-countries').textContent = c + '+';
+      }
+      /* Update lang button */
+      var langData = LANGS[currentLang] || LANGS.ro;
+      document.getElementById('lang-label').textContent = langData.label;
+      /* Re-render countries with current language */
+      if (Object.keys(allPlans).length > 0) {
+        var at = document.querySelector('.tab-btn.active');
+        var ar = at ? at.dataset.region : 'all';
+        renderCountries(document.getElementById('search').value, ar);
+      }
+      /* Update tab "All/Toate" */
+      var allTab = document.querySelector('.tab-btn[data-region="all"]');
+      if (allTab) allTab.textContent = t('tab_all');
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('satconnect_lang', lang);
+      document.querySelectorAll('.lang-option').forEach(function(el) {
+        el.classList.toggle('active', el.getAttribute('data-lang') === lang);
+      });
+      document.getElementById('lang-switcher').classList.remove('open');
+      applyTranslations();
+    }
+
+    /* Language switcher events */
+    document.getElementById('lang-btn').addEventListener('click', function(e) {
+      e.stopPropagation();
+      document.getElementById('lang-switcher').classList.toggle('open');
+    });
+    document.getElementById('lang-dropdown').addEventListener('click', function(e) {
+      var opt = e.target.closest('.lang-option');
+      if (opt) setLanguage(opt.getAttribute('data-lang'));
+    });
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.lang-switcher')) {
+        document.getElementById('lang-switcher').classList.remove('open');
+      }
+    });
+
+    /* Apply saved language on page load */
+    if (currentLang !== 'ro') {
+      applyTranslations();
+    }
 
     loadPlans();
   </script>
