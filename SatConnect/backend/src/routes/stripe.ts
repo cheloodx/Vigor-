@@ -100,22 +100,14 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
       },
     });
 
-    // Create order record in Supabase (blocking — if this fails, don't let user pay)
-    // Note: createOrderForSession returns null on internal errors instead of throwing,
-    // so we check both null return AND exceptions.
+    // Create order record (best-effort — don't block checkout if DB is down)
     try {
       const orderRecord = await createOrderForSession(session.id, plan.id);
       if (!orderRecord) {
-        // Expire the orphaned Stripe session so it doesn't linger for 24h
-        await stripe.checkout.sessions.expire(session.id).catch(() => {});
-        res.status(500).json({ error: 'Failed to initialize order. Please try again.' });
-        return;
+        console.warn('Order record creation returned null — proceeding anyway');
       }
     } catch (orderErr) {
-      console.error('Failed to create order record:', orderErr);
-      await stripe.checkout.sessions.expire(session.id).catch(() => {});
-      res.status(500).json({ error: 'Failed to initialize order. Please try again.' });
-      return;
+      console.error('Failed to create order record (non-blocking):', orderErr);
     }
 
     res.json({
@@ -290,19 +282,14 @@ router.get('/checkout-redirect', async (req: Request, res: Response) => {
       },
     });
 
-    // Create order record (check null return AND exceptions)
+    // Create order record (best-effort — don't block checkout if DB is down)
     try {
       const orderRecord = await createOrderForSession(session.id, plan.id);
       if (!orderRecord) {
-        await stripe.checkout.sessions.expire(session.id).catch(() => {});
-        res.status(500).send('Failed to initialize order');
-        return;
+        console.warn('Order record creation returned null — proceeding to checkout anyway');
       }
     } catch (orderErr) {
-      console.error('Failed to create order:', orderErr);
-      await stripe.checkout.sessions.expire(session.id).catch(() => {});
-      res.status(500).send('Failed to initialize order');
-      return;
+      console.error('Failed to create order record (non-blocking):', orderErr);
     }
 
     // Redirect to Stripe Checkout
