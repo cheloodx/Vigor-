@@ -541,7 +541,7 @@
       btn.textContent = 'Se proceseaza...';
 
       try {
-        const planId = `${selectedPlan.country_code.toLowerCase()}-${selectedPlan.data_label.toLowerCase().replace(/\s+/g, '')}`;
+        const planId = selectedPlan.id;
         
         const res = await fetch(`${API_BASE}/api/stripe/create-checkout`, {
           method: 'POST',
