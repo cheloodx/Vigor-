@@ -335,12 +335,15 @@
       checkPaymentAndProvision();
     }
 
+    // Store Stripe session data for fallback display
+    let stripeSessionData = null;
+
     async function checkPaymentAndProvision() {
       try {
         const stripeRes = await fetch(`${API_BASE}/api/stripe/session/${sessionId}`);
-        const stripeData = await stripeRes.json();
+        stripeSessionData = await stripeRes.json();
 
-        if (stripeData.status !== 'paid') {
+        if (stripeSessionData.status !== 'paid') {
           showError('Plata nefinalizata', 'Plata nu a fost confirmata inca. Te rugam sa reincerci.');
           return;
         }
@@ -400,7 +403,53 @@
         const progress = Math.min(90, (i + 1) * 7);
         document.getElementById('subtitle').textContent = `Progres: ${progress}%... Te rugam sa astepti`;
       }
-      showError('Timeout', 'Activarea dureaza mai mult decat de obicei. Verifica mai tarziu sau contacteaza suportul.');
+      // Instead of showing error, show payment confirmation with Stripe data as fallback
+      showPaymentConfirmedFallback();
+    }
+
+    function showPaymentConfirmedFallback() {
+      // Payment was confirmed but eSIM provisioning is still processing (webhook handles it)
+      // Show success with Stripe session info so user doesn't see scary error
+      const sd = stripeSessionData || {};
+      const country = escapeHtml(sd.countryName || '');
+      const data = escapeHtml(sd.dataLabel || '');
+      const amount = sd.amountTotal ? (sd.amountTotal / 100).toFixed(2) : '';
+      const curr = escapeHtml((sd.currency || '').toUpperCase());
+
+      updateStatus('success', 'Plata confirmata!', (sd.countryName && sd.dataLabel) ? `${sd.countryName} — ${sd.dataLabel}` : 'eSIM-ul tau este in curs de activare');
+
+      let html = '<div class="esim-details">';
+      if (country) html += `<div class="detail-row"><span class="detail-label">Tara</span><span class="detail-value">${country}</span></div>`;
+      if (data) html += `<div class="detail-row"><span class="detail-label">Plan</span><span class="detail-value">${data}</span></div>`;
+      if (amount && curr) html += `<div class="detail-row"><span class="detail-label">Suma platita</span><span class="detail-value">${amount} ${curr}</span></div>`;
+      html += `<div class="detail-row"><span class="detail-label">Status</span><span class="detail-value" style="color:var(--warning)">Se activeaza...</span></div>`;
+      html += '</div>';
+
+      html += `<div style="margin-top:24px; padding:20px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:var(--radius-md); text-align:center;">
+        <p style="color:var(--warning); font-weight:600; margin-bottom:8px;">eSIM-ul se activeaza automat</p>
+        <p style="color:var(--text-muted); font-size:0.85rem; line-height:1.5;">Vei primi detaliile eSIM-ului in cateva minute. Poti reveni pe aceasta pagina mai tarziu sau verifica email-ul.</p>
+      </div>`;
+
+      document.getElementById('content').innerHTML = html;
+      document.getElementById('back-link').style.display = 'inline-flex';
+
+      // Continue polling in background — auto-update if eSIM becomes ready
+      pollInBackground();
+    }
+
+    async function pollInBackground() {
+      for (let i = 0; i < 30; i++) {
+        await new Promise(r => setTimeout(r, 5000));
+        const order = await checkOrder();
+        if (order && order.status === 'provisioned' && order.iccid) {
+          showEsimDetails(order);
+          return;
+        }
+        if (order && order.status === 'failed') {
+          showError('Activare esuata', order.error || 'eSIM-ul nu a putut fi activat. Contacteaza suportul.');
+          return;
+        }
+      }
     }
 
     function showEsimDetails(order) {
