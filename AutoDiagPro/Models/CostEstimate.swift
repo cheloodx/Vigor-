@@ -32,7 +32,7 @@ enum OperationCategory: String, Codable, CaseIterable {
 
     var icon: String {
         switch self {
-        case .motor: return "engine.combustion.fill"
+        case .motor: return "bolt.heart.fill"
         case .frane: return "circle.circle.fill"
         case .suspensie: return "car.side.fill"
         case .electric: return "bolt.fill"

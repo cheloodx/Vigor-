@@ -161,6 +161,182 @@ struct MechanicAI {
             """
         }
 
+        if lowerQuery.contains("vibre") || lowerQuery.contains("vibra") {
+            return """
+            Vibratii la \(vehicle.displayName):
+
+            🔍 **Cauze posibile in functie de situatie:**
+
+            **La mers / viteza mare (>80 km/h):**
+            • Roti neechilibrate
+            • Jante deformate
+            • Cardane uzate (tractiune fata)
+            • Rulmenti roti defecti
+
+            **La relanti / stationare:**
+            • Suporti motor uzati/rupti
+            • Volanta masa dubla defecta
+            • Injectoare dezechilibrate
+            • Bujii uzate (benzina)
+
+            **La franare:**
+            • Discuri frana deformate
+            • Placute uzate neuniform
+            • Etrier blocat
+
+            💡 Faceti un test: vibratia se simte in volan, in scaun sau in tot corpul? Asta ajuta la localizare!
+
+            💰 Echilibrare roti: 80-120 RON | Suport motor: 200-500 RON
+            """
+        }
+
+        if lowerQuery.contains("turbo") {
+            return """
+            Probleme turbo la \(vehicle.displayName) (\(vehicle.engineType)):
+
+            ⚠️ **Simptome turbo defect:**
+            • Pierdere putere (masina "nu mai trage")
+            • Fum albastru/gri la esapament
+            • Suierat anormal sau zgomot metalic
+            • Consum ulei crescut
+            • Check engine aprins
+
+            🔧 **Verificari:**
+            1. Verificati furtunurile de intercooler (fisuri, deconectari)
+            2. Joc axial pe axul turbinei
+            3. Geometrie variabila blocata (la VNT/VGT)
+            4. Actuator turbo electronic
+
+            💰 **Costuri estimate:**
+            • Reconditionare turbo: 800-1.500 RON
+            • Turbo nou aftermarket: 1.500-3.000 RON
+            • Turbo original: 3.000-6.000 RON
+            • Manopera: 400-800 RON
+            """
+        }
+
+        if lowerQuery.contains("baterie") || lowerQuery.contains("acumulator") || lowerQuery.contains("pornire") {
+            return """
+            Probleme electrice / baterie la \(vehicle.displayName):
+
+            🔋 **Diagnosticare baterie:**
+            • Tensiune la repaus: >12.4V = OK, <12.0V = Slaba
+            • Tensiune la pornire: >10.5V
+            • Tensiune cu motor pornit: 13.5-14.5V (alternator)
+
+            💡 Verificati in tab-ul **Live** tensiunea in timp real!
+
+            **Cauze pornire dificila:**
+            1. Baterie descarcata/uzata (durata viata: 4-6 ani)
+            2. Alternator defect (nu incarca)
+            3. Electromotor uzat
+            4. Bujii incandescente (diesel, la rece)
+            5. Conexiuni oxidate pe borne
+
+            ✅ **Recomandare:** Verificati bateria cu un tester profesional la orice service auto.
+
+            💰 Baterie noua: 300-600 RON | Alternator: 500-1.200 RON
+            """
+        }
+
+        if lowerQuery.contains("dpf") || lowerQuery.contains("particule") || lowerQuery.contains("fap") {
+            return """
+            Probleme DPF/FAP la \(vehicle.displayName) (\(vehicle.engineType)):
+
+            🔍 **Ce este DPF-ul?**
+            Filtrul de particule retine funinginea din gazele de esapament (diesel).
+
+            ⚠️ **Simptome DPF colmatat:**
+            • Lampa DPF aprinsa pe bord
+            • Pierdere putere
+            • Turatie instabila
+            • Regenerari frecvente (consum crescut)
+            • Miros de ars
+
+            🔧 **Solutii:**
+            1. **Regenerare fortata** cu diagnoza (80-150 RON)
+            2. **Curatare chimica** cu aditiv (200-400 RON)
+            3. **Curatare profesionala** ultrasonete (500-800 RON)
+            4. **Inlocuire DPF** (1.500-4.000 RON)
+
+            💡 **Preventie:** Condus pe autostrada 30min la 3000+ RPM lunar, folositi combustibil de calitate.
+            """
+        }
+
+        if lowerQuery.contains("directie") || lowerQuery.contains("volan") {
+            return """
+            Probleme directie la \(vehicle.displayName):
+
+            🔍 **Simptome frecvente:**
+            • Volan greu la parcare → pompa servodirectie sau lichid scazut
+            • Volan vibreaza la viteza → echilibrare roti
+            • Masina trage intr-o parte → geometrie gresita sau presiune pneuri diferita
+            • Zgomot la rotirea volanului → planetare sau bieleta directie
+
+            🔧 **Verificari recomandate:**
+            1. Nivel lichid servodirectie
+            2. Bieleta directie (joc)
+            3. Cap bara directie
+            4. Geometrie roti (toe, camber, caster)
+            5. Planetare (burduf rupt = inlocuire urgenta)
+
+            💰 **Costuri estimate:**
+            • Geometrie: 100-200 RON
+            • Bieleta directie: 80-200 RON
+            • Planetara: 300-600 RON
+            • Pompa servodirectie: 500-1.200 RON
+            """
+        }
+
+        if lowerQuery.contains("ac ") || lowerQuery.contains("clima") || lowerQuery.contains("aer conditionat") {
+            return """
+            Climatizare la \(vehicle.displayName):
+
+            ❄️ **Probleme frecvente AC:**
+            1. Nu raceste → freon scazut sau compresor defect
+            2. Miros neplacut → filtru habitaclu murdar sau evaporator cu mucegai
+            3. Zgomot la pornire AC → compresor sau curea
+            4. Clima functioneaza intermitent → senzor presiune sau releu
+
+            🔧 **Mentenanta recomandata:**
+            • Incarcare freon: anual sau cand nu mai raceste
+            • Filtru habitaclu: la 15.000 km
+            • Dezinfectie circuit: anual (primavara)
+
+            💰 **Costuri:**
+            • Incarcare freon R134a: 150-250 RON
+            • Filtru habitaclu: 40-80 RON
+            • Compresor AC: 1.000-2.500 RON
+            • Dezinfectie: 80-150 RON
+
+            📅 Verificati tab-ul **Service** pentru intervalul filtrului de habitaclu!
+            """
+        }
+
+        if lowerQuery.contains("itp") || lowerQuery.contains("inspectie") || lowerQuery.contains("tehnic") {
+            return """
+            Pregatire ITP pentru \(vehicle.displayName):
+
+            📋 **Puncte verificate la ITP:**
+            1. ✅ Frane (eficienta, echilibru)
+            2. ✅ Directie (jocuri)
+            3. ✅ Suspensie (amortizoare, articulatii)
+            4. ✅ Lumini (toate functionale + reglaj faruri)
+            5. ✅ Emisii (CO, opacitate diesel)
+            6. ✅ Anvelope (min 1.6mm, fara taieturi)
+            7. ✅ Parbriz (fara fisuri in zona soferului)
+            8. ✅ Caroserie (fara rugina perforanta)
+
+            ⚠️ **Motive frecvente de respingere:**
+            • Jocuri la directie/suspensie
+            • Faruri dezreglate
+            • Emisii peste limita (DPF/catalizator)
+            • Frane dezechilibrate
+
+            💰 Taxa ITP: ~150 RON | Pregatire: 200-500 RON
+            """
+        }
+
         // Default response
         return """
         Multumesc pentru intrebare! 🔧

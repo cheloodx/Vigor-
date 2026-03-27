@@ -4,8 +4,11 @@ struct LiveDashboardView: View {
     @EnvironmentObject var appState: AppState
 
     @StateObject private var simulator = OBDDemoSimulator()
+    @StateObject private var bluetoothManager = OBD2BluetoothManager()
     @State private var isConnected = false
     @State private var isConnecting = false
+    @State private var useRealBluetooth = false
+    @State private var showDeviceList = false
 
     var body: some View {
         NavigationView {
@@ -40,6 +43,111 @@ struct LiveDashboardView: View {
                                 .foregroundColor(Theme.gaugeGreen)
                         }
                     }
+                }
+            }
+            .onChange(of: bluetoothManager.connectionState) { state in
+                if state == .connected {
+                    showDeviceList = false
+                    isConnected = true
+                    isConnecting = false
+                    appState.isOBDConnected = true
+                } else if state == .error || state == .disconnected {
+                    if useRealBluetooth && !isConnected {
+                        isConnecting = false
+                    }
+                }
+            }
+            .sheet(isPresented: $showDeviceList) {
+                bluetoothDeviceListView
+            }
+        }
+    }
+
+    // MARK: - Bluetooth Device List
+    private var bluetoothDeviceListView: some View {
+        NavigationView {
+            VStack(spacing: 12) {
+                if bluetoothManager.connectionState == .scanning {
+                    ProgressView()
+                        .scaleEffect(1.2)
+                        .tint(Theme.primary)
+                    Text("Caut dispozitive OBD2...")
+                        .font(.system(size: 13))
+                        .foregroundColor(Theme.textSecondary)
+                }
+
+                if let error = bluetoothManager.errorMessage {
+                    HStack(spacing: 6) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(Theme.danger)
+                        Text(error)
+                            .font(.system(size: 12))
+                            .foregroundColor(Color(red: 0.99, green: 0.65, blue: 0.65))
+                    }
+                    .padding(10)
+                    .background(Color(red: 0.11, green: 0.04, blue: 0.04))
+                    .cornerRadius(8)
+                }
+
+                if bluetoothManager.discoveredDevices.isEmpty && bluetoothManager.connectionState != .scanning {
+                    Text("Nu s-au gasit dispozitive. Verificati ca adaptorul OBD2 este pornit.")
+                        .font(.system(size: 13))
+                        .foregroundColor(Theme.textMuted)
+                        .multilineTextAlignment(.center)
+                        .padding()
+                }
+
+                ForEach(bluetoothManager.discoveredDevices, id: \.identifier) { device in
+                    Button(action: {
+                        bluetoothManager.connectToDevice(device)
+                    }) {
+                        HStack(spacing: 10) {
+                            Image(systemName: "antenna.radiowaves.left.and.right")
+                                .foregroundColor(Theme.primary)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(device.name ?? "Dispozitiv necunoscut")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(Theme.textPrimary)
+                                Text(device.identifier.uuidString.prefix(8) + "...")
+                                    .font(.system(size: 10, design: .monospaced))
+                                    .foregroundColor(Theme.textMuted)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .foregroundColor(Theme.textMuted)
+                        }
+                        .padding(12)
+                        .background(Theme.cardBackground)
+                        .cornerRadius(10)
+                        .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color(red: 0.12, green: 0.17, blue: 0.23), lineWidth: 1))
+                    }
+                }
+
+                Spacer()
+
+                Button(action: { bluetoothManager.startScanning() }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.clockwise")
+                        Text("Recautare")
+                            .font(.system(size: 13, weight: .semibold))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Theme.primary.opacity(0.15))
+                    .foregroundColor(Theme.primary)
+                    .cornerRadius(10)
+                }
+            }
+            .padding(16)
+            .background(Theme.background)
+            .navigationTitle("Dispozitive Bluetooth")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Inchide") {
+                        showDeviceList = false
+                    }
+                    .foregroundColor(Theme.primary)
                 }
             }
         }
@@ -134,10 +242,23 @@ struct LiveDashboardView: View {
     // MARK: - Connected View
     private var connectedView: some View {
         VStack(spacing: 12) {
+            // Connection mode indicator
+            HStack(spacing: 6) {
+                Image(systemName: useRealBluetooth ? "antenna.radiowaves.left.and.right" : "play.circle.fill")
+                    .font(.system(size: 11))
+                Text(useRealBluetooth ? "Bluetooth OBD2" : "Mod Demo")
+                    .font(.system(size: 11, weight: .semibold))
+            }
+            .foregroundColor(useRealBluetooth ? Theme.gaugeGreen : Theme.primary)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+            .background(useRealBluetooth ? Theme.gaugeGreen.opacity(0.15) : Theme.primary.opacity(0.15))
+            .cornerRadius(12)
+
             // Gauges grid
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                 ForEach(GaugeConfig.allGauges) { config in
-                    GaugeWidgetView(config: config, data: simulator.liveData)
+                    GaugeWidgetView(config: config, data: useRealBluetooth ? bluetoothManager.liveData : simulator.liveData)
                 }
             }
             .padding(.horizontal, 16)
@@ -150,9 +271,9 @@ struct LiveDashboardView: View {
                     .tracking(1)
 
                 infoRow(label: "Sarcina motor", value: "\(String(format: "%.1f", 20 + sin(Date().timeIntervalSinceReferenceDate * 0.1) * 15))%")
-                infoRow(label: "Status OBD", value: "Conectat \u{00B7} Fara erori")
-                infoRow(label: "Protocol", value: "ISO 15765-4 CAN")
-                infoRow(label: "Adaptorul", value: "ELM327 v2.1")
+                infoRow(label: "Status OBD", value: useRealBluetooth ? "Bluetooth \u{00B7} Conectat" : "Demo \u{00B7} Simulare")
+                infoRow(label: "Protocol", value: useRealBluetooth ? bluetoothManager.protocolName : "ISO 15765-4 CAN (Demo)")
+                infoRow(label: "Adaptorul", value: useRealBluetooth ? bluetoothManager.adapterVersion : "Simulator intern")
             }
             .padding(14)
             .background(Theme.cardBackground)
@@ -197,6 +318,13 @@ struct LiveDashboardView: View {
 
     // MARK: - Actions
     private func connectOBD() {
+        useRealBluetooth = true
+        bluetoothManager.startScanning()
+        showDeviceList = true
+    }
+
+    private func startDemo() {
+        useRealBluetooth = false
         isConnecting = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             isConnecting = false
@@ -206,13 +334,14 @@ struct LiveDashboardView: View {
         }
     }
 
-    private func startDemo() {
-        connectOBD()
-    }
-
     private func disconnect() {
-        simulator.stopSimulation()
+        if useRealBluetooth {
+            bluetoothManager.disconnect()
+        } else {
+            simulator.stopSimulation()
+        }
         isConnected = false
+        useRealBluetooth = false
         appState.isOBDConnected = false
     }
 }

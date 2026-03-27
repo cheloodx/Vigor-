@@ -93,13 +93,17 @@ struct MechanicChatView: View {
                     .padding(.horizontal, 14)
                     .padding(.vertical, 10)
                     .background(
-                        message.isUser
-                            ? AnyShapeStyle(LinearGradient(colors: [Color(red: 0.11, green: 0.31, blue: 0.85), Color(red: 0.15, green: 0.39, blue: 0.92)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                            : AnyShapeStyle(Color(red: 0.06, green: 0.10, blue: 0.14))
+                        Group {
+                            if message.isUser {
+                                LinearGradient(colors: [Color(red: 0.11, green: 0.31, blue: 0.85), Color(red: 0.15, green: 0.39, blue: 0.92)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                            } else {
+                                Color(red: 0.06, green: 0.10, blue: 0.14)
+                            }
+                        }
                     )
                     .cornerRadius(message.isUser ? 16 : 16, corners: message.isUser ? [.topLeading, .topTrailing, .bottomLeading] : [.topLeading, .topTrailing, .bottomTrailing])
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16)
+                        RoundedCornerShape(radius: 16, corners: message.isUser ? [.topLeading, .topTrailing, .bottomLeading] : [.topLeading, .topTrailing, .bottomTrailing])
                             .stroke(message.isUser ? Color(red: 0.11, green: 0.31, blue: 0.85) : Color(red: 0.12, green: 0.17, blue: 0.23), lineWidth: 1)
                     )
 
@@ -126,16 +130,16 @@ struct MechanicChatView: View {
             }
 
             HStack(spacing: 4) {
-                ForEach(0..<3) { index in
+                ForEach(0..<3, id: \.self) { index in
                     Circle()
                         .fill(Theme.primary)
                         .frame(width: 6, height: 6)
-                        .opacity(0.6)
-                        .scaleEffect(1.0)
+                        .opacity(isLoading ? 1.0 : 0.4)
+                        .scaleEffect(isLoading ? 1.4 : 0.8)
                         .animation(
-                            .easeInOut(duration: 0.6)
-                                .repeatForever()
-                                .delay(Double(index) * 0.2),
+                            .easeInOut(duration: 0.5)
+                                .repeatForever(autoreverses: true)
+                                .delay(Double(index) * 0.15),
                             value: isLoading
                         )
                 }

@@ -4,9 +4,8 @@ import AVFoundation
 
 struct VoiceDiagnosticView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
+    @StateObject private var speechManager = SpeechRecognitionManager()
 
-    @State private var isListening = false
-    @State private var transcript: String = ""
     @State private var aiResponse: String?
     @State private var isProcessing = false
     @State private var waveformPhase: Double = 0
@@ -26,6 +25,23 @@ struct VoiceDiagnosticView: View {
                 VStack(spacing: 14) {
                     // Main voice card
                     voiceRecordCard
+
+                    // Error message
+                    if let error = speechManager.errorMessage {
+                        HStack(spacing: 6) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .font(.system(size: 12))
+                            Text(error)
+                                .font(.system(size: 12))
+                        }
+                        .foregroundColor(Color(red: 0.99, green: 0.65, blue: 0.65))
+                        .padding(10)
+                        .frame(maxWidth: .infinity)
+                        .background(Color(red: 0.11, green: 0.04, blue: 0.04))
+                        .cornerRadius(8)
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(red: 0.5, green: 0.11, blue: 0.11), lineWidth: 1))
+                        .padding(.horizontal, 16)
+                    }
 
                     // AI Response
                     if let response = aiResponse {
@@ -59,7 +75,7 @@ struct VoiceDiagnosticView: View {
     private var voiceRecordCard: some View {
         VStack(spacing: 14) {
             // Waveform / Icon
-            if isListening {
+            if speechManager.isListening {
                 WaveformView(phase: waveformPhase)
                     .frame(height: 60)
             } else {
@@ -81,7 +97,7 @@ struct VoiceDiagnosticView: View {
 
             // Record button
             Button(action: {
-                if isListening {
+                if speechManager.isListening {
                     stopListening()
                 } else {
                     startListening()
@@ -90,43 +106,44 @@ struct VoiceDiagnosticView: View {
                 ZStack {
                     Circle()
                         .fill(
-                            isListening
+                            speechManager.isListening
                                 ? LinearGradient(colors: [Color(red: 0.86, green: 0.15, blue: 0.15), Theme.danger], startPoint: .topLeading, endPoint: .bottomTrailing)
                                 : Theme.primaryGradient
                         )
                         .frame(width: 76, height: 76)
-                        .shadow(color: isListening ? Theme.danger.opacity(0.4) : Theme.primary.opacity(0.4), radius: isListening ? 20 : 12)
+                        .shadow(color: speechManager.isListening ? Theme.danger.opacity(0.4) : Theme.primary.opacity(0.4), radius: speechManager.isListening ? 20 : 12)
 
                     if isProcessing {
                         ProgressView()
                             .scaleEffect(1.3)
                             .tint(.white)
                     } else {
-                        Image(systemName: isListening ? "stop.fill" : "mic.fill")
+                        Image(systemName: speechManager.isListening ? "stop.fill" : "mic.fill")
                             .font(.system(size: 30))
                             .foregroundColor(.white)
                     }
                 }
             }
             .disabled(isProcessing)
-            .pulseAnimation(isListening)
+            .pulseAnimation(speechManager.isListening)
 
             // Status text
             Text(
-                isListening ? "Ascult... (apasa pentru a opri)"
+                speechManager.isListening ? "Ascult... (apasa pentru a opri)"
                 : isProcessing ? "Procesez..."
-                : "Apasa pentru a vorbi"
+                : speechManager.isAuthorized ? "Apasa pentru a vorbi"
+                : "Apasa pentru a vorbi (mod demo)"
             )
             .font(.system(size: 13, weight: .semibold))
             .foregroundColor(
-                isListening ? Theme.danger
+                speechManager.isListening ? Theme.danger
                 : isProcessing ? Theme.gaugeYellow
                 : Theme.textSecondary
             )
 
             // Transcript
-            if !transcript.isEmpty {
-                Text("\u{201E}\(transcript)\u{201D}")
+            if !speechManager.transcript.isEmpty {
+                Text("\u{201E}\(speechManager.transcript)\u{201D}")
                     .font(.system(size: 13))
                     .italic()
                     .foregroundColor(Theme.textSecondary)
@@ -141,6 +158,15 @@ struct VoiceDiagnosticView: View {
         .cornerRadius(Theme.cornerRadius)
         .overlay(RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(Color(red: 0.12, green: 0.17, blue: 0.23), lineWidth: 1))
         .padding(.horizontal, 16)
+        .onChange(of: speechManager.isListening) { listening in
+            if !listening && !speechManager.transcript.isEmpty {
+                analyzeText(speechManager.transcript)
+            }
+            if !listening {
+                waveformTimer?.invalidate()
+                waveformTimer = nil
+            }
+        }
     }
 
     // MARK: - Response Card
@@ -201,51 +227,24 @@ struct VoiceDiagnosticView: View {
 
     // MARK: - Speech Recognition
     private func startListening() {
-        transcript = ""
         aiResponse = nil
-        isListening = true
 
         // Start waveform animation
         waveformTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
             waveformPhase += 0.06
         }
 
-        // Use Speech framework
-        SFSpeechRecognizer.requestAuthorization { status in
-            DispatchQueue.main.async {
-                if status != .authorized {
-                    // Simulate for demo
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        transcript = "Motorul face un zgomot ciudat la pornire la rece"
-                        stopListening()
-                    }
-                }
-            }
-        }
-
-        // Demo: auto-stop after 4 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
-            if isListening {
-                if transcript.isEmpty {
-                    transcript = "Motorul face zgomot la pornire la rece"
-                }
-                stopListening()
-            }
-        }
+        speechManager.startListening()
     }
 
     private func stopListening() {
-        isListening = false
+        speechManager.stopListening()
         waveformTimer?.invalidate()
         waveformTimer = nil
-
-        if !transcript.isEmpty {
-            analyzeText(transcript)
-        }
     }
 
     private func analyzeText(_ text: String) {
-        transcript = text
+        speechManager.transcript = text
         isProcessing = true
         aiResponse = nil
 
@@ -261,13 +260,27 @@ struct VoiceDiagnosticView: View {
 // MARK: - Waveform View
 struct WaveformView: View {
     let phase: Double
-    let barCount: Int = 36
+    let barCount: Int
+
+    // Pre-computed random offsets for stable animation
+    private let randomOffsets: [Double]
+
+    init(phase: Double, barCount: Int = 36) {
+        self.phase = phase
+        self.barCount = barCount
+        var offsets: [Double] = []
+        for i in 0..<barCount {
+            let seed = Double(i) * 0.7 + 1.3
+            offsets.append(sin(seed * 3.14) * 4 + 4)
+        }
+        self.randomOffsets = offsets
+    }
 
     var body: some View {
         GeometryReader { geo in
             HStack(spacing: (geo.size.width / CGFloat(barCount)) * 0.15) {
                 ForEach(0..<barCount, id: \.self) { i in
-                    let height = 20 + sin(phase * 3 + Double(i) * 0.4) * 18 + Double.random(in: 0...8)
+                    let height = 20 + sin(phase * 3 + Double(i) * 0.4) * 18 + randomOffsets[i] * sin(phase * 2 + Double(i))
                     RoundedRectangle(cornerRadius: 2)
                         .fill(
                             LinearGradient(colors: [Theme.primary, Color(red: 0.11, green: 0.31, blue: 0.85)],
