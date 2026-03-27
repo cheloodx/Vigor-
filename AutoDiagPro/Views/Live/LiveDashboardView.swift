@@ -289,11 +289,11 @@ struct GaugeWidgetView: View {
 // MARK: - Arc Shape
 struct ArcShape: Shape {
     let startAngle: Angle
-    let endAngle: Angle
+    var endAngle: Angle
 
     var animatableData: Double {
         get { endAngle.degrees }
-        set { }
+        set { endAngle = .degrees(newValue) }
     }
 
     func path(in rect: CGRect) -> Path {

@@ -202,13 +202,18 @@ struct ServiceCalendarView: View {
         let progress = 1 - item.progressPercentage
         let nextKm = (item.lastServiceKm ?? 0) + item.intervalKm
         let remaining = item.kmRemaining
+        let overdueKm: Int = {
+            guard let lastKm = item.lastServiceKm else { return 0 }
+            let diff = (item.currentKm - lastKm) - item.intervalKm
+            return max(0, diff)
+        }()
 
         return Group {
             if progress >= 1 {
                 HStack(spacing: 4) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .font(.system(size: 10))
-                    Text("Depasit cu \(abs(remaining).formatted()) km")
+                    Text("Depasit cu \(overdueKm.formatted()) km")
                 }
                 .font(.system(size: 11))
                 .foregroundColor(Theme.danger)
