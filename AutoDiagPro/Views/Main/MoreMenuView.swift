@@ -178,6 +178,8 @@ struct MoreMenuView: View {
         [
             MoreFeature(name: "Scor Sanatate", subtitle: "Nota generala 0-100", icon: "heart.text.square.fill", color: Theme.gaugeGreen, destination: AnyView(HealthScoreView().environmentObject(vehicleManager))),
             MoreFeature(name: "Diagrama Auto", subtitle: "Componente vizuale", icon: "car.fill", color: Theme.primary, destination: AnyView(CarAnimationView().environmentObject(vehicleManager))),
+            MoreFeature(name: "AR Piese", subtitle: "Vizualizare AR daune", icon: "viewfinder", color: Color(red: 0.0, green: 0.85, blue: 0.75), destination: AnyView(ARDiagnosticView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Scanner Piese", subtitle: "QR cod + alternative", icon: "qrcode.viewfinder", color: Color(red: 0.85, green: 0.55, blue: 0.0), destination: AnyView(QRPartScannerView().environmentObject(vehicleManager))),
             MoreFeature(name: "Analiza Sunet", subtitle: "Inregistrare motor", icon: "waveform.circle.fill", color: Color(red: 0.95, green: 0.5, blue: 0.2), destination: AnyView(EngineSoundAnalysisView())),
             MoreFeature(name: "Diagnostic Rapid", subtitle: "Shake to diagnose", icon: "iphone.radiowaves.left.and.right", color: Color.purple, destination: AnyView(ShakeDiagnoseView().environmentObject(vehicleManager))),
             MoreFeature(name: "Widget iOS", subtitle: "Home screen widget", icon: "square.text.square.fill", color: Color(red: 0.0, green: 0.75, blue: 0.85), destination: AnyView(HealthWidgetPreview().environmentObject(vehicleManager))),

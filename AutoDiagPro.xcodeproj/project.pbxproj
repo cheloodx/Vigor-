@@ -47,6 +47,8 @@
 		845A9B15D573A487404B46A4 /* ServiceMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6A69A507FA74B99E6158B8; };
 		DB66A83B26C14EA193310B6E /* EngineSoundAnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD17DDA952A614910FE3B2; };
 		43670D616FAB779EBF6CCD1B /* MoreMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128507A7D8C047D74ECD5482; };
+		A1B2C3D4E5F60718293A4B5C /* ARDiagnosticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D5E6F07182930A1B2; };
+		B2C3D4E5F6071829A3B4C5D6 /* QRPartScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F07182930A1B2C3; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +94,8 @@
 		DB6A69A507FA74B99E6158B8 /* ServiceMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceMapView.swift; sourceTree = "<group>"; };
 		CADD17DDA952A614910FE3B2 /* EngineSoundAnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineSoundAnalysisView.swift; sourceTree = "<group>"; };
 		128507A7D8C047D74ECD5482 /* MoreMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreMenuView.swift; sourceTree = "<group>"; };
+		1A2B3C4D5E6F07182930A1B2 /* ARDiagnosticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDiagnosticView.swift; sourceTree = "<group>"; };
+		2B3C4D5E6F07182930A1B2C3 /* QRPartScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRPartScannerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +164,7 @@
 				CC3344556677889900112233 /* Journal */,
 				DD4455667788990011223344 /* Map */,
 				EE5566778899001122334455 /* Sound */,
+				FF6677889900112233445566 /* AR */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -305,6 +310,15 @@
 			path = Sound;
 			sourceTree = "<group>";
 		};
+		FF6677889900112233445566 /* AR */ = {
+			isa = PBXGroup;
+			children = (
+				1A2B3C4D5E6F07182930A1B2 /* ARDiagnosticView.swift */,
+				2B3C4D5E6F07182930A1B2C3 /* QRPartScannerView.swift */,
+			);
+			path = AR;
+			sourceTree = "<group>";
+		};
 		9A7BB86C336844EF1D466967 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -422,6 +436,8 @@
 				845A9B15D573A487404B46A4 /* ServiceMapView.swift in Sources */,
 				DB66A83B26C14EA193310B6E /* EngineSoundAnalysisView.swift in Sources */,
 				43670D616FAB779EBF6CCD1B /* MoreMenuView.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5C /* ARDiagnosticView.swift in Sources */,
+				B2C3D4E5F6071829A3B4C5D6 /* QRPartScannerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
