@@ -30,6 +30,23 @@
 		0D6C221E3D56B2DDB39FC7BF /* MechanicChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3770A9E69786BC180759BA5F; };
 		EE4C030FE4EF6B54E7B5B9B3 /* ImagePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A703DA5998F0588DA3D154; };
 		825EE232CDA1398273789CC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 17BD25A0F7E3204088DB9FE7; };
+		03B7D81C76D583C2060F3DF2 /* HealthScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD3B589F48155F85CEF634C; };
+		70D2AC0EC002BB902CD27FF6 /* JournalEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDDB3FA1466E42973C1BD2AE; };
+		DE42D867A305313FCC28281A /* ServiceLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F6BC13CC734E520F85FB5B2; };
+		E55AE74C03AD3DFFC338F26F /* MaintenanceAlarmManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D279922C1401931CFA4D0954; };
+		53246608B59239185BCE660C /* NightModeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA57A9CC0EF9531D3DB64F16; };
+		8073DE5B75C02A7632651091 /* PDFExportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42FF6ABA40B111D08FFF3B6C; };
+		6168C13738703A86BDBF504F /* HealthScoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB588935285A14038EF9F9DA; };
+		DD33E9D43A6D7B5D06B98B42 /* DiagnosticHistoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5CD6E387EBA901D9ECA1D70; };
+		704944F3316A01A6325B27CE /* VehicleJournalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4F6263A0F2E17A29430813; };
+		A0AB3B3CFCF6977DA6F2F52A /* MaintenanceAlarmsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA82578F27B899B75F3C51D0; };
+		BCCA5327BED3E870C5F32FB5 /* CarAnimationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B89C484AB5F8DA4E27350E; };
+		F3F2F83498F2AB5B9C3C1349 /* HealthWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B195B9A688F8B1A2DA7C2E6F; };
+		87FB1D6FAB23479D8E97B5F3 /* ShakeDiagnoseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EACCB227AB418316386CBDE; };
+		C82E55249439C1270677099A /* CostComparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA917E419C3AE112ACD1506; };
+		845A9B15D573A487404B46A4 /* ServiceMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6A69A507FA74B99E6158B8; };
+		DB66A83B26C14EA193310B6E /* EngineSoundAnalysisView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CADD17DDA952A614910FE3B2; };
+		43670D616FAB779EBF6CCD1B /* MoreMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128507A7D8C047D74ECD5482; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +75,23 @@
 		17BD25A0F7E3204088DB9FE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		69678153401C62EBDAC17B5D /* AutoDiagPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoDiagPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D0971D95BD9AF663CF4FB17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3CD3B589F48155F85CEF634C /* HealthScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthScore.swift; sourceTree = "<group>"; };
+		DDDB3FA1466E42973C1BD2AE /* JournalEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntry.swift; sourceTree = "<group>"; };
+		3F6BC13CC734E520F85FB5B2 /* ServiceLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceLocation.swift; sourceTree = "<group>"; };
+		D279922C1401931CFA4D0954 /* MaintenanceAlarmManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceAlarmManager.swift; sourceTree = "<group>"; };
+		EA57A9CC0EF9531D3DB64F16 /* NightModeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightModeManager.swift; sourceTree = "<group>"; };
+		42FF6ABA40B111D08FFF3B6C /* PDFExportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFExportManager.swift; sourceTree = "<group>"; };
+		AB588935285A14038EF9F9DA /* HealthScoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthScoreView.swift; sourceTree = "<group>"; };
+		F5CD6E387EBA901D9ECA1D70 /* DiagnosticHistoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticHistoryView.swift; sourceTree = "<group>"; };
+		AB4F6263A0F2E17A29430813 /* VehicleJournalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleJournalView.swift; sourceTree = "<group>"; };
+		FA82578F27B899B75F3C51D0 /* MaintenanceAlarmsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceAlarmsView.swift; sourceTree = "<group>"; };
+		D4B89C484AB5F8DA4E27350E /* CarAnimationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarAnimationView.swift; sourceTree = "<group>"; };
+		B195B9A688F8B1A2DA7C2E6F /* HealthWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthWidgetView.swift; sourceTree = "<group>"; };
+		3EACCB227AB418316386CBDE /* ShakeDiagnoseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakeDiagnoseView.swift; sourceTree = "<group>"; };
+		ADA917E419C3AE112ACD1506 /* CostComparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostComparatorView.swift; sourceTree = "<group>"; };
+		DB6A69A507FA74B99E6158B8 /* ServiceMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceMapView.swift; sourceTree = "<group>"; };
+		CADD17DDA952A614910FE3B2 /* EngineSoundAnalysisView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngineSoundAnalysisView.swift; sourceTree = "<group>"; };
+		128507A7D8C047D74ECD5482 /* MoreMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreMenuView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,6 +136,9 @@
 				8879CAE35723FC79CFE5337D /* CostEstimate.swift */,
 				9F607DD755FB618DC705AE6B /* OBDData.swift */,
 				43F0AEEF5CEE601D9DEF7027 /* ChatMessage.swift */,
+				3CD3B589F48155F85CEF634C /* HealthScore.swift */,
+				DDDB3FA1466E42973C1BD2AE /* JournalEntry.swift */,
+				3F6BC13CC734E520F85FB5B2 /* ServiceLocation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -118,6 +155,11 @@
 				C3F5DAE94E6DB12270084F25 /* Voice */,
 				D4A6EBF05F7EC23381195A36 /* Chat */,
 				E5B7FC016A8FD34492206B47 /* Shared */,
+				AA1122334455667788990011 /* Health */,
+				BB2233445566778899001122 /* History */,
+				CC3344556677889900112233 /* Journal */,
+				DD4455667788990011223344 /* Map */,
+				EE5566778899001122334455 /* Sound */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -128,6 +170,9 @@
 				11E49637FA00E8E2BACB0CCA /* VehicleManager.swift */,
 				52B20E51DD84128A24DC29ED /* SpeechRecognitionManager.swift */,
 				27D06477771915363950D0E9 /* OBD2BluetoothManager.swift */,
+				D279922C1401931CFA4D0954 /* MaintenanceAlarmManager.swift */,
+				EA57A9CC0EF9531D3DB64F16 /* NightModeManager.swift */,
+				42FF6ABA40B111D08FFF3B6C /* PDFExportManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -146,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				94B7FCAAED96EBFCCB8AEA99 /* MainTabView.swift */,
+				128507A7D8C047D74ECD5482 /* MoreMenuView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -178,6 +224,7 @@
 			isa = PBXGroup;
 			children = (
 				26731134F97B48DBE9978242 /* CostEstimatorView.swift */,
+				ADA917E419C3AE112ACD1506 /* CostComparatorView.swift */,
 			);
 			path = Costs;
 			sourceTree = "<group>";
@@ -212,6 +259,50 @@
 				02A703DA5998F0588DA3D154 /* ImagePickerView.swift */,
 			);
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		AA1122334455667788990011 /* Health */ = {
+			isa = PBXGroup;
+			children = (
+				AB588935285A14038EF9F9DA /* HealthScoreView.swift */,
+				D4B89C484AB5F8DA4E27350E /* CarAnimationView.swift */,
+				FA82578F27B899B75F3C51D0 /* MaintenanceAlarmsView.swift */,
+				3EACCB227AB418316386CBDE /* ShakeDiagnoseView.swift */,
+				B195B9A688F8B1A2DA7C2E6F /* HealthWidgetView.swift */,
+			);
+			path = Health;
+			sourceTree = "<group>";
+		};
+		BB2233445566778899001122 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				F5CD6E387EBA901D9ECA1D70 /* DiagnosticHistoryView.swift */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
+		CC3344556677889900112233 /* Journal */ = {
+			isa = PBXGroup;
+			children = (
+				AB4F6263A0F2E17A29430813 /* VehicleJournalView.swift */,
+			);
+			path = Journal;
+			sourceTree = "<group>";
+		};
+		DD4455667788990011223344 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				DB6A69A507FA74B99E6158B8 /* ServiceMapView.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		EE5566778899001122334455 /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				CADD17DDA952A614910FE3B2 /* EngineSoundAnalysisView.swift */,
+			);
+			path = Sound;
 			sourceTree = "<group>";
 		};
 		9A7BB86C336844EF1D466967 /* Products */ = {
@@ -314,6 +405,23 @@
 				92517CF614CD584E79EFB21A /* VoiceDiagnosticView.swift in Sources */,
 				0D6C221E3D56B2DDB39FC7BF /* MechanicChatView.swift in Sources */,
 				EE4C030FE4EF6B54E7B5B9B3 /* ImagePickerView.swift in Sources */,
+				03B7D81C76D583C2060F3DF2 /* HealthScore.swift in Sources */,
+				70D2AC0EC002BB902CD27FF6 /* JournalEntry.swift in Sources */,
+				DE42D867A305313FCC28281A /* ServiceLocation.swift in Sources */,
+				E55AE74C03AD3DFFC338F26F /* MaintenanceAlarmManager.swift in Sources */,
+				53246608B59239185BCE660C /* NightModeManager.swift in Sources */,
+				8073DE5B75C02A7632651091 /* PDFExportManager.swift in Sources */,
+				6168C13738703A86BDBF504F /* HealthScoreView.swift in Sources */,
+				DD33E9D43A6D7B5D06B98B42 /* DiagnosticHistoryView.swift in Sources */,
+				704944F3316A01A6325B27CE /* VehicleJournalView.swift in Sources */,
+				A0AB3B3CFCF6977DA6F2F52A /* MaintenanceAlarmsView.swift in Sources */,
+				BCCA5327BED3E870C5F32FB5 /* CarAnimationView.swift in Sources */,
+				F3F2F83498F2AB5B9C3C1349 /* HealthWidgetView.swift in Sources */,
+				87FB1D6FAB23479D8E97B5F3 /* ShakeDiagnoseView.swift in Sources */,
+				C82E55249439C1270677099A /* CostComparatorView.swift in Sources */,
+				845A9B15D573A487404B46A4 /* ServiceMapView.swift in Sources */,
+				DB66A83B26C14EA193310B6E /* EngineSoundAnalysisView.swift in Sources */,
+				43670D616FAB779EBF6CCD1B /* MoreMenuView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,6 +564,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "AutoDiag Pro foloseste camera pentru scanare diagnostic si citire VIN/numar de inmatriculare.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "AutoDiag Pro foloseste microfonul pentru comanda vocala si diagnostic vocal.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "AutoDiag Pro foloseste recunoasterea vocala pentru a primi comenzi in limba romana.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "AutoDiag Pro foloseste locatia pentru a gasi service-uri auto aproape de tine.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -465,7 +574,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.autodiagpro.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -493,6 +602,7 @@
 				INFOPLIST_KEY_NSCameraUsageDescription = "AutoDiag Pro foloseste camera pentru scanare diagnostic si citire VIN/numar de inmatriculare.";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "AutoDiag Pro foloseste microfonul pentru comanda vocala si diagnostic vocal.";
 				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "AutoDiag Pro foloseste recunoasterea vocala pentru a primi comenzi in limba romana.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "AutoDiag Pro foloseste locatia pentru a gasi service-uri auto aproape de tine.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -502,7 +612,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.autodiagpro.app;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

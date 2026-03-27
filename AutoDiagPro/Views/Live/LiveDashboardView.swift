@@ -51,11 +51,15 @@ struct LiveDashboardView: View {
                     isConnected = true
                     isConnecting = false
                     appState.isOBDConnected = true
-                } else if state == .error || state == .disconnected {
-                    if useRealBluetooth && !isConnected {
-                        isConnecting = false
+                    } else if state == .error || state == .disconnected {
+                        if useRealBluetooth && !isConnected {
+                            isConnecting = false
+                        }
+                        if useRealBluetooth && isConnected {
+                            isConnected = false
+                            appState.isOBDConnected = false
+                        }
                     }
-                }
             }
             .sheet(isPresented: $showDeviceList) {
                 bluetoothDeviceListView

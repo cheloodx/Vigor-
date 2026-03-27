@@ -20,40 +20,26 @@ struct MainTabView: View {
                 }
                 .tag(1)
 
-            ServiceCalendarView()
-                .tabItem {
-                    Image(systemName: "calendar.badge.clock")
-                    Text("Service")
-                }
-                .tag(2)
-
-            CostEstimatorView()
-                .tabItem {
-                    Image(systemName: "creditcard.fill")
-                    Text("Costuri")
-                }
-                .tag(3)
-
             LiveDashboardView()
                 .tabItem {
                     Image(systemName: "gauge.open.with.lines.needle.33percent.and.arrowtriangle")
                     Text("Live")
                 }
-                .tag(4)
-
-            VoiceDiagnosticView()
-                .tabItem {
-                    Image(systemName: "mic.fill")
-                    Text("Voce")
-                }
-                .tag(5)
+                .tag(2)
 
             MechanicChatView()
                 .tabItem {
                     Image(systemName: "bubble.left.and.bubble.right.fill")
                     Text("Mecanic")
                 }
-                .tag(6)
+                .tag(3)
+
+            MoreMenuView()
+                .tabItem {
+                    Image(systemName: "square.grid.2x2.fill")
+                    Text("Mai Mult")
+                }
+                .tag(4)
         }
         .accentColor(Theme.primary)
         .onAppear {
