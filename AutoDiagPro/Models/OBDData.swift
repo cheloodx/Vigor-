@@ -7,14 +7,14 @@ struct OBDLiveData: Codable {
     var rpm: Double = 0              // RPM
     var speed: Double = 0            // km/h
     var batteryVoltage: Double = 0   // Volts
-    var oilPressure: Double = 0      // Bar
+    var oilTemp: Double = 0           // Celsius (PID 5C)
 
     var engineTempFormatted: String { String(format: "%.0f°C", engineTemp) }
     var airTempFormatted: String { String(format: "%.0f°C", airTemp) }
     var rpmFormatted: String { String(format: "%.0f", rpm) }
     var speedFormatted: String { String(format: "%.0f", speed) }
     var voltageFormatted: String { String(format: "%.1fV", batteryVoltage) }
-    var oilPressureFormatted: String { String(format: "%.1f bar", oilPressure) }
+    var oilTempFormatted: String { String(format: "%.0f°C", oilTemp) }
 }
 
 struct GaugeConfig: Identifiable {
@@ -120,15 +120,15 @@ extension GaugeConfig {
             colorScheme: .lowIsBad
         ),
         GaugeConfig(
-            title: "Presiune Ulei",
-            unit: "bar",
+            title: "Temperatura Ulei",
+            unit: "°C",
             minValue: 0,
-            maxValue: 6,
-            warningThreshold: 1.5,
-            dangerThreshold: 1.0,
+            maxValue: 150,
+            warningThreshold: 120,
+            dangerThreshold: 130,
             icon: "drop.fill",
-            keyPath: \.oilPressure,
-            colorScheme: .lowIsBad
+            keyPath: \.oilTemp,
+            colorScheme: .highIsBad
         ),
     ]
 }
@@ -150,7 +150,7 @@ class OBDDemoSimulator: ObservableObject {
             rpm: 800,
             speed: 0,
             batteryVoltage: 12.6,
-            oilPressure: 2.0
+            oilTemp: 40
         )
 
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
@@ -174,11 +174,11 @@ class OBDDemoSimulator: ObservableObject {
         liveData.rpm = 800 + drivePhase * 3500 + sin(time * 0.3) * 200
         liveData.speed = drivePhase * 120 + sin(time * 0.2) * 10
         liveData.batteryVoltage = 13.8 + sin(time * 0.05) * 0.3
-        liveData.oilPressure = 2.0 + drivePhase * 2.5 + sin(time * 0.15) * 0.3
+        liveData.oilTemp = min(110, 40 + liveData.engineTemp * 0.7 + sin(time * 0.08) * 5)
 
         // Clamp values
         liveData.speed = max(0, liveData.speed)
         liveData.rpm = max(600, liveData.rpm)
-        liveData.oilPressure = max(0.5, liveData.oilPressure)
+        liveData.oilTemp = max(20, liveData.oilTemp)
     }
 }

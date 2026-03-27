@@ -275,7 +275,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
             if let byteA = UInt8(dataHex.prefix(2), radix: 16) {
                 let temp = Double(byteA) - 40
                 DispatchQueue.main.async { [weak self] in
-                    self?.liveData.oilPressure = max(0.5, temp / 40.0) // Approximate
+                    self?.liveData.oilTemp = temp
                 }
             }
 

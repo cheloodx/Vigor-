@@ -734,10 +734,11 @@ struct ScanView: View {
         withAnimation { isLoading = true }
         errorMessage = nil
 
-        // Analyze image properties for diagnostic hints
+        // Capture vehicle on main thread to avoid data race
+        let vehicle = vehicleManager.currentVehicle
+
         DispatchQueue.global(qos: .userInitiated).async {
-            // Perform basic image analysis
-            let analysis = performImageAnalysis()
+            let analysis = performImageAnalysis(for: vehicle)
 
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                 withAnimation {
@@ -748,12 +749,9 @@ struct ScanView: View {
         }
     }
 
-    private func performImageAnalysis() -> DiagnosticResult {
+    private func performImageAnalysis(for vehicle: Vehicle) -> DiagnosticResult {
         var result = DiagnosticResult()
-        result.vehicleName = vehicleManager.currentVehicle.displayName
-
-        // Generate contextual diagnostic based on current vehicle
-        let vehicle = vehicleManager.currentVehicle
+        result.vehicleName = vehicle.displayName
         let highMileage = vehicle.mileage > 100000
 
         result.items = [
