@@ -351,9 +351,9 @@ extension OBD2BluetoothManager: CBCentralManagerDelegate {
 // MARK: - CBPeripheralDelegate
 extension OBD2BluetoothManager: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard let services = peripheral.services else {
-            // Try discovering all services
-            peripheral.discoverServices(nil)
+        guard let services = peripheral.services, error == nil else {
+            errorMessage = "Nu s-au putut descoperi serviciile Bluetooth."
+            connectionState = .error
             return
         }
 
@@ -383,8 +383,8 @@ extension OBD2BluetoothManager: CBPeripheralDelegate {
             }
         }
 
-        // If we found write + notify, start initialization
-        if writeCharacteristic != nil || notifyCharacteristic != nil {
+        // If we found write + notify, start initialization (only once)
+        if (writeCharacteristic != nil || notifyCharacteristic != nil) && connectionState == .connecting {
             initializeELM327()
         }
     }
