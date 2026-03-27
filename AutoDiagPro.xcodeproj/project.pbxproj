@@ -49,6 +49,20 @@
 		43670D616FAB779EBF6CCD1B /* MoreMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128507A7D8C047D74ECD5482; };
 		A1B2C3D4E5F60718293A4B5C /* ARDiagnosticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B3C4D5E6F07182930A1B2; };
 		B2C3D4E5F6071829A3B4C5D6 /* QRPartScannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F07182930A1B2C3; };
+		C3D4E5F607182930A1B2C3D4 /* FailurePredictorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4D5E6F07182930A1B2C3D4; };
+		D4E5F6071829A3B4C5D6E7F8 /* ITPRadarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5E6F07182930A1B2C3D4E5; };
+		E5F607182930A1B2C3D4E5F6 /* DTCDecoderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E6F07182930A1B2C3D4E5F6; };
+		F607182930A1B2C3D4E5F607 /* RCAComparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F07182930A1B2C3D4E5F607; };
+		A718293041B2C3D4E5F60718 /* FuelCalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 718293041B2C3D4E5F607182; };
+		B82930A1B2C3D4E5F6071829 /* CarValuationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82930A1B2C3D4E5F60718293; };
+		C930A1B2C3D4E5F607182930 /* RecallCampaignsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930A1B2C3D4E5F6071829304; };
+		DA30A1B2C3D4E5F607182930 /* ARRepairGuideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A30A1B2C3D4E5F60718293A1; };
+		EB41B2C3D4E5F60718293041 /* CarDigitalTwinView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41B2C3D4E5F607182930A1B; };
+		FC52C3D4E5F6071829304152 /* VINAutoSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C52C3D4E5F607182930A1B2C; };
+		AD63D4E5F607182930415263 /* ServiceMarketplaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D63D4E5F607182930A1B2C3D; };
+		BE74E5F6071829304152637A /* MultiCountryConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74E5F607182930A1B2C3D4E; };
+		CF85F607182930415263748B /* EuropeanAIDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85F607182930A1B2C3D4E5F; };
+		D096071829304152637485A0 /* EuropeanCountry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096071829304152637485A0B; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -96,6 +110,20 @@
 		128507A7D8C047D74ECD5482 /* MoreMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreMenuView.swift; sourceTree = "<group>"; };
 		1A2B3C4D5E6F07182930A1B2 /* ARDiagnosticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARDiagnosticView.swift; sourceTree = "<group>"; };
 		2B3C4D5E6F07182930A1B2C3 /* QRPartScannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRPartScannerView.swift; sourceTree = "<group>"; };
+		3C4D5E6F07182930A1B2C3D4 /* FailurePredictorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailurePredictorView.swift; sourceTree = "<group>"; };
+		4D5E6F07182930A1B2C3D4E5 /* ITPRadarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ITPRadarView.swift; sourceTree = "<group>"; };
+		5E6F07182930A1B2C3D4E5F6 /* DTCDecoderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTCDecoderView.swift; sourceTree = "<group>"; };
+		6F07182930A1B2C3D4E5F607 /* RCAComparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RCAComparatorView.swift; sourceTree = "<group>"; };
+		718293041B2C3D4E5F607182 /* FuelCalculatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FuelCalculatorView.swift; sourceTree = "<group>"; };
+		82930A1B2C3D4E5F60718293 /* CarValuationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarValuationView.swift; sourceTree = "<group>"; };
+		930A1B2C3D4E5F6071829304 /* RecallCampaignsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecallCampaignsView.swift; sourceTree = "<group>"; };
+		A30A1B2C3D4E5F60718293A1 /* ARRepairGuideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARRepairGuideView.swift; sourceTree = "<group>"; };
+		B41B2C3D4E5F607182930A1B /* CarDigitalTwinView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarDigitalTwinView.swift; sourceTree = "<group>"; };
+		C52C3D4E5F607182930A1B2C /* VINAutoSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VINAutoSetupView.swift; sourceTree = "<group>"; };
+		D63D4E5F607182930A1B2C3D /* ServiceMarketplaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceMarketplaceView.swift; sourceTree = "<group>"; };
+		E74E5F607182930A1B2C3D4E /* MultiCountryConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiCountryConfigView.swift; sourceTree = "<group>"; };
+		F85F607182930A1B2C3D4E5F /* EuropeanAIDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EuropeanAIDataView.swift; sourceTree = "<group>"; };
+		096071829304152637485A0B /* EuropeanCountry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EuropeanCountry.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +171,7 @@
 				3CD3B589F48155F85CEF634C /* HealthScore.swift */,
 				DDDB3FA1466E42973C1BD2AE /* JournalEntry.swift */,
 				3F6BC13CC734E520F85FB5B2 /* ServiceLocation.swift */,
+				096071829304152637485A0B /* EuropeanCountry.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -165,6 +194,17 @@
 				DD4455667788990011223344 /* Map */,
 				EE5566778899001122334455 /* Sound */,
 				FF6677889900112233445566 /* AR */,
+				1122334455667788990011AA /* Predictions */,
+				2233445566778899001122BB /* ITP */,
+				3344556677889900112233CC /* DTC */,
+				4455667788990011223344DD /* Insurance */,
+				5566778899001122334455EE /* Fuel */,
+				6677889900112233445566FF /* Valuation */,
+				7788990011223344556677A0 /* Recall */,
+				8899001122334455667788B1 /* DigitalTwin */,
+				9900112233445566778899C2 /* Marketplace */,
+				AA11223344556677889900D3 /* Country */,
+				BB22334455667788990011E4 /* AI */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -213,6 +253,7 @@
 			isa = PBXGroup;
 			children = (
 				16AD5892EBC852359B09D316 /* VINScanView.swift */,
+				C52C3D4E5F607182930A1B2C /* VINAutoSetupView.swift */,
 			);
 			path = VIN;
 			sourceTree = "<group>";
@@ -315,8 +356,97 @@
 			children = (
 				1A2B3C4D5E6F07182930A1B2 /* ARDiagnosticView.swift */,
 				2B3C4D5E6F07182930A1B2C3 /* QRPartScannerView.swift */,
+				A30A1B2C3D4E5F60718293A1 /* ARRepairGuideView.swift */,
 			);
 			path = AR;
+			sourceTree = "<group>";
+		};
+		1122334455667788990011AA /* Predictions */ = {
+			isa = PBXGroup;
+			children = (
+				3C4D5E6F07182930A1B2C3D4 /* FailurePredictorView.swift */,
+			);
+			path = Predictions;
+			sourceTree = "<group>";
+		};
+		2233445566778899001122BB /* ITP */ = {
+			isa = PBXGroup;
+			children = (
+				4D5E6F07182930A1B2C3D4E5 /* ITPRadarView.swift */,
+			);
+			path = ITP;
+			sourceTree = "<group>";
+		};
+		3344556677889900112233CC /* DTC */ = {
+			isa = PBXGroup;
+			children = (
+				5E6F07182930A1B2C3D4E5F6 /* DTCDecoderView.swift */,
+			);
+			path = DTC;
+			sourceTree = "<group>";
+		};
+		4455667788990011223344DD /* Insurance */ = {
+			isa = PBXGroup;
+			children = (
+				6F07182930A1B2C3D4E5F607 /* RCAComparatorView.swift */,
+			);
+			path = Insurance;
+			sourceTree = "<group>";
+		};
+		5566778899001122334455EE /* Fuel */ = {
+			isa = PBXGroup;
+			children = (
+				718293041B2C3D4E5F607182 /* FuelCalculatorView.swift */,
+			);
+			path = Fuel;
+			sourceTree = "<group>";
+		};
+		6677889900112233445566FF /* Valuation */ = {
+			isa = PBXGroup;
+			children = (
+				82930A1B2C3D4E5F60718293 /* CarValuationView.swift */,
+			);
+			path = Valuation;
+			sourceTree = "<group>";
+		};
+		7788990011223344556677A0 /* Recall */ = {
+			isa = PBXGroup;
+			children = (
+				930A1B2C3D4E5F6071829304 /* RecallCampaignsView.swift */,
+			);
+			path = Recall;
+			sourceTree = "<group>";
+		};
+		8899001122334455667788B1 /* DigitalTwin */ = {
+			isa = PBXGroup;
+			children = (
+				B41B2C3D4E5F607182930A1B /* CarDigitalTwinView.swift */,
+			);
+			path = DigitalTwin;
+			sourceTree = "<group>";
+		};
+		9900112233445566778899C2 /* Marketplace */ = {
+			isa = PBXGroup;
+			children = (
+				D63D4E5F607182930A1B2C3D /* ServiceMarketplaceView.swift */,
+			);
+			path = Marketplace;
+			sourceTree = "<group>";
+		};
+		AA11223344556677889900D3 /* Country */ = {
+			isa = PBXGroup;
+			children = (
+				E74E5F607182930A1B2C3D4E /* MultiCountryConfigView.swift */,
+			);
+			path = Country;
+			sourceTree = "<group>";
+		};
+		BB22334455667788990011E4 /* AI */ = {
+			isa = PBXGroup;
+			children = (
+				F85F607182930A1B2C3D4E5F /* EuropeanAIDataView.swift */,
+			);
+			path = AI;
 			sourceTree = "<group>";
 		};
 		9A7BB86C336844EF1D466967 /* Products */ = {
@@ -438,6 +568,20 @@
 				43670D616FAB779EBF6CCD1B /* MoreMenuView.swift in Sources */,
 				A1B2C3D4E5F60718293A4B5C /* ARDiagnosticView.swift in Sources */,
 				B2C3D4E5F6071829A3B4C5D6 /* QRPartScannerView.swift in Sources */,
+				C3D4E5F607182930A1B2C3D4 /* FailurePredictorView.swift in Sources */,
+				D4E5F6071829A3B4C5D6E7F8 /* ITPRadarView.swift in Sources */,
+				E5F607182930A1B2C3D4E5F6 /* DTCDecoderView.swift in Sources */,
+				F607182930A1B2C3D4E5F607 /* RCAComparatorView.swift in Sources */,
+				A718293041B2C3D4E5F60718 /* FuelCalculatorView.swift in Sources */,
+				B82930A1B2C3D4E5F6071829 /* CarValuationView.swift in Sources */,
+				C930A1B2C3D4E5F607182930 /* RecallCampaignsView.swift in Sources */,
+				DA30A1B2C3D4E5F607182930 /* ARRepairGuideView.swift in Sources */,
+				EB41B2C3D4E5F60718293041 /* CarDigitalTwinView.swift in Sources */,
+				FC52C3D4E5F6071829304152 /* VINAutoSetupView.swift in Sources */,
+				AD63D4E5F607182930415263 /* ServiceMarketplaceView.swift in Sources */,
+				BE74E5F6071829304152637A /* MultiCountryConfigView.swift in Sources */,
+				CF85F607182930415263748B /* EuropeanAIDataView.swift in Sources */,
+				D096071829304152637485A0 /* EuropeanCountry.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

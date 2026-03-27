@@ -169,16 +169,11 @@ class OBDDemoSimulator: ObservableObject {
         // Simulate engine warming up and driving
         let drivePhase = sin(time * 0.05) * 0.5 + 0.5 // 0-1 cycle
 
-        liveData.engineTemp = min(95, liveData.engineTemp + 0.02) + sin(time * 0.1) * 2
+        liveData.engineTemp = min(95, max(0, liveData.engineTemp + 0.02 + sin(time * 0.1) * 2))
         liveData.airTemp = 22 + sin(time * 0.01) * 3
-        liveData.rpm = 800 + drivePhase * 3500 + sin(time * 0.3) * 200
-        liveData.speed = drivePhase * 120 + sin(time * 0.2) * 10
+        liveData.rpm = max(600, 800 + drivePhase * 3500 + sin(time * 0.3) * 200)
+        liveData.speed = max(0, drivePhase * 120 + sin(time * 0.2) * 10)
         liveData.batteryVoltage = 13.8 + sin(time * 0.05) * 0.3
-        liveData.oilTemp = min(110, 40 + liveData.engineTemp * 0.7 + sin(time * 0.08) * 5)
-
-        // Clamp values
-        liveData.speed = max(0, liveData.speed)
-        liveData.rpm = max(600, liveData.rpm)
-        liveData.oilTemp = max(20, liveData.oilTemp)
+        liveData.oilTemp = min(110, max(20, 40 + liveData.engineTemp * 0.7 + sin(time * 0.08) * 5))
     }
 }

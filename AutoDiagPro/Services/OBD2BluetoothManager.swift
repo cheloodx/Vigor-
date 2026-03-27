@@ -395,7 +395,7 @@ extension OBD2BluetoothManager: CBPeripheralDelegate {
         responseBuffer += response
 
         // ELM327 responses end with ">" prompt
-        if responseBuffer.contains(">") || responseBuffer.contains("\r\r") {
+        if responseBuffer.contains(">") {
             let fullResponse = responseBuffer
             responseBuffer = ""
             processResponse(fullResponse)
