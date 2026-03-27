@@ -138,6 +138,10 @@ class OBDDemoSimulator: ObservableObject {
     @Published var liveData = OBDLiveData()
     private var timer: Timer?
 
+    deinit {
+        stopSimulation()
+    }
+
     func startSimulation() {
         // Initial values
         liveData = OBDLiveData(

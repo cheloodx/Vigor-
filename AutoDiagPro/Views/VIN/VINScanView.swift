@@ -304,6 +304,7 @@ struct VINScanView: View {
 
                 // Use vehicle button
                 Button(action: {
+                    vehicleManager.addVehicle(vehicle)
                     vehicleManager.selectVehicle(vehicle)
                     withAnimation { showResult = false }
                 }) {

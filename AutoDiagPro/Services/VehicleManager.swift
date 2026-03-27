@@ -79,6 +79,9 @@ class VehicleManager: ObservableObject {
         if let encoded = try? JSONEncoder().encode(savedVehicles) {
             UserDefaults.standard.set(encoded, forKey: vehiclesKey)
         }
+        if let encoded = try? JSONEncoder().encode(serviceItems) {
+            UserDefaults.standard.set(encoded, forKey: serviceKey)
+        }
     }
 
     private func loadData() {
@@ -88,6 +91,10 @@ class VehicleManager: ObservableObject {
             if let first = vehicles.first {
                 currentVehicle = first
             }
+        }
+        if let data = UserDefaults.standard.data(forKey: serviceKey),
+           let items = try? JSONDecoder().decode([ServiceItem].self, from: data) {
+            serviceItems = items
         }
     }
 }
