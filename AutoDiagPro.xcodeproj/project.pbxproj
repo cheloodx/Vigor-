@@ -1,0 +1,518 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A10000001 /* AutoDiagProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000001; };
+		A10000002 /* Vehicle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000002; };
+		A10000003 /* Diagnostic.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000003; };
+		A10000004 /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000004; };
+		A10000005 /* CostEstimate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000005; };
+		A10000006 /* OBDData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000006; };
+		A10000007 /* ChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000007; };
+		A10000008 /* VehicleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000008; };
+		A10000009 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000009; };
+		A10000010 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000010; };
+		A10000011 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000011; };
+		A10000012 /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000012; };
+		A10000013 /* ScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000013; };
+		A10000014 /* VINScanView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000014; };
+		A10000015 /* ServiceCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000015; };
+		A10000016 /* CostEstimatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000016; };
+		A10000017 /* LiveDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000017; };
+		A10000018 /* VoiceDiagnosticView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000018; };
+		A10000019 /* MechanicChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000019; };
+		A10000020 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10000020; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B10000001 /* AutoDiagProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoDiagProApp.swift; sourceTree = "<group>"; };
+		B10000002 /* Vehicle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Vehicle.swift; sourceTree = "<group>"; };
+		B10000003 /* Diagnostic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diagnostic.swift; sourceTree = "<group>"; };
+		B10000004 /* ServiceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
+		B10000005 /* CostEstimate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostEstimate.swift; sourceTree = "<group>"; };
+		B10000006 /* OBDData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBDData.swift; sourceTree = "<group>"; };
+		B10000007 /* ChatMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessage.swift; sourceTree = "<group>"; };
+		B10000008 /* VehicleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleManager.swift; sourceTree = "<group>"; };
+		B10000009 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
+		B10000010 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		B10000011 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		B10000012 /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		B10000013 /* ScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanView.swift; sourceTree = "<group>"; };
+		B10000014 /* VINScanView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VINScanView.swift; sourceTree = "<group>"; };
+		B10000015 /* ServiceCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCalendarView.swift; sourceTree = "<group>"; };
+		B10000016 /* CostEstimatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostEstimatorView.swift; sourceTree = "<group>"; };
+		B10000017 /* LiveDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDashboardView.swift; sourceTree = "<group>"; };
+		B10000018 /* VoiceDiagnosticView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceDiagnosticView.swift; sourceTree = "<group>"; };
+		B10000019 /* MechanicChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MechanicChatView.swift; sourceTree = "<group>"; };
+		B10000020 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C10000001 /* AutoDiagPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AutoDiagPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C10000002 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D10000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E10000001 = {
+			isa = PBXGroup;
+			children = (
+				E10000002 /* AutoDiagPro */,
+				E10000099 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E10000002 /* AutoDiagPro */ = {
+			isa = PBXGroup;
+			children = (
+				B10000001 /* AutoDiagProApp.swift */,
+				C10000002 /* Info.plist */,
+				B10000020 /* Assets.xcassets */,
+				E10000003 /* Models */,
+				E10000004 /* Views */,
+				E10000005 /* Services */,
+				E10000006 /* Utilities */,
+			);
+			path = AutoDiagPro;
+			sourceTree = "<group>";
+		};
+		E10000003 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B10000002 /* Vehicle.swift */,
+				B10000003 /* Diagnostic.swift */,
+				B10000004 /* ServiceItem.swift */,
+				B10000005 /* CostEstimate.swift */,
+				B10000006 /* OBDData.swift */,
+				B10000007 /* ChatMessage.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E10000004 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				E10000010 /* Main */,
+				E10000011 /* Scan */,
+				E10000012 /* VIN */,
+				E10000013 /* Service */,
+				E10000014 /* Costs */,
+				E10000015 /* Live */,
+				E10000016 /* Voice */,
+				E10000017 /* Chat */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		E10000005 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B10000008 /* VehicleManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		E10000006 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				B10000009 /* AppState.swift */,
+				B10000010 /* Extensions.swift */,
+				B10000011 /* Theme.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		E10000010 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				B10000012 /* MainTabView.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		E10000011 /* Scan */ = {
+			isa = PBXGroup;
+			children = (
+				B10000013 /* ScanView.swift */,
+			);
+			path = Scan;
+			sourceTree = "<group>";
+		};
+		E10000012 /* VIN */ = {
+			isa = PBXGroup;
+			children = (
+				B10000014 /* VINScanView.swift */,
+			);
+			path = VIN;
+			sourceTree = "<group>";
+		};
+		E10000013 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				B10000015 /* ServiceCalendarView.swift */,
+			);
+			path = Service;
+			sourceTree = "<group>";
+		};
+		E10000014 /* Costs */ = {
+			isa = PBXGroup;
+			children = (
+				B10000016 /* CostEstimatorView.swift */,
+			);
+			path = Costs;
+			sourceTree = "<group>";
+		};
+		E10000015 /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				B10000017 /* LiveDashboardView.swift */,
+			);
+			path = Live;
+			sourceTree = "<group>";
+		};
+		E10000016 /* Voice */ = {
+			isa = PBXGroup;
+			children = (
+				B10000018 /* VoiceDiagnosticView.swift */,
+			);
+			path = Voice;
+			sourceTree = "<group>";
+		};
+		E10000017 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				B10000019 /* MechanicChatView.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
+		E10000099 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C10000001 /* AutoDiagPro.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F10000001 /* AutoDiagPro */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = G10000003 /* Build configuration list for PBXNativeTarget "AutoDiagPro" */;
+			buildPhases = (
+				F10000002 /* Sources */,
+				D10000001 /* Frameworks */,
+				F10000003 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AutoDiagPro;
+			productName = AutoDiagPro;
+			productReference = C10000001 /* AutoDiagPro.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F10000099 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					F10000001 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = G10000001 /* Build configuration list for PBXProject "AutoDiagPro" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = ro;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				ro,
+				Base,
+			);
+			mainGroup = E10000001;
+			productRefGroup = E10000099 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F10000001 /* AutoDiagPro */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F10000003 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000020 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F10000002 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A10000001 /* AutoDiagProApp.swift in Sources */,
+				A10000002 /* Vehicle.swift in Sources */,
+				A10000003 /* Diagnostic.swift in Sources */,
+				A10000004 /* ServiceItem.swift in Sources */,
+				A10000005 /* CostEstimate.swift in Sources */,
+				A10000006 /* OBDData.swift in Sources */,
+				A10000007 /* ChatMessage.swift in Sources */,
+				A10000008 /* VehicleManager.swift in Sources */,
+				A10000009 /* AppState.swift in Sources */,
+				A10000010 /* Extensions.swift in Sources */,
+				A10000011 /* Theme.swift in Sources */,
+				A10000012 /* MainTabView.swift in Sources */,
+				A10000013 /* ScanView.swift in Sources */,
+				A10000014 /* VINScanView.swift in Sources */,
+				A10000015 /* ServiceCalendarView.swift in Sources */,
+				A10000016 /* CostEstimatorView.swift in Sources */,
+				A10000017 /* LiveDashboardView.swift in Sources */,
+				A10000018 /* VoiceDiagnosticView.swift in Sources */,
+				A10000019 /* MechanicChatView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		G10000010 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		G10000011 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		G10000020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AutoDiagPro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "AutoDiag Pro";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "AutoDiag Pro foloseste camera pentru scanare diagnostic si citire VIN/numar de inmatriculare.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "AutoDiag Pro foloseste microfonul pentru comanda vocala si diagnostic vocal.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "AutoDiag Pro foloseste recunoasterea vocala pentru a primi comenzi in limba romana.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.autodiagpro.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		G10000021 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AutoDiagPro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "AutoDiag Pro";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSCameraUsageDescription = "AutoDiag Pro foloseste camera pentru scanare diagnostic si citire VIN/numar de inmatriculare.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "AutoDiag Pro foloseste microfonul pentru comanda vocala si diagnostic vocal.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "AutoDiag Pro foloseste recunoasterea vocala pentru a primi comenzi in limba romana.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.autodiagpro.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		G10000001 /* Build configuration list for PBXProject "AutoDiagPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				G10000010 /* Debug */,
+				G10000011 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		G10000003 /* Build configuration list for PBXNativeTarget "AutoDiagPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				G10000020 /* Debug */,
+				G10000021 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F10000099 /* Project object */;
+}
