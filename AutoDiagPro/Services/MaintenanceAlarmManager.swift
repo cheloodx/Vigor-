@@ -66,9 +66,11 @@ class MaintenanceAlarmManager: ObservableObject {
     @Published var alarms: [MaintenanceAlarm] = MaintenanceAlarm.sampleAlarms
     
     func requestNotificationPermission() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { [weak self] granted, error in
             if granted {
-                self.scheduleNotifications()
+                DispatchQueue.main.async {
+                    self?.scheduleNotifications()
+                }
             }
         }
     }
@@ -85,6 +87,7 @@ class MaintenanceAlarmManager: ObservableObject {
             let days = alarm.daysRemaining()
             if days > 0 && days <= 30 {
                 let triggerDate = Calendar.current.date(byAdding: .day, value: -7, to: alarm.nextServiceDate) ?? Date()
+                guard triggerDate > Date() else { continue }
                 let components = Calendar.current.dateComponents([.year, .month, .day, .hour], from: triggerDate)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
                 

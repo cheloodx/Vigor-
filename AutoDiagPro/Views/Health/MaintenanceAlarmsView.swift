@@ -67,7 +67,7 @@ struct MaintenanceAlarmsView: View {
     private var alarmSummary: some View {
         let mileage = vehicleManager.currentVehicle.mileage
         let overdue = alarmManager.alarms.filter { $0.daysRemaining() <= 0 || $0.kmRemaining(currentMileage: mileage) <= 0 }.count
-        let upcoming = alarmManager.alarms.filter { ($0.daysRemaining() > 0 && $0.daysRemaining() <= 30) || ($0.kmRemaining(currentMileage: mileage) > 0 && $0.kmRemaining(currentMileage: mileage) <= 2000) }.count
+        let upcoming = alarmManager.alarms.filter { $0.daysRemaining() > 0 && $0.kmRemaining(currentMileage: mileage) > 0 && ($0.daysRemaining() <= 30 || $0.kmRemaining(currentMileage: mileage) <= 2000) }.count
         let ok = alarmManager.alarms.count - overdue - upcoming
         
         return HStack(spacing: 8) {

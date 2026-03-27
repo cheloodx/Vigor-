@@ -14,7 +14,7 @@ struct ServiceItem: Identifiable, Codable {
     var notes: String = ""
 
     var progressPercentage: Double {
-        guard let lastKm = lastServiceKm else { return 0 }
+        guard let lastKm = lastServiceKm else { return 1.0 }
         let kmSinceService = currentKm - lastKm
         let progress = 1.0 - (Double(kmSinceService) / Double(intervalKm))
         return max(0, min(1, progress))
