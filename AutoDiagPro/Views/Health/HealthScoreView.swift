@@ -9,6 +9,7 @@ struct HealthScoreView: View {
     @State private var selectedCategory: HealthCategory?
     @State private var showShareSheet = false
     @State private var isLiveUpdating = false
+    @State private var baselineCategories: [HealthCategory] = []
     private let liveTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
@@ -328,13 +329,17 @@ struct HealthScoreView: View {
             vehicleId: vehicle.id
         )
         
+        // Store baseline before OBD adjustments for future recalculations
+        baselineCategories = categories
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             animateRing = true
         }
     }
     
     private func recalculateFromOBD() {
-        var categories = healthScore.categories
+        // Start from baseline categories (before OBD adjustments) to avoid cumulative inflation
+        var categories = baselineCategories.isEmpty ? healthScore.categories : baselineCategories
         adjustCategoriesFromOBD(&categories)
         let avgScore = categories.reduce(0) { $0 + $1.score } / max(1, categories.count)
         withAnimation(.easeInOut(duration: 0.5)) {
