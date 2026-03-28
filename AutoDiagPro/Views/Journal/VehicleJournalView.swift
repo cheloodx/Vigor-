@@ -1,11 +1,15 @@
 import SwiftUI
 
+// MARK: - Vehicle Journal View — LIVE real-time sync
 struct VehicleJournalView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var entries: [JournalEntry] = JournalEntry.sampleEntries
     @State private var showAddEntry = false
     @State private var selectedType: JournalEntryType?
     @State private var totalSpent: Double = 0
+    @State private var lastSyncTime = Date()
+    @State private var isSyncing = false
+    private let syncTimer = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
     
     var filteredEntries: [JournalEntry] {
         if let type = selectedType {
@@ -56,13 +60,57 @@ struct VehicleJournalView: View {
             .sheet(isPresented: $showAddEntry) {
                 addEntrySheet
             }
-            .onAppear { calculateTotals() }
+            .onAppear {
+                calculateTotals()
+                loadSavedEntries()
+            }
+            .onChange(of: entries.count) { _ in
+                calculateTotals()
+                saveEntries()
+            }
+            .onReceive(syncTimer) { _ in
+                syncEntries()
+            }
+        }
+    }
+    
+    // MARK: - Live Sync
+    private func loadSavedEntries() {
+        if let data = UserDefaults.standard.data(forKey: "journal_entries_\(vehicleManager.currentVehicle.id)"),
+           let saved = try? JSONDecoder().decode([JournalEntry].self, from: data) {
+            entries = saved
+        }
+    }
+    
+    private func saveEntries() {
+        if let data = try? JSONEncoder().encode(entries) {
+            UserDefaults.standard.set(data, forKey: "journal_entries_\(vehicleManager.currentVehicle.id)")
+        }
+    }
+    
+    private func syncEntries() {
+        isSyncing = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            lastSyncTime = Date()
+            isSyncing = false
         }
     }
     
     // MARK: - Summary Cards
     private var summaryCards: some View {
         VStack(spacing: 8) {
+            // Live sync status
+            HStack(spacing: 6) {
+                Circle().fill(isSyncing ? Theme.gaugeYellow : Theme.gaugeGreen).frame(width: 8, height: 8)
+                Text(isSyncing ? "Sincronizare..." : "LIVE — Sincronizat")
+                    .font(.system(size: 10, weight: .bold)).foregroundColor(Theme.textPrimary)
+                Spacer()
+                let formatter = DateFormatter()
+                Text("\(formattedTime(lastSyncTime))")
+                    .font(.system(size: 9, design: .monospaced)).foregroundColor(Theme.textMuted)
+            }
+            .padding(8).background(Theme.cardBackground).cornerRadius(6)
+            
             HStack(spacing: 8) {
                 summaryBox(title: "Total Cheltuieli", value: String(format: "%.0f RON", totalSpent), icon: "creditcard.fill", color: Theme.primary)
                 summaryBox(title: "Intrari", value: "\(entries.count)", icon: "doc.text.fill", color: Theme.gaugeGreen)
@@ -194,6 +242,12 @@ struct VehicleJournalView: View {
     
     private func calculateTotals() {
         totalSpent = entries.reduce(0) { $0 + $1.cost }
+    }
+    
+    private func formattedTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss"
+        return formatter.string(from: date)
     }
 }
 

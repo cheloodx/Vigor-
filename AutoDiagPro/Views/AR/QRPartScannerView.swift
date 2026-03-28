@@ -5,6 +5,7 @@ import AVFoundation
 // Scan part serial number via QR code or barcode and find compatible alternatives
 struct QRPartScannerView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
+    @StateObject private var cameraManager = CameraSessionManager()
     @State private var scannedCode: String = ""
     @State private var isScanning = false
     @State private var showManualEntry = false
@@ -65,33 +66,24 @@ struct QRPartScannerView: View {
         }
     }
     
-    // MARK: - Scanner Card
+    // MARK: - Scanner Card (Real Camera + Barcode Detection)
     private var scannerCard: some View {
         VStack(spacing: 14) {
-            // Scanner preview area
+            // Scanner preview area with real camera
             ZStack {
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0.04, green: 0.07, blue: 0.11),
-                                Color(red: 0.07, green: 0.10, blue: 0.16)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(height: 220)
-                
-                if isScanning {
-                    // Scanning animation
+                if isScanning && cameraManager.permissionGranted {
+                    // Real camera feed for scanning
+                    CameraPreviewView(session: cameraManager.session)
+                        .frame(height: 260)
+                        .cornerRadius(14)
+                    
+                    // QR frame overlay on camera
                     VStack(spacing: 12) {
                         ZStack {
-                            // QR frame corners
                             qrFrameCorners
-                                .frame(width: 140, height: 140)
+                                .frame(width: 180, height: 180)
                             
-                            // Scan line
+                            // Scan line animation
                             Rectangle()
                                 .fill(
                                     LinearGradient(
@@ -100,52 +92,86 @@ struct QRPartScannerView: View {
                                         endPoint: .trailing
                                     )
                                 )
-                                .frame(width: 120, height: 2)
-                                .offset(y: flashAnimation ? 50 : -50)
-                            
-                            Image(systemName: "qrcode")
-                                .font(.system(size: 40))
-                                .foregroundColor(Theme.primary.opacity(0.3))
+                                .frame(width: 160, height: 2)
+                                .offset(y: flashAnimation ? 70 : -70)
                         }
                         
                         Text("Pozitioneaza codul in cadru")
                             .font(.system(size: 12))
-                            .foregroundColor(Theme.textSecondary)
-                    }
-                } else if !scannedCode.isEmpty {
-                    // Scanned result
-                    VStack(spacing: 8) {
-                        Image(systemName: "checkmark.circle.fill")
-                            .font(.system(size: 36))
-                            .foregroundColor(Theme.gaugeGreen)
-                        
-                        Text("Cod scanat cu succes!")
-                            .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(Theme.textPrimary)
-                        
-                        Text(scannedCode)
-                            .font(.system(size: 16, weight: .bold, design: .monospaced))
-                            .foregroundColor(Theme.primary)
+                            .foregroundColor(.white)
                             .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Theme.primary.opacity(0.1))
+                            .padding(.vertical, 4)
+                            .background(Color.black.opacity(0.6))
                             .cornerRadius(8)
                     }
-                } else {
-                    // Ready to scan
-                    VStack(spacing: 10) {
-                        Image(systemName: "qrcode.viewfinder")
-                            .font(.system(size: 48))
-                            .foregroundColor(Theme.primary.opacity(0.5))
-                        
-                        Text("Scaneaza codul de pe piesa")
-                            .font(.system(size: 13))
-                            .foregroundColor(Theme.textSecondary)
-                        
-                        Text("QR Code, Cod de Bare, EAN")
-                            .font(.system(size: 10))
-                            .foregroundColor(Theme.textMuted)
+                    
+                    // Torch button
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Button(action: { cameraManager.toggleTorch() }) {
+                                Image(systemName: "flashlight.on.fill")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(Theme.gaugeYellow)
+                                    .padding(8)
+                                    .background(Color.black.opacity(0.7))
+                                    .cornerRadius(8)
+                            }
+                            .padding(8)
+                        }
+                        Spacer()
                     }
+                } else if !scannedCode.isEmpty {
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(Color(red: 0.04, green: 0.07, blue: 0.11))
+                        .frame(height: 220)
+                        .overlay(
+                            VStack(spacing: 8) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .font(.system(size: 36))
+                                    .foregroundColor(Theme.gaugeGreen)
+                                
+                                Text("Cod scanat cu succes!")
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundColor(Theme.textPrimary)
+                                
+                                Text(scannedCode)
+                                    .font(.system(size: 16, weight: .bold, design: .monospaced))
+                                    .foregroundColor(Theme.primary)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(Theme.primary.opacity(0.1))
+                                    .cornerRadius(8)
+                            }
+                        )
+                } else {
+                    RoundedRectangle(cornerRadius: 14)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color(red: 0.04, green: 0.07, blue: 0.11),
+                                    Color(red: 0.07, green: 0.10, blue: 0.16)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(height: 220)
+                        .overlay(
+                            VStack(spacing: 10) {
+                                Image(systemName: "qrcode.viewfinder")
+                                    .font(.system(size: 48))
+                                    .foregroundColor(Theme.primary.opacity(0.5))
+                                
+                                Text("Scaneaza codul de pe piesa")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(Theme.textSecondary)
+                                
+                                Text("QR Code, Cod de Bare, EAN")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(Theme.textMuted)
+                            }
+                        )
                 }
             }
             
@@ -568,30 +594,44 @@ struct QRPartScannerView: View {
             .cornerRadius(4)
     }
     
-    // MARK: - Actions
+    // MARK: - Actions (Real Camera Barcode Scanning)
     private func startScanning() {
         if isScanning {
+            // Stop scanning
             isScanning = false
+            flashAnimation = false
+            cameraManager.stopSession()
             return
         }
         
         scannedCode = ""
         scanResult = nil
         isScanning = true
+        cameraManager.detectedBarcodes = []
+        
+        // Set up barcode detection callback
+        cameraManager.onBarcodeDetected = { [self] code in
+            withAnimation(.spring()) {
+                isScanning = false
+                flashAnimation = false
+                scannedCode = code
+                cameraManager.stopSession()
+                searchPart(serial: code)
+            }
+        }
+        
+        // Start real camera session
+        cameraManager.startSession()
         
         // Start scan line animation
         withAnimation(.linear(duration: 1.5).repeatForever(autoreverses: true)) {
             flashAnimation = true
         }
         
-        // Simulate scan after delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            withAnimation(.spring()) {
-                isScanning = false
-                flashAnimation = false
-                scannedCode = "04E 115 561 H"
-                searchPart(serial: scannedCode)
-            }
+        // Fallback timeout: if no barcode detected in 15 seconds, use demo data
+        DispatchQueue.main.asyncAfter(deadline: .now() + 15.0) { [self] in
+            guard isScanning else { return }
+            // Camera is running but no barcode found - show hint
         }
     }
     

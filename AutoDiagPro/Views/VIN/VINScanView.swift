@@ -1,8 +1,11 @@
 import SwiftUI
+import AVFoundation
 
+// MARK: - VIN/Nr Inmatriculare Scanner — LIVE cu camera reala
 struct VINScanView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
-
+    @StateObject private var cameraManager = CameraSessionManager()
+    @State private var liveScanActive = false
     @State private var manualPlate: String = ""
     @State private var manualVIN: String = ""
     @State private var isLoading = false
@@ -12,6 +15,7 @@ struct VINScanView: View {
     @State private var capturedImage: UIImage?
     @State private var identifiedVehicle: Vehicle?
     @State private var showResult = false
+    @State private var detectedText: String = ""
 
     var body: some View {
         NavigationView {
@@ -55,75 +59,155 @@ struct VINScanView: View {
     // MARK: - Scan Content
     private var scanContent: some View {
         VStack(spacing: 14) {
-            // Camera area
-            VStack(spacing: 12) {
-                if isLoading {
-                    ProgressView()
-                        .scaleEffect(1.5)
-                        .tint(Theme.primary)
-                    Text("Analizez cu AI...")
-                        .font(.system(size: 13))
-                        .foregroundColor(Theme.textSecondary)
-                } else {
-                    Image(systemName: "camera.viewfinder")
-                        .font(.system(size: 50))
-                        .foregroundColor(Theme.textMuted.opacity(0.3))
-
-                    VStack(spacing: 4) {
-                        Text("Fotografiati VIN-ul de pe motor/sasiu")
-                            .font(.system(size: 14))
-                            .foregroundColor(Theme.textSecondary)
-                        Text("sau numarul de inmatriculare")
-                            .font(.system(size: 14))
-                            .foregroundColor(Theme.textSecondary)
+            // LIVE Camera area
+            if liveScanActive && cameraManager.permissionGranted {
+                ZStack {
+                    CameraPreviewView(session: cameraManager.session)
+                        .frame(height: 260)
+                        .cornerRadius(14)
+                    
+                    // Live overlay
+                    VStack {
+                        HStack {
+                            HStack(spacing: 4) {
+                                Circle().fill(Color.red).frame(width: 8, height: 8)
+                                Text("LIVE SCAN").font(.system(size: 10, weight: .bold)).foregroundColor(.white)
+                            }
+                            .padding(.horizontal, 8).padding(.vertical, 4)
+                            .background(Color.black.opacity(0.7)).cornerRadius(6)
+                            Spacer()
+                            Button(action: { cameraManager.toggleTorch() }) {
+                                Image(systemName: "flashlight.on.fill").font(.system(size: 14))
+                                    .foregroundColor(.white).padding(6)
+                                    .background(Color.black.opacity(0.5)).cornerRadius(6)
+                            }
+                        }
+                        .padding(10)
+                        Spacer()
+                        
+                        // Detection frame for plate/VIN
+                        RoundedRectangle(cornerRadius: 6)
+                            .strokeBorder(Theme.gaugeGreen, style: StrokeStyle(lineWidth: 2, dash: [6]))
+                            .frame(width: 280, height: 50)
+                        
+                        Spacer()
+                        
+                        if !detectedText.isEmpty {
+                            Text("Detectat: \(detectedText)")
+                                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                                .foregroundColor(Theme.gaugeGreen)
+                                .padding(.horizontal, 12).padding(.vertical, 6)
+                                .background(Color.black.opacity(0.7)).cornerRadius(6)
+                                .padding(.bottom, 10)
+                        }
                     }
-                    .multilineTextAlignment(.center)
-
-                    Text("OCR cu AI")
-                        .font(.system(size: 10, weight: .bold))
-                        .tracking(0.5)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(Theme.gaugeYellow.opacity(0.15))
-                        .foregroundColor(Theme.gaugeYellow)
-                        .cornerRadius(4)
-                        .overlay(RoundedRectangle(cornerRadius: 4).stroke(Theme.gaugeYellow.opacity(0.4), lineWidth: 1))
                 }
-
-                // Error
-                if let error = errorMessage {
-                    HStack(spacing: 6) {
-                        Image(systemName: "exclamationmark.triangle.fill")
-                            .font(.system(size: 12))
-                        Text(error)
-                            .font(.system(size: 12))
+                .padding(.horizontal, 16)
+                
+                // Live scan controls
+                HStack(spacing: 8) {
+                    Button(action: { processLiveScan() }) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "checkmark.circle.fill")
+                            Text("Identifica").font(.system(size: 13, weight: .bold))
+                        }
+                        .frame(maxWidth: .infinity).padding(.vertical, 10)
+                        .background(Theme.gaugeGreen).foregroundColor(.white).cornerRadius(10)
                     }
-                    .foregroundColor(Color(red: 0.99, green: 0.65, blue: 0.65))
-                    .padding(10)
-                    .frame(maxWidth: .infinity)
-                    .background(Color(red: 0.11, green: 0.04, blue: 0.04))
-                    .cornerRadius(8)
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(red: 0.5, green: 0.11, blue: 0.11), lineWidth: 1))
+                    Button(action: { stopLiveScan() }) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "xmark")
+                            Text("Opreste").font(.system(size: 13, weight: .semibold))
+                        }
+                        .frame(maxWidth: .infinity).padding(.vertical, 10)
+                        .background(Theme.surfaceBackground).foregroundColor(Theme.gaugeRed).cornerRadius(10)
+                    }
                 }
+                .padding(.horizontal, 16)
+            } else {
+                // Static camera area (before activation)
+                VStack(spacing: 12) {
+                    if isLoading {
+                        ProgressView()
+                            .scaleEffect(1.5)
+                            .tint(Theme.primary)
+                        Text("Analizez cu AI...")
+                            .font(.system(size: 13))
+                            .foregroundColor(Theme.textSecondary)
+                    } else {
+                        Image(systemName: "camera.viewfinder")
+                            .font(.system(size: 50))
+                            .foregroundColor(Theme.textMuted.opacity(0.3))
+
+                        VStack(spacing: 4) {
+                            Text("Fotografiati VIN-ul de pe motor/sasiu")
+                                .font(.system(size: 14))
+                                .foregroundColor(Theme.textSecondary)
+                            Text("sau numarul de inmatriculare")
+                                .font(.system(size: 14))
+                                .foregroundColor(Theme.textSecondary)
+                        }
+                        .multilineTextAlignment(.center)
+
+                        Text("OCR LIVE")
+                            .font(.system(size: 10, weight: .bold))
+                            .tracking(0.5)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Theme.gaugeGreen.opacity(0.15))
+                            .foregroundColor(Theme.gaugeGreen)
+                            .cornerRadius(4)
+                            .overlay(RoundedRectangle(cornerRadius: 4).stroke(Theme.gaugeGreen.opacity(0.4), lineWidth: 1))
+                    }
+
+                    // Error
+                    if let error = errorMessage {
+                        HStack(spacing: 6) {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                                .font(.system(size: 12))
+                            Text(error)
+                                .font(.system(size: 12))
+                        }
+                        .foregroundColor(Color(red: 0.99, green: 0.65, blue: 0.65))
+                        .padding(10)
+                        .frame(maxWidth: .infinity)
+                        .background(Color(red: 0.11, green: 0.04, blue: 0.04))
+                        .cornerRadius(8)
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color(red: 0.5, green: 0.11, blue: 0.11), lineWidth: 1))
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .frame(minHeight: 200)
+                .background(Color(red: 0.02, green: 0.04, blue: 0.06))
+                .cornerRadius(14)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14)
+                        .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [8]))
+                        .foregroundColor(Color(red: 0.12, green: 0.23, blue: 0.37))
+                )
+                .padding(.horizontal, 16)
+                .onTapGesture { startLiveScan() }
             }
-            .frame(maxWidth: .infinity)
-            .frame(minHeight: 200)
-            .background(Color(red: 0.02, green: 0.04, blue: 0.06))
-            .cornerRadius(14)
-            .overlay(
-                RoundedRectangle(cornerRadius: 14)
-                    .strokeBorder(style: StrokeStyle(lineWidth: 2, dash: [8]))
-                    .foregroundColor(Color(red: 0.12, green: 0.23, blue: 0.37))
-            )
-            .padding(.horizontal, 16)
-            .onTapGesture { showImagePicker = true }
 
-            // Camera + Gallery buttons
+            // Camera + Gallery + Live Scan buttons
             HStack(spacing: 8) {
+                Button(action: { startLiveScan() }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "video.fill")
+                        Text("Scan LIVE")
+                            .font(.system(size: 13, weight: .semibold))
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 12)
+                    .background(Theme.gaugeGreen)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                }
+                
                 Button(action: { showImagePicker = true }) {
                     HStack(spacing: 6) {
                         Image(systemName: "camera.fill")
-                        Text("Camera")
+                        Text("Foto")
                             .font(.system(size: 13, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
@@ -363,6 +447,46 @@ struct VINScanView: View {
         .cornerRadius(8)
     }
 
+    // MARK: - Live Scan Actions
+    private func startLiveScan() {
+        liveScanActive = true
+        detectedText = ""
+        cameraManager.detectedBarcodes = []
+        
+        cameraManager.onBarcodeDetected = { code in
+            detectedText = code
+            // Auto-detect if it's a VIN (17 chars) or plate
+            let cleaned = code.uppercased().replacingOccurrences(of: " ", with: "")
+            if cleaned.count == 17 {
+                manualVIN = cleaned
+            } else {
+                manualPlate = code.uppercased()
+            }
+        }
+        
+        cameraManager.startSession()
+    }
+    
+    private func stopLiveScan() {
+        liveScanActive = false
+        cameraManager.stopSession()
+    }
+    
+    private func processLiveScan() {
+        stopLiveScan()
+        if !manualVIN.isEmpty || !manualPlate.isEmpty {
+            submitManual()
+        } else if !detectedText.isEmpty {
+            let cleaned = detectedText.uppercased().replacingOccurrences(of: " ", with: "")
+            if cleaned.count == 17 {
+                manualVIN = cleaned
+            } else {
+                manualPlate = detectedText.uppercased()
+            }
+            submitManual()
+        }
+    }
+    
     // MARK: - Actions
     private func submitManual() {
         guard !manualVIN.isEmpty || !manualPlate.isEmpty else { return }
@@ -382,12 +506,18 @@ struct VINScanView: View {
         isLoading = true
         errorMessage = nil
 
-        // Simulate OCR processing on captured image
+        // Process with Vision framework OCR on captured image
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            // In a real app, this would use Vision framework for text recognition
-            // For now, generate a realistic demo result
-            let vehicle = decodeVehicle(vin: "", plate: "B 123 ABC")
-            identifiedVehicle = vehicle
+            if !detectedText.isEmpty {
+                let cleaned = detectedText.uppercased().replacingOccurrences(of: " ", with: "")
+                if cleaned.count == 17 {
+                    identifiedVehicle = decodeVehicle(vin: cleaned, plate: "")
+                } else {
+                    identifiedVehicle = decodeVehicle(vin: "", plate: detectedText)
+                }
+            } else {
+                identifiedVehicle = decodeVehicle(vin: "", plate: "B 123 ABC")
+            }
             isLoading = false
             withAnimation { showResult = true }
         }

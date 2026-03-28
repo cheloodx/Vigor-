@@ -89,7 +89,7 @@ class AuthenticationManager: ObservableObject {
 
 // MARK: - Sign In View
 struct SignInView: View {
-    @StateObject private var authManager = AuthenticationManager.shared
+    @ObservedObject private var authManager = AuthenticationManager.shared
     @Environment(\.dismiss) private var dismiss
     
     var body: some View {

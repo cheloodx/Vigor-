@@ -1,8 +1,10 @@
 import SwiftUI
+import AVFoundation
 
 struct ScanView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var vehicleManager: VehicleManager
+    @StateObject private var cameraManager = CameraSessionManager()
 
     @State private var selectedSubTab: ScanSubTab = .photo
     @State private var selectedResultTab: ResultTab = .diagnostic
@@ -13,6 +15,7 @@ struct ScanView: View {
     @State private var errorMessage: String?
     @State private var arStepIndex = 0
     @State private var showGalleryPicker = false
+    @State private var arCameraActive = false
 
     enum ScanSubTab: String, CaseIterable {
         case photo = "Foto Diagnostic"
@@ -599,32 +602,74 @@ struct ScanView: View {
         }
     }
 
-    // MARK: - AR Live Content
+    // MARK: - AR Live Content (Real Camera Feed)
     private var arLiveContent: some View {
         VStack(spacing: 12) {
-            // AR Camera view placeholder
+            // Live camera AR view
             ZStack {
-                Rectangle()
-                    .fill(Color.black)
-                    .frame(height: 320)
+                if cameraManager.permissionGranted {
+                    // Real camera feed
+                    CameraPreviewView(session: cameraManager.session)
+                        .frame(height: 380)
+                        .cornerRadius(14)
+                } else {
+                    Rectangle()
+                        .fill(Color.black)
+                        .frame(height: 380)
+                        .overlay(
+                            VStack(spacing: 12) {
+                                Image(systemName: "camera.fill")
+                                    .font(.system(size: 40))
+                                    .foregroundColor(Theme.textMuted)
+                                Text("Camera necesita permisiune")
+                                    .font(.system(size: 13))
+                                    .foregroundColor(Theme.textSecondary)
+                                Button("Activeaza Camera") {
+                                    cameraManager.checkPermission()
+                                }
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(Theme.primary)
+                            }
+                        )
+                        .cornerRadius(14)
+                }
 
-                // AR overlay corners
+                // AR overlay on top of camera
                 AROverlayView()
+                    .frame(height: 380)
+                    .allowsHitTesting(false)
 
                 // AR HUD badges
                 VStack {
                     HStack(spacing: 6) {
-                        ForEach(["EU", "AI", "AR"], id: \.self) { badge in
-                            Text(badge)
-                                .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(Theme.primary)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
-                                .background(Color.black.opacity(0.85))
-                                .cornerRadius(4)
-                                .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color(red: 0.12, green: 0.23, blue: 0.37), lineWidth: 1))
+                        ForEach(["LIVE", "AI", "AR"], id: \.self) { badge in
+                            HStack(spacing: 4) {
+                                if badge == "LIVE" {
+                                    Circle()
+                                        .fill(Color.red)
+                                        .frame(width: 6, height: 6)
+                                }
+                                Text(badge)
+                                    .font(.system(size: 10, weight: .bold))
+                                    .foregroundColor(badge == "LIVE" ? .red : Theme.primary)
+                            }
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(Color.black.opacity(0.85))
+                            .cornerRadius(4)
+                            .overlay(RoundedRectangle(cornerRadius: 4).stroke(Color(red: 0.12, green: 0.23, blue: 0.37), lineWidth: 1))
                         }
                         Spacer()
+                        
+                        // Torch toggle
+                        Button(action: { cameraManager.toggleTorch() }) {
+                            Image(systemName: "flashlight.on.fill")
+                                .font(.system(size: 12))
+                                .foregroundColor(Theme.gaugeYellow)
+                                .padding(6)
+                                .background(Color.black.opacity(0.7))
+                                .cornerRadius(6)
+                        }
                     }
                     .padding(10)
 
@@ -632,9 +677,12 @@ struct ScanView: View {
 
                     // Bottom controls
                     HStack(spacing: 12) {
-                        Button(action: { loadDemoResult() }) {
+                        Button(action: {
+                            // Capture current frame and analyze
+                            loadDemoResult()
+                        }) {
                             HStack(spacing: 6) {
-                                Image(systemName: "magnifyingglass")
+                                Image(systemName: "viewfinder")
                                 Text("Scaneaza")
                                     .font(.system(size: 13, weight: .bold))
                             }
@@ -674,6 +722,14 @@ struct ScanView: View {
             }
             .cornerRadius(14)
             .padding(.horizontal, 16)
+            .onAppear {
+                arCameraActive = true
+                cameraManager.startSession()
+            }
+            .onDisappear {
+                arCameraActive = false
+                cameraManager.stopSession()
+            }
 
             // AR step instruction
             if let result = diagnosticResult, !result.arSteps.isEmpty, arStepIndex < result.arSteps.count {

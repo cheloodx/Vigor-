@@ -81,6 +81,8 @@
 		DA30415263748596F607182C /* AppStoreScreenshotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A30415263748596F6071829; };
 		EB30415263748596F607182D /* PrivacyTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B30415263748596F6071829; };
 		FC30415263748596F607182E /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C30415263748596F6071829; };
+		AA11223344556677889900AB /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11223344556677889900AB; };
+		CC11223344556677889900AB /* CameraPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD11223344556677889900AB; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -160,6 +162,8 @@
 		4A30415263748596F6071829 /* AppStoreScreenshotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotsView.swift; sourceTree = "<group>"; };
 		5B30415263748596F6071829 /* PrivacyTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyTermsView.swift; sourceTree = "<group>"; };
 		6C30415263748596F6071829 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
+		BB11223344556677889900AB /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		DD11223344556677889900AB /* CameraPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreviewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,9 +255,10 @@
 			CC33445566778899A011F5A1 /* CarCV */,
 			DD4455667788990AB1220062 /* Legal */,
 			EE556677889900BC12330073 /* Trust */,
-			FF667788990011CD23440084 /* Share */,
-			);
-			path = Views;
+				FF667788990011CD23440084 /* Share */,
+			EE11223344556677889900CC /* Camera */,
+				);
+				path = Views;
 			sourceTree = "<group>";
 		};
 		7BE6A6CBEC9176276DDA1B41 /* Services */ = {
@@ -270,6 +275,7 @@
 				E4F5060718293041B2C3D4E5 /* AuthenticationManager.swift */,
 				282930415263748596F607182 /* NotificationManager.swift */,
 				6C30415263748596F6071829 /* AnalyticsManager.swift */,
+			BB11223344556677889900AB /* LocationManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -591,6 +597,14 @@
 			path = Share;
 			sourceTree = "<group>";
 		};
+		EE11223344556677889900CC /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				DD11223344556677889900AB /* CameraPreviewView.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
 		9A7BB86C336844EF1D466967 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -742,6 +756,8 @@
 				DA30415263748596F607182C /* AppStoreScreenshotsView.swift in Sources */,
 				EB30415263748596F607182D /* PrivacyTermsView.swift in Sources */,
 				FC30415263748596F607182E /* AnalyticsManager.swift in Sources */,
+				AA11223344556677889900AB /* LocationManager.swift in Sources */,
+				CC11223344556677889900AB /* CameraPreviewView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

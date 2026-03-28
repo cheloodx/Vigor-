@@ -1,11 +1,15 @@
 import SwiftUI
 
+// MARK: - Health Score View — LIVE real-time with OBD2 data
 struct HealthScoreView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
+    @StateObject private var obdManager = OBD2BluetoothManager()
     @State private var healthScore: HealthScore = .sample
     @State private var animateRing = false
     @State private var selectedCategory: HealthCategory?
     @State private var showShareSheet = false
+    @State private var isLiveUpdating = false
+    private let liveTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     
     var body: some View {
         NavigationView {
@@ -44,13 +48,44 @@ struct HealthScoreView: View {
                     }
                 }
             }
-            .onAppear { calculateHealthScore() }
+            .onAppear {
+                calculateHealthScore()
+            }
+            .onReceive(liveTimer) { _ in
+                if obdManager.isConnected {
+                    isLiveUpdating = true
+                    recalculateFromOBD()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { isLiveUpdating = false }
+                }
+            }
         }
     }
     
     // MARK: - Score Ring Card
     private var scoreRingCard: some View {
         VStack(spacing: 16) {
+            // Live status
+            HStack(spacing: 6) {
+                Circle().fill(obdManager.isConnected ? Theme.gaugeGreen : Theme.gaugeYellow)
+                    .frame(width: 8, height: 8)
+                Text(obdManager.isConnected ? "LIVE \u2014 Date OBD2 reale" : "Estimare bazata pe kilometraj")
+                    .font(.system(size: 10, weight: .bold)).foregroundColor(Theme.textPrimary)
+                Spacer()
+                if isLiveUpdating {
+                    ProgressView().scaleEffect(0.6)
+                }
+                Button(action: {
+                    if obdManager.isConnected { obdManager.disconnect() }
+                    else { obdManager.startScanning() }
+                }) {
+                    Text(obdManager.isConnected ? "Deconecteaza" : "Conecteaza OBD2")
+                        .font(.system(size: 9, weight: .bold))
+                        .padding(.horizontal, 8).padding(.vertical, 4)
+                        .background(Theme.primary).foregroundColor(.white).cornerRadius(5)
+                }
+            }
+            .padding(8).background(Theme.surfaceBackground).cornerRadius(6)
+            
             Text(vehicleManager.currentVehicle.displayName)
                 .font(.system(size: 14, weight: .semibold))
                 .foregroundColor(Theme.textSecondary)
@@ -279,6 +314,11 @@ struct HealthScoreView: View {
             }
         }
         
+        // If OBD2 connected, use real data
+        if obdManager.isConnected {
+            adjustCategoriesFromOBD(&categories)
+        }
+        
         let avgScore = categories.reduce(0) { $0 + $1.score } / max(1, categories.count)
         
         healthScore = HealthScore(
@@ -290,6 +330,49 @@ struct HealthScoreView: View {
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             animateRing = true
+        }
+    }
+    
+    private func recalculateFromOBD() {
+        var categories = healthScore.categories
+        adjustCategoriesFromOBD(&categories)
+        let avgScore = categories.reduce(0) { $0 + $1.score } / max(1, categories.count)
+        withAnimation(.easeInOut(duration: 0.5)) {
+            healthScore = HealthScore(
+                overallScore: avgScore,
+                categories: categories,
+                lastUpdated: Date(),
+                vehicleId: vehicleManager.currentVehicle.id
+            )
+        }
+    }
+    
+    private func adjustCategoriesFromOBD(_ categories: inout [HealthCategory]) {
+        let data = obdManager.liveData
+        // Engine temp check
+        if data.engineTemp > 105 {
+            if let idx = categories.firstIndex(where: { $0.name.contains("Motor") }) {
+                categories[idx].score = max(20, categories[idx].score - 25)
+                categories[idx].details = "Temperatura ridicata: \(Int(data.engineTemp))\u00b0C"
+            }
+        } else if data.engineTemp > 60 && data.engineTemp < 100 {
+            if let idx = categories.firstIndex(where: { $0.name.contains("Motor") }) {
+                categories[idx].score = min(100, categories[idx].score + 5)
+            }
+        }
+        // Battery check
+        if data.batteryVoltage < 11.8 {
+            if let idx = categories.firstIndex(where: { $0.name.contains("Electric") }) {
+                categories[idx].score = max(30, categories[idx].score - 20)
+                categories[idx].details = "Tensiune baterie scazuta: \(String(format: "%.1f", data.batteryVoltage))V"
+            }
+        }
+        // RPM idle check
+        if data.rpm > 0 && data.rpm < 600 {
+            if let idx = categories.firstIndex(where: { $0.name.contains("Motor") }) {
+                categories[idx].score = max(40, categories[idx].score - 10)
+                categories[idx].recommendations.append("Turatie ralanti scazuta - verificati injectoarele")
+            }
         }
     }
     

@@ -7,7 +7,8 @@ struct EnhancedOBDView: View {
     @StateObject private var obdManager = OBD2BluetoothManager()
     @State private var selectedTab: OBDTab = .live
     @State private var useDemoMode = true
-    @State private var demoTimer: Timer?
+    @State private var demoTimerActive = false
+    private let demoTimerPublisher = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
     @State private var fuelConsumption: Double = 0.0
     @State private var avgFuelConsumption: Double = 0.0
     @State private var tripDistance: Double = 0.0
@@ -59,6 +60,10 @@ struct EnhancedOBDView: View {
             }
             .onAppear { startDemoMode() }
             .onDisappear { stopDemoMode() }
+            .onReceive(demoTimerPublisher) { _ in
+                guard demoTimerActive, useDemoMode else { return }
+                updateDemoData()
+            }
         }
     }
     
@@ -430,58 +435,54 @@ struct EnhancedOBDView: View {
     
     // MARK: - Demo Mode
     private func startDemoMode() {
-        stopDemoMode()  // Invalidate any existing timer first
         sessionStart = Date()
-        demoTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [self] _ in
-            guard useDemoMode else { return }
-            
-            let time = Date().timeIntervalSince(sessionStart)
-            let rpm = 900 + 400 * sin(time * 0.3) + Double.random(in: -50...50)
-            let speed = max(0, 60 + 30 * sin(time * 0.15) + Double.random(in: -5...5))
-            let engineTemp = min(95, 70 + time * 0.05 + Double.random(in: -1...1))
-            let airTemp = 22 + Double.random(in: -1...1)
-            let voltage = 13.8 + 0.3 * sin(time * 0.1) + Double.random(in: -0.1...0.1)
-            let oilTemp = min(90, 60 + time * 0.04 + Double.random(in: -1...1))
-            
-            DispatchQueue.main.async {
-                obdManager.liveData.rpm = rpm
-                obdManager.liveData.speed = speed
-                obdManager.liveData.engineTemp = engineTemp
-                obdManager.liveData.airTemp = airTemp
-                obdManager.liveData.batteryVoltage = voltage
-                obdManager.liveData.oilTemp = oilTemp
-                
-                // Calculate fuel consumption (simplified: based on RPM and speed)
-                let instantFuel = speed > 5 ? (rpm * 0.0008 + speed * 0.02) / max(1, speed) * 100 : 0
-                fuelConsumption = max(0, min(20, instantFuel + Double.random(in: -0.5...0.5)))
-                
-                // Trip accumulation
-                tripDistance += speed / 3600.0 // km per second
-                tripFuelUsed += fuelConsumption * speed / (3600.0 * 100.0)
-                avgFuelConsumption = tripDistance > 0.1 ? tripFuelUsed / tripDistance * 100 : fuelConsumption
-                
-                // Record history every 5 seconds
-                if Int(time) % 5 == 0 {
-                    let point = OBDDataPoint(
-                        timestamp: Date(),
-                        rpm: rpm,
-                        speed: speed,
-                        engineTemp: engineTemp,
-                        fuelConsumption: fuelConsumption
-                    )
-                    dataHistory.append(point)
-                    // Keep only last 100 points
-                    if dataHistory.count > 100 {
-                        dataHistory.removeFirst()
-                    }
-                }
-            }
-        }
+        demoTimerActive = true
     }
     
     private func stopDemoMode() {
-        demoTimer?.invalidate()
-        demoTimer = nil
+        demoTimerActive = false
+    }
+    
+    private func updateDemoData() {
+        let time = Date().timeIntervalSince(sessionStart)
+        let rpm = 900 + 400 * sin(time * 0.3) + Double.random(in: -50...50)
+        let speed = max(0, 60 + 30 * sin(time * 0.15) + Double.random(in: -5...5))
+        let engineTemp = min(95, 70 + time * 0.05 + Double.random(in: -1...1))
+        let airTemp = 22 + Double.random(in: -1...1)
+        let voltage = 13.8 + 0.3 * sin(time * 0.1) + Double.random(in: -0.1...0.1)
+        let oilTemp = min(90, 60 + time * 0.04 + Double.random(in: -1...1))
+        
+        obdManager.liveData.rpm = rpm
+        obdManager.liveData.speed = speed
+        obdManager.liveData.engineTemp = engineTemp
+        obdManager.liveData.airTemp = airTemp
+        obdManager.liveData.batteryVoltage = voltage
+        obdManager.liveData.oilTemp = oilTemp
+        
+        // Calculate fuel consumption (simplified: based on RPM and speed)
+        let instantFuel = speed > 5 ? (rpm * 0.0008 + speed * 0.02) / max(1, speed) * 100 : 0
+        fuelConsumption = max(0, min(20, instantFuel + Double.random(in: -0.5...0.5)))
+        
+        // Trip accumulation
+        tripDistance += speed / 3600.0 // km per second
+        tripFuelUsed += fuelConsumption * speed / (3600.0 * 100.0)
+        avgFuelConsumption = tripDistance > 0.1 ? tripFuelUsed / tripDistance * 100 : fuelConsumption
+        
+        // Record history every 5 seconds
+        if Int(time) % 5 == 0 {
+            let point = OBDDataPoint(
+                timestamp: Date(),
+                rpm: rpm,
+                speed: speed,
+                engineTemp: engineTemp,
+                fuelConsumption: fuelConsumption
+            )
+            dataHistory.append(point)
+            // Keep only last 100 points
+            if dataHistory.count > 100 {
+                dataHistory.removeFirst()
+            }
+        }
     }
     
     private func resetTrip() {

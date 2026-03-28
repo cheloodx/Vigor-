@@ -2,6 +2,7 @@ import SwiftUI
 import MapKit
 
 struct ServiceMapView: View {
+    @StateObject private var locationManager = LocationManager()
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 46.7712, longitude: 23.6236),
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
@@ -10,6 +11,8 @@ struct ServiceMapView: View {
     @State private var selectedLocation: ServiceLocation?
     @State private var selectedFilter: ServiceType?
     @State private var showList = false
+    @State private var followUser = true
+    @State private var showLocationInfo = false
     
     var filteredLocations: [ServiceLocation] {
         if let filter = selectedFilter {
@@ -21,8 +24,11 @@ struct ServiceMapView: View {
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottom) {
-                // Map
-                Map(coordinateRegion: $region, annotationItems: filteredLocations) { location in
+                // Map with real-time user location
+                Map(coordinateRegion: $region,
+                    showsUserLocation: true,
+                    userTrackingMode: .constant(followUser ? .follow : .none),
+                    annotationItems: filteredLocations) { location in
                     MapAnnotation(coordinate: location.coordinate) {
                         Button(action: { withAnimation { selectedLocation = location } }) {
                             VStack(spacing: 2) {
@@ -48,6 +54,66 @@ struct ServiceMapView: View {
                     }
                 }
                 .ignoresSafeArea(edges: .top)
+                .onAppear {
+                    locationManager.startTracking()
+                    updateDistances()
+                }
+                .onDisappear {
+                    locationManager.stopTracking()
+                }
+                .onChange(of: locationManager.userLocation?.latitude) { _ in
+                    updateDistances()
+                }
+                
+                // Location tracking button (top-right overlay)
+                VStack {
+                    HStack {
+                        Spacer()
+                        VStack(spacing: 8) {
+                            // Center on user button
+                            Button(action: {
+                                followUser = true
+                                if let loc = locationManager.userLocation {
+                                    withAnimation {
+                                        region.center = loc
+                                        region.span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                                    }
+                                }
+                            }) {
+                                Image(systemName: followUser ? "location.fill" : "location")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(followUser ? Theme.primary : Theme.textSecondary)
+                                    .frame(width: 40, height: 40)
+                                    .background(Theme.cardBackground.opacity(0.95))
+                                    .cornerRadius(20)
+                                    .shadow(color: .black.opacity(0.3), radius: 4)
+                            }
+                            
+                            // Location info button
+                            Button(action: { withAnimation { showLocationInfo.toggle() } }) {
+                                Image(systemName: "info.circle")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(Theme.textSecondary)
+                                    .frame(width: 40, height: 40)
+                                    .background(Theme.cardBackground.opacity(0.95))
+                                    .cornerRadius(20)
+                                    .shadow(color: .black.opacity(0.3), radius: 4)
+                            }
+                        }
+                        .padding(.trailing, 12)
+                        .padding(.top, 60)
+                    }
+                    Spacer()
+                }
+                
+                // Location info overlay
+                if showLocationInfo {
+                    VStack {
+                        locationInfoBar
+                            .padding(.top, 50)
+                        Spacer()
+                    }
+                }
                 
                 // Bottom overlay
                 VStack(spacing: 0) {
@@ -305,6 +371,69 @@ struct ServiceMapView: View {
             .background(Theme.background)
             .navigationTitle("Service-uri")
             .navigationBarTitleDisplayMode(.inline)
+        }
+    }
+    
+    // MARK: - Location Info Bar
+    private var locationInfoBar: some View {
+        HStack(spacing: 12) {
+            if let loc = locationManager.userLocation {
+                HStack(spacing: 4) {
+                    Circle()
+                        .fill(Theme.gaugeGreen)
+                        .frame(width: 8, height: 8)
+                    Text("GPS Activ")
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(Theme.gaugeGreen)
+                }
+                
+                Text(String(format: "%.4f, %.4f", loc.latitude, loc.longitude))
+                    .font(.system(size: 10, design: .monospaced))
+                    .foregroundColor(Theme.textSecondary)
+                
+                if locationManager.speed > 0.5 {
+                    Text(String(format: "%.0f km/h", locationManager.speed * 3.6))
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundColor(Theme.primary)
+                }
+                
+                Text(String(format: "±%.0fm", locationManager.accuracy))
+                    .font(.system(size: 9))
+                    .foregroundColor(Theme.textMuted)
+            } else if let error = locationManager.locationError {
+                HStack(spacing: 4) {
+                    Circle()
+                        .fill(Theme.gaugeRed)
+                        .frame(width: 8, height: 8)
+                    Text(error)
+                        .font(.system(size: 10))
+                        .foregroundColor(Theme.gaugeRed)
+                        .lineLimit(1)
+                }
+            } else {
+                HStack(spacing: 4) {
+                    ProgressView()
+                        .scaleEffect(0.6)
+                    Text("Se cauta locatia...")
+                        .font(.system(size: 10))
+                        .foregroundColor(Theme.textMuted)
+                }
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(Theme.cardBackground.opacity(0.95))
+        .cornerRadius(20)
+        .shadow(color: .black.opacity(0.3), radius: 4)
+        .padding(.horizontal, 12)
+    }
+    
+    // MARK: - Update Distances
+    private func updateDistances() {
+        guard let userLoc = locationManager.userLocation else { return }
+        for i in locations.indices {
+            let dist = locationManager.distanceTo(locations[i].coordinate)
+            locations[i].distance = dist
         }
     }
     

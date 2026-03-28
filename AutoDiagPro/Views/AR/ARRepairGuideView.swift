@@ -1,9 +1,11 @@
 import SwiftUI
+import AVFoundation
 
 // MARK: - AR Repair Guide View
-// Step-by-step AR-guided repair instructions
+// Step-by-step AR-guided repair instructions with REAL camera feed — LIVE
 struct ARRepairGuideView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
+    @StateObject private var cameraManager = CameraSessionManager()
     @State private var selectedRepair: RepairGuide?
     @State private var currentStep = 0
     @State private var isARActive = false
@@ -49,43 +51,74 @@ struct ARRepairGuideView: View {
     
     private func arPreview(_ repair: RepairGuide) -> some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 14)
-                .fill(LinearGradient(colors: [Color(red: 0.04, green: 0.07, blue: 0.11), Color(red: 0.07, green: 0.10, blue: 0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
-                .frame(height: 200)
+            if isARActive && cameraManager.permissionGranted {
+                // REAL camera feed with AR overlays
+                CameraPreviewView(session: cameraManager.session)
+                    .frame(height: 250)
+                    .cornerRadius(14)
+            } else {
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(LinearGradient(colors: [Color(red: 0.04, green: 0.07, blue: 0.11), Color(red: 0.07, green: 0.10, blue: 0.16)], startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .frame(height: 250)
+            }
             
-            VStack(spacing: 12) {
-                // AR overlay simulation
+            VStack {
+                // Live badge
+                if isARActive {
+                    HStack {
+                        HStack(spacing: 4) {
+                            Circle().fill(Color.red).frame(width: 8, height: 8)
+                            Text("AR LIVE").font(.system(size: 10, weight: .bold)).foregroundColor(.white)
+                        }
+                        .padding(.horizontal, 8).padding(.vertical, 4)
+                        .background(Color.black.opacity(0.7)).cornerRadius(6)
+                        Spacer()
+                        Button(action: { cameraManager.toggleTorch() }) {
+                            Image(systemName: "flashlight.on.fill").font(.system(size: 12))
+                                .foregroundColor(.white).padding(6)
+                                .background(Color.black.opacity(0.5)).cornerRadius(6)
+                        }
+                    }
+                    .padding(10)
+                }
+                
+                Spacer()
+                
+                // AR overlay on camera
                 ZStack {
-                    // Car component outline
-                    Image(systemName: repair.steps[min(currentStep, repair.steps.count - 1)].icon)
-                        .font(.system(size: 50))
-                        .foregroundColor(Theme.primary.opacity(0.3))
+                    if !isARActive {
+                        Image(systemName: repair.steps[min(currentStep, repair.steps.count - 1)].icon)
+                            .font(.system(size: 50))
+                            .foregroundColor(Theme.primary.opacity(0.3))
+                    }
                     
-                    // AR markers
                     if isARActive {
-                        // Pulsing indicator
+                        // AR detection markers overlaid on camera
                         Circle()
                             .stroke(Theme.gaugeGreen, lineWidth: 2)
-                            .frame(width: 30, height: 30)
+                            .frame(width: 40, height: 40)
                             .offset(x: 20, y: -15)
                         
-                        // Step indicator
-                        Text("Pas \(currentStep + 1)/\(repair.steps.count)")
+                        // Component label
+                        Text(repair.steps[min(currentStep, repair.steps.count - 1)].title)
                             .font(.system(size: 10, weight: .bold))
                             .padding(.horizontal, 8).padding(.vertical, 4)
-                            .background(Theme.primary)
+                            .background(Theme.gaugeGreen.opacity(0.9))
                             .foregroundColor(.white)
                             .cornerRadius(4)
                             .offset(x: 40, y: 20)
                     }
                 }
                 
+                Spacer()
+                
+                // Controls
                 HStack(spacing: 8) {
-                    Button(action: { withAnimation { isARActive.toggle() } }) {
+                    Button(action: { toggleAR() }) {
                         HStack(spacing: 4) {
                             Image(systemName: isARActive ? "camera.fill" : "camera")
                                 .font(.system(size: 12))
-                            Text(isARActive ? "AR Activ" : "Porneste AR")
+                            Text(isARActive ? "AR LIVE" : "Porneste AR")
                                 .font(.system(size: 11, weight: .bold))
                         }
                         .padding(.horizontal, 14).padding(.vertical, 8)
@@ -93,14 +126,37 @@ struct ARRepairGuideView: View {
                         .foregroundColor(.white).cornerRadius(8)
                     }
                     
+                    Text("Pas \(currentStep + 1)/\(repair.steps.count)")
+                        .font(.system(size: 11, weight: .bold))
+                        .padding(.horizontal, 10).padding(.vertical, 6)
+                        .background(Color.black.opacity(0.6))
+                        .foregroundColor(.white).cornerRadius(6)
+                    
+                    Spacer()
+                    
                     Text(repair.title)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundColor(Theme.textPrimary)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.white)
+                        .padding(.horizontal, 8).padding(.vertical, 4)
+                        .background(Color.black.opacity(0.5)).cornerRadius(6)
                 }
+                .padding(10)
             }
         }
+        .frame(height: 250)
         .cornerRadius(14)
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Theme.primary.opacity(0.2), lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(isARActive ? Theme.gaugeGreen.opacity(0.5) : Theme.primary.opacity(0.2), lineWidth: isARActive ? 2 : 1))
+    }
+    
+    private func toggleAR() {
+        withAnimation {
+            isARActive.toggle()
+            if isARActive {
+                cameraManager.startSession()
+            } else {
+                cameraManager.stopSession()
+            }
+        }
     }
     
     private func stepsList(_ repair: RepairGuide) -> some View {

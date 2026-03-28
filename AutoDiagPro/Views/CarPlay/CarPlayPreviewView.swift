@@ -1,11 +1,17 @@
 import SwiftUI
+import MapKit
 
 // MARK: - CarPlay Preview View
-// Shows what CarPlay integration would look like + setup info
+// Real-time OBD2 data streaming on CarPlay display — LIVE
 struct CarPlayPreviewView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
+    @StateObject private var obdManager = OBD2BluetoothManager()
+    @ObservedObject private var locationManager = LocationManager.shared
     @State private var selectedScreen = 0
     @State private var animateGauges = false
+    @State private var useDemoMode = true
+    @State private var demoTimerActive = false
+    private let demoTimerPublisher = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
     
     private let screens = ["Dashboard", "Gauges", "Alarme", "Navigatie"]
     
@@ -42,7 +48,20 @@ struct CarPlayPreviewView: View {
                 }
             }
         }
-        .onAppear { withAnimation(.easeOut(duration: 1.2)) { animateGauges = true } }
+        .onAppear {
+            withAnimation(.easeOut(duration: 1.2)) { animateGauges = true }
+            locationManager.startTracking()
+            demoTimerActive = true
+        }
+        .onDisappear {
+            locationManager.stopTracking()
+            demoTimerActive = false
+        }
+        .onReceive(demoTimerPublisher) { _ in
+            guard demoTimerActive, useDemoMode else { return }
+            // Update live data from OBD demo
+            withAnimation(.easeInOut(duration: 0.3)) { animateGauges = true }
+        }
     }
     
     // MARK: - CarPlay Screen
@@ -116,12 +135,12 @@ struct CarPlayPreviewView: View {
                 // Quick stats grid
                 VStack(spacing: 6) {
                     HStack(spacing: 10) {
-                        carPlayStat(label: "Motor", value: "88°C", color: Theme.gaugeGreen)
-                        carPlayStat(label: "Baterie", value: "12.4V", color: Theme.gaugeYellow)
+                                carPlayStat(label: "Motor", value: String(format: "%.0f°C", obdManager.liveData.engineTemp), color: tempColor(obdManager.liveData.engineTemp))
+                                carPlayStat(label: "Baterie", value: String(format: "%.1fV", obdManager.liveData.batteryVoltage), color: Theme.gaugeYellow)
                     }
                     HStack(spacing: 10) {
-                        carPlayStat(label: "RPM", value: "2,450", color: Theme.primary)
-                        carPlayStat(label: "Consum", value: "7.2L", color: Color(red: 0.0, green: 0.8, blue: 0.6))
+                                carPlayStat(label: "RPM", value: String(format: "%.0f", obdManager.liveData.rpm), color: Theme.primary)
+                                carPlayStat(label: "Viteza", value: String(format: "%.0f", obdManager.liveData.speed), color: Color(red: 0.0, green: 0.8, blue: 0.6))
                     }
                 }
             }
@@ -139,13 +158,13 @@ struct CarPlayPreviewView: View {
         }
     }
     
-    // MARK: - Gauges Screen
+    // MARK: - Gauges Screen (LIVE from OBD2)
     private var gaugesScreen: some View {
         HStack(spacing: 14) {
-            miniGauge(title: "RPM", value: animateGauges ? 0.45 : 0, text: "2,450", color: Theme.primary)
-            miniGauge(title: "km/h", value: animateGauges ? 0.6 : 0, text: "72", color: Theme.gaugeGreen)
-            miniGauge(title: "°C", value: animateGauges ? 0.88 : 0, text: "88", color: Theme.gaugeYellow)
-            miniGauge(title: "V", value: animateGauges ? 0.85 : 0, text: "12.4", color: Color(red: 0.0, green: 0.8, blue: 0.6))
+            miniGauge(title: "RPM", value: animateGauges ? min(1.0, obdManager.liveData.rpm / 6000) : 0, text: String(format: "%.0f", obdManager.liveData.rpm), color: Theme.primary)
+            miniGauge(title: "km/h", value: animateGauges ? min(1.0, obdManager.liveData.speed / 250) : 0, text: String(format: "%.0f", obdManager.liveData.speed), color: Theme.gaugeGreen)
+            miniGauge(title: "°C", value: animateGauges ? min(1.0, obdManager.liveData.engineTemp / 120) : 0, text: String(format: "%.0f", obdManager.liveData.engineTemp), color: tempColor(obdManager.liveData.engineTemp))
+            miniGauge(title: "V", value: animateGauges ? min(1.0, obdManager.liveData.batteryVoltage / 16) : 0, text: String(format: "%.1f", obdManager.liveData.batteryVoltage), color: Color(red: 0.0, green: 0.8, blue: 0.6))
         }
     }
     
@@ -199,10 +218,10 @@ struct CarPlayPreviewView: View {
         }
     }
     
-    // MARK: - Navigation Screen
+    // MARK: - Navigation Screen (LIVE location)
     private var navigationScreen: some View {
         VStack(spacing: 8) {
-            Text("Navigatie catre Service")
+            Text("Navigatie LIVE")
                 .font(.system(size: 12, weight: .bold))
                 .foregroundColor(Theme.primary)
             
@@ -212,18 +231,39 @@ struct CarPlayPreviewView: View {
                     .frame(height: 120)
                 
                 VStack(spacing: 4) {
-                    Image(systemName: "map.fill")
-                        .font(.system(size: 30))
-                        .foregroundColor(Theme.primary.opacity(0.5))
-                    Text("Service Auto Rapid")
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(.white)
-                    Text("2.3 km - 5 min")
-                        .font(.system(size: 9))
-                        .foregroundColor(.gray)
+                    if let loc = locationManager.userLocation {
+                        HStack(spacing: 4) {
+                            Circle().fill(Theme.gaugeGreen).frame(width: 6, height: 6)
+                            Text("GPS LIVE").font(.system(size: 8, weight: .bold)).foregroundColor(Theme.gaugeGreen)
+                        }
+                        Text(String(format: "%.4f, %.4f", loc.coordinate.latitude, loc.coordinate.longitude))
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundColor(.white)
+                        if let speed = locationManager.speed {
+                            Text(String(format: "%.0f km/h", max(0, speed * 3.6)))
+                                .font(.system(size: 16, weight: .bold, design: .rounded))
+                                .foregroundColor(Theme.gaugeGreen)
+                        }
+                        Text("Service Auto Rapid — 2.3 km")
+                            .font(.system(size: 9))
+                            .foregroundColor(.gray)
+                    } else {
+                        Image(systemName: "location.fill")
+                            .font(.system(size: 30))
+                            .foregroundColor(Theme.primary.opacity(0.5))
+                        Text("Se obtine locatia GPS...")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundColor(.white)
+                    }
                 }
             }
         }
+    }
+    
+    private func tempColor(_ temp: Double) -> Color {
+        if temp > 105 { return Theme.gaugeRed }
+        if temp > 95 { return Theme.gaugeYellow }
+        return Theme.gaugeGreen
     }
     
     private func carPlayStat(label: String, value: String, color: Color) -> some View {
@@ -297,6 +337,23 @@ struct CarPlayPreviewView: View {
     // MARK: - Setup Info
     private var setupInfo: some View {
         VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Circle().fill(useDemoMode ? Theme.gaugeYellow : Theme.gaugeGreen).frame(width: 8, height: 8)
+                Text(useDemoMode ? "MOD DEMO — Date simulate" : "LIVE — Date OBD2 reale")
+                    .font(.system(size: 11, weight: .bold)).foregroundColor(Theme.textPrimary)
+                Spacer()
+                Button(action: {
+                    useDemoMode.toggle()
+                    if !useDemoMode { obdManager.startScanning() }
+                    else { obdManager.disconnect() }
+                }) {
+                    Text(useDemoMode ? "Conecteaza OBD2" : "Mod Demo")
+                        .font(.system(size: 10, weight: .bold))
+                        .padding(.horizontal, 10).padding(.vertical, 5)
+                        .background(Theme.primary).foregroundColor(.white).cornerRadius(6)
+                }
+            }
+            
             Text("COMPATIBILITATE")
                 .font(.system(size: 10, weight: .bold))
                 .foregroundColor(Theme.textMuted)

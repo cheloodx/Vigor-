@@ -168,7 +168,7 @@ class NotificationManager: ObservableObject {
 
 // MARK: - Notification Settings View
 struct NotificationSettingsView: View {
-    @StateObject private var notifManager = NotificationManager.shared
+    @ObservedObject private var notifManager = NotificationManager.shared
     @EnvironmentObject var vehicleManager: VehicleManager
     
     var body: some View {

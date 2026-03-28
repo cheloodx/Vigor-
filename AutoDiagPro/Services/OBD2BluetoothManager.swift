@@ -265,10 +265,11 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
 
         // Check for standard OBD response format: 41XX...
         guard hex.count >= 4, hex.hasPrefix("41") else {
-            // Check for voltage response (ATRV)
-            if response.contains("V") || response.contains("v") {
-                let digits = response.filter { $0.isNumber || $0 == "." }
-                if let voltage = Double(digits) {
+            // Check for voltage response (ATRV) — response ends with 'V', e.g. "12.6V"
+            if let vIndex = response.lastIndex(of: "V"),
+               vIndex == response.index(before: response.endIndex) || response[response.index(after: vIndex)...].trimmingCharacters(in: .whitespaces).isEmpty {
+                let digits = response.prefix(upTo: vIndex).filter { $0.isNumber || $0 == "." }
+                if let voltage = Double(digits), voltage > 5 && voltage < 20 {
                     DispatchQueue.main.async { [weak self] in
                         self?.liveData.batteryVoltage = voltage
                     }

@@ -164,7 +164,7 @@ class AnalyticsManager: ObservableObject {
 
 // MARK: - Analytics Dashboard View
 struct AnalyticsDashboardView: View {
-    @StateObject private var analytics = AnalyticsManager.shared
+    @ObservedObject private var analytics = AnalyticsManager.shared
     
     var body: some View {
         ScrollView {

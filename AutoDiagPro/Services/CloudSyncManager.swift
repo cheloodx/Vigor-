@@ -26,7 +26,7 @@ class CloudSyncManager: ObservableObject {
     private let kvStore = NSUbiquitousKeyValueStore.default
     
     init() {
-        self.syncEnabled = UserDefaults.standard.bool(forKey: "iCloudSyncEnabled")
+        self.syncEnabled = UserDefaults.standard.object(forKey: "iCloudSyncEnabled") as? Bool ?? true
         setupNotifications()
         if syncEnabled { pullFromCloud() }
     }
@@ -138,7 +138,7 @@ class CloudSyncManager: ObservableObject {
 
 // MARK: - iCloud Sync Settings View
 struct CloudSyncSettingsView: View {
-    @StateObject private var syncManager = CloudSyncManager.shared
+    @ObservedObject private var syncManager = CloudSyncManager.shared
     
     var body: some View {
         ScrollView {

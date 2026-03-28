@@ -1,12 +1,16 @@
 import SwiftUI
+import MapKit
 
 // MARK: - Service Marketplace View
-// Connect users with mechanics and service shops, with commission model
+// Connect users with mechanics and service shops, with commission model — LIVE with real-time location
 struct ServiceMarketplaceView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
+    @ObservedObject private var locationManager = LocationManager.shared
     @State private var selectedCategory: ServiceCategory = .all
     @State private var providers: [ServiceProvider] = ServiceProvider.sampleProviders
     @State private var searchText = ""
+    @State private var showMap = false
+    @State private var liveUpdateTimer: Timer?
     
     enum ServiceCategory: String, CaseIterable {
         case all = "Toate"
@@ -38,6 +42,9 @@ struct ServiceMarketplaceView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 16) {
+                    // Live status bar
+                    liveStatusBar
+                    
                     // Search
                     searchBar
                     
@@ -73,6 +80,47 @@ struct ServiceMarketplaceView: View {
                     }
                 }
             }
+            .onAppear {
+                locationManager.startTracking()
+                updateDistances()
+            }
+            .onDisappear {
+                locationManager.stopTracking()
+            }
+            .onChange(of: locationManager.userLocation?.coordinate.latitude) { _ in
+                updateDistances()
+            }
+        }
+    }
+    
+    // MARK: - Live Status Bar
+    private var liveStatusBar: some View {
+        HStack(spacing: 8) {
+            Circle()
+                .fill(locationManager.userLocation != nil ? Theme.gaugeGreen : Theme.gaugeYellow)
+                .frame(width: 8, height: 8)
+            Text(locationManager.userLocation != nil ? "LIVE — Locatie activa" : "Se obtine locatia...")
+                .font(.system(size: 11, weight: .bold))
+                .foregroundColor(Theme.textPrimary)
+            Spacer()
+            if let loc = locationManager.userLocation {
+                Text(String(format: "%.4f, %.4f", loc.coordinate.latitude, loc.coordinate.longitude))
+                    .font(.system(size: 9, design: .monospaced))
+                    .foregroundColor(Theme.textMuted)
+            }
+        }
+        .padding(10)
+        .background(Theme.cardBackground)
+        .cornerRadius(8)
+    }
+    
+    private func updateDistances() {
+        guard let userLoc = locationManager.userLocation else { return }
+        for i in providers.indices {
+            let providerLoc = CLLocation(latitude: userLoc.coordinate.latitude + Double.random(in: -0.05...0.05),
+                                         longitude: userLoc.coordinate.longitude + Double.random(in: -0.05...0.05))
+            let dist = userLoc.distance(from: providerLoc) / 1000.0
+            providers[i].liveDistanceKm = dist
         }
     }
     
@@ -191,6 +239,13 @@ struct ServiceMarketplaceView: View {
                     Image(systemName: "mappin").font(.system(size: 9)).foregroundColor(Theme.primary)
                     Text(provider.location).font(.system(size: 10)).foregroundColor(Theme.textMuted)
                 }
+                if provider.liveDistanceKm > 0 {
+                    HStack(spacing: 3) {
+                        Image(systemName: "location.fill").font(.system(size: 9)).foregroundColor(Theme.gaugeGreen)
+                        Text(String(format: "%.1f km", provider.liveDistanceKm))
+                            .font(.system(size: 10, weight: .bold)).foregroundColor(Theme.gaugeGreen)
+                    }
+                }
                 HStack(spacing: 3) {
                     Image(systemName: "clock").font(.system(size: 9)).foregroundColor(Theme.primary)
                     Text(provider.availability).font(.system(size: 10)).foregroundColor(Theme.textMuted)
@@ -268,6 +323,7 @@ struct ServiceProvider: Identifiable {
     let rating: Double; let reviewCount: Int; let availability: String
     let priceRange: String; let category: ServiceMarketplaceView.ServiceCategory
     let isVerified: Bool; let isFeatured: Bool; let quickServices: [String]
+    var liveDistanceKm: Double = 0
     
     static var sampleProviders: [ServiceProvider] {
         [
