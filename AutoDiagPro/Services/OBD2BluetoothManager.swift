@@ -60,7 +60,6 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     private let sppCharUUID = CBUUID(string: "0000FFE1-0000-1000-8000-00805F9B34FB")
 
     private var responseBuffer = ""
-    private var pollingTimer: Timer?
     private var initStep = 0
     private var currentPIDIndex = 0
     private let pidCycle: [String] = [
@@ -112,9 +111,6 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     }
 
     func disconnect() {
-        pollingTimer?.invalidate()
-        pollingTimer = nil
-
         if let peripheral = connectedPeripheral {
             centralManager?.cancelPeripheralConnection(peripheral)
         }
@@ -155,25 +151,27 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
         sendCommand(initCommands[initStep])
     }
 
-    // MARK: - Data Polling
+    // MARK: - Data Polling (response-driven)
 
     private func startPolling() {
         currentPIDIndex = 0
-        pollingTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: true) { [weak self] _ in
-            self?.pollNextPID()
-        }
+        pollNextPID()
     }
 
     private func pollNextPID() {
-        guard connectionState == .connected else {
-            pollingTimer?.invalidate()
-            pollingTimer = nil
-            return
-        }
+        guard connectionState == .connected else { return }
 
         let command = pidCycle[currentPIDIndex]
         sendCommand(command)
         currentPIDIndex = (currentPIDIndex + 1) % pidCycle.count
+    }
+
+    /// Called after a PID response is fully received to chain the next request
+    private func scheduleNextPoll() {
+        guard connectionState == .connected else { return }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+            self?.pollNextPID()
+        }
     }
 
     // MARK: - Send Command
@@ -229,6 +227,9 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
 
         // Parse PID responses
         parsePIDResponse(cleaned)
+
+        // Chain next PID request after response is received
+        scheduleNextPoll()
     }
 
     private func parsePIDResponse(_ response: String) {
@@ -354,8 +355,6 @@ extension OBD2BluetoothManager: CBCentralManagerDelegate {
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         DispatchQueue.main.async { [weak self] in
-            self?.pollingTimer?.invalidate()
-            self?.pollingTimer = nil
             self?.connectionState = .disconnected
             if error != nil {
                 self?.errorMessage = "Conexiunea s-a pierdut. Reconectati adaptorul."
