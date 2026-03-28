@@ -9,6 +9,9 @@ struct EuropeanAIDataView: View {
     @State private var isAnalyzing = false
     @State private var analysisComplete = false
     @State private var insights: [AIInsight] = []
+    @State private var fiabilitate = 0
+    @State private var popularitate = 0
+    @State private var costMediu = 0
     
     enum EUBrand: String, CaseIterable {
         case volkswagen = "Volkswagen"
@@ -201,9 +204,9 @@ struct EuropeanAIDataView: View {
             }
             
             HStack(spacing: 12) {
-                miniStat("Fiabilitate", value: "\(Int.random(in: 70...92))%", color: Theme.gaugeGreen)
-                miniStat("Popularitate", value: "#\(Int.random(in: 1...8))", color: Theme.primary)
-                miniStat("Cost mediu/an", value: "\(Int.random(in: 800...2500))\(country?.currencySymbol ?? "€")", color: Theme.secondary)
+                miniStat("Fiabilitate", value: "\(fiabilitate)%", color: Theme.gaugeGreen)
+                miniStat("Popularitate", value: "#\(popularitate)", color: Theme.primary)
+                miniStat("Cost mediu/an", value: "\(costMediu)\(country?.currencySymbol ?? "€")", color: Theme.secondary)
             }
         }
         .padding(14).background(Theme.cardBackground).cornerRadius(Theme.cornerRadius)
@@ -260,6 +263,9 @@ struct EuropeanAIDataView: View {
             withAnimation(.spring()) {
                 isAnalyzing = false; analysisComplete = true
                 insights = AIInsight.generate(brand: selectedBrand, country: selectedCountry)
+                fiabilitate = Int.random(in: 70...92)
+                popularitate = Int.random(in: 1...8)
+                costMediu = Int.random(in: 800...2500)
             }
         }
     }

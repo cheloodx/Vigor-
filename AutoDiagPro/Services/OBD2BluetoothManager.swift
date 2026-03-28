@@ -41,6 +41,10 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     @Published var protocolName: String = "Necunoscut"
     @Published var adapterVersion: String = "ELM327"
 
+    deinit {
+        disconnect()
+    }
+
     private var centralManager: CBCentralManager?
     private var connectedPeripheral: CBPeripheral?
     private var writeCharacteristic: CBCharacteristic?
