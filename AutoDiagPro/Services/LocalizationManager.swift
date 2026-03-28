@@ -39,7 +39,7 @@ class LocalizationManager: ObservableObject {
     }
     
     // MARK: - All Translations
-    // Core UI strings in 20 European languages
+    // Core UI strings in 44 European languages (one per country)
     var allTranslations: [String: [String: String]] {
         [
             "ro": roTranslations,
@@ -62,6 +62,30 @@ class LocalizationManager: ObservableObject {
             "el": elTranslations,
             "tr": trTranslations,
             "ru": ruTranslations,
+            "sq": sqTranslations,
+            "be": beTranslations,
+            "bs": bsTranslations,
+            "da": daTranslations,
+            "et": etTranslations,
+            "fi": fiTranslations,
+            "ka": kaTranslations,
+            "is": isTranslations,
+            "ga": gaTranslations,
+            "lv": lvTranslations,
+            "lt": ltTranslations,
+            "lb": lbTranslations,
+            "mk": mkTranslations,
+            "mt": mtTranslations,
+            "me": meTranslations,
+            "no": noTranslations,
+            "sv": svTranslations,
+            "ca": caTranslations,
+            "de-AT": deATTranslations,
+            "de-CH": deCHTranslations,
+            "fr-BE": frBETranslations,
+            "nl-BE": nlBETranslations,
+            "fr-CH": frCHTranslations,
+            "it-CH": itCHTranslations,
         ]
     }
     
@@ -661,6 +685,699 @@ class LocalizationManager: ObservableObject {
         ]
     }
     
+    // MARK: - Albanian
+    private var sqTranslations: [String: String] {
+        [
+            "tab.scan": "Skanim",
+            "tab.vin": "VIN/Targa",
+            "tab.live": "Drejtperdrejt",
+            "tab.mechanic": "Mekanik",
+            "tab.more": "Me shume",
+            "health.score": "Rezultati i shendetit",
+            "health.engine": "Motori",
+            "health.brakes": "Frenat",
+            "health.electrical": "Elektrike",
+            "health.suspension": "Suspensioni",
+            "health.transmission": "Transmisioni",
+            "health.body": "Karoseria",
+            "obd.connected": "I lidhur",
+            "obd.disconnected": "I shkeputer",
+            "chat.placeholder": "Pershkruani problemin...",
+            "chat.send": "Dergo",
+            "chat.welcome": "Miresevini! Une jam mekaniku juaj virtual.",
+            "general.save": "Ruaj",
+            "general.cancel": "Anullo",
+            "general.delete": "Fshi",
+            "general.search": "Kerko",
+            "general.close": "Mbyll",
+            "general.back": "Prapa",
+            "general.next": "Tjetri",
+            "general.done": "U krye",
+            "itp.title": "Kontrolli teknik",
+            "itp.pass": "Do ta kaloje kontrollin",
+            "itp.fail": "Nuk do ta kaloje kontrollin",
+            "purchase.upgrade": "Permireso ne PRO",
+            "privacy.title": "Politika e privatesis",
+            "terms.title": "Kushtet e perdorimit",
+        ]
+    }
+    
+    // MARK: - Belarusian
+    private var beTranslations: [String: String] {
+        [
+            "tab.scan": "Сканаваць",
+            "tab.vin": "VIN/Нумар",
+            "tab.live": "Нажыва",
+            "tab.mechanic": "Механiк",
+            "tab.more": "Яшчэ",
+            "health.score": "Ацэнка здароўя",
+            "health.engine": "Рухавiк",
+            "health.brakes": "Тармазы",
+            "obd.connected": "Падключана",
+            "obd.disconnected": "Адключана",
+            "chat.placeholder": "Апiшыце праблему...",
+            "chat.send": "Адправiць",
+            "chat.welcome": "Вiтаем! Я ваш вiртуальны механiк.",
+            "general.save": "Захаваць",
+            "general.cancel": "Адмянiць",
+            "general.search": "Шукаць",
+            "itp.title": "Тэхагляд",
+            "purchase.upgrade": "Абнавiць да PRO",
+            "privacy.title": "Палiтыка канфiдэнцыяльнасцi",
+            "terms.title": "Умовы выкарыстання",
+        ]
+    }
+    
+    // MARK: - Bosnian
+    private var bsTranslations: [String: String] {
+        [
+            "tab.scan": "Skeniranje",
+            "tab.vin": "VIN/Tablica",
+            "tab.live": "Uzivo",
+            "tab.mechanic": "Mehanicar",
+            "tab.more": "Vise",
+            "health.score": "Ocjena zdravlja",
+            "health.engine": "Motor",
+            "health.brakes": "Kocnice",
+            "obd.connected": "Povezan",
+            "obd.disconnected": "Nije povezan",
+            "chat.placeholder": "Opisite problem...",
+            "chat.send": "Posalji",
+            "chat.welcome": "Dobrodosli! Ja sam vas virtualni mehanicar.",
+            "general.save": "Spremi",
+            "general.cancel": "Otkazi",
+            "general.search": "Pretrazi",
+            "itp.title": "Tehnicki pregled",
+            "purchase.upgrade": "Nadogradi na PRO",
+            "privacy.title": "Politika privatnosti",
+            "terms.title": "Uslovi koristenja",
+        ]
+    }
+    
+    // MARK: - Danish
+    private var daTranslations: [String: String] {
+        [
+            "tab.scan": "Scan",
+            "tab.vin": "VIN/Nummerplade",
+            "tab.live": "Live",
+            "tab.mechanic": "Mekaniker",
+            "tab.more": "Mere",
+            "health.score": "Sundhedsscore",
+            "health.engine": "Motor",
+            "health.brakes": "Bremser",
+            "health.electrical": "Elektrisk",
+            "health.suspension": "Affjedring",
+            "health.transmission": "Gearkasse",
+            "health.body": "Karrosseri",
+            "obd.connected": "Tilsluttet",
+            "obd.disconnected": "Frakoblet",
+            "chat.placeholder": "Beskriv problemet...",
+            "chat.send": "Send",
+            "chat.welcome": "Velkommen! Jeg er din virtuelle mekaniker.",
+            "general.save": "Gem",
+            "general.cancel": "Annuller",
+            "general.delete": "Slet",
+            "general.search": "Sog",
+            "general.close": "Luk",
+            "general.back": "Tilbage",
+            "general.next": "Naeste",
+            "general.done": "Faerdig",
+            "itp.title": "Syn",
+            "itp.pass": "Vil bestaa syn",
+            "itp.fail": "Vil ikke bestaa syn",
+            "purchase.upgrade": "Opgrader til PRO",
+            "privacy.title": "Privatlivspolitik",
+            "terms.title": "Vilkaar og betingelser",
+        ]
+    }
+    
+    // MARK: - Estonian
+    private var etTranslations: [String: String] {
+        [
+            "tab.scan": "Skaneeri",
+            "tab.vin": "VIN/Numbrimork",
+            "tab.live": "Otse",
+            "tab.mechanic": "Mehaanik",
+            "tab.more": "Rohkem",
+            "health.score": "Tervise skoor",
+            "health.engine": "Mootor",
+            "health.brakes": "Pidurid",
+            "obd.connected": "Uhendatud",
+            "obd.disconnected": "Uhendus katkestatud",
+            "chat.placeholder": "Kirjeldage probleemi...",
+            "chat.send": "Saada",
+            "chat.welcome": "Tere tulemast! Olen teie virtuaalne mehaanik.",
+            "general.save": "Salvesta",
+            "general.cancel": "Tuhista",
+            "general.search": "Otsi",
+            "itp.title": "Tehnoulevaatus",
+            "purchase.upgrade": "Uuenda PRO-ks",
+            "privacy.title": "Privaatsuspoliitika",
+            "terms.title": "Kasutustingimused",
+        ]
+    }
+    
+    // MARK: - Finnish
+    private var fiTranslations: [String: String] {
+        [
+            "tab.scan": "Skannaa",
+            "tab.vin": "VIN/Rekisterikilpi",
+            "tab.live": "Live",
+            "tab.mechanic": "Mekaanikko",
+            "tab.more": "Lisaa",
+            "health.score": "Terveyspistemaat",
+            "health.engine": "Moottori",
+            "health.brakes": "Jarrut",
+            "health.electrical": "Sahko",
+            "health.suspension": "Jousitus",
+            "health.transmission": "Vaihteisto",
+            "health.body": "Kori",
+            "obd.connected": "Yhdistetty",
+            "obd.disconnected": "Yhteys katkaistu",
+            "chat.placeholder": "Kuvaile ongelma...",
+            "chat.send": "Laheta",
+            "chat.welcome": "Tervetuloa! Olen virtuaalimekaanikko.",
+            "general.save": "Tallenna",
+            "general.cancel": "Peruuta",
+            "general.delete": "Poista",
+            "general.search": "Etsi",
+            "general.close": "Sulje",
+            "general.back": "Takaisin",
+            "general.next": "Seuraava",
+            "general.done": "Valmis",
+            "itp.title": "Katsastus",
+            "itp.pass": "Lapaiseekatsastuksen",
+            "itp.fail": "Ei lapaise katsastusta",
+            "purchase.upgrade": "Paivita PRO:hon",
+            "privacy.title": "Tietosuojakaytanto",
+            "terms.title": "Kayttoehdot",
+        ]
+    }
+    
+    // MARK: - Georgian
+    private var kaTranslations: [String: String] {
+        [
+            "tab.scan": "სკანირება",
+            "tab.vin": "VIN/ნომერი",
+            "tab.live": "პირდაპირ",
+            "tab.mechanic": "მექანიკოსი",
+            "tab.more": "მეტი",
+            "health.score": "ჯანმრთელობის ქულა",
+            "health.engine": "ძრავი",
+            "health.brakes": "მუხრუჭები",
+            "obd.connected": "დაკავშირებული",
+            "obd.disconnected": "გათიშული",
+            "chat.placeholder": "აღწერეთ პრობლემა...",
+            "chat.send": "გაგზავნა",
+            "chat.welcome": "კეთილი იყოს თქვენი მობრძანება! მე ვარ თქვენი ვირტუალური მექანიკოსი.",
+            "general.save": "შენახვა",
+            "general.cancel": "გაუქმება",
+            "general.search": "ძებნა",
+            "itp.title": "ტექ. ინსპექცია",
+            "purchase.upgrade": "განახლება PRO-ზე",
+            "privacy.title": "კონფიდენციალურობის პოლიტიკა",
+            "terms.title": "მოხმარების პირობები",
+        ]
+    }
+    
+    // MARK: - Icelandic
+    private var isTranslations: [String: String] {
+        [
+            "tab.scan": "Skanna",
+            "tab.vin": "VIN/Numeraplata",
+            "tab.live": "Beint",
+            "tab.mechanic": "Bifreidameistari",
+            "tab.more": "Meira",
+            "health.score": "Heilbrigdisskor",
+            "health.engine": "Vel",
+            "health.brakes": "Hemlar",
+            "obd.connected": "Tengt",
+            "obd.disconnected": "Aftengt",
+            "chat.placeholder": "Lystu vandamalinu...",
+            "chat.send": "Senda",
+            "chat.welcome": "Velkomin! Eg er sjarufur bifreidameistari.",
+            "general.save": "Vista",
+            "general.cancel": "Haetta vid",
+            "general.search": "Leita",
+            "itp.title": "Skodun",
+            "purchase.upgrade": "Uppfaera i PRO",
+            "privacy.title": "Personuverndarstefna",
+            "terms.title": "Notkunarskilmalar",
+        ]
+    }
+    
+    // MARK: - Irish
+    private var gaTranslations: [String: String] {
+        [
+            "tab.scan": "Scan",
+            "tab.vin": "VIN/Plata",
+            "tab.live": "Beo",
+            "tab.mechanic": "Meicneoir",
+            "tab.more": "Nios Mo",
+            "health.score": "Scor Slainte",
+            "health.engine": "Inneall",
+            "health.brakes": "Coscain",
+            "obd.connected": "Ceangailte",
+            "obd.disconnected": "Diceangailte",
+            "chat.placeholder": "Cuir sios ar an bhfadhb...",
+            "chat.send": "Seol",
+            "chat.welcome": "Failte! Is mise do mheicneoir fiorual.",
+            "general.save": "Sabhdil",
+            "general.cancel": "Cealaigh",
+            "general.search": "Cuardaigh",
+            "itp.title": "NCT",
+            "itp.pass": "Eireoidh leis an NCT",
+            "itp.fail": "Ni eireoidh leis an NCT",
+            "purchase.upgrade": "Uasghradaigh go PRO",
+            "privacy.title": "Polasai priobhaideachta",
+            "terms.title": "Tearmai agus coinniollachta",
+        ]
+    }
+    
+    // MARK: - Latvian
+    private var lvTranslations: [String: String] {
+        [
+            "tab.scan": "Skenet",
+            "tab.vin": "VIN/Numurs",
+            "tab.live": "Tiesraide",
+            "tab.mechanic": "Mehanikus",
+            "tab.more": "Vairak",
+            "health.score": "Veselibas rezultats",
+            "health.engine": "Motors",
+            "health.brakes": "Bremzes",
+            "obd.connected": "Savienots",
+            "obd.disconnected": "Atvienots",
+            "chat.placeholder": "Aprakstiet problemu...",
+            "chat.send": "Nosutit",
+            "chat.welcome": "Laipni ludzam! Es esmu jusu virtualais mehanikus.",
+            "general.save": "Saglabar",
+            "general.cancel": "Atcelt",
+            "general.search": "Meklet",
+            "itp.title": "Tehniska apskate",
+            "purchase.upgrade": "Jauninet uz PRO",
+            "privacy.title": "Privatuma politika",
+            "terms.title": "Lietosanas noteikumi",
+        ]
+    }
+    
+    // MARK: - Lithuanian
+    private var ltTranslations: [String: String] {
+        [
+            "tab.scan": "Skenuoti",
+            "tab.vin": "VIN/Numeris",
+            "tab.live": "Tiesiogiai",
+            "tab.mechanic": "Mechanikas",
+            "tab.more": "Daugiau",
+            "health.score": "Sveikatos balas",
+            "health.engine": "Variklis",
+            "health.brakes": "Stabdziai",
+            "obd.connected": "Prijungtas",
+            "obd.disconnected": "Atjungtas",
+            "chat.placeholder": "Aprasyke problema...",
+            "chat.send": "Siusti",
+            "chat.welcome": "Sveiki! As esu jusu virtualus mechanikas.",
+            "general.save": "Issaugoti",
+            "general.cancel": "Atsaukti",
+            "general.search": "Ieskoti",
+            "itp.title": "Technine apziura",
+            "purchase.upgrade": "Atnaujinti i PRO",
+            "privacy.title": "Privatumo politika",
+            "terms.title": "Naudojimo salygos",
+        ]
+    }
+    
+    // MARK: - Luxembourgish
+    private var lbTranslations: [String: String] {
+        [
+            "tab.scan": "Scan",
+            "tab.vin": "VIN/Plack",
+            "tab.live": "Live",
+            "tab.mechanic": "Mechaniker",
+            "tab.more": "Mei",
+            "health.score": "Gesondheetsscore",
+            "health.engine": "Motor",
+            "health.brakes": "Bremsen",
+            "obd.connected": "Verbonnen",
+            "obd.disconnected": "Getrennt",
+            "chat.placeholder": "Beschreift de Problem...",
+            "chat.send": "Schecken",
+            "chat.welcome": "Willkomm! Ech sinn Iere virtuellen Mechaniker.",
+            "general.save": "Spicheren",
+            "general.cancel": "Ofbriechen",
+            "general.search": "Sichen",
+            "itp.title": "Controle technique",
+            "purchase.upgrade": "Op PRO upgraden",
+            "privacy.title": "Dateschutzpolitik",
+            "terms.title": "Notzungsbedengungen",
+        ]
+    }
+    
+    // MARK: - Macedonian
+    private var mkTranslations: [String: String] {
+        [
+            "tab.scan": "Скенирај",
+            "tab.vin": "VIN/Таблица",
+            "tab.live": "Во живо",
+            "tab.mechanic": "Механичар",
+            "tab.more": "Повеќе",
+            "health.score": "Оцена на здравје",
+            "health.engine": "Мотор",
+            "health.brakes": "Сопирачки",
+            "obd.connected": "Поврзан",
+            "obd.disconnected": "Исклучен",
+            "chat.placeholder": "Опишете го проблемот...",
+            "chat.send": "Испрати",
+            "chat.welcome": "Добредојдовте! Јас сум вашиот виртуелен механичар.",
+            "general.save": "Зачувај",
+            "general.cancel": "Откажи",
+            "general.search": "Пребарај",
+            "itp.title": "Технички преглед",
+            "purchase.upgrade": "Надгради на PRO",
+            "privacy.title": "Политика за приватност",
+            "terms.title": "Услови за користење",
+        ]
+    }
+    
+    // MARK: - Maltese
+    private var mtTranslations: [String: String] {
+        [
+            "tab.scan": "Iskennja",
+            "tab.vin": "VIN/Pjancha",
+            "tab.live": "Dirett",
+            "tab.mechanic": "Mekkanik",
+            "tab.more": "Iktar",
+            "health.score": "Puntegg tas-sahha",
+            "health.engine": "Magna",
+            "health.brakes": "Brejkijiet",
+            "obd.connected": "Konness",
+            "obd.disconnected": "Mhux konness",
+            "chat.placeholder": "Iddeskrivi l-problema...",
+            "chat.send": "Ibghat",
+            "chat.welcome": "Merhba! Jien il-mekkanik virtwali tieghek.",
+            "general.save": "Issejvja",
+            "general.cancel": "Ikkanxella",
+            "general.search": "Fittex",
+            "itp.title": "VRT",
+            "purchase.upgrade": "Aghmel upgrade ghal PRO",
+            "privacy.title": "Politika tal-privatezza",
+            "terms.title": "Termini u kondizzjonijiet",
+        ]
+    }
+    
+    // MARK: - Montenegrin
+    private var meTranslations: [String: String] {
+        [
+            "tab.scan": "Skeniraj",
+            "tab.vin": "VIN/Tablica",
+            "tab.live": "Uzivo",
+            "tab.mechanic": "Mehanicar",
+            "tab.more": "Vise",
+            "health.score": "Ocjena zdravlja",
+            "health.engine": "Motor",
+            "health.brakes": "Kocnice",
+            "obd.connected": "Povezan",
+            "obd.disconnected": "Nije povezan",
+            "chat.placeholder": "Opisite problem...",
+            "chat.send": "Posalji",
+            "chat.welcome": "Dobrodosli! Ja sam vas virtualni mehanicar.",
+            "general.save": "Sacuvaj",
+            "general.cancel": "Otkazi",
+            "general.search": "Pretrazi",
+            "itp.title": "Tehnicki pregled",
+            "purchase.upgrade": "Nadogradi na PRO",
+            "privacy.title": "Politika privatnosti",
+            "terms.title": "Uslovi koriscenja",
+        ]
+    }
+    
+    // MARK: - Norwegian
+    private var noTranslations: [String: String] {
+        [
+            "tab.scan": "Skann",
+            "tab.vin": "VIN/Skilt",
+            "tab.live": "Direkte",
+            "tab.mechanic": "Mekaniker",
+            "tab.more": "Mer",
+            "health.score": "Helsepoeng",
+            "health.engine": "Motor",
+            "health.brakes": "Bremser",
+            "health.electrical": "Elektrisk",
+            "health.suspension": "Fjering",
+            "health.transmission": "Girkasse",
+            "health.body": "Karosseri",
+            "obd.connected": "Tilkoblet",
+            "obd.disconnected": "Frakoblet",
+            "chat.placeholder": "Beskriv problemet...",
+            "chat.send": "Send",
+            "chat.welcome": "Velkommen! Jeg er din virtuelle mekaniker.",
+            "general.save": "Lagre",
+            "general.cancel": "Avbryt",
+            "general.delete": "Slett",
+            "general.search": "Sok",
+            "general.close": "Lukk",
+            "general.back": "Tilbake",
+            "general.next": "Neste",
+            "general.done": "Ferdig",
+            "itp.title": "EU-kontroll",
+            "itp.pass": "Vil bestaa EU-kontroll",
+            "itp.fail": "Vil ikke bestaa EU-kontroll",
+            "purchase.upgrade": "Oppgrader til PRO",
+            "privacy.title": "Personvernpolicy",
+            "terms.title": "Vilkaar og betingelser",
+        ]
+    }
+    
+    // MARK: - Swedish
+    private var svTranslations: [String: String] {
+        [
+            "tab.scan": "Skanna",
+            "tab.vin": "VIN/Reg.nr",
+            "tab.live": "Live",
+            "tab.mechanic": "Mekaniker",
+            "tab.more": "Mer",
+            "health.score": "Halsopoang",
+            "health.engine": "Motor",
+            "health.brakes": "Bromsar",
+            "health.electrical": "Elektrisk",
+            "health.suspension": "Fjadring",
+            "health.transmission": "Vaxellada",
+            "health.body": "Kaross",
+            "obd.connected": "Ansluten",
+            "obd.disconnected": "Frankopplad",
+            "chat.placeholder": "Beskriv problemet...",
+            "chat.send": "Skicka",
+            "chat.welcome": "Valkommen! Jag ar din virtuella mekaniker.",
+            "general.save": "Spara",
+            "general.cancel": "Avbryt",
+            "general.delete": "Radera",
+            "general.search": "Sok",
+            "general.close": "Stang",
+            "general.back": "Tillbaka",
+            "general.next": "Nasta",
+            "general.done": "Klar",
+            "itp.title": "Besiktning",
+            "itp.pass": "Kommer klara besiktning",
+            "itp.fail": "Kommer inte klara besiktning",
+            "purchase.upgrade": "Uppgradera till PRO",
+            "privacy.title": "Integritetspolicy",
+            "terms.title": "Villkor och anvandaravtal",
+        ]
+    }
+    
+    // MARK: - Catalan (Andorra)
+    private var caTranslations: [String: String] {
+        [
+            "tab.scan": "Escanejar",
+            "tab.vin": "VIN/Matricula",
+            "tab.live": "En directe",
+            "tab.mechanic": "Mecanic",
+            "tab.more": "Mes",
+            "health.score": "Puntuacio de salut",
+            "health.engine": "Motor",
+            "health.brakes": "Frens",
+            "obd.connected": "Connectat",
+            "obd.disconnected": "Desconnectat",
+            "chat.placeholder": "Descriu el problema...",
+            "chat.send": "Envia",
+            "chat.welcome": "Benvingut! Soc el teu mecanic virtual.",
+            "general.save": "Desa",
+            "general.cancel": "Cancel·la",
+            "general.search": "Cerca",
+            "itp.title": "ITV",
+            "purchase.upgrade": "Actualitza a PRO",
+            "privacy.title": "Politica de privacitat",
+            "terms.title": "Termes i condicions",
+        ]
+    }
+    
+    // MARK: - Austrian German
+    private var deATTranslations: [String: String] {
+        [
+            "tab.scan": "Scan",
+            "tab.vin": "VIN/Kennz.",
+            "tab.live": "Live",
+            "tab.mechanic": "Mechaniker",
+            "tab.more": "Mehr",
+            "health.score": "Gesundheitswert",
+            "health.engine": "Motor",
+            "health.brakes": "Bremsen",
+            "obd.connected": "Verbunden",
+            "obd.disconnected": "Getrennt",
+            "chat.placeholder": "Problem beschreiben...",
+            "chat.send": "Senden",
+            "chat.welcome": "Willkommen! Ich bin Ihr virtueller Mechaniker.",
+            "general.save": "Speichern",
+            "general.cancel": "Abbrechen",
+            "general.search": "Suchen",
+            "itp.title": "Paragraf 57a (Pickerl)",
+            "itp.pass": "Wird Pickerl bestehen",
+            "itp.fail": "Wird Pickerl nicht bestehen",
+            "purchase.upgrade": "Auf PRO upgraden",
+            "privacy.title": "Datenschutzrichtlinie",
+            "terms.title": "Nutzungsbedingungen",
+        ]
+    }
+    
+    // MARK: - Swiss German
+    private var deCHTranslations: [String: String] {
+        [
+            "tab.scan": "Scan",
+            "tab.vin": "VIN/Kennz.",
+            "tab.live": "Live",
+            "tab.mechanic": "Mechaniker",
+            "tab.more": "Meh",
+            "health.score": "Gsundheitswart",
+            "health.engine": "Motor",
+            "health.brakes": "Bremse",
+            "obd.connected": "Verbunde",
+            "obd.disconnected": "Trennt",
+            "chat.placeholder": "Problem beschriibe...",
+            "chat.send": "Schicke",
+            "chat.welcome": "Willkomme! Ich bi Ihre virtuell Mechaniker.",
+            "general.save": "Speichere",
+            "general.cancel": "Abbrache",
+            "general.search": "Sueche",
+            "itp.title": "MFK",
+            "itp.pass": "Wird MFK bestah",
+            "itp.fail": "Wird MFK nid bestah",
+            "purchase.upgrade": "Uf PRO upgrade",
+            "privacy.title": "Dateschutzrichtlinie",
+            "terms.title": "Nutzigsbedingige",
+        ]
+    }
+    
+    // MARK: - Belgian French
+    private var frBETranslations: [String: String] {
+        [
+            "tab.scan": "Scan",
+            "tab.vin": "VIN/Plaque",
+            "tab.live": "Direct",
+            "tab.mechanic": "Mecanicien",
+            "tab.more": "Plus",
+            "health.score": "Score Sante",
+            "health.engine": "Moteur",
+            "health.brakes": "Freins",
+            "obd.connected": "Connecte",
+            "obd.disconnected": "Deconnecte",
+            "chat.placeholder": "Decrivez le probleme...",
+            "chat.send": "Envoyer",
+            "chat.welcome": "Bienvenue! Je suis votre mecanicien virtuel.",
+            "general.save": "Enregistrer",
+            "general.cancel": "Annuler",
+            "general.search": "Rechercher",
+            "itp.title": "Controle technique",
+            "itp.pass": "Passera le CT",
+            "itp.fail": "Ne passera pas le CT",
+            "purchase.upgrade": "Passer a PRO",
+            "privacy.title": "Politique de confidentialite",
+            "terms.title": "Conditions d'utilisation",
+        ]
+    }
+    
+    // MARK: - Belgian Dutch
+    private var nlBETranslations: [String: String] {
+        [
+            "tab.scan": "Scan",
+            "tab.vin": "VIN/Nummerplaat",
+            "tab.live": "Live",
+            "tab.mechanic": "Mecanicien",
+            "tab.more": "Meer",
+            "health.score": "Gezondheidsscore",
+            "health.engine": "Motor",
+            "health.brakes": "Remmen",
+            "obd.connected": "Verbonden",
+            "obd.disconnected": "Verbroken",
+            "chat.placeholder": "Beschrijf het probleem...",
+            "chat.send": "Verstuur",
+            "chat.welcome": "Welkom! Ik ben uw virtuele mecanicien.",
+            "general.save": "Opslaan",
+            "general.cancel": "Annuleren",
+            "general.search": "Zoeken",
+            "itp.title": "Autokeuring",
+            "itp.pass": "Zal autokeuring halen",
+            "itp.fail": "Zal autokeuring niet halen",
+            "purchase.upgrade": "Upgrade naar PRO",
+            "privacy.title": "Privacybeleid",
+            "terms.title": "Algemene voorwaarden",
+        ]
+    }
+    
+    // MARK: - Swiss French
+    private var frCHTranslations: [String: String] {
+        [
+            "tab.scan": "Scan",
+            "tab.vin": "VIN/Plaque",
+            "tab.live": "Direct",
+            "tab.mechanic": "Mecanicien",
+            "tab.more": "Plus",
+            "health.score": "Score Sante",
+            "health.engine": "Moteur",
+            "health.brakes": "Freins",
+            "obd.connected": "Connecte",
+            "obd.disconnected": "Deconnecte",
+            "chat.placeholder": "Decrivez le probleme...",
+            "chat.send": "Envoyer",
+            "chat.welcome": "Bienvenue! Je suis votre mecanicien virtuel.",
+            "general.save": "Enregistrer",
+            "general.cancel": "Annuler",
+            "general.search": "Rechercher",
+            "itp.title": "Expertise",
+            "itp.pass": "Passera l'expertise",
+            "itp.fail": "Ne passera pas l'expertise",
+            "purchase.upgrade": "Passer a PRO",
+            "privacy.title": "Politique de confidentialite",
+            "terms.title": "Conditions d'utilisation",
+        ]
+    }
+    
+    // MARK: - Swiss Italian
+    private var itCHTranslations: [String: String] {
+        [
+            "tab.scan": "Scansione",
+            "tab.vin": "VIN/Targa",
+            "tab.live": "Live",
+            "tab.mechanic": "Meccanico",
+            "tab.more": "Altro",
+            "health.score": "Punteggio Salute",
+            "health.engine": "Motore",
+            "health.brakes": "Freni",
+            "obd.connected": "Connesso",
+            "obd.disconnected": "Disconnesso",
+            "chat.placeholder": "Descrivi il problema...",
+            "chat.send": "Invia",
+            "chat.welcome": "Benvenuto! Sono il tuo meccanico virtuale.",
+            "general.save": "Salva",
+            "general.cancel": "Annulla",
+            "general.search": "Cerca",
+            "itp.title": "Collaudo",
+            "itp.pass": "Passera il collaudo",
+            "itp.fail": "Non passera il collaudo",
+            "purchase.upgrade": "Passa a PRO",
+            "privacy.title": "Informativa sulla privacy",
+            "terms.title": "Termini e condizioni",
+        ]
+    }
+    
     // MARK: - Supported Languages List
     static var supportedLanguages: [(code: String, name: String, nativeName: String)] {
         [
@@ -684,6 +1401,30 @@ class LocalizationManager: ObservableObject {
             ("el", "Greek", "Ελληνικά"),
             ("tr", "Turkish", "Turkce"),
             ("ru", "Russian", "Русский"),
+            ("sq", "Albanian", "Shqip"),
+            ("be", "Belarusian", "Беларуская"),
+            ("bs", "Bosnian", "Bosanski"),
+            ("da", "Danish", "Dansk"),
+            ("et", "Estonian", "Eesti"),
+            ("fi", "Finnish", "Suomi"),
+            ("ka", "Georgian", "ქართული"),
+            ("is", "Icelandic", "Islenska"),
+            ("ga", "Irish", "Gaeilge"),
+            ("lv", "Latvian", "Latviesu"),
+            ("lt", "Lithuanian", "Lietuviu"),
+            ("lb", "Luxembourgish", "Letzebuergesch"),
+            ("mk", "Macedonian", "Македонски"),
+            ("mt", "Maltese", "Malti"),
+            ("me", "Montenegrin", "Crnogorski"),
+            ("no", "Norwegian", "Norsk"),
+            ("sv", "Swedish", "Svenska"),
+            ("ca", "Catalan", "Catala"),
+            ("de-AT", "Austrian German", "Osterreichisches Deutsch"),
+            ("de-CH", "Swiss German", "Schwiizerduutsch"),
+            ("fr-BE", "Belgian French", "Francais (Belgique)"),
+            ("nl-BE", "Belgian Dutch", "Nederlands (Belgie)"),
+            ("fr-CH", "Swiss French", "Francais (Suisse)"),
+            ("it-CH", "Swiss Italian", "Italiano (Svizzera)"),
         ]
     }
 }
