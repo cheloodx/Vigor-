@@ -2,7 +2,7 @@ import SwiftUI
 import MapKit
 
 struct ServiceMapView: View {
-    @StateObject private var locationManager = LocationManager()
+    @ObservedObject private var locationManager = LocationManager.shared
     @State private var region = MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 46.7712, longitude: 23.6236),
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
