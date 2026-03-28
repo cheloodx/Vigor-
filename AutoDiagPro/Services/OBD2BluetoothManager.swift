@@ -42,6 +42,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     @Published var adapterVersion: String = "ELM327"
 
     deinit {
+        cancelWatchdog()
         disconnect()
     }
 
@@ -62,6 +63,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     private var responseBuffer = ""
     private var initStep = 0
     private var currentPIDIndex = 0
+    private var pollingWatchdog: DispatchWorkItem?
     private let pidCycle: [String] = [
         ELM327Commands.engineCoolantTemp,
         ELM327Commands.engineRPM,
@@ -169,9 +171,29 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     /// Called after a PID response is fully received to chain the next request
     private func scheduleNextPoll() {
         guard connectionState == .connected else { return }
+        cancelWatchdog()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
             self?.pollNextPID()
         }
+    }
+
+    // MARK: - Watchdog Timer
+    // Restarts polling chain if no response arrives within 2 seconds
+    private func startWatchdog() {
+        cancelWatchdog()
+        let watchdog = DispatchWorkItem { [weak self] in
+            guard let self = self, self.connectionState == .connected else { return }
+            // No response received in 2s — restart the polling chain
+            self.responseBuffer = ""
+            self.pollNextPID()
+        }
+        pollingWatchdog = watchdog
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: watchdog)
+    }
+
+    private func cancelWatchdog() {
+        pollingWatchdog?.cancel()
+        pollingWatchdog = nil
     }
 
     // MARK: - Send Command
@@ -185,6 +207,11 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
 
         let writeType: CBCharacteristicWriteType = characteristic.properties.contains(.write) ? .withResponse : .withoutResponse
         peripheral.writeValue(data, for: characteristic, type: writeType)
+
+        // Start watchdog — if no response arrives within 2s, restart polling chain
+        if connectionState == .connected {
+            startWatchdog()
+        }
     }
 
     // MARK: - Response Parsing

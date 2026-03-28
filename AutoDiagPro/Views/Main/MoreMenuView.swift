@@ -22,6 +22,8 @@ struct MoreMenuView: View {
                     featureSection(title: "INCREDERE & PARTAJARE", features: trustFeatures)
                     featureSection(title: "LEGAL & SIGURANTA", features: legalFeatures)
                     featureSection(title: "EUROPA & MARKETPLACE", features: europeFeatures)
+                    featureSection(title: "CONT & SINCRONIZARE", features: accountFeatures)
+                    featureSection(title: "DISPOZITIVE", features: deviceFeatures)
                     featureSection(title: "SETARI", features: settingsFeatures)
                     
                     // Export PDF button
@@ -247,9 +249,30 @@ struct MoreMenuView: View {
         ]
     }
     
+    private var accountFeatures: [MoreFeature] {
+        [
+            MoreFeature(name: "Cont", subtitle: "Sign in with Apple", icon: "person.circle.fill", color: Theme.primary, destination: AnyView(SignInView())),
+            MoreFeature(name: "iCloud Sync", subtitle: "Sincronizare date", icon: "icloud.fill", color: Color(red: 0.0, green: 0.6, blue: 1.0), destination: AnyView(CloudSyncSettingsView())),
+            MoreFeature(name: "PRO", subtitle: "Upgrade premium", icon: "crown.fill", color: Theme.secondary, destination: AnyView(InAppPurchaseView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Notificari", subtitle: "Alarme push", icon: "bell.badge.fill", color: Theme.gaugeYellow, destination: AnyView(NotificationSettingsView().environmentObject(vehicleManager))),
+        ]
+    }
+    
+    private var deviceFeatures: [MoreFeature] {
+        [
+            MoreFeature(name: "Apple Watch", subtitle: "Companion app", icon: "applewatch", color: Color(red: 0.0, green: 0.75, blue: 0.85), destination: AnyView(WatchPreviewView().environmentObject(vehicleManager))),
+            MoreFeature(name: "CarPlay", subtitle: "Dashboard masina", icon: "car.fill", color: Theme.primary, destination: AnyView(CarPlayPreviewView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Siri Shortcuts", subtitle: "Comenzi vocale", icon: "waveform.circle.fill", color: Color(red: 0.0, green: 0.6, blue: 1.0), destination: AnyView(SiriShortcutsView().environmentObject(vehicleManager))),
+        ]
+    }
+    
     private var settingsFeatures: [MoreFeature] {
         [
             MoreFeature(name: "Mod Noapte", subtitle: nightModeManager.isAutoMode ? "Auto" : (nightModeManager.isNightMode ? "Activat" : "Dezactivat"), icon: nightModeManager.isNightMode ? "moon.fill" : "sun.max.fill", color: Theme.gaugeYellow, destination: AnyView(NightModeSettingsView(nightModeManager: nightModeManager))),
+            MoreFeature(name: "Statistici", subtitle: "Utilizare & crash", icon: "chart.bar.fill", color: Theme.gaugeGreen, destination: AnyView(AnalyticsDashboardView())),
+            MoreFeature(name: "App Store", subtitle: "Screenshots preview", icon: "rectangle.on.rectangle.angled", color: Color(red: 0.0, green: 0.5, blue: 0.9), destination: AnyView(AppStoreScreenshotsView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Confidentialitate", subtitle: "Politica GDPR", icon: "lock.shield.fill", color: Theme.primary, destination: AnyView(PrivacyPolicyView())),
+            MoreFeature(name: "Termeni", subtitle: "Conditii utilizare", icon: "doc.text.fill", color: Theme.textMuted, destination: AnyView(TermsOfServiceView())),
         ]
     }
     

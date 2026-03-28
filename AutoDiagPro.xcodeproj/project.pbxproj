@@ -69,6 +69,18 @@
 		B4DAE15263748596071829D3 /* ShareVehicleReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DAE15263748596071829D34; };
 		C5EBF26374859607182930E4 /* EnhancedOBDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBF26374859607182930E45; };
 		D6FC037485960718293041F5 /* EnhancedAIChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC037485960718293041F56; };
+		A1B2C3D4E5F60718293A4B5D /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1C2D3E4F5061728394A5B6C; };
+		B2C3D4E5F607182930A1B2C4 /* LocalizationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2D3E4F5060718293A1B2C3D; };
+		C3D4E5F60718293041B2C3D5 /* CloudSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E4F506071829304A1B2C3D; };
+		D4E5F607182930A1B2C3D4E6 /* AuthenticationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4F5060718293041B2C3D4E5; };
+		E5F6071829304152B2C3D4E7 /* WatchPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5060718293041B2C3D4E5F6; };
+		F607182930415263C3D4E5F8 /* CarPlayPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060718293041526374D4E5F6; };
+		A718293041526374D4E5F609 /* SiriShortcutsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1718293041526374D4E5F607; };
+		B82930415263748596E5F60A /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282930415263748596F607182; };
+		C930415263748596F607182B /* InAppPurchaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3930415263748596F6071829; };
+		DA30415263748596F607182C /* AppStoreScreenshotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A30415263748596F6071829; };
+		EB30415263748596F607182D /* PrivacyTermsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B30415263748596F6071829; };
+		FC30415263748596F607182E /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C30415263748596F6071829; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -136,6 +148,18 @@
 		4DAE15263748596071829D34 /* ShareVehicleReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareVehicleReportView.swift; sourceTree = "<group>"; };
 		5EBF26374859607182930E45 /* EnhancedOBDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedOBDView.swift; sourceTree = "<group>"; };
 		6FC037485960718293041F56 /* EnhancedAIChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedAIChatView.swift; sourceTree = "<group>"; };
+		B1C2D3E4F5061728394A5B6C /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		C2D3E4F5060718293A1B2C3D /* LocalizationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationManager.swift; sourceTree = "<group>"; };
+		D3E4F506071829304A1B2C3D /* CloudSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSyncManager.swift; sourceTree = "<group>"; };
+		E4F5060718293041B2C3D4E5 /* AuthenticationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationManager.swift; sourceTree = "<group>"; };
+		F5060718293041B2C3D4E5F6 /* WatchPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPreviewView.swift; sourceTree = "<group>"; };
+		060718293041526374D4E5F6 /* CarPlayPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayPreviewView.swift; sourceTree = "<group>"; };
+		1718293041526374D4E5F607 /* SiriShortcutsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SiriShortcutsView.swift; sourceTree = "<group>"; };
+		282930415263748596F607182 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
+		3930415263748596F6071829 /* InAppPurchaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppPurchaseView.swift; sourceTree = "<group>"; };
+		4A30415263748596F6071829 /* AppStoreScreenshotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStoreScreenshotsView.swift; sourceTree = "<group>"; };
+		5B30415263748596F6071829 /* PrivacyTermsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyTermsView.swift; sourceTree = "<group>"; };
+		6C30415263748596F6071829 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -216,7 +240,14 @@
 				8899001122334455667788B1 /* DigitalTwin */,
 				9900112233445566778899C2 /* Marketplace */,
 				AA11223344556677889900D3 /* Country */,
-				BB22334455667788990011E4 /* AI */,
+			BB22334455667788990011E4 /* AI */,
+			AA22334455667788990011F5 /* Onboarding */,
+			BB33445566778899001122A6 /* Watch */,
+			CC44556677889900112233B7 /* CarPlay */,
+			DD55667788990011223344C8 /* Siri */,
+			EE66778899001122334455D9 /* Purchase */,
+			FF77889900112233445566EA /* Settings */,
+			AA88990011223344556677FB /* Privacy */,
 			CC33445566778899A011F5A1 /* CarCV */,
 			DD4455667788990AB1220062 /* Legal */,
 			EE556677889900BC12330073 /* Trust */,
@@ -234,6 +265,11 @@
 				D279922C1401931CFA4D0954 /* MaintenanceAlarmManager.swift */,
 				EA57A9CC0EF9531D3DB64F16 /* NightModeManager.swift */,
 				42FF6ABA40B111D08FFF3B6C /* PDFExportManager.swift */,
+				C2D3E4F5060718293A1B2C3D /* LocalizationManager.swift */,
+				D3E4F506071829304A1B2C3D /* CloudSyncManager.swift */,
+				E4F5060718293041B2C3D4E5 /* AuthenticationManager.swift */,
+				282930415263748596F607182 /* NotificationManager.swift */,
+				6C30415263748596F6071829 /* AnalyticsManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -467,6 +503,62 @@
 			path = AI;
 			sourceTree = "<group>";
 		};
+		AA22334455667788990011F5 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				B1C2D3E4F5061728394A5B6C /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		BB33445566778899001122A6 /* Watch */ = {
+			isa = PBXGroup;
+			children = (
+				F5060718293041B2C3D4E5F6 /* WatchPreviewView.swift */,
+			);
+			path = Watch;
+			sourceTree = "<group>";
+		};
+		CC44556677889900112233B7 /* CarPlay */ = {
+			isa = PBXGroup;
+			children = (
+				060718293041526374D4E5F6 /* CarPlayPreviewView.swift */,
+			);
+			path = CarPlay;
+			sourceTree = "<group>";
+		};
+		DD55667788990011223344C8 /* Siri */ = {
+			isa = PBXGroup;
+			children = (
+				1718293041526374D4E5F607 /* SiriShortcutsView.swift */,
+			);
+			path = Siri;
+			sourceTree = "<group>";
+		};
+		EE66778899001122334455D9 /* Purchase */ = {
+			isa = PBXGroup;
+			children = (
+				3930415263748596F6071829 /* InAppPurchaseView.swift */,
+			);
+			path = Purchase;
+			sourceTree = "<group>";
+		};
+		FF77889900112233445566EA /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				4A30415263748596F6071829 /* AppStoreScreenshotsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		AA88990011223344556677FB /* Privacy */ = {
+			isa = PBXGroup;
+			children = (
+				5B30415263748596F6071829 /* PrivacyTermsView.swift */,
+			);
+			path = Privacy;
+			sourceTree = "<group>";
+		};
 		CC33445566778899A011F5A1 /* CarCV */ = {
 			isa = PBXGroup;
 			children = (
@@ -638,6 +730,18 @@
 				B4DAE15263748596071829D3 /* ShareVehicleReportView.swift in Sources */,
 				C5EBF26374859607182930E4 /* EnhancedOBDView.swift in Sources */,
 				D6FC037485960718293041F5 /* EnhancedAIChatView.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5D /* OnboardingView.swift in Sources */,
+				B2C3D4E5F607182930A1B2C4 /* LocalizationManager.swift in Sources */,
+				C3D4E5F60718293041B2C3D5 /* CloudSyncManager.swift in Sources */,
+				D4E5F607182930A1B2C3D4E6 /* AuthenticationManager.swift in Sources */,
+				E5F6071829304152B2C3D4E7 /* WatchPreviewView.swift in Sources */,
+				F607182930415263C3D4E5F8 /* CarPlayPreviewView.swift in Sources */,
+				A718293041526374D4E5F609 /* SiriShortcutsView.swift in Sources */,
+				B82930415263748596E5F60A /* NotificationManager.swift in Sources */,
+				C930415263748596F607182B /* InAppPurchaseView.swift in Sources */,
+				DA30415263748596F607182C /* AppStoreScreenshotsView.swift in Sources */,
+				EB30415263748596F607182D /* PrivacyTermsView.swift in Sources */,
+				FC30415263748596F607182E /* AnalyticsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
