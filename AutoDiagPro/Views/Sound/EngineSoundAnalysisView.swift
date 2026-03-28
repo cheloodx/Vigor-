@@ -52,6 +52,7 @@ struct EngineSoundAnalysisView: View {
                     }
                 }
             }
+            .onDisappear { stopRecording() }
         }
     }
     

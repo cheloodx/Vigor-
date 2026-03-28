@@ -103,8 +103,9 @@ struct FuelCalculatorView: View {
                     // Line chart
                     if consumptions.count >= 2 {
                         Path { path in
+                            let divisor = max(1, consumptions.count - 1)
                             for (i, entry) in consumptions.enumerated() {
-                                let x = geo.size.width * CGFloat(i) / CGFloat(consumptions.count - 1)
+                                let x = geo.size.width * CGFloat(i) / CGFloat(divisor)
                                 let y = range > 0 ? geo.size.height * (1 - CGFloat(entry.1 - minVal) / CGFloat(range)) : geo.size.height * 0.5
                                 if i == 0 { path.move(to: CGPoint(x: x, y: y)) }
                                 else { path.addLine(to: CGPoint(x: x, y: y)) }
@@ -114,7 +115,7 @@ struct FuelCalculatorView: View {
                         
                         // Dots
                         ForEach(0..<consumptions.count, id: \.self) { i in
-                            let x = geo.size.width * CGFloat(i) / CGFloat(consumptions.count - 1)
+                            let x = geo.size.width * CGFloat(i) / CGFloat(max(1, consumptions.count - 1))
                             let y = range > 0 ? geo.size.height * (1 - CGFloat(consumptions[i].1 - minVal) / CGFloat(range)) : geo.size.height * 0.5
                             Circle()
                                 .fill(Theme.primary)

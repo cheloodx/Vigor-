@@ -233,7 +233,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
             return
         }
 
-        let pidHex = String(hex.dropFirst(2).prefix(2))
+        let pidHex = String(hex.dropFirst(2).prefix(2)).uppercased()
         let dataHex = String(hex.dropFirst(4))
 
         switch pidHex {
