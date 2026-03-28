@@ -8,6 +8,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     static let shared = LocationManager()
     
     private let manager = CLLocationManager()
+    private var trackingRefCount = 0
     
     @Published var userLocation: CLLocationCoordinate2D?
     @Published var userHeading: Double = 0
@@ -38,6 +39,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func startTracking() {
+        trackingRefCount += 1
+        guard trackingRefCount == 1 else { return } // Already tracking
         requestPermission()
         manager.startUpdatingLocation()
         manager.startUpdatingHeading()
@@ -46,6 +49,8 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     func stopTracking() {
+        trackingRefCount = max(0, trackingRefCount - 1)
+        guard trackingRefCount == 0 else { return } // Other views still need tracking
         manager.stopUpdatingLocation()
         manager.stopUpdatingHeading()
         isTracking = false

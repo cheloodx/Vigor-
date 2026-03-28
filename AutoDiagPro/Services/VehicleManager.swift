@@ -27,6 +27,7 @@ class VehicleManager: ObservableObject {
 
     func addVehicle(_ vehicle: Vehicle) {
         let isDuplicate = savedVehicles.contains { existing in
+            existing.id == vehicle.id ||
             (!vehicle.vin.isEmpty && existing.vin == vehicle.vin) ||
             (!vehicle.licensePlate.isEmpty && existing.licensePlate == vehicle.licensePlate)
         }
