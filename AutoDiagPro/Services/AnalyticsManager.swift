@@ -84,15 +84,20 @@ class AnalyticsManager: ObservableObject {
     }
     
     func setupCrashHandler() {
+        // Capture device info on main thread before registering crash handler
+        let cachedIOSVersion = UIDevice.current.systemVersion
+        let cachedDeviceModel = UIDevice.current.model
+        let cachedAppVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "3.0"
+        
         NSSetUncaughtExceptionHandler { exception in
             let report = CrashReport(
                 id: UUID().uuidString,
                 date: Date(),
                 description: exception.name.rawValue + ": " + (exception.reason ?? "Unknown"),
                 stackTrace: exception.callStackSymbols.joined(separator: "\n"),
-                appVersion: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "3.0",
-                iosVersion: UIDevice.current.systemVersion,
-                deviceModel: UIDevice.current.model
+                appVersion: cachedAppVersion,
+                iosVersion: cachedIOSVersion,
+                deviceModel: cachedDeviceModel
             )
             if let data = try? JSONEncoder().encode([report]) {
                 UserDefaults.standard.set(data, forKey: "pending_crash_reports")

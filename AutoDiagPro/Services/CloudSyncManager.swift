@@ -82,7 +82,9 @@ class CloudSyncManager: ObservableObject {
     // MARK: - Pull from iCloud
     func pullFromCloud() {
         guard syncEnabled else {
-            syncStatus = .disabled
+            DispatchQueue.main.async { [weak self] in
+                self?.syncStatus = .disabled
+            }
             return
         }
         
@@ -91,25 +93,27 @@ class CloudSyncManager: ObservableObject {
             self?.syncStatus = .syncing
         }
         
-        // Read sync timestamp
+        // Read data from kvStore (thread-safe reads)
         let timestamp = kvStore.double(forKey: "sync_timestamp")
-        if timestamp > 0 {
-            lastSyncDate = Date(timeIntervalSince1970: timestamp)
-        }
+        let vehicleData = kvStore.data(forKey: "sync_vehicles")
+        let journalData = kvStore.data(forKey: "sync_journal")
         
-        // Read vehicles
-        if let vehicleData = kvStore.data(forKey: "sync_vehicles"),
-           let vehicles = try? JSONDecoder().decode([Vehicle].self, from: vehicleData) {
-            pulledVehicles = vehicles
-        }
+        // Decode off main queue
+        let decodedVehicles = vehicleData.flatMap { try? JSONDecoder().decode([Vehicle].self, from: $0) }
+        let decodedEntries = journalData.flatMap { try? JSONDecoder().decode([JournalEntry].self, from: $0) }
+        let syncDate = timestamp > 0 ? Date(timeIntervalSince1970: timestamp) : nil
         
-        // Read journal
-        if let journalData = kvStore.data(forKey: "sync_journal"),
-           let entries = try? JSONDecoder().decode([JournalEntry].self, from: journalData) {
-            pulledJournalEntries = entries
-        }
-        
+        // Update all @Published properties on main thread
         DispatchQueue.main.async { [weak self] in
+            if let syncDate = syncDate {
+                self?.lastSyncDate = syncDate
+            }
+            if let vehicles = decodedVehicles {
+                self?.pulledVehicles = vehicles
+            }
+            if let entries = decodedEntries {
+                self?.pulledJournalEntries = entries
+            }
             self?.isSyncing = false
             self?.syncStatus = .success
         }
