@@ -12,11 +12,15 @@ class VehicleManager: ObservableObject {
     private let serviceKey = "service_items"
 
     init() {
+        let isFirstLaunch = UserDefaults.standard.data(forKey: vehiclesKey) == nil
         loadData()
         // Persist default vehicles on first launch so their UUIDs are stable across restarts.
         // Without this, Vehicle.sample/sampleBMW generate new UUIDs each launch,
         // causing journal entries (keyed by vehicle UUID) to be lost.
-        saveData()
+        // Only save on first launch to avoid overwriting user data if decode fails on upgrade.
+        if isFirstLaunch {
+            saveData()
+        }
     }
 
     // MARK: - Vehicle Management
