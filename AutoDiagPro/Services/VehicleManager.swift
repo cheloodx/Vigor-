@@ -13,6 +13,10 @@ class VehicleManager: ObservableObject {
 
     init() {
         loadData()
+        // Persist default vehicles on first launch so their UUIDs are stable across restarts.
+        // Without this, Vehicle.sample/sampleBMW generate new UUIDs each launch,
+        // causing journal entries (keyed by vehicle UUID) to be lost.
+        saveData()
     }
 
     // MARK: - Vehicle Management

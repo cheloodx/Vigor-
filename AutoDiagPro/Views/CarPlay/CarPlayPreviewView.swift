@@ -59,7 +59,14 @@ struct CarPlayPreviewView: View {
         }
         .onReceive(demoTimerPublisher) { _ in
             guard demoTimerActive, useDemoMode else { return }
-            // Update live data from OBD demo
+            // Generate simulated OBD data (sine-wave) so gauges show realistic values
+            let t = Date().timeIntervalSince1970
+            obdManager.liveData.rpm = 800 + 400 * sin(t * 0.5) + 200 * sin(t * 1.3)
+            obdManager.liveData.speed = max(0, 60 + 30 * sin(t * 0.3))
+            obdManager.liveData.engineTemp = 85 + 10 * sin(t * 0.2)
+            obdManager.liveData.airTemp = 25 + 5 * sin(t * 0.15)
+            obdManager.liveData.batteryVoltage = 13.8 + 0.5 * sin(t * 0.4)
+            obdManager.liveData.oilTemp = 90 + 8 * sin(t * 0.25)
             withAnimation(.easeInOut(duration: 0.3)) { animateGauges = true }
         }
     }
