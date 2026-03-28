@@ -69,6 +69,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
         ELM327Commands.vehicleSpeed,
         ELM327Commands.intakeAirTemp,
         ELM327Commands.controlModuleVoltage,
+        ELM327Commands.oilTemp,
     ]
 
     var isConnected: Bool {

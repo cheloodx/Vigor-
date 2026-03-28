@@ -74,6 +74,11 @@ class PDFExportManager {
             
             // Categories
             for category in categories {
+                if yOffset > pageHeight - 100 {
+                    context.beginPage()
+                    yOffset = margin
+                }
+                
                 let catStr = "\(category.name): \(category.score)/100 - \(category.details)"
                 let catColor = category.score >= 80 ? UIColor(red: 0.13, green: 0.77, blue: 0.37, alpha: 1.0) : (category.score >= 50 ? UIColor(red: 0.98, green: 0.75, blue: 0.15, alpha: 1.0) : UIColor(red: 0.94, green: 0.27, blue: 0.27, alpha: 1.0))
                 
@@ -82,6 +87,10 @@ class PDFExportManager {
                 yOffset += 16
                 
                 for rec in category.recommendations {
+                    if yOffset > pageHeight - 80 {
+                        context.beginPage()
+                        yOffset = margin
+                    }
                     "    \u{25B8} \(rec)".draw(at: CGPoint(x: margin + 20, y: yOffset), withAttributes: [.font: bodyFont, .foregroundColor: grayColor])
                     yOffset += 14
                 }
