@@ -76,7 +76,9 @@ class MaintenanceAlarmManager: ObservableObject {
     }
     
     func scheduleNotifications() {
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        // Only remove notifications owned by this manager (alarm UUIDs), not all app notifications
+        let alarmIds = alarms.map { $0.id.uuidString }
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: alarmIds)
         
         for alarm in alarms where alarm.isEnabled {
             let content = UNMutableNotificationContent()

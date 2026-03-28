@@ -145,9 +145,15 @@ class NotificationManager: ObservableObject {
         UNUserNotificationCenter.current().add(request)
     }
     
-    // MARK: - Cancel All
+    // MARK: - Cancel All (only NotificationManager-owned notifications)
     func cancelAllNotifications() {
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+        // Only remove notifications with our prefixed identifiers, not alarm UUIDs from MaintenanceAlarmManager
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            let ownedIds = requests
+                .map(\.identifier)
+                .filter { $0.hasPrefix("service_") || $0.hasPrefix("itp_") || $0.hasPrefix("weekly_report_") }
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: ownedIds)
+        }
     }
     
     // MARK: - Refresh Pending

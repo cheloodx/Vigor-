@@ -45,21 +45,25 @@ class AnalyticsManager: ObservableObject {
     }
     
     func trackScan() {
+        guard analyticsEnabled else { return }
         totalScans += 1
         trackEvent("scan_performed")
     }
     
     func trackOBDConnection() {
+        guard analyticsEnabled else { return }
         totalOBDConnections += 1
         trackEvent("obd_connected")
     }
     
     func trackChatMessage() {
+        guard analyticsEnabled else { return }
         totalChatMessages += 1
         trackEvent("chat_message_sent")
     }
     
     func trackSessionStart() {
+        guard analyticsEnabled else { return }
         totalSessions += 1
         trackEvent("session_start")
     }

@@ -12,6 +12,8 @@ class CloudSyncManager: ObservableObject {
         didSet { UserDefaults.standard.set(syncEnabled, forKey: "iCloudSyncEnabled") }
     }
     @Published var syncStatus: SyncStatus = .idle
+    @Published var pulledVehicles: [Vehicle] = []
+    @Published var pulledJournalEntries: [JournalEntry] = []
     
     enum SyncStatus: String {
         case idle = "Inactiv"
@@ -97,14 +99,14 @@ class CloudSyncManager: ObservableObject {
         
         // Read vehicles
         if let vehicleData = kvStore.data(forKey: "sync_vehicles"),
-           let _ = try? JSONDecoder().decode([Vehicle].self, from: vehicleData) {
-            // Vehicles available - VehicleManager can merge these
+           let vehicles = try? JSONDecoder().decode([Vehicle].self, from: vehicleData) {
+            pulledVehicles = vehicles
         }
         
         // Read journal
         if let journalData = kvStore.data(forKey: "sync_journal"),
-           let _ = try? JSONDecoder().decode([JournalEntry].self, from: journalData) {
-            // Journal entries available
+           let entries = try? JSONDecoder().decode([JournalEntry].self, from: journalData) {
+            pulledJournalEntries = entries
         }
         
         DispatchQueue.main.async { [weak self] in
