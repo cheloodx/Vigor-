@@ -87,12 +87,23 @@ class MaintenanceAlarmManager: ObservableObject {
             content.sound = .default
             
             let days = alarm.daysRemaining()
-            if days > 0 && days <= 30 {
+            if days <= 0 {
+                // Overdue — notify immediately (5 second delay)
+                content.body = "\(alarm.componentName) este DEPASIT! Programati urgent o vizita la service."
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+                let request = UNNotificationRequest(identifier: alarm.id.uuidString, content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request)
+            } else if days <= 7 {
+                // Due within 7 days — notify immediately (5 second delay) since the 7-day-ahead window has passed
+                content.body = "\(alarm.componentName) necesita atentie in \(days) zile! Programati o vizita la service."
+                let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+                let request = UNNotificationRequest(identifier: alarm.id.uuidString, content: content, trigger: trigger)
+                UNUserNotificationCenter.current().add(request)
+            } else if days <= 30 {
+                // Due in 8-30 days — schedule 7 days before due date
                 let triggerDate = Calendar.current.date(byAdding: .day, value: -7, to: alarm.nextServiceDate) ?? Date()
-                guard triggerDate > Date() else { continue }
                 let components = Calendar.current.dateComponents([.year, .month, .day, .hour], from: triggerDate)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-                
                 let request = UNNotificationRequest(identifier: alarm.id.uuidString, content: content, trigger: trigger)
                 UNUserNotificationCenter.current().add(request)
             }
