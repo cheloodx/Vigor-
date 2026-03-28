@@ -1,5 +1,4 @@
 import SwiftUI
-import WidgetKit
 
 // MARK: - Widget-Ready Health View
 // This provides the widget UI components that can be used by a WidgetKit extension
