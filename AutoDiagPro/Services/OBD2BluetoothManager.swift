@@ -210,7 +210,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
             }
 
             // Detect error responses from ELM327
-            let errorIndicators = ["?", "ERROR", "UNABLE TO CONNECT", "NO DATA", "BUS INIT", "CAN ERROR"]
+            let errorIndicators = ["?", "ERROR", "UNABLE TO CONNECT", "NO DATA", "CAN ERROR"]
             let isError = errorIndicators.contains { cleaned.uppercased().contains($0) }
 
             // Protocol search (last init step) failing means vehicle ECU is not responding
