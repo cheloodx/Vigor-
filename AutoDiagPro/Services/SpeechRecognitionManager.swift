@@ -12,6 +12,7 @@ class SpeechRecognitionManager: ObservableObject {
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
+    private var sessionID = UUID()
 
     init() {
         checkAuthorization()
@@ -127,6 +128,8 @@ class SpeechRecognitionManager: ObservableObject {
 
     // MARK: - Demo Mode Fallback
     private func startDemoMode() {
+        let currentSession = UUID()
+        sessionID = currentSession
         isListening = true
         transcript = ""
         errorMessage = nil
@@ -145,13 +148,14 @@ class SpeechRecognitionManager: ObservableObject {
         let words = selectedTranscript.components(separatedBy: " ")
         for (index, _) in words.enumerated() {
             DispatchQueue.main.asyncAfter(deadline: .now() + Double(index) * 0.3) { [weak self] in
-                guard let self = self, self.isListening else { return }
+                guard let self = self, self.isListening, self.sessionID == currentSession else { return }
                 self.transcript = words[0...index].joined(separator: " ")
 
                 // Auto-stop after last word
                 if index == words.count - 1 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                        self?.stopListening()
+                        guard let self = self, self.sessionID == currentSession else { return }
+                        self.stopListening()
                     }
                 }
             }

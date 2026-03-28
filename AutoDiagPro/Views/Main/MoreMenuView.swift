@@ -19,6 +19,8 @@ struct MoreMenuView: View {
                     featureSection(title: "AI & PREDICTII", features: aiFeatures)
                     featureSection(title: "VEHICUL", features: vehicleFeatures)
                     featureSection(title: "SERVICE & COSTURI", features: serviceFeatures)
+                    featureSection(title: "INCREDERE & PARTAJARE", features: trustFeatures)
+                    featureSection(title: "LEGAL & SIGURANTA", features: legalFeatures)
                     featureSection(title: "EUROPA & MARKETPLACE", features: europeFeatures)
                     featureSection(title: "SETARI", features: settingsFeatures)
                     
@@ -192,6 +194,7 @@ struct MoreMenuView: View {
     
     private var aiFeatures: [MoreFeature] {
         [
+            MoreFeature(name: "Mecanic AI Pro", subtitle: "Chat AI context-aware", icon: "bubble.left.and.bubble.right.fill", color: Color(red: 0.0, green: 0.7, blue: 0.9), destination: AnyView(EnhancedAIChatView().environmentObject(vehicleManager))),
             MoreFeature(name: "Predictor AI", subtitle: "Ce se strica in 3-6 luni", icon: "brain.head.profile", color: Color(red: 0.6, green: 0.2, blue: 0.9), destination: AnyView(FailurePredictorView().environmentObject(vehicleManager))),
             MoreFeature(name: "Radar ITP", subtitle: "Trece ITP-ul?", icon: "shield.checkered", color: Theme.gaugeRed, destination: AnyView(ITPRadarView().environmentObject(vehicleManager))),
             MoreFeature(name: "Digital Twin", subtitle: "Twin digital complet", icon: "cube.transparent.fill", color: Theme.primary, destination: AnyView(CarDigitalTwinView().environmentObject(vehicleManager))),
@@ -201,6 +204,8 @@ struct MoreMenuView: View {
     
     private var vehicleFeatures: [MoreFeature] {
         [
+            MoreFeature(name: "CV Auto", subtitle: "Istoric complet vehicul", icon: "doc.text.fill", color: Color(red: 0.0, green: 0.7, blue: 0.5), destination: AnyView(CarCVView().environmentObject(vehicleManager))),
+            MoreFeature(name: "OBD2 Avansat", subtitle: "Live data + consum real", icon: "antenna.radiowaves.left.and.right", color: Theme.primary, destination: AnyView(EnhancedOBDView().environmentObject(vehicleManager))),
             MoreFeature(name: "Istoric", subtitle: "Scanari anterioare", icon: "clock.arrow.circlepath", color: Theme.primary, destination: AnyView(DiagnosticHistoryView().environmentObject(vehicleManager))),
             MoreFeature(name: "Jurnal", subtitle: "Log vehicul complet", icon: "book.fill", color: Color(red: 0.22, green: 0.78, blue: 0.35), destination: AnyView(VehicleJournalView().environmentObject(vehicleManager))),
             MoreFeature(name: "Alarme", subtitle: "Notificari intretinere", icon: "bell.badge.fill", color: Theme.gaugeYellow, destination: AnyView(MaintenanceAlarmsView().environmentObject(vehicleManager))),
@@ -219,6 +224,19 @@ struct MoreMenuView: View {
             MoreFeature(name: "Voce", subtitle: "Diagnostic vocal", icon: "mic.fill", color: Color(red: 0.95, green: 0.3, blue: 0.5), destination: AnyView(VoiceDiagnosticView().environmentObject(vehicleManager))),
             MoreFeature(name: "Comparator", subtitle: "Autorizat vs Independent", icon: "arrow.left.arrow.right.circle.fill", color: Color.purple, destination: AnyView(CostComparatorView().environmentObject(vehicleManager))),
             MoreFeature(name: "Comparator RCA", subtitle: "Oferte asigurare", icon: "shield.fill", color: Color(red: 0.2, green: 0.5, blue: 0.9), destination: AnyView(RCAComparatorView().environmentObject(vehicleManager))),
+        ]
+    }
+    
+    private var trustFeatures: [MoreFeature] {
+        [
+            MoreFeature(name: "Mecanici Verificati", subtitle: "Rating + garantie lucrare", icon: "checkmark.shield.fill", color: Theme.gaugeGreen, destination: AnyView(MechanicTrustView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Raport Vehicul", subtitle: "Trimite/primeste raport", icon: "square.and.arrow.up.fill", color: Color(red: 0.0, green: 0.6, blue: 0.85), destination: AnyView(ShareVehicleReportView().environmentObject(vehicleManager))),
+        ]
+    }
+    
+    private var legalFeatures: [MoreFeature] {
+        [
+            MoreFeature(name: "Legal & Amenzi", subtitle: "Camere, reguli, amenzi", icon: "exclamationmark.triangle.fill", color: Theme.gaugeYellow, destination: AnyView(LegalRadarView().environmentObject(vehicleManager))),
         ]
     }
     

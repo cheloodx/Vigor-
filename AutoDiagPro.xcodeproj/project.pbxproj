@@ -63,6 +63,12 @@
 		BE74E5F6071829304152637A /* MultiCountryConfigView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74E5F607182930A1B2C3D4E; };
 		CF85F607182930415263748B /* EuropeanAIDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F85F607182930A1B2C3D4E5F; };
 		D096071829304152637485A0 /* EuropeanCountry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096071829304152637485A0B; };
+		E1A7B82930415263748596A0 /* CarCVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A7B82930415263748596A01; };
+		F2B8C93041526374859607B1 /* LegalRadarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8C93041526374859607B12; };
+		A3C9D04152637485960718C2 /* MechanicTrustView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9D04152637485960718C23; };
+		B4DAE15263748596071829D3 /* ShareVehicleReportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DAE15263748596071829D34; };
+		C5EBF26374859607182930E4 /* EnhancedOBDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EBF26374859607182930E45; };
+		D6FC037485960718293041F5 /* EnhancedAIChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC037485960718293041F56; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -124,6 +130,12 @@
 		E74E5F607182930A1B2C3D4E /* MultiCountryConfigView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiCountryConfigView.swift; sourceTree = "<group>"; };
 		F85F607182930A1B2C3D4E5F /* EuropeanAIDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EuropeanAIDataView.swift; sourceTree = "<group>"; };
 		096071829304152637485A0B /* EuropeanCountry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EuropeanCountry.swift; sourceTree = "<group>"; };
+		1A7B82930415263748596A01 /* CarCVView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarCVView.swift; sourceTree = "<group>"; };
+		2B8C93041526374859607B12 /* LegalRadarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LegalRadarView.swift; sourceTree = "<group>"; };
+		3C9D04152637485960718C23 /* MechanicTrustView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MechanicTrustView.swift; sourceTree = "<group>"; };
+		4DAE15263748596071829D34 /* ShareVehicleReportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareVehicleReportView.swift; sourceTree = "<group>"; };
+		5EBF26374859607182930E45 /* EnhancedOBDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedOBDView.swift; sourceTree = "<group>"; };
+		6FC037485960718293041F56 /* EnhancedAIChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnhancedAIChatView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -205,6 +217,10 @@
 				9900112233445566778899C2 /* Marketplace */,
 				AA11223344556677889900D3 /* Country */,
 				BB22334455667788990011E4 /* AI */,
+			CC33445566778899A011F5A1 /* CarCV */,
+			DD4455667788990AB1220062 /* Legal */,
+			EE556677889900BC12330073 /* Trust */,
+			FF667788990011CD23440084 /* Share */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -279,6 +295,7 @@
 			isa = PBXGroup;
 			children = (
 				526F84A86BE7844EC28576C4 /* LiveDashboardView.swift */,
+				5EBF26374859607182930E45 /* EnhancedOBDView.swift */,
 			);
 			path = Live;
 			sourceTree = "<group>";
@@ -295,6 +312,7 @@
 			isa = PBXGroup;
 			children = (
 				3770A9E69786BC180759BA5F /* MechanicChatView.swift */,
+				6FC037485960718293041F56 /* EnhancedAIChatView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -449,6 +467,38 @@
 			path = AI;
 			sourceTree = "<group>";
 		};
+		CC33445566778899A011F5A1 /* CarCV */ = {
+			isa = PBXGroup;
+			children = (
+				1A7B82930415263748596A01 /* CarCVView.swift */,
+			);
+			path = CarCV;
+			sourceTree = "<group>";
+		};
+		DD4455667788990AB1220062 /* Legal */ = {
+			isa = PBXGroup;
+			children = (
+				2B8C93041526374859607B12 /* LegalRadarView.swift */,
+			);
+			path = Legal;
+			sourceTree = "<group>";
+		};
+		EE556677889900BC12330073 /* Trust */ = {
+			isa = PBXGroup;
+			children = (
+				3C9D04152637485960718C23 /* MechanicTrustView.swift */,
+			);
+			path = Trust;
+			sourceTree = "<group>";
+		};
+		FF667788990011CD23440084 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				4DAE15263748596071829D34 /* ShareVehicleReportView.swift */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
 		9A7BB86C336844EF1D466967 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -582,6 +632,12 @@
 				BE74E5F6071829304152637A /* MultiCountryConfigView.swift in Sources */,
 				CF85F607182930415263748B /* EuropeanAIDataView.swift in Sources */,
 				D096071829304152637485A0 /* EuropeanCountry.swift in Sources */,
+				E1A7B82930415263748596A0 /* CarCVView.swift in Sources */,
+				F2B8C93041526374859607B1 /* LegalRadarView.swift in Sources */,
+				A3C9D04152637485960718C2 /* MechanicTrustView.swift in Sources */,
+				B4DAE15263748596071829D3 /* ShareVehicleReportView.swift in Sources */,
+				C5EBF26374859607182930E4 /* EnhancedOBDView.swift in Sources */,
+				D6FC037485960718293041F5 /* EnhancedAIChatView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

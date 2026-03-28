@@ -187,6 +187,6 @@ struct MaintenanceAlarmsView: View {
         let km = alarm.kmRemaining(currentMileage: mileage)
         let kmProgress = alarm.intervalKm > 0 ? CGFloat(alarm.intervalKm - km) / CGFloat(alarm.intervalKm) : 0
         
-        return min(1.0, max(dayProgress, kmProgress))
+        return min(1.0, max(0.0, max(dayProgress, kmProgress)))
     }
 }
