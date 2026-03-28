@@ -430,6 +430,7 @@ struct EnhancedOBDView: View {
     
     // MARK: - Demo Mode
     private func startDemoMode() {
+        stopDemoMode()  // Invalidate any existing timer first
         sessionStart = Date()
         demoTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [self] _ in
             guard useDemoMode else { return }
