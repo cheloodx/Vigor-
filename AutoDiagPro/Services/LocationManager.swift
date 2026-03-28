@@ -105,7 +105,12 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
             
             switch manager.authorizationStatus {
             case .authorizedWhenInUse, .authorizedAlways:
-                self?.startTracking()
+                // Resume tracking if views already requested it, without corrupting refCount
+                if self?.trackingRefCount ?? 0 > 0 {
+                    self?.manager.startUpdatingLocation()
+                    self?.manager.startUpdatingHeading()
+                    self?.isTracking = true
+                }
             case .denied, .restricted:
                 self?.locationError = "Accesul la locatie este refuzat. Activati din Setari."
                 self?.isTracking = false
