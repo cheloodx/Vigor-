@@ -217,7 +217,7 @@ struct SignInView: View {
             // Sign out
             Button(action: { authManager.signOut() }) {
                 HStack(spacing: 8) {
-                    Image(systemName: "rectangle.portrait.and.arrow.right")
+                    Image(systemName: "arrow.right.circle")
                     Text("Deconecteaza-te")
                 }
                 .font(.system(size: 14, weight: .semibold))

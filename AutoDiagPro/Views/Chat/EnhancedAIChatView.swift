@@ -90,7 +90,7 @@ struct EnhancedAIChatView: View {
                 .font(.system(size: 10))
                 .foregroundColor(Theme.textMuted)
             Spacer()
-            Image(systemName: "brain.head.profile")
+            Image(systemName: "brain")
                 .font(.system(size: 11))
                 .foregroundColor(Theme.gaugeGreen)
         }

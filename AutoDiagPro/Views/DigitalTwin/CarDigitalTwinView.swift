@@ -113,7 +113,7 @@ struct CarDigitalTwinView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "cube.transparent.fill")
+                        Image(systemName: "cube.fill")
                             .foregroundColor(Theme.primary)
                         Text("Digital Twin")
                             .font(.system(size: 18, weight: .bold))

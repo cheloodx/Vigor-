@@ -303,9 +303,13 @@ struct VINScanView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .background(
-                    (manualVIN.isEmpty && manualPlate.isEmpty) || isLoading
-                        ? Color.gray.opacity(0.3)
-                        : LinearGradient(colors: [Color(red: 0.06, green: 0.46, blue: 0.43), Color(red: 0.08, green: 0.72, blue: 0.65)], startPoint: .leading, endPoint: .trailing)
+                    Group {
+                        if (manualVIN.isEmpty && manualPlate.isEmpty) || isLoading {
+                            Color.gray.opacity(0.3)
+                        } else {
+                            LinearGradient(colors: [Color(red: 0.06, green: 0.46, blue: 0.43), Color(red: 0.08, green: 0.72, blue: 0.65)], startPoint: .leading, endPoint: .trailing)
+                        }
+                    }
                 )
                 .foregroundColor(.white)
                 .cornerRadius(10)
@@ -363,7 +367,7 @@ struct VINScanView: View {
 
                 // Info grid
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                    infoCell(label: "Tara", value: "RO", icon: "globe.europe.africa.fill")
+                    infoCell(label: "Tara", value: "RO", icon: "globe.americas.fill")
                     infoCell(label: "Culoare", value: vehicle.color, icon: "paintpalette.fill")
                     infoCell(label: "Echipare", value: vehicle.equipment, icon: "gearshape.fill")
                     infoCell(label: "Revizie", value: "15.000 km", icon: "calendar")

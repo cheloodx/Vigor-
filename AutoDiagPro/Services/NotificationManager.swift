@@ -254,7 +254,7 @@ struct NotificationSettingsView: View {
                 .tracking(1.2)
             
             notifToggle(title: "Alarme Service", subtitle: "Cand se apropie revizia", icon: "wrench.fill", color: Theme.primary, binding: $notifManager.notificationSettings.serviceAlerts)
-            notifToggle(title: "Reminder ITP", subtitle: "30 zile inainte de expirare", icon: "shield.checkered", color: Theme.gaugeRed, binding: $notifManager.notificationSettings.itpReminder)
+            notifToggle(title: "Reminder ITP", subtitle: "30 zile inainte de expirare", icon: "shield.fill", color: Theme.gaugeRed, binding: $notifManager.notificationSettings.itpReminder)
             notifToggle(title: "Reminder RCA", subtitle: "30 zile inainte de expirare", icon: "shield.fill", color: Color(red: 0.2, green: 0.5, blue: 0.9), binding: $notifManager.notificationSettings.rcaReminder)
             notifToggle(title: "Raport Saptamanal", subtitle: "Duminica la 10:00", icon: "chart.bar.fill", color: Theme.gaugeGreen, binding: $notifManager.notificationSettings.weeklyReport)
             notifToggle(title: "Alerte DTC", subtitle: "Erori motor detectate", icon: "exclamationmark.triangle.fill", color: Theme.gaugeYellow, binding: $notifManager.notificationSettings.dtcAlerts)

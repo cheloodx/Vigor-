@@ -30,6 +30,14 @@
 	<string>AutoDiag Pro foloseste recunoasterea vocala pentru a primi comenzi in limba romana.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>AutoDiag Pro foloseste Bluetooth pentru conectarea la adaptorul OBD2 ELM327.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>AutoDiag Pro foloseste Bluetooth pentru conectarea la adaptorul OBD2 ELM327.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>AutoDiag Pro foloseste locatia pentru a gasi service-uri auto, mecanici si statii ITP in apropierea ta.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>AutoDiag Pro foloseste locatia pentru a gasi service-uri auto, mecanici si statii ITP in apropierea ta.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>AutoDiag Pro foloseste senzorii de miscare pentru functia Shake to Diagnose.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

@@ -24,7 +24,7 @@ struct LiveDashboardView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "gauge.open.with.lines.needle.33percent")
+                        Image(systemName: "speedometer")
                             .foregroundColor(Theme.primary)
                         Text("Date Live OBD2")
                             .font(.system(size: 18, weight: .bold))
@@ -163,7 +163,7 @@ struct LiveDashboardView: View {
             Spacer(minLength: 40)
 
             VStack(spacing: 14) {
-                Image(systemName: "cable.connector")
+                Image(systemName: "link")
                     .font(.system(size: 52))
                     .foregroundColor(Theme.textMuted)
 
@@ -288,7 +288,7 @@ struct LiveDashboardView: View {
             // Disconnect button
             Button(action: disconnect) {
                 HStack(spacing: 8) {
-                    Image(systemName: "cable.connector")
+                    Image(systemName: "link")
                     Text("Deconectare")
                         .font(.system(size: 13, weight: .semibold))
                 }

@@ -22,7 +22,7 @@ struct MainTabView: View {
 
             LiveDashboardView()
                 .tabItem {
-                    Image(systemName: "gauge.open.with.lines.needle.33percent.and.arrowtriangle")
+                    Image(systemName: "speedometer")
                     Text("Live")
                 }
                 .tag(2)

@@ -202,7 +202,7 @@ struct ShareVehicleReportView: View {
                             Text("Se genereaza raportul...")
                                 .font(.system(size: 14, weight: .bold))
                         } else {
-                            Image(systemName: "doc.badge.plus")
+                            Image(systemName: "doc.fill")
                             Text("Genereaza Raport")
                                 .font(.system(size: 14, weight: .bold))
                         }

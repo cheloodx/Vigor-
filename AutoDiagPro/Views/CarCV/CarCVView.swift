@@ -301,7 +301,7 @@ struct CarCVView: View {
             // Add invoice button
             Button(action: { showAddRecord = true }) {
                 HStack(spacing: 8) {
-                    Image(systemName: "doc.badge.plus")
+                    Image(systemName: "doc.fill")
                         .font(.system(size: 16))
                     Text("Adauga Factura (Foto)")
                         .font(.system(size: 13, weight: .semibold))

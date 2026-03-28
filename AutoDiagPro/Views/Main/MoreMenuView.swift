@@ -182,7 +182,7 @@ struct MoreMenuView: View {
     // MARK: - Feature Lists
     private var diagnosticFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Scor Sanatate", subtitle: "Nota generala 0-100", icon: "heart.text.square.fill", color: Theme.gaugeGreen, destination: AnyView(HealthScoreView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Scor Sanatate", subtitle: "Nota generala 0-100", icon: "heart.square.fill", color: Theme.gaugeGreen, destination: AnyView(HealthScoreView().environmentObject(vehicleManager))),
             MoreFeature(name: "Diagrama Auto", subtitle: "Componente vizuale", icon: "car.fill", color: Theme.primary, destination: AnyView(CarAnimationView().environmentObject(vehicleManager))),
             MoreFeature(name: "AR Piese", subtitle: "Vizualizare AR daune", icon: "viewfinder", color: Color(red: 0.0, green: 0.85, blue: 0.75), destination: AnyView(ARDiagnosticView().environmentObject(vehicleManager))),
             MoreFeature(name: "Scanner Piese", subtitle: "QR cod + alternative", icon: "qrcode.viewfinder", color: Color(red: 0.85, green: 0.55, blue: 0.0), destination: AnyView(QRPartScannerView().environmentObject(vehicleManager))),
@@ -190,17 +190,17 @@ struct MoreMenuView: View {
             MoreFeature(name: "Analiza Sunet", subtitle: "Inregistrare motor", icon: "waveform.circle.fill", color: Color(red: 0.95, green: 0.5, blue: 0.2), destination: AnyView(EngineSoundAnalysisView())),
             MoreFeature(name: "Diagnostic Rapid", subtitle: "Shake to diagnose", icon: "iphone.radiowaves.left.and.right", color: Color.purple, destination: AnyView(ShakeDiagnoseView().environmentObject(vehicleManager))),
             MoreFeature(name: "AR Ghid Reparatie", subtitle: "Pasi AR interactivi", icon: "wrench.and.screwdriver.fill", color: Theme.gaugeGreen, destination: AnyView(ARRepairGuideView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Widget iOS", subtitle: "Home screen widget", icon: "square.text.square.fill", color: Color(red: 0.0, green: 0.75, blue: 0.85), destination: AnyView(HealthWidgetPreview().environmentObject(vehicleManager))),
+            MoreFeature(name: "Widget iOS", subtitle: "Home screen widget", icon: "square.grid.2x2.fill", color: Color(red: 0.0, green: 0.75, blue: 0.85), destination: AnyView(HealthWidgetPreview().environmentObject(vehicleManager))),
         ]
     }
     
     private var aiFeatures: [MoreFeature] {
         [
             MoreFeature(name: "Mecanic AI Pro", subtitle: "Chat AI context-aware", icon: "bubble.left.and.bubble.right.fill", color: Color(red: 0.0, green: 0.7, blue: 0.9), destination: AnyView(EnhancedAIChatView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Predictor AI", subtitle: "Ce se strica in 3-6 luni", icon: "brain.head.profile", color: Color(red: 0.6, green: 0.2, blue: 0.9), destination: AnyView(FailurePredictorView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Radar ITP", subtitle: "Trece ITP-ul?", icon: "shield.checkered", color: Theme.gaugeRed, destination: AnyView(ITPRadarView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Digital Twin", subtitle: "Twin digital complet", icon: "cube.transparent.fill", color: Theme.primary, destination: AnyView(CarDigitalTwinView().environmentObject(vehicleManager))),
-            MoreFeature(name: "AI European", subtitle: "Date per marca/tara", icon: "brain.head.profile", color: Color(red: 0.0, green: 0.6, blue: 0.9), destination: AnyView(EuropeanAIDataView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Predictor AI", subtitle: "Ce se strica in 3-6 luni", icon: "brain", color: Color(red: 0.6, green: 0.2, blue: 0.9), destination: AnyView(FailurePredictorView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Radar ITP", subtitle: "Trece ITP-ul?", icon: "shield.fill", color: Theme.gaugeRed, destination: AnyView(ITPRadarView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Digital Twin", subtitle: "Twin digital complet", icon: "cube.fill", color: Theme.primary, destination: AnyView(CarDigitalTwinView().environmentObject(vehicleManager))),
+            MoreFeature(name: "AI European", subtitle: "Date per marca/tara", icon: "brain", color: Color(red: 0.0, green: 0.6, blue: 0.9), destination: AnyView(EuropeanAIDataView().environmentObject(vehicleManager))),
         ]
     }
     
@@ -221,7 +221,7 @@ struct MoreMenuView: View {
     
     private var serviceFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Service", subtitle: "Calendar intretinere", icon: "calendar.badge.clock", color: Theme.primary, destination: AnyView(ServiceCalendarView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Service", subtitle: "Calendar intretinere", icon: "calendar", color: Theme.primary, destination: AnyView(ServiceCalendarView().environmentObject(vehicleManager))),
             MoreFeature(name: "Costuri", subtitle: "Estimator costuri", icon: "creditcard.fill", color: Theme.secondary, destination: AnyView(CostEstimatorView().environmentObject(vehicleManager))),
             MoreFeature(name: "Voce", subtitle: "Diagnostic vocal", icon: "mic.fill", color: Color(red: 0.95, green: 0.3, blue: 0.5), destination: AnyView(VoiceDiagnosticView().environmentObject(vehicleManager))),
             MoreFeature(name: "Comparator", subtitle: "Autorizat vs Independent", icon: "arrow.left.arrow.right.circle.fill", color: Color.purple, destination: AnyView(CostComparatorView().environmentObject(vehicleManager))),
@@ -244,8 +244,8 @@ struct MoreMenuView: View {
     
     private var europeFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Configurare Tara", subtitle: "44 tari europene", icon: "globe.europe.africa.fill", color: Color(red: 0.0, green: 0.5, blue: 0.9), destination: AnyView(MultiCountryConfigView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Marketplace", subtitle: "Mecanici & service-uri", icon: "storefront.fill", color: Theme.secondary, destination: AnyView(ServiceMarketplaceView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Configurare Tara", subtitle: "44 tari europene", icon: "globe.americas.fill", color: Color(red: 0.0, green: 0.5, blue: 0.9), destination: AnyView(MultiCountryConfigView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Marketplace", subtitle: "Mecanici & service-uri", icon: "building.2.fill", color: Theme.secondary, destination: AnyView(ServiceMarketplaceView().environmentObject(vehicleManager))),
         ]
     }
     

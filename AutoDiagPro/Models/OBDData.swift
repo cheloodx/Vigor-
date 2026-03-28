@@ -93,7 +93,7 @@ extension GaugeConfig {
             maxValue: 8000,
             warningThreshold: 5500,
             dangerThreshold: 6500,
-            icon: "gauge.open.with.lines.needle.33percent",
+            icon: "speedometer",
             keyPath: \.rpm,
             colorScheme: .highIsBad
         ),
@@ -115,7 +115,7 @@ extension GaugeConfig {
             maxValue: 16,
             warningThreshold: 11.5,
             dangerThreshold: 11.0,
-            icon: "battery.100.bolt",
+            icon: "battery.100percent",
             keyPath: \.batteryVoltage,
             colorScheme: .lowIsBad
         ),

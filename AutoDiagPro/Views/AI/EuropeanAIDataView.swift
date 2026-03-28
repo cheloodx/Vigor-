@@ -95,7 +95,7 @@ struct EuropeanAIDataView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "brain.head.profile")
+                        Image(systemName: "brain")
                             .foregroundColor(Theme.primary)
                         Text("AI Date Europene")
                             .font(.system(size: 18, weight: .bold))
@@ -168,7 +168,7 @@ struct EuropeanAIDataView: View {
     private var analyzeButton: some View {
         Button(action: { startAnalysis() }) {
             HStack(spacing: 8) {
-                Image(systemName: "brain.head.profile").font(.system(size: 16))
+                Image(systemName: "brain").font(.system(size: 16))
                 Text("Analizeaza \(selectedBrand.rawValue) in \(EuropeanCountry.country(for: selectedCountry)?.name ?? selectedCountry)")
                     .font(.system(size: 14, weight: .bold))
             }
@@ -285,7 +285,7 @@ struct AIInsight: Identifiable {
             AIInsight(title: "Cost mediu intretinere", description: "Costul mediu anual de intretinere pentru \(brand.rawValue) in \(countryName), incluzand revizie, consumabile si reparatii minore.", icon: "banknote.fill", color: Theme.secondary, category: "Costuri", dataPoints: ["Revizie standard: 500-900 \(currency)", "Frane complete: 800-1500 \(currency)", "Distributie: 1200-2500 \(currency)", "Total mediu/an: 1500-3000 \(currency)"]),
             AIInsight(title: "Fiabilitate pe piata \(countryName)", description: "Bazat pe statisticile de inspectie tehnica si rapoartele service, \(brand.rawValue) se pozitioneaza in top 5 cele mai fiabile marci pe piata din \(countryName).", icon: "chart.bar.fill", color: Theme.gaugeGreen, category: "Fiabilitate", dataPoints: ["Rata trecere ITP prima data: 78%", "Problema principala la ITP: emisii gaze", "Varsta medie parc: 12.5 ani", "Km mediu la vanzare SH: 165.000 km"]),
             AIInsight(title: "Piese si disponibilitate", description: "Disponibilitatea pieselor de schimb pentru \(brand.rawValue) in \(countryName). Marcile germane au cea mai buna retea de distributie piese.", icon: "shippingbox.fill", color: Theme.primary, category: "Piese", dataPoints: ["Timp livrare piese OEM: 1-3 zile", "Alternative aftermarket: disponibile larg", "Piese SH: piata activa online", "Discount mediu aftermarket vs OEM: 30-50%"]),
-            AIInsight(title: "Tendinte piata \(countryName)", description: "Tendintele actuale ale pietei auto din \(countryName) pentru \(brand.rawValue): cresterea interesului pentru hibrid/electric, scaderea valorii diesel.", icon: "chart.line.uptrend.xyaxis", color: Theme.gaugeYellow, category: "Tendinte", dataPoints: ["Diesel: scadere 15% valoare/an", "Hibrid: crestere cerere 25%/an", "Electric: crestere cerere 40%/an", "SUV: cel mai popular segment"]),
+            AIInsight(title: "Tendinte piata \(countryName)", description: "Tendintele actuale ale pietei auto din \(countryName) pentru \(brand.rawValue): cresterea interesului pentru hibrid/electric, scaderea valorii diesel.", icon: "chart.xyaxis.line", color: Theme.gaugeYellow, category: "Tendinte", dataPoints: ["Diesel: scadere 15% valoare/an", "Hibrid: crestere cerere 25%/an", "Electric: crestere cerere 40%/an", "SUV: cel mai popular segment"]),
         ]
     }
 }

@@ -789,7 +789,7 @@ struct ARDetectedPart: Identifiable {
             ),
             ARDetectedPart(
                 name: "Baterie Auto",
-                icon: "battery.100.bolt",
+                icon: "battery.100percent",
                 arPosition: CGPoint(x: 120, y: 70),
                 healthPercent: 40,
                 severity: .warning,

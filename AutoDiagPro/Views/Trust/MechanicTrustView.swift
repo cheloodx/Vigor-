@@ -200,7 +200,7 @@ struct MechanicTrustView: View {
                         .foregroundColor(Theme.textSecondary)
                 }
                 Spacer()
-                Image(systemName: "shield.checkered")
+                Image(systemName: "shield.fill")
                     .font(.system(size: 32))
                     .foregroundColor(Theme.gaugeGreen)
             }

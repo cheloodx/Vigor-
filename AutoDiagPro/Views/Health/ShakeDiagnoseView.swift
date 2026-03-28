@@ -87,7 +87,7 @@ struct ShakeDiagnoseView: View {
                     .fill(Theme.primary.opacity(0.1))
                     .frame(width: 120, height: 120)
                 
-                Image(systemName: "iphone.gen3")
+                Image(systemName: "iphone")
                     .font(.system(size: 50))
                     .foregroundColor(Theme.primary)
                     .rotationEffect(.degrees(isShaking ? -15 : 15))

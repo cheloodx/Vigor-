@@ -137,7 +137,7 @@ struct EnhancedOBDView: View {
         VStack(spacing: 10) {
             // Main gauges grid
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                liveGauge(title: "RPM", value: obdManager.liveData.rpm, unit: "rpm", maxVal: 6000, color: Theme.primary, icon: "gauge.high")
+                liveGauge(title: "RPM", value: obdManager.liveData.rpm, unit: "rpm", maxVal: 6000, color: Theme.primary, icon: "speedometer")
                 liveGauge(title: "Viteza", value: obdManager.liveData.speed, unit: "km/h", maxVal: 250, color: Theme.gaugeGreen, icon: "speedometer")
                 liveGauge(title: "Temp. Motor", value: obdManager.liveData.engineTemp, unit: "C", maxVal: 120, color: tempColor(obdManager.liveData.engineTemp), icon: "thermometer.medium")
                 liveGauge(title: "Temp. Aer", value: obdManager.liveData.airTemp, unit: "C", maxVal: 60, color: Theme.primary, icon: "wind")
@@ -263,7 +263,7 @@ struct EnhancedOBDView: View {
                     .foregroundColor(Theme.textMuted)
                     .tracking(1.2)
                 
-                fuelTip(icon: "gauge.low", text: "Mentin turatia sub 2500 RPM pentru consum optim", savings: "-15%")
+                fuelTip(icon: "speedometer", text: "Mentin turatia sub 2500 RPM pentru consum optim", savings: "-15%")
                 fuelTip(icon: "thermometer.low", text: "Motor cald = consum mai mic. Evita distantele scurte", savings: "-10%")
                 fuelTip(icon: "tire", text: "Presiune corecta anvelope reduce consumul", savings: "-5%")
                 fuelTip(icon: "wind", text: "Reducerea vitezei de la 130 la 110 km/h", savings: "-20%")
@@ -373,10 +373,10 @@ struct EnhancedOBDView: View {
                 let minutes = (Int(elapsed) % 3600) / 60
                 
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                    tripStat(icon: "road.lanes", label: "Distanta", value: String(format: "%.1f km", tripDistance))
+                    tripStat(icon: "arrow.left.and.right", label: "Distanta", value: String(format: "%.1f km", tripDistance))
                     tripStat(icon: "clock", label: "Durata", value: String(format: "%d:%02d", hours, minutes))
                     tripStat(icon: "fuelpump.fill", label: "Combustibil", value: String(format: "%.2f L", tripFuelUsed))
-                    tripStat(icon: "gauge.medium", label: "Consum mediu", value: String(format: "%.1f L/100", avgFuelConsumption))
+                    tripStat(icon: "speedometer", label: "Consum mediu", value: String(format: "%.1f L/100", avgFuelConsumption))
                     tripStat(icon: "speedometer", label: "Viteza medie", value: tripDistance > 0 && elapsed > 0 ? String(format: "%.0f km/h", tripDistance / (elapsed / 3600)) : "0 km/h")
                     tripStat(icon: "thermometer.medium", label: "Temp. medie", value: String(format: "%.0f C", obdManager.liveData.engineTemp))
                 }

@@ -143,7 +143,7 @@ struct WatchPreviewView: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
-                    complicationCard(title: "Scor Sanatate", icon: "heart.text.square.fill", color: Theme.gaugeGreen, index: 0)
+                    complicationCard(title: "Scor Sanatate", icon: "heart.square.fill", color: Theme.gaugeGreen, index: 0)
                     complicationCard(title: "Temp. Motor", icon: "thermometer.medium", color: Theme.primary, index: 1)
                     complicationCard(title: "Baterie", icon: "bolt.fill", color: Theme.gaugeYellow, index: 2)
                     complicationCard(title: "Alarma Service", icon: "bell.badge.fill", color: Theme.gaugeRed, index: 3)
@@ -183,10 +183,10 @@ struct WatchPreviewView: View {
                 .foregroundColor(Theme.textMuted)
                 .tracking(1.2)
             
-            featureRow(icon: "heart.text.square.fill", title: "Scor Sanatate", description: "Vede scorul 0-100 pe ceas", color: Theme.gaugeGreen)
+            featureRow(icon: "heart.square.fill", title: "Scor Sanatate", description: "Vede scorul 0-100 pe ceas", color: Theme.gaugeGreen)
             featureRow(icon: "bell.badge.fill", title: "Alarme Service", description: "Notificari cand se apropie revizia", color: Theme.gaugeYellow)
             featureRow(icon: "antenna.radiowaves.left.and.right", title: "Date OBD2", description: "Temperatura, tensiune in timp real", color: Theme.primary)
-            featureRow(icon: "gauge.medium", title: "Consum Instant", description: "L/100km pe ecranul ceasului", color: Color(red: 0.0, green: 0.8, blue: 0.6))
+            featureRow(icon: "speedometer", title: "Consum Instant", description: "L/100km pe ecranul ceasului", color: Color(red: 0.0, green: 0.8, blue: 0.6))
             featureRow(icon: "exclamationmark.triangle.fill", title: "Alerte DTC", description: "Erori motor direct pe ceas", color: Theme.gaugeRed)
             featureRow(icon: "location.fill", title: "Parcare", description: "Salveaza locatia parcarii", color: Color.purple)
         }

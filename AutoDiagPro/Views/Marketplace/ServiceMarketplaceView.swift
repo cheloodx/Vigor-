@@ -72,7 +72,7 @@ struct ServiceMarketplaceView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "storefront.fill")
+                        Image(systemName: "building.2.fill")
                             .foregroundColor(Theme.secondary)
                         Text("Marketplace Auto")
                             .font(.system(size: 18, weight: .bold))

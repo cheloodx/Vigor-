@@ -53,7 +53,7 @@ struct MultiCountryConfigView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "globe.europe.africa.fill")
+                        Image(systemName: "globe.americas.fill")
                             .foregroundColor(Theme.primary)
                         Text("Configurare Tara")
                             .font(.system(size: 18, weight: .bold))
@@ -169,7 +169,7 @@ struct MultiCountryConfigView: View {
             HStack(spacing: 12) {
                 speedCard("Oras", limit: selectedCountry.speedLimitUrban, icon: "building.2.fill")
                 speedCard("Rural", limit: selectedCountry.speedLimitRural, icon: "leaf.fill")
-                speedCard("Autostrada", limit: selectedCountry.speedLimitMotorway == 0 ? nil : selectedCountry.speedLimitMotorway, icon: "road.lanes")
+                speedCard("Autostrada", limit: selectedCountry.speedLimitMotorway == 0 ? nil : selectedCountry.speedLimitMotorway, icon: "arrow.left.and.right")
             }
             
             HStack(spacing: 16) {
@@ -203,7 +203,7 @@ struct MultiCountryConfigView: View {
     
     private var inspectionCard: some View {
         VStack(alignment: .leading, spacing: 8) {
-            sectionHeader("INSPECTIE TEHNICA", icon: "shield.checkered")
+            sectionHeader("INSPECTIE TEHNICA", icon: "shield.fill")
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(selectedCountry.inspectionName)

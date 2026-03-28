@@ -33,7 +33,7 @@ struct ServiceCalendarView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "calendar.badge.clock")
+                        Image(systemName: "calendar")
                             .foregroundColor(Theme.primary)
                         Text("Calendar Intretinere")
                             .font(.system(size: 18, weight: .bold))

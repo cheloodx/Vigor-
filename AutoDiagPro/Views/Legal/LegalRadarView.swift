@@ -254,7 +254,7 @@ struct LegalRadarView: View {
                 "Germania: autostrazi gratuite (pentru moment)"
             ])
             
-            tipCard(icon: "light.beacon.max.fill", title: "Echipamente obligatorii", tips: [
+            tipCard(icon: "lightbulb.fill", title: "Echipamente obligatorii", tips: [
                 "Franta: etiloptest obligatoriu in masina",
                 "Austria: trusa prim-ajutor obligatorie",
                 "Italia: vesta reflectorizanta obligatorie",
@@ -317,7 +317,7 @@ struct LegalRadarView: View {
             return [
                 CameraInfo(type: "Camere fixe viteza", icon: "video.fill", color: Theme.gaugeRed, count: 350, description: "Pe autostrazi si drumuri nationale"),
                 CameraInfo(type: "Radare mobile", icon: "car.fill", color: Theme.gaugeYellow, count: 120, description: "Echipaje mobile politie"),
-                CameraInfo(type: "Semafor rosu", icon: "light.beacon.max.fill", color: Theme.primary, count: 85, description: "Intersectii monitorizate"),
+                CameraInfo(type: "Semafor rosu", icon: "lightbulb.fill", color: Theme.primary, count: 85, description: "Intersectii monitorizate"),
                 CameraInfo(type: "Camere mediu urban", icon: "building.2.fill", color: Color.purple, count: 200, description: "Monitorizare trafic oras"),
             ]
         case "Germania":
@@ -325,20 +325,20 @@ struct LegalRadarView: View {
                 CameraInfo(type: "Blitzer fix", icon: "video.fill", color: Theme.gaugeRed, count: 4700, description: "Radare fixe pe drumuri"),
                 CameraInfo(type: "Mobile Blitzer", icon: "car.fill", color: Theme.gaugeYellow, count: 800, description: "Radare mobile politie"),
                 CameraInfo(type: "Abschnittskontrollen", icon: "arrow.left.arrow.right", color: Theme.primary, count: 10, description: "Control viteza medie pe sector"),
-                CameraInfo(type: "Rotlicht-Blitzer", icon: "light.beacon.max.fill", color: Color.purple, count: 1200, description: "Camere semafor rosu"),
+                CameraInfo(type: "Rotlicht-Blitzer", icon: "lightbulb.fill", color: Color.purple, count: 1200, description: "Camere semafor rosu"),
             ]
         case "Regatul Unit":
             return [
                 CameraInfo(type: "Gatso cameras", icon: "video.fill", color: Theme.gaugeRed, count: 2400, description: "Camere fixe viteza"),
                 CameraInfo(type: "SPECS", icon: "arrow.left.arrow.right", color: Theme.gaugeYellow, count: 350, description: "Control viteza medie"),
                 CameraInfo(type: "ANPR cameras", icon: "camera.fill", color: Theme.primary, count: 11000, description: "Recunoastere numar inmatriculare"),
-                CameraInfo(type: "Red light cameras", icon: "light.beacon.max.fill", color: Color.purple, count: 700, description: "Camere semafor rosu"),
+                CameraInfo(type: "Red light cameras", icon: "lightbulb.fill", color: Color.purple, count: 700, description: "Camere semafor rosu"),
             ]
         default:
             return [
                 CameraInfo(type: "Camere fixe", icon: "video.fill", color: Theme.gaugeRed, count: 500, description: "Radare fixe pe drumuri"),
                 CameraInfo(type: "Radare mobile", icon: "car.fill", color: Theme.gaugeYellow, count: 200, description: "Echipaje mobile"),
-                CameraInfo(type: "Camere semafor", icon: "light.beacon.max.fill", color: Theme.primary, count: 150, description: "Intersectii monitorizate"),
+                CameraInfo(type: "Camere semafor", icon: "lightbulb.fill", color: Theme.primary, count: 150, description: "Intersectii monitorizate"),
             ]
         }
     }

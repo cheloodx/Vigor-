@@ -305,7 +305,13 @@ struct AddJournalEntryView: View {
                         .font(.system(size: 15, weight: .bold))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 14)
-                        .background(title.isEmpty ? Theme.textMuted : Theme.primaryGradient)
+                        .background(Group {
+                            if title.isEmpty {
+                                Theme.textMuted
+                            } else {
+                                Theme.primaryGradient
+                            }
+                        })
                         .foregroundColor(.white)
                         .cornerRadius(12)
                 }

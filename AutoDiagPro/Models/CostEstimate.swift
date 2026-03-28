@@ -120,7 +120,7 @@ extension CostOperation {
         // Electric
         CostOperation(name: "Alternator recondiționat", category: .electric, laborCost: 200, partsCostMin: 300, partsCostMax: 700, laborHours: 1.5, icon: "bolt.circle.fill"),
         CostOperation(name: "Electromotor", category: .electric, laborCost: 200, partsCostMin: 250, partsCostMax: 600, laborHours: 1.5, icon: "power"),
-        CostOperation(name: "Baterie auto", category: .electric, laborCost: 30, partsCostMin: 250, partsCostMax: 500, laborHours: 0.25, icon: "battery.100.bolt"),
+        CostOperation(name: "Baterie auto", category: .electric, laborCost: 30, partsCostMin: 250, partsCostMax: 500, laborHours: 0.25, icon: "battery.100percent"),
 
         // Transmisie
         CostOperation(name: "Schimb ulei cutie viteze", category: .transmisie, laborCost: 100, partsCostMin: 100, partsCostMax: 250, laborHours: 1.0, icon: "gearshape.fill"),

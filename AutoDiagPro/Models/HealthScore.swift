@@ -56,9 +56,9 @@ struct HealthCategory: Codable, Identifiable {
     
     static var sampleCategories: [HealthCategory] {
         [
-            HealthCategory(name: "Motor", score: 85, icon: "engine.combustion.badge.exclamationmark", details: "Stare generala buna", recommendations: ["Schimb ulei la 5.000 km", "Verificare bujii"]),
+            HealthCategory(name: "Motor", score: 85, icon: "gearshape.fill", details: "Stare generala buna", recommendations: ["Schimb ulei la 5.000 km", "Verificare bujii"]),
             HealthCategory(name: "Frane", score: 72, icon: "circle.circle", details: "Placute uzate 60%", recommendations: ["Inlocuire placute frana fata", "Verificare discuri"]),
-            HealthCategory(name: "Suspensie", score: 90, icon: "car.side.front.open", details: "Fara jocuri detectate", recommendations: ["Verificare la 30.000 km"]),
+            HealthCategory(name: "Suspensie", score: 90, icon: "car.fill", details: "Fara jocuri detectate", recommendations: ["Verificare la 30.000 km"]),
             HealthCategory(name: "Electrica", score: 68, icon: "bolt.fill", details: "Baterie slaba", recommendations: ["Inlocuire baterie recomandata", "Verificare alternator"]),
             HealthCategory(name: "Transmisie", score: 82, icon: "gearshape.2.fill", details: "Functioneaza normal", recommendations: ["Schimb ulei cutie la 60.000 km"]),
             HealthCategory(name: "Caroserie", score: 75, icon: "car.fill", details: "Rugina minora pe praguri", recommendations: ["Tratament anticoroziv", "Verificare ITP"]),

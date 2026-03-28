@@ -63,7 +63,7 @@ struct HealthWidgetPreview: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "square.text.square.fill")
+                        Image(systemName: "square.grid.2x2.fill")
                             .foregroundColor(Theme.primary)
                         Text("Widget iOS")
                             .font(.system(size: 18, weight: .bold))

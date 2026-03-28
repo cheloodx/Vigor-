@@ -11,7 +11,7 @@ struct AppStoreScreenshotsView: View {
         AppStoreScreen(
             title: "Diagnostic Auto Complet",
             subtitle: "Scor Sanatate 0-100",
-            icon: "heart.text.square.fill",
+            icon: "heart.square.fill",
             color: Color(red: 0.0, green: 0.85, blue: 0.45),
             features: ["Motor", "Frane", "Electrica", "Suspensie", "Transmisie", "Caroserie"],
             mockValue: "78"
@@ -27,7 +27,7 @@ struct AppStoreScreenshotsView: View {
         AppStoreScreen(
             title: "AI Mecanic Virtual",
             subtitle: "Diagnostic instant cu AI",
-            icon: "brain.head.profile",
+            icon: "brain",
             color: Color(red: 0.6, green: 0.2, blue: 0.9),
             features: ["Chat AI", "Predictor", "DTC Decoder", "Voce", "Consum", "ITP"],
             mockValue: "15+"
@@ -35,7 +35,7 @@ struct AppStoreScreenshotsView: View {
         AppStoreScreen(
             title: "44 Tari Europene",
             subtitle: "Adaptat pentru tara ta",
-            icon: "globe.europe.africa.fill",
+            icon: "globe.americas.fill",
             color: Color(red: 0.0, green: 0.5, blue: 0.9),
             features: ["Legi trafic", "Amenzi", "Camere radar", "Asigurari", "ITP/MOT/TUV", "Moneda locala"],
             mockValue: "44"
@@ -206,7 +206,7 @@ struct AppStoreScreenshotsView: View {
                             
                             // Tab bar mock
                             HStack(spacing: 0) {
-                                ForEach(["camera.fill", "barcode.viewfinder", "gauge.medium", "bubble.left.fill", "square.grid.2x2.fill"], id: \.self) { icon in
+                                ForEach(["camera.fill", "barcode.viewfinder", "speedometer", "bubble.left.fill", "square.grid.2x2.fill"], id: \.self) { icon in
                                     Image(systemName: icon)
                                         .font(.system(size: 10))
                                         .foregroundColor(Theme.textMuted)

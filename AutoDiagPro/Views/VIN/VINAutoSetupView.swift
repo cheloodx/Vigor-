@@ -123,7 +123,13 @@ struct VINAutoSetupView: View {
                     Text(cameraActive ? "Camera Activa — LIVE" : "Scaneaza VIN cu Camera").font(.system(size: 14, weight: .bold))
                 }
                 .frame(maxWidth: .infinity).padding(.vertical, 14)
-                .background(cameraActive ? Theme.gaugeGreen : Theme.primaryGradient).foregroundColor(.white).cornerRadius(12)
+                .background(Group {
+                    if cameraActive {
+                        Theme.gaugeGreen
+                    } else {
+                        Theme.primaryGradient
+                    }
+                }).foregroundColor(.white).cornerRadius(12)
             }
             
             Text("sau introdu manual").font(.system(size: 11)).foregroundColor(Theme.textMuted)

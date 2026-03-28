@@ -46,7 +46,7 @@ struct FailurePredictorView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "brain.head.profile")
+                        Image(systemName: "brain")
                             .foregroundColor(Theme.primary)
                         Text("Predictor Defectiuni AI")
                             .font(.system(size: 18, weight: .bold))
@@ -84,7 +84,7 @@ struct FailurePredictorView: View {
     private var startAnalysisButton: some View {
         Button(action: { startAnalysis() }) {
             HStack(spacing: 10) {
-                Image(systemName: "brain.head.profile")
+                Image(systemName: "brain")
                     .font(.system(size: 18))
                 Text("Analizeaza Predictii Defectiuni")
                     .font(.system(size: 15, weight: .bold))
@@ -325,7 +325,7 @@ struct FailurePrediction: Identifiable {
     static var samplePredictions: [FailurePrediction] {
         [
             FailurePrediction(componentName: "Placute Frana Fata", icon: "circle.circle", probability: 85, riskLevel: .high, timeframe: "1-2 luni", description: "Bazat pe km parcursi (45.000 km de la ultima schimbare), placutele de frana fata au probabilitate ridicata de uzura critica. Media de viata pentru acest model este 50.000 km.", estimatedCost: 450, preventionTip: "Programeaza verificare frane in urmatoarele 2 saptamani."),
-            FailurePrediction(componentName: "Baterie Auto", icon: "battery.100.bolt", probability: 72, riskLevel: .high, timeframe: "2-4 luni", description: "Bateria are aprox. 4 ani vechime. Statisticile arata ca 70% din baterii cedeaza intre 3-5 ani. Tensiunea la pornire a scazut progresiv.", estimatedCost: 400, preventionTip: "Testeaza capacitatea bateriei la un service autorizat."),
+            FailurePrediction(componentName: "Baterie Auto", icon: "battery.100percent", probability: 72, riskLevel: .high, timeframe: "2-4 luni", description: "Bateria are aprox. 4 ani vechime. Statisticile arata ca 70% din baterii cedeaza intre 3-5 ani. Tensiunea la pornire a scazut progresiv.", estimatedCost: 400, preventionTip: "Testeaza capacitatea bateriei la un service autorizat."),
             FailurePrediction(componentName: "Curea Distributie", icon: "gearshape.2.fill", probability: 45, riskLevel: .medium, timeframe: "3-6 luni", description: "Intervalul recomandat de schimb este 120.000 km. Kilometrajul actual se apropie de acest prag. Ruperea cureii poate distruge motorul.", estimatedCost: 1500, preventionTip: "Nu depasi intervalul de schimb recomandat de producator!"),
             FailurePrediction(componentName: "Amortizoare Fata", icon: "arrow.up.arrow.down", probability: 38, riskLevel: .medium, timeframe: "4-6 luni", description: "Amortizoarele au peste 80.000 km. Eficienta de amortizare scade progresiv dupa 60.000 km. Pot aparea zgomote si instabilitate.", estimatedCost: 800, preventionTip: "Verificare vizuala pentru scurgeri de ulei la amortizoare."),
             FailurePrediction(componentName: "Filtru Particule DPF", icon: "wind", probability: 30, riskLevel: .medium, timeframe: "3-6 luni", description: "Conducerea predominant in oras creste riscul de blocare DPF. Regenerarile active au devenit mai frecvente.", estimatedCost: 1200, preventionTip: "Fa o cursa lunga pe autostrada (min 30 min, > 2500 RPM) lunar."),

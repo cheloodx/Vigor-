@@ -41,7 +41,7 @@ struct HealthScoreView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "heart.text.square.fill")
+                        Image(systemName: "heart.square.fill")
                             .foregroundColor(Theme.primary)
                         Text("Scor Sanatate")
                             .font(.system(size: 18, weight: .bold))
@@ -315,6 +315,9 @@ struct HealthScoreView: View {
             }
         }
         
+        // Store baseline BEFORE OBD adjustments for future recalculations
+        baselineCategories = categories
+        
         // If OBD2 connected, use real data
         if obdManager.isConnected {
             adjustCategoriesFromOBD(&categories)
@@ -328,9 +331,6 @@ struct HealthScoreView: View {
             lastUpdated: Date(),
             vehicleId: vehicle.id
         )
-        
-        // Store baseline before OBD adjustments for future recalculations
-        baselineCategories = categories
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             animateRing = true

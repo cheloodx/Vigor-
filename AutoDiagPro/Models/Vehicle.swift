@@ -41,7 +41,7 @@ enum FuelType: String, Codable, CaseIterable {
         switch self {
         case .diesel: return "fuelpump.fill"
         case .benzina: return "fuelpump"
-        case .hybrid: return "bolt.car.fill"
+        case .hybrid: return "bolt.fill"
         case .electric: return "bolt.fill"
         case .gpl: return "flame.fill"
         }

@@ -29,7 +29,7 @@ struct OnboardingView: View {
             features: ["6 gauge-uri animate", "Consum real L/100km", "Istoric date live"]
         ),
         OnboardingPage(
-            icon: "brain.head.profile",
+            icon: "brain",
             title: "AI Mecanic Virtual",
             subtitle: "Intreaba orice despre masina ta",
             description: "Chat-ul AI stie marca, modelul si istoricul masinii tale. Primesti diagnostic instant si estimari de cost.",
@@ -37,7 +37,7 @@ struct OnboardingView: View {
             features: ["Diagnostic vocal", "Predictor defectiuni", "Decodor erori DTC"]
         ),
         OnboardingPage(
-            icon: "globe.europe.africa.fill",
+            icon: "globe.americas.fill",
             title: "Adaptat pentru Europa",
             subtitle: "Selecteaza tara ta",
             description: "Legi, amenzi, camere radar, asigurari, inspectii tehnice — totul adaptat pentru tara ta.",

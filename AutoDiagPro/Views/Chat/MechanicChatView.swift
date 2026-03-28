@@ -202,9 +202,13 @@ struct MechanicChatView: View {
                     .foregroundColor(.white)
                     .frame(width: 42, height: 42)
                     .background(
-                        (inputText.trimmingCharacters(in: .whitespaces).isEmpty || isLoading)
-                            ? Color.gray.opacity(0.3)
-                            : LinearGradient(colors: [Color(red: 0.11, green: 0.31, blue: 0.85), Theme.primary], startPoint: .topLeading, endPoint: .bottomTrailing)
+                        Group {
+                            if inputText.trimmingCharacters(in: .whitespaces).isEmpty || isLoading {
+                                Color.gray.opacity(0.3)
+                            } else {
+                                LinearGradient(colors: [Color(red: 0.11, green: 0.31, blue: 0.85), Theme.primary], startPoint: .topLeading, endPoint: .bottomTrailing)
+                            }
+                        }
                     )
                     .cornerRadius(21)
             }

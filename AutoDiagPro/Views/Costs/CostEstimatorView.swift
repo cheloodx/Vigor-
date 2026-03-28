@@ -59,9 +59,13 @@ struct CostEstimatorView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                         .background(
-                            selectedCount == 0 || isLoading
-                                ? Color.gray.opacity(0.3)
-                                : LinearGradient(colors: [Color(red: 0.49, green: 0.23, blue: 0.93), Color(red: 0.66, green: 0.55, blue: 0.98)], startPoint: .leading, endPoint: .trailing)
+                            Group {
+                                if selectedCount == 0 || isLoading {
+                                    Color.gray.opacity(0.3)
+                                } else {
+                                    LinearGradient(colors: [Color(red: 0.49, green: 0.23, blue: 0.93), Color(red: 0.66, green: 0.55, blue: 0.98)], startPoint: .leading, endPoint: .trailing)
+                                }
+                            }
                         )
                         .foregroundColor(.white)
                         .cornerRadius(10)

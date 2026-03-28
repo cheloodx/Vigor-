@@ -88,7 +88,7 @@ struct ITPRadarView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     HStack(spacing: 8) {
-                        Image(systemName: "shield.checkered")
+                        Image(systemName: "shield.fill")
                             .foregroundColor(Theme.primary)
                         Text("Radar ITP")
                             .font(.system(size: 18, weight: .bold))
@@ -142,7 +142,7 @@ struct ITPRadarView: View {
             Map(coordinateRegion: $mapRegion, showsUserLocation: true, annotationItems: stationAnnotations) { station in
                 MapAnnotation(coordinate: station.coordinate) {
                     VStack(spacing: 2) {
-                        Image(systemName: "shield.checkered")
+                        Image(systemName: "shield.fill")
                             .font(.system(size: 12)).foregroundColor(.white)
                             .padding(5).background(Theme.primary).cornerRadius(6)
                         Text(station.name)
@@ -201,7 +201,7 @@ struct ITPRadarView: View {
     private var infoCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
-                Image(systemName: "shield.checkered")
+                Image(systemName: "shield.fill")
                     .font(.system(size: 20))
                     .foregroundColor(Theme.primary)
                 Text("Verificare ITP Virtuala")
@@ -222,7 +222,7 @@ struct ITPRadarView: View {
     private var startCheckButton: some View {
         Button(action: { startCheck() }) {
             HStack(spacing: 10) {
-                Image(systemName: "shield.checkered")
+                Image(systemName: "shield.fill")
                     .font(.system(size: 16))
                 Text("Verifica Acum")
                     .font(.system(size: 15, weight: .bold))

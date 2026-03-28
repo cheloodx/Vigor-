@@ -310,7 +310,7 @@ struct CarPlayPreviewView: View {
                 .foregroundColor(Theme.textMuted)
                 .tracking(1.2)
             
-            featureRow(icon: "gauge.medium", title: "Dashboard Live", desc: "Toate datele OBD2 pe ecranul masinii")
+            featureRow(icon: "speedometer", title: "Dashboard Live", desc: "Toate datele OBD2 pe ecranul masinii")
             featureRow(icon: "bell.badge.fill", title: "Alarme Service", desc: "Notificari intretinere in timp real")
             featureRow(icon: "map.fill", title: "Navigatie Service", desc: "Directii catre cel mai apropiat service")
             featureRow(icon: "mic.fill", title: "Comenzi Vocale", desc: "\"Hey Siri, ce scor are masina?\"")

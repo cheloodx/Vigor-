@@ -63,7 +63,7 @@ enum ServiceType: String, Codable, CaseIterable {
         case .quickService: return "bolt.fill"
         case .tires: return "circle.circle"
         case .itp: return "checkmark.seal.fill"
-        case .electrical: return "bolt.car.fill"
+        case .electrical: return "bolt.fill"
         case .bodyShop: return "paintbrush.fill"
         }
     }

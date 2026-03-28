@@ -196,12 +196,12 @@ struct SiriShortcut: Identifiable {
     
     static var defaultShortcuts: [SiriShortcut] {
         [
-            SiriShortcut(phrase: "Ce scor are masina mea?", description: "Afiseaza scorul de sanatate 0-100", icon: "heart.text.square.fill", color: Theme.gaugeGreen, activityType: "healthScore", isEnabled: false),
+            SiriShortcut(phrase: "Ce scor are masina mea?", description: "Afiseaza scorul de sanatate 0-100", icon: "heart.square.fill", color: Theme.gaugeGreen, activityType: "healthScore", isEnabled: false),
             SiriShortcut(phrase: "Diagnosticheaza masina", description: "Lanseaza diagnosticul rapid", icon: "stethoscope", color: Theme.primary, activityType: "quickDiagnose", isEnabled: false),
             SiriShortcut(phrase: "Cand e urmatorul service?", description: "Verifica alarmele de intretinere", icon: "bell.badge.fill", color: Theme.gaugeYellow, activityType: "nextService", isEnabled: false),
             SiriShortcut(phrase: "Conecteaza OBD2", description: "Porneste scanarea Bluetooth OBD2", icon: "antenna.radiowaves.left.and.right", color: Theme.primary, activityType: "connectOBD", isEnabled: false),
             SiriShortcut(phrase: "Cat consuma masina?", description: "Afiseaza consumul real L/100km", icon: "fuelpump.fill", color: Color(red: 0.0, green: 0.8, blue: 0.6), activityType: "fuelConsumption", isEnabled: false),
-            SiriShortcut(phrase: "Trece ITP-ul?", description: "Verifica daca masina trece ITP", icon: "shield.checkered", color: Theme.gaugeRed, activityType: "itpCheck", isEnabled: false),
+            SiriShortcut(phrase: "Trece ITP-ul?", description: "Verifica daca masina trece ITP", icon: "shield.fill", color: Theme.gaugeRed, activityType: "itpCheck", isEnabled: false),
             SiriShortcut(phrase: "Cat valoreaza masina?", description: "Estimeaza valoarea pe piata", icon: "tag.fill", color: Theme.secondary, activityType: "carValue", isEnabled: false),
             SiriShortcut(phrase: "Deschide mecanicul AI", description: "Lanseaza chat-ul cu mecanicul virtual", icon: "bubble.left.and.bubble.right.fill", color: Color(red: 0.6, green: 0.2, blue: 0.9), activityType: "aiChat", isEnabled: false),
         ]

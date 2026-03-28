@@ -321,7 +321,7 @@ struct RepairGuide: Identifiable {
                 ],
                 tools: ["Cric sau rampa", "Cheie filtru ulei", "Cheie surub drenaj", "Vas colectare ulei", "Palnie", "Manusi"]
             ),
-            RepairGuide(title: "Schimb Baterie", icon: "battery.100.bolt", difficulty: "Usor", totalDuration: "15 min",
+            RepairGuide(title: "Schimb Baterie", icon: "battery.100percent", difficulty: "Usor", totalDuration: "15 min",
                 steps: [
                     RepairStep(title: "Opreste motorul", description: "Opreste motorul si scoate cheia din contact. Asteapta 5 minute.", icon: "power", duration: "1 min", warning: ""),
                     RepairStep(title: "Deconecteaza minus", description: "Deconecteaza mai intai borna NEGATIVA (-). Izoleaza cablul.", icon: "minus.circle", duration: "2 min", warning: "INTOTDEAUNA minus primul!"),
