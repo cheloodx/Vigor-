@@ -78,12 +78,18 @@ class NotificationManager: ObservableObject {
         content.badge = 1
         
         let trigger: UNNotificationTrigger
-        if daysUntilDue > 0 {
+        if daysUntilDue > 7 {
+            // Due in 8+ days — schedule 7 days before due date
             let futureDate = Calendar.current.date(byAdding: .day, value: daysUntilDue - 7, to: Date()) ?? Date()
-            guard futureDate > Date() else { return }
             let components = Calendar.current.dateComponents([.year, .month, .day, .hour], from: futureDate)
             trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        } else if daysUntilDue > 0 {
+            // Due within 7 days — notify immediately (5s delay)
+            content.body = "\(serviceName) necesita atentie in \(daysUntilDue) zile! Programati o vizita la service."
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         } else {
+            // Overdue — notify immediately
+            content.body = "\(serviceName) este DEPASIT pentru \(vehicleName)! Programati urgent o vizita la service."
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
         }
         
