@@ -89,13 +89,19 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
                 switch clError.code {
                 case .denied:
                     self?.locationError = "Locatia este dezactivata. Activati din Setari > Confidentialitate > Servicii de localizare."
+                    // Only stop tracking for permanent errors (denied)
+                    self?.trackingRefCount = 0
+                    self?.manager.stopUpdatingLocation()
+                    self?.manager.stopUpdatingHeading()
+                    self?.isTracking = false
                 case .locationUnknown:
+                    // Transient error — CLLocationManager may deliver a valid location next.
+                    // Set error message but do NOT stop tracking or touch refCount.
                     self?.locationError = "Nu se poate determina locatia. Verificati semnalul GPS."
                 default:
                     self?.locationError = "Eroare locatie: \(error.localizedDescription)"
                 }
             }
-            self?.isTracking = false
         }
     }
     
