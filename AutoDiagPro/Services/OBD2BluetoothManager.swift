@@ -209,6 +209,17 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
                 protocolName = cleaned
             }
 
+            // Detect error responses from ELM327
+            let errorIndicators = ["?", "ERROR", "UNABLE TO CONNECT", "NO DATA", "BUS INIT", "CAN ERROR"]
+            let isError = errorIndicators.contains { cleaned.uppercased().contains($0) }
+
+            // Protocol search (last init step) failing means vehicle ECU is not responding
+            if isError && initStep >= 6 {
+                errorMessage = "Vehiculul nu raspunde. Verificati contactul si cablul OBD2."
+                connectionState = .error
+                return
+            }
+
             initStep += 1
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
                 self?.sendNextInitCommand()
