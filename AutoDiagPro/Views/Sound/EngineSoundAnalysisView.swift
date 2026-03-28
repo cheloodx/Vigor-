@@ -413,6 +413,9 @@ struct EngineSoundAnalysisView: View {
         isRecording = false
         isAnalyzing = true
         
+        let audioSession = AVAudioSession.sharedInstance()
+        try? audioSession.setActive(false, options: .notifyOthersOnDeactivation)
+        
         // Simulate analysis
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             withAnimation {
