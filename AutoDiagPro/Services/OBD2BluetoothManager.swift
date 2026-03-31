@@ -166,8 +166,9 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
         ]
 
         guard initStep < initCommands.count else {
-            // Initialization complete
+            // Initialization complete — only transition if still initializing
             cancelInitTimeout()
+            guard connectionState == .initializing else { return }
             connectionState = .connected
             startPolling()
             return
