@@ -62,11 +62,12 @@ final class EuropeanAIDataViewModel: ObservableObject {
                 withAnimation(.spring()) {
                     isAnalyzing = false
                     analysisComplete = true
-                    // Fallback to local generation
+                    // Deterministic fallback based on brand index
                     insights = AIInsight.generate(brand: selectedBrand, country: selectedCountry)
-                    fiabilitate = Int.random(in: 70...92)
-                    popularitate = Int.random(in: 1...8)
-                    costMediu = Int.random(in: 800...2500)
+                    let brandIndex = EuropeanAIDataView.EUBrand.allCases.firstIndex(of: selectedBrand) ?? 0
+                    fiabilitate = 75 + (brandIndex * 3) % 20
+                    popularitate = 1 + brandIndex % 8
+                    costMediu = 900 + brandIndex * 150
                     errorMessage = "Date locale (offline). \(error.localizedDescription)"
                 }
             }

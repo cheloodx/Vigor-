@@ -163,10 +163,16 @@ struct MechanicTrustView: View {
     
     private func updateMechanicDistances() {
         guard let userLoc = locationManager.userLocation else { return }
+        // Deterministic offsets per mechanic index (no random)
+        let offsets: [(Double, Double)] = [
+            (0.015, -0.012), (-0.022, 0.018), (0.008, 0.032),
+            (-0.035, -0.007), (0.027, -0.025), (-0.018, 0.014)
+        ]
         for i in mechanics.indices {
+            let offset = offsets[i % offsets.count]
             let mechLoc = CLLocation(
-                latitude: userLoc.coordinate.latitude + Double.random(in: -0.04...0.04),
-                longitude: userLoc.coordinate.longitude + Double.random(in: -0.04...0.04)
+                latitude: userLoc.coordinate.latitude + offset.0,
+                longitude: userLoc.coordinate.longitude + offset.1
             )
             mechanics[i].liveDistanceKm = userLoc.distance(from: mechLoc) / 1000.0
         }
@@ -175,12 +181,18 @@ struct MechanicTrustView: View {
     private func buildAnnotations() {
         let baseLat = mapRegion.center.latitude
         let baseLon = mapRegion.center.longitude
+        // Deterministic positions per mechanic index (no random)
+        let positions: [(Double, Double)] = [
+            (0.015, -0.012), (-0.022, 0.018), (0.008, 0.032),
+            (-0.035, -0.007), (0.027, -0.025), (-0.018, 0.014)
+        ]
         mechanicAnnotations = mechanics.enumerated().map { idx, mech in
-            MechanicAnnotation(
+            let pos = positions[idx % positions.count]
+            return MechanicAnnotation(
                 name: mech.name,
                 coordinate: CLLocationCoordinate2D(
-                    latitude: baseLat + Double.random(in: -0.03...0.03),
-                    longitude: baseLon + Double.random(in: -0.03...0.03)
+                    latitude: baseLat + pos.0,
+                    longitude: baseLon + pos.1
                 ),
                 isVerified: mech.isVerified
             )

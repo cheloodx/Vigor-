@@ -168,7 +168,7 @@ struct VINAutoSetupView: View {
                 Text("Exemple:").font(.system(size: 9)).foregroundColor(Theme.textMuted)
                 HStack(spacing: 6) {
                     ForEach(["WVWZZZ3CZ", "WBAPH5C5X", "VF1RFB00X"], id: \.self) { prefix in
-                        Button(action: { vinInput = prefix + "WE" + String(Int.random(in: 100000...999999)); decodeVIN() }) {
+                        Button(action: { vinInput = prefix + "WE123456"; decodeVIN() }) {
                             Text(prefix + "...")
                                 .font(.system(size: 9, design: .monospaced))
                                 .padding(.horizontal, 6).padding(.vertical, 3)
@@ -341,7 +341,7 @@ struct VINAutoSetupView: View {
                 vinInput = detected.uppercased()
             } else {
                 // Fallback: simulate VIN detection from camera frame
-                vinInput = "WVWZZZ3CZWE" + String(Int.random(in: 100000...999999))
+                vinInput = "WVWZZZ3CZWE654321"
             }
             isScanning = false
             cameraActive = false

@@ -116,9 +116,17 @@ struct ServiceMarketplaceView: View {
     
     private func updateDistances() {
         guard let userLoc = locationManager.userLocation else { return }
+        // Deterministic offsets per provider index (no random)
+        let offsets: [(Double, Double)] = [
+            (0.012, -0.008), (-0.015, 0.022), (0.035, 0.018),
+            (-0.028, -0.031), (0.042, -0.019), (-0.009, 0.041)
+        ]
         for i in providers.indices {
-            let providerLoc = CLLocation(latitude: userLoc.coordinate.latitude + Double.random(in: -0.05...0.05),
-                                         longitude: userLoc.coordinate.longitude + Double.random(in: -0.05...0.05))
+            let offset = offsets[i % offsets.count]
+            let providerLoc = CLLocation(
+                latitude: userLoc.coordinate.latitude + offset.0,
+                longitude: userLoc.coordinate.longitude + offset.1
+            )
             let dist = userLoc.distance(from: providerLoc) / 1000.0
             providers[i].liveDistanceKm = dist
         }

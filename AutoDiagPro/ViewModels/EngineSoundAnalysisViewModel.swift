@@ -101,7 +101,8 @@ final class EngineSoundAnalysisViewModel: ObservableObject {
         if dbValue > peakDb { peakDb = dbValue }
         
         waveformData.removeFirst()
-        waveformData.append(CGFloat(normalizedPower) * 0.8 + CGFloat.random(in: 0.1...0.3))
+        let jitter = CGFloat(sin(recordingDuration * 17.0) * 0.1 + 0.2)
+        waveformData.append(CGFloat(normalizedPower) * 0.8 + jitter)
         
         if recordingDuration >= maxDuration {
             stopRecording()
@@ -121,7 +122,8 @@ final class EngineSoundAnalysisViewModel: ObservableObject {
         if dbValue > peakDb { peakDb = dbValue }
         
         waveformData.removeFirst()
-        waveformData.append(CGFloat(0.3 + sin(time * 5) * 0.3 + Double.random(in: -0.1...0.1)))
+        let demoJitter = sin(time * 13.0) * 0.08
+        waveformData.append(CGFloat(0.3 + sin(time * 5) * 0.3 + demoJitter))
         
         if recordingDuration >= maxDuration {
             stopRecording()

@@ -445,12 +445,16 @@ struct EnhancedOBDView: View {
     
     private func updateDemoData() {
         let time = Date().timeIntervalSince(sessionStart)
-        let rpm = 900 + 400 * sin(time * 0.3) + Double.random(in: -50...50)
-        let speed = max(0, 60 + 30 * sin(time * 0.15) + Double.random(in: -5...5))
-        let engineTemp = min(95, 70 + time * 0.05 + Double.random(in: -1...1))
-        let airTemp = 22 + Double.random(in: -1...1)
-        let voltage = 13.8 + 0.3 * sin(time * 0.1) + Double.random(in: -0.1...0.1)
-        let oilTemp = min(90, 60 + time * 0.04 + Double.random(in: -1...1))
+        // Deterministic simulation using sine waves (no random)
+        let rpmJitter = sin(time * 7.3) * 30 + sin(time * 13.1) * 20
+        let rpm = 900 + 400 * sin(time * 0.3) + rpmJitter
+        let speedJitter = sin(time * 11.7) * 3 + sin(time * 5.3) * 2
+        let speed = max(0, 60 + 30 * sin(time * 0.15) + speedJitter)
+        let tempJitter = sin(time * 9.1) * 0.5
+        let engineTemp = min(95, 70 + time * 0.05 + tempJitter)
+        let airTemp = 22 + sin(time * 3.7) * 0.8
+        let voltage = 13.8 + 0.3 * sin(time * 0.1) + sin(time * 6.3) * 0.05
+        let oilTemp = min(90, 60 + time * 0.04 + sin(time * 4.9) * 0.6)
         
         obdManager.liveData.rpm = rpm
         obdManager.liveData.speed = speed
@@ -461,7 +465,8 @@ struct EnhancedOBDView: View {
         
         // Calculate fuel consumption (simplified: based on RPM and speed)
         let instantFuel = speed > 5 ? (rpm * 0.0008 + speed * 0.02) / max(1, speed) * 100 : 0
-        fuelConsumption = max(0, min(20, instantFuel + Double.random(in: -0.5...0.5)))
+        let fuelJitter = sin(time * 8.3) * 0.3
+        fuelConsumption = max(0, min(20, instantFuel + fuelJitter))
         
         // Trip accumulation
         tripDistance += speed / 3600.0 // km per second

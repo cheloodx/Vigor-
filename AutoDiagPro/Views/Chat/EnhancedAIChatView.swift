@@ -287,7 +287,7 @@ struct EnhancedAIChatView: View {
         let vehicle = vehicleManager.currentVehicle
         let response = generateContextAwareResponse(for: trimmed, vehicle: vehicle)
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + Double.random(in: 1.0...2.5)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             isTyping = false
             messages.append(response)
         }

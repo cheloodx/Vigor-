@@ -142,7 +142,9 @@ class SpeechRecognitionManager: ObservableObject {
             "Consumul a crescut mult in ultima perioada",
         ]
 
-        let selectedTranscript = demoTranscripts.randomElement() ?? demoTranscripts[0]
+        // Deterministic selection: cycle through transcripts based on session count
+        let index = abs(currentSession.hashValue) % demoTranscripts.count
+        let selectedTranscript = demoTranscripts[index]
 
         // Simulate progressive transcription
         let words = selectedTranscript.components(separatedBy: " ")

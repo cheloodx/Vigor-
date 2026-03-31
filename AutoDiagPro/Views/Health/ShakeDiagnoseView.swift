@@ -282,23 +282,25 @@ struct ShakeDiagnoseView: View {
             checks.append(QuickCheck(name: "Kilometraj", value: "\(vehicle.mileage) km - OK", passed: true))
         }
         
-        // Simulated checks
-        let randomFactor = Int.random(in: 0...20)
+        // Deterministic checks based on vehicle data (mileage-derived heuristic)
+        let mileageFactor = vehicle.mileage / 10000
+        let brakeWorn = vehicle.mileage > 60000
+        let batteryWeak = vehicle.mileage > 80000
         
         checks.append(QuickCheck(name: "Ultima revizie", value: highMileage ? "Necesara" : "La zi", passed: !highMileage))
         if highMileage { score -= 10; actions.append("Programati revizia la service") }
         
-        checks.append(QuickCheck(name: "Frane", value: randomFactor > 15 ? "Verificare" : "OK", passed: randomFactor <= 15))
-        if randomFactor > 15 { score -= 8; actions.append("Verificati placutele de frana") }
+        checks.append(QuickCheck(name: "Frane", value: brakeWorn ? "Verificare" : "OK", passed: !brakeWorn))
+        if brakeWorn { score -= 8; actions.append("Verificati placutele de frana") }
         
-        checks.append(QuickCheck(name: "Baterie", value: randomFactor > 12 ? "Slaba" : "OK", passed: randomFactor <= 12))
-        if randomFactor > 12 { score -= 7; actions.append("Verificati tensiunea bateriei") }
+        checks.append(QuickCheck(name: "Baterie", value: batteryWeak ? "Slaba" : "OK", passed: !batteryWeak))
+        if batteryWeak { score -= 7; actions.append("Verificati tensiunea bateriei") }
         
         checks.append(QuickCheck(name: "Anvelope", value: "Verificare vizuala", passed: true))
         checks.append(QuickCheck(name: "Lichide motor", value: highMileage ? "Verificare" : "OK", passed: !highMileage))
         if highMileage { actions.append("Verificati nivelul uleiului si al lichidului de racire") }
         
-        score = max(30, score - randomFactor / 2)
+        score = max(30, score - mileageFactor)
         
         if actions.isEmpty {
             actions.append("Vehiculul pare in stare buna!")

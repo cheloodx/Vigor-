@@ -421,7 +421,11 @@ struct ShareVehicleReportView: View {
     private func generateReport() {
         isGenerating = true
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            reportScore = Int.random(in: 65...95)
+            // Deterministic score based on vehicle mileage and year
+            let vehicle = vehicleManager.currentVehicle
+            let ageDeduction = max(0, (2025 - vehicle.year) * 2)
+            let mileageDeduction = vehicle.mileage / 20000
+            reportScore = max(40, 95 - ageDeduction - mileageDeduction)
             shareLink = "autodiag.pro/report/\(UUID().uuidString.prefix(8).lowercased())"
             isGenerating = false
             reportGenerated = true
