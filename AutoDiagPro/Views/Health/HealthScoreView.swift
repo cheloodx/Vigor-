@@ -366,7 +366,7 @@ struct HealthScoreView: View {
             }
         }
         // Battery check
-        if data.batteryVoltage < 11.8 {
+        if data.batteryVoltage > 0 && data.batteryVoltage < 11.8 {
             if let idx = categories.firstIndex(where: { $0.name.contains("Electric") }) {
                 categories[idx].score = max(30, categories[idx].score - 20)
                 categories[idx].details = "Tensiune baterie scazuta: \(String(format: "%.1f", data.batteryVoltage))V"
