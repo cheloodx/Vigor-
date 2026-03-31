@@ -13,6 +13,7 @@ class SpeechRecognitionManager: ObservableObject {
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
     private var sessionID = UUID()
+    private var tapInstalled = false
 
     init() {
         checkAuthorization()
@@ -78,6 +79,7 @@ class SpeechRecognitionManager: ObservableObject {
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, _ in
             self?.recognitionRequest?.append(buffer)
         }
+        tapInstalled = true
 
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { [weak self] result, error in
             DispatchQueue.main.async {
@@ -116,7 +118,10 @@ class SpeechRecognitionManager: ObservableObject {
 
     func stopListening() {
         audioEngine.stop()
-        audioEngine.inputNode.removeTap(onBus: 0)
+        if tapInstalled {
+            audioEngine.inputNode.removeTap(onBus: 0)
+            tapInstalled = false
+        }
         recognitionRequest?.endAudio()
         recognitionRequest = nil
         recognitionTask?.cancel()
