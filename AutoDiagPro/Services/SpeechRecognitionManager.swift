@@ -144,7 +144,7 @@ class SpeechRecognitionManager: ObservableObject {
         ]
 
         // Deterministic selection: cycle through transcripts based on session count
-        let index = abs(currentSession.hashValue) % demoTranscripts.count
+        let index = Int(currentSession.hashValue & 0x7FFFFFFFFFFFFFFF) % demoTranscripts.count
         let selectedTranscript = demoTranscripts[index]
 
         // Simulate progressive transcription

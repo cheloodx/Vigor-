@@ -46,6 +46,16 @@ enum FuelType: String, Codable, CaseIterable {
         case .gpl: return "flame.fill"
         }
     }
+
+    static func from(apiString: String) -> FuelType {
+        let lower = apiString.lowercased()
+        if lower.contains("diesel") { return .diesel }
+        if lower.contains("gasoline") || lower.contains("petrol") || lower.contains("benzin") { return .benzina }
+        if lower.contains("hybrid") { return .hybrid }
+        if lower.contains("electric") { return .electric }
+        if lower.contains("gpl") || lower.contains("lpg") { return .gpl }
+        return FuelType(rawValue: apiString) ?? .diesel
+    }
 }
 
 enum TransmissionType: String, Codable, CaseIterable {
@@ -53,6 +63,15 @@ enum TransmissionType: String, Codable, CaseIterable {
     case automatic = "Automata"
     case dsg = "DSG"
     case cvt = "CVT"
+
+    static func from(apiString: String) -> TransmissionType {
+        let lower = apiString.lowercased()
+        if lower.contains("manual") || lower.contains("manuala") { return .manual }
+        if lower.contains("automatic") || lower.contains("automata") { return .automatic }
+        if lower.contains("dsg") || lower.contains("dct") { return .dsg }
+        if lower.contains("cvt") { return .cvt }
+        return TransmissionType(rawValue: apiString) ?? .manual
+    }
 }
 
 // MARK: - Sample Data

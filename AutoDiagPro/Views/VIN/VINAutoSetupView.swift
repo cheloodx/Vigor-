@@ -368,8 +368,8 @@ struct VINAutoSetupView: View {
         updatedVehicle.vin = viewModel.vinInput
         updatedVehicle.engineType = result.engineType
         updatedVehicle.engineCapacity = result.engineCapacity
-        updatedVehicle.fuelType = FuelType(rawValue: result.fuelType) ?? .diesel
-        updatedVehicle.transmission = TransmissionType(rawValue: result.transmission) ?? .manual
+        updatedVehicle.fuelType = FuelType.from(apiString: result.fuelType)
+        updatedVehicle.transmission = TransmissionType.from(apiString: result.transmission)
         vehicleManager.updateVehicle(updatedVehicle)
     }
 }
