@@ -43,6 +43,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
 
     deinit {
         cancelWatchdog()
+        cancelInitTimeout()
         disconnect()
     }
 
@@ -64,6 +65,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     private var initStep = 0
     private var currentPIDIndex = 0
     private var pollingWatchdog: DispatchWorkItem?
+    private var initTimeoutWorkItem: DispatchWorkItem?
     private let pidCycle: [String] = [
         ELM327Commands.engineCoolantTemp,
         ELM327Commands.engineRPM,
@@ -113,6 +115,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     }
 
     func disconnect() {
+        cancelInitTimeout()
         if let peripheral = connectedPeripheral {
             centralManager?.cancelPeripheralConnection(peripheral)
         }
@@ -129,7 +132,25 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     private func initializeELM327() {
         connectionState = .initializing
         initStep = 0
+        startInitTimeout()
         sendNextInitCommand()
+    }
+
+    /// Timeout: if initialization hasn't completed within 10s, transition to error
+    private func startInitTimeout() {
+        cancelInitTimeout()
+        let timeout = DispatchWorkItem { [weak self] in
+            guard let self = self, self.connectionState == .initializing else { return }
+            self.connectionState = .error
+            self.errorMessage = "Adaptorul OBD2 nu raspunde. Verificati conexiunea."
+        }
+        initTimeoutWorkItem = timeout
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0, execute: timeout)
+    }
+
+    private func cancelInitTimeout() {
+        initTimeoutWorkItem?.cancel()
+        initTimeoutWorkItem = nil
     }
 
     private func sendNextInitCommand() {
@@ -145,6 +166,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
 
         guard initStep < initCommands.count else {
             // Initialization complete
+            cancelInitTimeout()
             connectionState = .connected
             startPolling()
             return
