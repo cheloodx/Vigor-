@@ -361,10 +361,12 @@ struct VINAutoSetupView: View {
     }
     
     private func applyConfiguration(_ result: VINDecodeAPIResponse) {
-        vehicleManager.currentVehicle.make = result.make
-        vehicleManager.currentVehicle.model = result.model
-        vehicleManager.currentVehicle.year = result.year
-        vehicleManager.currentVehicle.vin = viewModel.vinInput
+        var updatedVehicle = vehicleManager.currentVehicle
+        updatedVehicle.make = result.make
+        updatedVehicle.model = result.model
+        updatedVehicle.year = result.year
+        updatedVehicle.vin = viewModel.vinInput
+        vehicleManager.updateVehicle(updatedVehicle)
     }
 }
 
