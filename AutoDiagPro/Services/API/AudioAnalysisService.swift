@@ -21,7 +21,7 @@ final class AudioAnalysisService {
             frequencies: frequencies
         )
         return try await client.post(
-            endpoint: "/api/sound/analyze",
+            endpoint: "/sound/analyze",
             body: request,
             responseType: SoundAnalysisAPIResponse.self
         )

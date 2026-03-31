@@ -8,10 +8,20 @@ final class EuropeanAutoDatabase {
     private init() {}
     
     /// Get European insights for a car brand in a specific country.
-    func getInsights(brand: String, countryCode: String) async throws -> InsightsAPIResponse {
-        let request = InsightsAPIRequest(brand: brand, countryCode: countryCode)
+    func getInsights(
+        brand: String,
+        countryCode: String,
+        category: String = "",
+        vin: String? = nil
+    ) async throws -> InsightsAPIResponse {
+        let request = InsightsAPIRequest(
+            brand: brand,
+            countryCode: countryCode,
+            category: category,
+            vin: vin
+        )
         return try await client.post(
-            endpoint: "/api/insights/european",
+            endpoint: "/ai/european-insights",
             body: request,
             responseType: InsightsAPIResponse.self
         )

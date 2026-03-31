@@ -21,7 +21,7 @@ final class RecallService {
             vin: vin
         )
         return try await client.post(
-            endpoint: "/api/recalls/check",
+            endpoint: "/recalls/check",
             body: request,
             responseType: RecallAPIResponse.self
         )

@@ -47,6 +47,8 @@ struct DTCDecodeAPIResponse: Decodable {
 struct InsightsAPIRequest: Encodable {
     let brand: String
     let countryCode: String
+    let category: String
+    let vin: String?
 }
 
 struct AIInsightAPIItem: Decodable {

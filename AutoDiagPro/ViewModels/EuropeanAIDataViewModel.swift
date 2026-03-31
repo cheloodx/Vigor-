@@ -14,6 +14,8 @@ final class EuropeanAIDataViewModel: ObservableObject {
     @Published var currency = "RON"
     @Published var countryName = "Romania"
     @Published var errorMessage: String?
+    @Published var selectedCategory: String = ""
+    @Published var selectedVIN: String? = nil
     
     private let service = EuropeanAutoDatabase.shared
     
@@ -27,7 +29,9 @@ final class EuropeanAIDataViewModel: ObservableObject {
             do {
                 let response = try await service.getInsights(
                     brand: selectedBrand.rawValue,
-                    countryCode: selectedCountry
+                    countryCode: selectedCountry,
+                    category: selectedCategory,
+                    vin: selectedVIN
                 )
                 
                 withAnimation(.spring()) {

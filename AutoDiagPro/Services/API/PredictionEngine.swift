@@ -25,7 +25,7 @@ final class PredictionEngine {
             engineType: engineType
         )
         return try await client.post(
-            endpoint: "/api/predictions/failure",
+            endpoint: "/predictions/failure",
             body: request,
             responseType: PredictionAPIResponse.self
         )

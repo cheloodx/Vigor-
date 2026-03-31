@@ -11,7 +11,7 @@ final class DTCDatabaseService {
     func decode(code: String) async throws -> DTCDecodeAPIResponse {
         let request = DTCDecodeRequest(code: code.uppercased().trimmingCharacters(in: .whitespaces))
         return try await client.post(
-            endpoint: "/api/dtc/decode",
+            endpoint: "/dtc/decode",
             body: request,
             responseType: DTCDecodeAPIResponse.self
         )

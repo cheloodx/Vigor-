@@ -21,7 +21,7 @@ final class ImageAnalysisService {
             symptom: symptom
         )
         return try await client.post(
-            endpoint: "/api/scan/analyze",
+            endpoint: "/scan/analyze",
             body: request,
             responseType: ScanAnalysisAPIResponse.self
         )

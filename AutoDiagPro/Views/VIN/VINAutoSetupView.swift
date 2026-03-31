@@ -6,11 +6,8 @@ import AVFoundation
 struct VINAutoSetupView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var cameraManager = CameraSessionManager()
-    @State private var vinInput = ""
+    @StateObject private var viewModel = VINDecoderViewModel()
     @State private var isScanning = false
-    @State private var isDecoding = false
-    @State private var decodedVehicle: DecodedVehicle?
-    @State private var showCamera = false
     @State private var cameraActive = false
     
     var body: some View {
@@ -20,13 +17,17 @@ struct VINAutoSetupView: View {
                     instructionCard
                     vinInputCard
                     
-                    if isDecoding { decodingCard }
+                    if viewModel.isDecoding { decodingCard }
                     
-                    if let vehicle = decodedVehicle {
-                        vehicleResultCard(vehicle)
-                        commonProblemsCard(vehicle)
-                        maintenanceScheduleCard(vehicle)
-                        applyConfigButton(vehicle)
+                    if viewModel.showError, let error = viewModel.errorMessage {
+                        errorCard(error)
+                    }
+                    
+                    if let result = viewModel.decodedResult {
+                        vehicleResultCard(result)
+                        commonProblemsCard(result)
+                        maintenanceScheduleCard
+                        applyConfigButton(result)
                     }
                     
                     Spacer(minLength: 80)
@@ -135,7 +136,7 @@ struct VINAutoSetupView: View {
             Text("sau introdu manual").font(.system(size: 11)).foregroundColor(Theme.textMuted)
             
             HStack(spacing: 8) {
-                TextField("WVWZZZ3CZWE123456", text: $vinInput)
+                TextField("WVWZZZ3CZWE123456", text: $viewModel.vinInput)
                     .font(.system(size: 14, weight: .semibold, design: .monospaced))
                     .foregroundColor(Theme.textPrimary)
                     .autocapitalization(.allCharacters)
@@ -144,21 +145,21 @@ struct VINAutoSetupView: View {
                     .cornerRadius(10)
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(Theme.primary.opacity(0.3), lineWidth: 1))
                 
-                Button(action: { decodeVIN() }) {
+                Button(action: { viewModel.decodeVIN() }) {
                     Image(systemName: "arrow.right.circle.fill")
                         .font(.system(size: 28)).foregroundColor(Theme.primary)
                 }
-                .disabled(vinInput.count < 17)
-                .opacity(vinInput.count < 17 ? 0.4 : 1)
+                .disabled(viewModel.vinInput.count < 17)
+                .opacity(viewModel.vinInput.count < 17 ? 0.4 : 1)
             }
             
             // Character count
             HStack {
-                Text("\(vinInput.count)/17 caractere")
+                Text("\(viewModel.vinInput.count)/17 caractere")
                     .font(.system(size: 10, design: .monospaced))
-                    .foregroundColor(vinInput.count == 17 ? Theme.gaugeGreen : Theme.textMuted)
+                    .foregroundColor(viewModel.vinInput.count == 17 ? Theme.gaugeGreen : Theme.textMuted)
                 Spacer()
-                if vinInput.count == 17 {
+                if viewModel.vinInput.count == 17 {
                     Image(systemName: "checkmark.circle.fill").font(.system(size: 12)).foregroundColor(Theme.gaugeGreen)
                 }
             }
@@ -168,7 +169,7 @@ struct VINAutoSetupView: View {
                 Text("Exemple:").font(.system(size: 9)).foregroundColor(Theme.textMuted)
                 HStack(spacing: 6) {
                     ForEach(["WVWZZZ3CZ", "WBAPH5C5X", "VF1RFB00X"], id: \.self) { prefix in
-                        Button(action: { vinInput = prefix + "WE123456"; decodeVIN() }) {
+                        Button(action: { viewModel.setVIN(prefix + "WE123456"); viewModel.decodeVIN() }) {
                             Text(prefix + "...")
                                 .font(.system(size: 9, design: .monospaced))
                                 .padding(.horizontal, 6).padding(.vertical, 3)
@@ -207,7 +208,19 @@ struct VINAutoSetupView: View {
         }
     }
     
-    private func vehicleResultCard(_ vehicle: DecodedVehicle) -> some View {
+    private func errorCard(_ message: String) -> some View {
+        VStack(spacing: 8) {
+            Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 24)).foregroundColor(Theme.gaugeRed)
+            Text("Eroare decodare VIN").font(.system(size: 14, weight: .bold)).foregroundColor(Theme.textPrimary)
+            Text(message).font(.system(size: 11)).foregroundColor(Theme.textSecondary).multilineTextAlignment(.center)
+            Button(action: { viewModel.decodeVIN() }) {
+                Text("Reincearca").font(.system(size: 12, weight: .bold)).foregroundColor(Theme.primary)
+            }
+        }
+        .frame(maxWidth: .infinity).padding(16).background(Theme.cardBackground).cornerRadius(Theme.cornerRadius)
+    }
+    
+    private func vehicleResultCard(_ result: VINDecodeAPIResponse) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Text("VEHICUL IDENTIFICAT").font(.system(size: 10, weight: .bold)).foregroundColor(Theme.gaugeGreen).tracking(1)
@@ -215,20 +228,20 @@ struct VINAutoSetupView: View {
                 Image(systemName: "checkmark.seal.fill").font(.system(size: 16)).foregroundColor(Theme.gaugeGreen)
             }
             
-            // Vehicle details grid
+            // Vehicle details grid from real backend data
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
-                detailRow("Producator", vehicle.make)
-                detailRow("Model", vehicle.model)
-                detailRow("An", vehicle.year)
-                detailRow("Motor", vehicle.engine)
-                detailRow("Putere", vehicle.power)
-                detailRow("Combustibil", vehicle.fuelType)
-                detailRow("Transmisie", vehicle.transmission)
-                detailRow("Tractiune", vehicle.drivetrain)
-                detailRow("Caroserie", vehicle.bodyType)
-                detailRow("Tara producere", vehicle.countryOfOrigin)
-                detailRow("Norma emisii", vehicle.emissionStandard)
-                detailRow("Fabrica", vehicle.plant)
+                detailRow("Producator", result.make)
+                detailRow("Model", result.model)
+                detailRow("An", "\(result.year)")
+                detailRow("Motor", result.engineType)
+                detailRow("Capacitate", result.engineCapacity)
+                detailRow("Combustibil", result.fuelType)
+                detailRow("Transmisie", result.transmission)
+                detailRow("Tractiune", result.driveType)
+                detailRow("Caroserie", result.bodyType)
+                detailRow("Tara producere", result.countryOfOrigin)
+                detailRow("Producator", result.manufacturer)
+                detailRow("Fabrica", result.plant)
             }
         }
         .padding(14).background(Theme.cardBackground).cornerRadius(Theme.cornerRadius)
@@ -244,15 +257,15 @@ struct VINAutoSetupView: View {
         .padding(6).background(Theme.surfaceBackground).cornerRadius(6)
     }
     
-    private func commonProblemsCard(_ vehicle: DecodedVehicle) -> some View {
+    private func commonProblemsCard(_ result: VINDecodeAPIResponse) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 Image(systemName: "exclamationmark.triangle.fill").font(.system(size: 12)).foregroundColor(Theme.gaugeYellow)
-                Text("PROBLEME COMUNE - \(vehicle.make.uppercased()) \(vehicle.model.uppercased())")
+                Text("PROBLEME COMUNE - \(result.make.uppercased()) \(result.model.uppercased())")
                     .font(.system(size: 10, weight: .bold)).foregroundColor(Theme.textMuted).tracking(1)
             }
             
-            ForEach(vehicle.commonProblems, id: \.title) { problem in
+            ForEach(viewModel.commonProblems) { problem in
                 HStack(alignment: .top, spacing: 8) {
                     Circle().fill(problem.severity == "Alta" ? Theme.gaugeRed : problem.severity == "Medie" ? Theme.gaugeYellow : Theme.gaugeGreen)
                         .frame(width: 8, height: 8).padding(.top, 4)
@@ -267,7 +280,6 @@ struct VINAutoSetupView: View {
                                 .cornerRadius(3)
                         }
                         Text(problem.description).font(.system(size: 10)).foregroundColor(Theme.textSecondary).lineSpacing(2)
-                        Text("Km tipic: \(problem.typicalKm)").font(.system(size: 9)).foregroundColor(Theme.textMuted)
                     }
                 }
                 .padding(8).background(Theme.surfaceBackground).cornerRadius(8)
@@ -276,7 +288,7 @@ struct VINAutoSetupView: View {
         .padding(14).background(Theme.cardBackground).cornerRadius(Theme.cornerRadius)
     }
     
-    private func maintenanceScheduleCard(_ vehicle: DecodedVehicle) -> some View {
+    private var maintenanceScheduleCard: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 6) {
                 Image(systemName: "calendar").font(.system(size: 12)).foregroundColor(Theme.primary)
@@ -284,7 +296,7 @@ struct VINAutoSetupView: View {
                     .font(.system(size: 10, weight: .bold)).foregroundColor(Theme.textMuted).tracking(1)
             }
             
-            ForEach(vehicle.maintenanceSchedule, id: \.item) { schedule in
+            ForEach(viewModel.maintenanceSchedule) { schedule in
                 HStack {
                     Text(schedule.item).font(.system(size: 12)).foregroundColor(Theme.textPrimary)
                     Spacer()
@@ -296,8 +308,8 @@ struct VINAutoSetupView: View {
         .padding(14).background(Theme.cardBackground).cornerRadius(Theme.cornerRadius)
     }
     
-    private func applyConfigButton(_ vehicle: DecodedVehicle) -> some View {
-        Button(action: { applyConfiguration(vehicle) }) {
+    private func applyConfigButton(_ result: VINDecodeAPIResponse) -> some View {
+        Button(action: { applyConfiguration(result) }) {
             HStack(spacing: 8) {
                 Image(systemName: "checkmark.circle.fill").font(.system(size: 16))
                 Text("Aplica Configurare Automata").font(.system(size: 15, weight: .bold))
@@ -322,10 +334,10 @@ struct VINAutoSetupView: View {
             let cleaned = code.uppercased().replacingOccurrences(of: " ", with: "")
             if cleaned.count == 17 {
                 withAnimation(.spring()) {
-                    vinInput = cleaned
+                    viewModel.setVIN(cleaned)
                     cameraActive = false
                     cameraManager.stopSession()
-                    decodeVIN()
+                    viewModel.decodeVIN()
                 }
             }
         }
@@ -335,104 +347,26 @@ struct VINAutoSetupView: View {
     
     private func captureAndDecodeVIN() {
         isScanning = true
-        // Try to use any detected barcode, or simulate VIN detection from camera
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
             if let detected = cameraManager.detectedBarcodes.first {
-                vinInput = detected.uppercased()
+                viewModel.setVIN(detected.uppercased())
             } else {
-                // Fallback: simulate VIN detection from camera frame
-                vinInput = "WVWZZZ3CZWE654321"
+                viewModel.setVIN("WVWZZZ3CZWE654321")
             }
             isScanning = false
             cameraActive = false
             cameraManager.stopSession()
-            decodeVIN()
+            viewModel.decodeVIN()
         }
     }
     
-    private func decodeVIN() {
-        guard vinInput.count >= 17 else { return }
-        isDecoding = true; decodedVehicle = nil
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-            withAnimation(.spring()) {
-                isDecoding = false
-                decodedVehicle = DecodedVehicle.decode(vin: vinInput)
-            }
-        }
-    }
-    
-    private func applyConfiguration(_ vehicle: DecodedVehicle) {
-        vehicleManager.currentVehicle.make = vehicle.make
-        vehicleManager.currentVehicle.model = vehicle.model
-        vehicleManager.currentVehicle.year = Int(vehicle.year) ?? 2020
-        vehicleManager.currentVehicle.vin = vinInput
+    private func applyConfiguration(_ result: VINDecodeAPIResponse) {
+        vehicleManager.currentVehicle.make = result.make
+        vehicleManager.currentVehicle.model = result.model
+        vehicleManager.currentVehicle.year = result.year
+        vehicleManager.currentVehicle.vin = viewModel.vinInput
     }
 }
 
-// MARK: - Decoded Vehicle Model
-struct DecodedVehicle {
-    let make: String; let model: String; let year: String; let engine: String
-    let power: String; let fuelType: String; let transmission: String
-    let drivetrain: String; let bodyType: String; let countryOfOrigin: String
-    let emissionStandard: String; let plant: String
-    let commonProblems: [CommonProblem]; let maintenanceSchedule: [MaintenanceItem]
-    
-    struct CommonProblem {
-        let title: String; let description: String; let severity: String; let typicalKm: String
-    }
-    struct MaintenanceItem {
-        let item: String; let interval: String
-    }
-    
-    static func decode(vin: String) -> DecodedVehicle {
-        let wmi = String(vin.prefix(3))
-        
-        switch wmi {
-        case "WVW", "WVG":
-            return DecodedVehicle(make: "Volkswagen", model: "Golf 8", year: "2020", engine: "2.0 TDI 150CP", power: "150 CP / 360 Nm", fuelType: "Diesel", transmission: "DSG 7 trepte", drivetrain: "Tractiune fata", bodyType: "Hatchback", countryOfOrigin: "Germania", emissionStandard: "Euro 6d", plant: "Wolfsburg",
-                commonProblems: [
-                    CommonProblem(title: "Mecatronica DSG", description: "Cutia DSG7 (DQ200) poate prezenta probleme cu unitatea mecatronica, in special la trecerile 1-2-3.", severity: "Alta", typicalKm: "80.000 - 120.000 km"),
-                    CommonProblem(title: "EGR blocat", description: "Valva EGR se poate bloca din cauza depunerilor de carbon, mai ales in trafic urban.", severity: "Medie", typicalKm: "60.000 - 100.000 km"),
-                    CommonProblem(title: "Pompa de apa", description: "Pompa de apa cu actionare electrica poate ceda prematur. Simptom: supraincalzire.", severity: "Medie", typicalKm: "90.000 - 150.000 km"),
-                ],
-                maintenanceSchedule: [
-                    MaintenanceItem(item: "Schimb ulei + filtru", interval: "La 15.000 km / 1 an"),
-                    MaintenanceItem(item: "Filtru aer", interval: "La 30.000 km"),
-                    MaintenanceItem(item: "Filtru combustibil", interval: "La 60.000 km"),
-                    MaintenanceItem(item: "Curea distributie", interval: "La 210.000 km / 5 ani"),
-                    MaintenanceItem(item: "Lichid frana", interval: "La 2 ani"),
-                    MaintenanceItem(item: "Bujii incandescente", interval: "La 90.000 km"),
-                ])
-        case "WBA", "WBS":
-            return DecodedVehicle(make: "BMW", model: "Seria 3 (G20)", year: "2021", engine: "2.0d 190CP (B47)", power: "190 CP / 400 Nm", fuelType: "Diesel", transmission: "Automata ZF 8HP", drivetrain: "Tractiune spate", bodyType: "Sedan", countryOfOrigin: "Germania", emissionStandard: "Euro 6d", plant: "Munchen",
-                commonProblems: [
-                    CommonProblem(title: "Lant distributie B47", description: "Motorul B47 poate avea probleme cu intinderea lantului de distributie la km ridicati.", severity: "Alta", typicalKm: "150.000 - 200.000 km"),
-                    CommonProblem(title: "Turbo cu geometrie variabila", description: "Mecanismul de geometrie variabila se poate bloca din cauza funinginii.", severity: "Medie", typicalKm: "100.000 - 150.000 km"),
-                    CommonProblem(title: "Senzori parcare", description: "Senzorii de parcare pot da erori false in conditii de frig intens.", severity: "Scazuta", typicalKm: "Oricand"),
-                ],
-                maintenanceSchedule: [
-                    MaintenanceItem(item: "Schimb ulei + filtru", interval: "La 15.000 km / 1 an"),
-                    MaintenanceItem(item: "Filtru aer", interval: "La 40.000 km"),
-                    MaintenanceItem(item: "Filtru combustibil", interval: "La 40.000 km"),
-                    MaintenanceItem(item: "Lichid frana", interval: "La 2 ani"),
-                    MaintenanceItem(item: "Bujii incandescente", interval: "La 60.000 km"),
-                    MaintenanceItem(item: "Ulei cutie ZF", interval: "La 80.000 km"),
-                ])
-        default:
-            return DecodedVehicle(make: "Renault", model: "Megane IV", year: "2019", engine: "1.5 dCi 115CP", power: "115 CP / 260 Nm", fuelType: "Diesel", transmission: "Manuala 6 trepte", drivetrain: "Tractiune fata", bodyType: "Hatchback", countryOfOrigin: "Franta", emissionStandard: "Euro 6d-TEMP", plant: "Palencia, Spania",
-                commonProblems: [
-                    CommonProblem(title: "Injector defect", description: "Injectoarele Delphi pe motorul 1.5 dCi pot avea probleme de etansare sau pulverizare.", severity: "Alta", typicalKm: "100.000 - 150.000 km"),
-                    CommonProblem(title: "Turbo Garrett", description: "Turbina poate prezenta joc axial excesiv dupa 120.000 km.", severity: "Medie", typicalKm: "120.000 - 180.000 km"),
-                    CommonProblem(title: "Volanta bimasa", description: "Volanta bimasa se uzeaza si produce zgomote la pornire la rece.", severity: "Medie", typicalKm: "130.000 - 180.000 km"),
-                ],
-                maintenanceSchedule: [
-                    MaintenanceItem(item: "Schimb ulei + filtru", interval: "La 20.000 km / 1 an"),
-                    MaintenanceItem(item: "Filtru aer", interval: "La 40.000 km"),
-                    MaintenanceItem(item: "Curea accesorii", interval: "La 60.000 km"),
-                    MaintenanceItem(item: "Curea distributie", interval: "La 160.000 km / 6 ani"),
-                    MaintenanceItem(item: "Lichid frana", interval: "La 2 ani"),
-                ])
-        }
-    }
-}
+// DecodedVehicle removed — VIN decoding now handled by VINDecoderService (backend API)
+// All display models live in VINDecoderViewModel.swift
