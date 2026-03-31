@@ -115,6 +115,7 @@ class OBD2BluetoothManager: NSObject, ObservableObject {
     }
 
     func disconnect() {
+        cancelWatchdog()
         cancelInitTimeout()
         if let peripheral = connectedPeripheral {
             centralManager?.cancelPeripheralConnection(peripheral)
