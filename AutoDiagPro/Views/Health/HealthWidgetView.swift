@@ -5,6 +5,7 @@ import SwiftUI
 // To add a real widget: File > New > Target > Widget Extension in Xcode
 
 struct HealthWidgetPreview: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var healthScore: Int = 78
     @State private var animateRing = false

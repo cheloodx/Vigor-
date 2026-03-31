@@ -3,6 +3,7 @@ import CoreMotion
 
 // MARK: - Shake to Diagnose Feature
 struct ShakeDiagnoseView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var isShaking = false
     @State private var showResult = false
@@ -67,7 +68,7 @@ struct ShakeDiagnoseView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "iphone.radiowaves.left.and.right")
                             .foregroundColor(Theme.primary)
-                        Text("Diagnostic Rapid")
+                        Text(localization.t("feature.shake_diagnose"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }
@@ -135,7 +136,7 @@ struct ShakeDiagnoseView: View {
                     .foregroundColor(diagnosis.statusColor)
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Diagnostic Rapid")
+                    Text(localization.t("feature.shake_diagnose"))
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(Theme.textMuted)
                     Text(diagnosis.title)

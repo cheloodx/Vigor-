@@ -4,6 +4,7 @@ import AVFoundation
 // MARK: - QR/Barcode Part Scanner View
 // Scan part serial number via QR code or barcode and find compatible alternatives
 struct QRPartScannerView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var cameraManager = CameraSessionManager()
     @State private var scannedCode: String = ""

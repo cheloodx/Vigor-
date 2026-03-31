@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MaintenanceAlarmsView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var alarmManager = MaintenanceAlarmManager()
     @State private var showAddAlarm = false
@@ -53,7 +54,7 @@ struct MaintenanceAlarmsView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "bell.badge.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Alarme Intretinere")
+                        Text(localization.t("service.calendar"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

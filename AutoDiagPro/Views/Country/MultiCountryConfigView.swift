@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Multi-Country Configuration View
 // Select country and see all adapted laws, prices, insurance, inspection rules
 struct MultiCountryConfigView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var selectedCountryId: String = "RO"
     @State private var searchText = ""
@@ -55,7 +56,7 @@ struct MultiCountryConfigView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "globe.americas.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Configurare Tara")
+                        Text(localization.t("settings.country"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

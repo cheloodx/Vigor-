@@ -2,6 +2,7 @@ import SwiftUI
 
 // MARK: - Real Fuel Consumption Calculator
 struct FuelCalculatorView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var entries: [FuelEntry] = FuelEntry.sampleEntries
     @State private var showAddEntry = false
@@ -41,7 +42,7 @@ struct FuelCalculatorView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "fuelpump.fill")
                             .foregroundColor(Theme.gaugeYellow)
-                        Text("Calculator Consum")
+                        Text(localization.t("feature.fuel_calc"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

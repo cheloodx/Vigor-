@@ -2,6 +2,7 @@ import SwiftUI
 
 // MARK: - Privacy Policy View
 struct PrivacyPolicyView: View {
+    @EnvironmentObject var localization: LocalizationManager
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -10,7 +11,7 @@ struct PrivacyPolicyView: View {
                     Image(systemName: "lock.shield.fill")
                         .font(.system(size: 40))
                         .foregroundColor(Theme.primary)
-                    Text("Politica de Confidentialitate")
+                    Text(localization.t("privacy.title"))
                         .font(.system(size: 20, weight: .black))
                         .foregroundColor(Theme.textPrimary)
                     Text("Ultima actualizare: Martie 2026")
@@ -125,7 +126,7 @@ struct TermsOfServiceView: View {
                     Image(systemName: "doc.text.fill")
                         .font(.system(size: 40))
                         .foregroundColor(Theme.primary)
-                    Text("Termeni si Conditii")
+                    Text(localization.t("terms.title"))
                         .font(.system(size: 20, weight: .black))
                         .foregroundColor(Theme.textPrimary)
                     Text("Ultima actualizare: Martie 2026")
@@ -200,7 +201,7 @@ struct TermsOfServiceView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("Termeni si Conditii")
+                Text(localization.t("terms.title"))
                     .font(.system(size: 18, weight: .bold))
                     .foregroundColor(Theme.textPrimary)
             }

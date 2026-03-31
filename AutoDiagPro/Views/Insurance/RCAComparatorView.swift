@@ -2,6 +2,7 @@ import SwiftUI
 
 // MARK: - RCA Insurance Comparator View
 struct RCAComparatorView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var offers: [InsuranceOffer] = []
     @State private var isSearching = false
@@ -42,7 +43,7 @@ struct RCAComparatorView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "shield.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Comparator RCA")
+                        Text(localization.t("feature.cost_estimator"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

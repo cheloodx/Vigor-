@@ -2,6 +2,7 @@ import SwiftUI
 
 // MARK: - Vehicle Journal View — LIVE real-time sync
 struct VehicleJournalView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var entries: [JournalEntry] = JournalEntry.sampleEntries
     @State private var showAddEntry = false
@@ -45,7 +46,7 @@ struct VehicleJournalView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "book.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Jurnal Vehicul")
+                        Text(localization.t("feature.car_history"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

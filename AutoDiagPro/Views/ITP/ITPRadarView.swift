@@ -4,6 +4,7 @@ import MapKit
 // MARK: - ITP Radar View
 // Real-time ITP check with OBD2 data and live location for nearby inspection centers — LIVE
 struct ITPRadarView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @ObservedObject private var locationManager = LocationManager.shared
     @StateObject private var obdManager = OBD2BluetoothManager()
@@ -90,7 +91,7 @@ struct ITPRadarView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "shield.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Radar ITP")
+                        Text(localization.t("itp.title"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

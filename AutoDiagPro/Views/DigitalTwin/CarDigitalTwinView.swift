@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Car Digital Twin View
 // Complete digital representation of the vehicle with all data
 struct CarDigitalTwinView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var selectedSystem: CarSystem = .engine
     @State private var isLoading = true
@@ -115,7 +116,7 @@ struct CarDigitalTwinView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "cube.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Digital Twin")
+                        Text(localization.t("feature.digital_twin"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

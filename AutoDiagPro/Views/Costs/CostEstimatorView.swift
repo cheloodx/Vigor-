@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CostEstimatorView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
 
     @State private var isLoading = false
@@ -89,7 +90,7 @@ struct CostEstimatorView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "creditcard.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Estimator Costuri")
+                        Text(localization.t("feature.cost_estimator"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

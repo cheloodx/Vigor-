@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - App Store Screenshots View
 // Generates professional app store listing screenshots
 struct AppStoreScreenshotsView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var currentPage = 0
     @State private var animateElements = false

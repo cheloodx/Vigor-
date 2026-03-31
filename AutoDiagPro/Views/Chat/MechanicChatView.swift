@@ -1,11 +1,12 @@
 import SwiftUI
 
 struct MechanicChatView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @EnvironmentObject var appState: AppState
 
     @State private var messages: [ChatMessage] = [
-        ChatMessage(text: "Salut! Sunt AutoDiag Pro. Descrie problema masinii sau intreaba orice despre reparatii, piese sau intretinere.", isUser: false)
+        ChatMessage(text: localization.t("chat.initial_msg"), isUser: false)
     ]
     @State private var inputText: String = ""
     @State private var isLoading = false
@@ -58,7 +59,7 @@ struct MechanicChatView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "bubble.left.and.bubble.right.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Mecanic AI")
+                        Text(localization.t("chat.ai_title"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }
@@ -184,7 +185,7 @@ struct MechanicChatView: View {
     // MARK: - Input Bar
     private var inputBar: some View {
         HStack(spacing: 8) {
-            TextField("Descrie problema masinii...", text: $inputText)
+            TextField(localization.t("chat.placeholder"), text: $inputText)
                 .font(.system(size: 13))
                 .foregroundColor(Theme.textPrimary)
                 .focused($isInputFocused)

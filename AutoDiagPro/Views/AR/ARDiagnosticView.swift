@@ -4,6 +4,7 @@ import AVFoundation
 // MARK: - AR Diagnostic View
 // Shows an AR-style overlay on camera feed highlighting broken/problematic parts
 struct ARDiagnosticView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var isScanning = false
     @State private var scanProgress: CGFloat = 0

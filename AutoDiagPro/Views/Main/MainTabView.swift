@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var vehicleManager: VehicleManager
 
@@ -9,35 +10,35 @@ struct MainTabView: View {
             ScanView()
                 .tabItem {
                     Image(systemName: "camera.viewfinder")
-                    Text("Scan")
+                    Text(localization.t("tab.scan"))
                 }
                 .tag(0)
 
             VINScanView()
                 .tabItem {
                     Image(systemName: "camera.fill")
-                    Text("VIN/Nr")
+                    Text(localization.t("tab.vin"))
                 }
                 .tag(1)
 
             LiveDashboardView()
                 .tabItem {
                     Image(systemName: "speedometer")
-                    Text("Live")
+                    Text(localization.t("tab.live"))
                 }
                 .tag(2)
 
             MechanicChatView()
                 .tabItem {
                     Image(systemName: "bubble.left.and.bubble.right.fill")
-                    Text("Mecanic")
+                    Text(localization.t("tab.mechanic"))
                 }
                 .tag(3)
 
             MoreMenuView()
                 .tabItem {
                     Image(systemName: "square.grid.2x2.fill")
-                    Text("Mai Mult")
+                    Text(localization.t("tab.more"))
                 }
                 .tag(4)
         }

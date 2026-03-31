@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Onboarding View
 // Welcome slides + country selection on first launch
 struct OnboardingView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @EnvironmentObject var appState: AppState
     @Binding var isPresented: Bool

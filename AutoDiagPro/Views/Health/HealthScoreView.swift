@@ -2,6 +2,7 @@ import SwiftUI
 
 // MARK: - Health Score View — LIVE real-time with OBD2 data
 struct HealthScoreView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var obdManager = OBD2BluetoothManager()
     @State private var healthScore: HealthScore = .sample
@@ -43,7 +44,7 @@ struct HealthScoreView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "heart.square.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Scor Sanatate")
+                        Text(localization.t("health.score"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }
@@ -123,7 +124,7 @@ struct HealthScoreView: View {
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(healthScore.scoreColor)
                     
-                    Text("din 100")
+                    Text(localization.t("health.out_of"))
                         .font(.system(size: 11))
                         .foregroundColor(Theme.textMuted)
                 }
@@ -148,9 +149,9 @@ struct HealthScoreView: View {
     // MARK: - Quick Stats
     private var quickStatsRow: some View {
         HStack(spacing: 8) {
-            statBox(title: "Probleme", value: "\(healthScore.categories.filter { $0.score < 70 }.count)", icon: "exclamationmark.triangle.fill", color: Theme.gaugeYellow)
-            statBox(title: "OK", value: "\(healthScore.categories.filter { $0.score >= 70 }.count)", icon: "checkmark.circle.fill", color: Theme.gaugeGreen)
-            statBox(title: "Critice", value: "\(healthScore.categories.filter { $0.score < 50 }.count)", icon: "xmark.circle.fill", color: Theme.gaugeRed)
+            statBox(title: localization.t("health.issues"), value: "\(healthScore.categories.filter { $0.score < 70 }.count)", icon: "exclamationmark.triangle.fill", color: Theme.gaugeYellow)
+            statBox(title: localization.t("health.ok"), value: "\(healthScore.categories.filter { $0.score >= 70 }.count)", icon: "checkmark.circle.fill", color: Theme.gaugeGreen)
+            statBox(title: localization.t("health.critical"), value: "\(healthScore.categories.filter { $0.score < 50 }.count)", icon: "xmark.circle.fill", color: Theme.gaugeRed)
         }
     }
     
@@ -176,7 +177,7 @@ struct HealthScoreView: View {
     // MARK: - Category Breakdown
     private var categoryBreakdown: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("DETALII PE CATEGORII")
+            Text(localization.t("health.categories").uppercased())
                 .font(.system(size: 11, weight: .bold))
                 .foregroundColor(Theme.textMuted)
                 .tracking(1.5)
@@ -252,7 +253,7 @@ struct HealthScoreView: View {
             HStack(spacing: 8) {
                 Image(systemName: "lightbulb.fill")
                     .foregroundColor(Theme.gaugeYellow)
-                Text("RECOMANDARI PRIORITARE")
+                Text(localization.t("health.recommendations").uppercased())
                     .font(.system(size: 11, weight: .bold))
                     .foregroundColor(Theme.textMuted)
                     .tracking(1.5)
@@ -284,7 +285,7 @@ struct HealthScoreView: View {
         Button(action: { showShareSheet = true }) {
             HStack(spacing: 8) {
                 Image(systemName: "square.and.arrow.up")
-                Text("Partajeaza Raportul")
+                Text(localization.t("health.share_report"))
                     .font(.system(size: 14, weight: .semibold))
             }
             .frame(maxWidth: .infinity)

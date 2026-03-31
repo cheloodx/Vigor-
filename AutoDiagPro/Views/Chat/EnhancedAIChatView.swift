@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Enhanced AI Chat View
 // Context-aware AI mechanic: knows your car, history, OBD data
 struct EnhancedAIChatView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var messages: [AIChatMessage] = []
     @State private var inputText = ""
@@ -61,7 +62,7 @@ struct EnhancedAIChatView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "bubble.left.and.bubble.right.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Mecanic AI Pro")
+                        Text(localization.t("chat.ai_title"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }
@@ -106,7 +107,7 @@ struct EnhancedAIChatView: View {
                 .font(.system(size: 36))
                 .foregroundColor(Theme.primary)
             
-            Text("Mecanic AI Pro")
+            Text(localization.t("chat.ai_title"))
                 .font(.system(size: 18, weight: .bold))
                 .foregroundColor(Theme.textPrimary)
             
@@ -254,7 +255,7 @@ struct EnhancedAIChatView: View {
     // MARK: - Input Bar
     private var inputBar: some View {
         HStack(spacing: 8) {
-            TextField("Descrie problema masinii...", text: $inputText)
+            TextField(localization.t("chat.placeholder"), text: $inputText)
                 .font(.system(size: 14))
                 .foregroundColor(Theme.textPrimary)
                 .padding(10)

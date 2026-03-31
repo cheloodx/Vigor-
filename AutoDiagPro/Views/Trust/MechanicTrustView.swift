@@ -4,6 +4,7 @@ import MapKit
 // MARK: - Mechanic Trust System View
 // Real ratings, mechanic verification, work guarantee, "best price nearby" — LIVE with real-time location
 struct MechanicTrustView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @ObservedObject private var locationManager = LocationManager.shared
     @State private var mechanics: [TrustedMechanic] = TrustedMechanic.sampleMechanics
@@ -92,7 +93,7 @@ struct MechanicTrustView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "checkmark.shield.fill")
                             .foregroundColor(Theme.gaugeGreen)
-                        Text("Mecanici de Incredere")
+                        Text(localization.t("trust.title"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

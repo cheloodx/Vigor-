@@ -4,6 +4,7 @@ import AVFoundation
 // MARK: - VIN Scanner + Auto Setup View
 // Scan VIN with REAL camera → auto-configure vehicle with model, engine, common problems — LIVE
 struct VINAutoSetupView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var cameraManager = CameraSessionManager()
     @StateObject private var viewModel = VINDecoderViewModel()
@@ -42,7 +43,7 @@ struct VINAutoSetupView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "barcode.viewfinder")
                             .foregroundColor(Theme.primary)
-                        Text("VIN Auto Setup")
+                        Text(localization.t("vin.auto_setup"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

@@ -4,6 +4,7 @@ import SwiftUI
 // Full vehicle history: repairs, scanned invoices, services, owners
 // When selling the car -> increases value
 struct CarCVView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var selectedTab: CVTab = .overview
     @State private var owners: [CarOwner] = CarOwner.sampleOwners
@@ -55,7 +56,7 @@ struct CarCVView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "doc.text.fill")
                             .foregroundColor(Theme.primary)
-                        Text("CV Auto")
+                        Text(localization.t("feature.car_history"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

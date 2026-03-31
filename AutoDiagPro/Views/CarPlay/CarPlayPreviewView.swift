@@ -4,6 +4,7 @@ import MapKit
 // MARK: - CarPlay Preview View
 // Real-time OBD2 data streaming on CarPlay display — LIVE
 struct CarPlayPreviewView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var obdManager = OBD2BluetoothManager()
     @ObservedObject private var locationManager = LocationManager.shared
@@ -42,7 +43,7 @@ struct CarPlayPreviewView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "car.fill")
                         .foregroundColor(Theme.primary)
-                    Text("CarPlay")
+                    Text(localization.t("feature.carplay"))
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(Theme.textPrimary)
                 }

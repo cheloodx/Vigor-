@@ -3,6 +3,7 @@ import AVFoundation
 
 // MARK: - VIN/Nr Inmatriculare Scanner — LIVE cu camera reala
 struct VINScanView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var cameraManager = CameraSessionManager()
     @State private var liveScanActive = false

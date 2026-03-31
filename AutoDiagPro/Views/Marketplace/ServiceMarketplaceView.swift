@@ -4,6 +4,7 @@ import MapKit
 // MARK: - Service Marketplace View
 // Connect users with mechanics and service shops, with commission model — LIVE with real-time location
 struct ServiceMarketplaceView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @ObservedObject private var locationManager = LocationManager.shared
     @State private var selectedCategory: ServiceCategory = .all
@@ -288,7 +289,7 @@ struct ServiceMarketplaceView: View {
                 Button(action: {}) {
                     HStack(spacing: 4) {
                         Image(systemName: "calendar").font(.system(size: 10))
-                        Text("Programeaza").font(.system(size: 11, weight: .semibold))
+                        Text(localization.t("marketplace.book")).font(.system(size: 11, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity).padding(.vertical, 8)
                     .background(Theme.surfaceBackground).foregroundColor(Theme.primary).cornerRadius(8)

@@ -2,6 +2,7 @@ import SwiftUI
 import AVFoundation
 
 struct EngineSoundAnalysisView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @StateObject private var viewModel = EngineSoundAnalysisViewModel()
     
     var body: some View {
@@ -36,7 +37,7 @@ struct EngineSoundAnalysisView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "waveform.circle.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Analiza Sunet Motor")
+                        Text(localization.t("feature.sound_analysis"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

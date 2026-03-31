@@ -4,6 +4,7 @@ import SwiftUI
 // "Scan a friend's car -> see full history and risks"
 // Viral feature: share simple, used when buying cars
 struct ShareVehicleReportView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var selectedTab: ShareTab = .generate
     @State private var isGenerating = false

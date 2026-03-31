@@ -2,6 +2,7 @@ import SwiftUI
 
 // MARK: - 3D Car Animation View (Visual Component Model)
 struct CarAnimationView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var healthScore: HealthScore = .sample
     @State private var selectedPart: CarPart?

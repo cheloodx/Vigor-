@@ -4,6 +4,7 @@ import AVFoundation
 // MARK: - AR Repair Guide View
 // Step-by-step AR-guided repair instructions with REAL camera feed — LIVE
 struct ARRepairGuideView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var cameraManager = CameraSessionManager()
     @State private var selectedRepair: RepairGuide?

@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - European AI Data View
 // AI diagnostics based on European-specific data per brand/country
 struct EuropeanAIDataView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var viewModel = EuropeanAIDataViewModel()
     
@@ -90,7 +91,7 @@ struct EuropeanAIDataView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "brain")
                             .foregroundColor(Theme.primary)
-                        Text("AI Date Europene")
+                        Text(localization.t("feature.european_data"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

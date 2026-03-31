@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - AI Failure Predictor View
 // Predicts what will break in the next 3-6 months based on vehicle data
 struct FailurePredictorView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var viewModel = FailurePredictorViewModel()
     

@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct LiveDashboardView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var appState: AppState
 
     @StateObject private var simulator = OBDDemoSimulator()

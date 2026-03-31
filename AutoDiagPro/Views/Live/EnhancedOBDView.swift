@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Enhanced OBD Live View
 // Real fuel consumption calculated from MAF/speed, live data history
 struct EnhancedOBDView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var obdManager = OBD2BluetoothManager()
     @State private var selectedTab: OBDTab = .live
@@ -17,10 +18,10 @@ struct EnhancedOBDView: View {
     @State private var sessionStart = Date()
     
     enum OBDTab: String, CaseIterable {
-        case live = "Live"
-        case fuel = "Consum"
-        case history = "Istoric"
-        case trip = "Calatorie"
+        case live = "live"
+        case fuel = "fuel"
+        case history = "history"
+        case trip = "trip"
     }
     
     var body: some View {
@@ -52,7 +53,7 @@ struct EnhancedOBDView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "antenna.radiowaves.left.and.right")
                             .foregroundColor(Theme.primary)
-                        Text("OBD2 Live Avansat")
+                        Text(localization.t("obd.live_title"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }
@@ -86,7 +87,7 @@ struct EnhancedOBDView: View {
                     stopDemoMode()
                     obdManager.startScanning()
                 }) {
-                    Text("Conecteaza OBD2")
+                    Text(localization.t("obd.connect"))
                         .font(.system(size: 10, weight: .bold))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
@@ -100,7 +101,7 @@ struct EnhancedOBDView: View {
                     useDemoMode = true
                     startDemoMode()
                 }) {
-                    Text("Mod Demo")
+                    Text(localization.t("obd.demo"))
                         .font(.system(size: 10, weight: .bold))
                         .padding(.horizontal, 10)
                         .padding(.vertical, 5)
@@ -137,17 +138,17 @@ struct EnhancedOBDView: View {
         VStack(spacing: 10) {
             // Main gauges grid
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                liveGauge(title: "RPM", value: obdManager.liveData.rpm, unit: "rpm", maxVal: 6000, color: Theme.primary, icon: "speedometer")
-                liveGauge(title: "Viteza", value: obdManager.liveData.speed, unit: "km/h", maxVal: 250, color: Theme.gaugeGreen, icon: "speedometer")
-                liveGauge(title: "Temp. Motor", value: obdManager.liveData.engineTemp, unit: "C", maxVal: 120, color: tempColor(obdManager.liveData.engineTemp), icon: "thermometer.medium")
-                liveGauge(title: "Temp. Aer", value: obdManager.liveData.airTemp, unit: "C", maxVal: 60, color: Theme.primary, icon: "wind")
-                liveGauge(title: "Baterie", value: obdManager.liveData.batteryVoltage, unit: "V", maxVal: 16, color: voltageColor(obdManager.liveData.batteryVoltage), icon: "battery.75percent")
-                liveGauge(title: "Temp. Ulei", value: obdManager.liveData.oilTemp, unit: "C", maxVal: 150, color: tempColor(obdManager.liveData.oilTemp), icon: "drop.fill")
+                liveGauge(title: localization.t("obd.rpm"), value: obdManager.liveData.rpm, unit: "rpm", maxVal: 6000, color: Theme.primary, icon: "speedometer")
+                liveGauge(title: localization.t("obd.speed"), value: obdManager.liveData.speed, unit: "km/h", maxVal: 250, color: Theme.gaugeGreen, icon: "speedometer")
+                liveGauge(title: localization.t("obd.temp"), value: obdManager.liveData.engineTemp, unit: "C", maxVal: 120, color: tempColor(obdManager.liveData.engineTemp), icon: "thermometer.medium")
+                liveGauge(title: localization.t("obd.airtemp"), value: obdManager.liveData.airTemp, unit: "C", maxVal: 60, color: Theme.primary, icon: "wind")
+                liveGauge(title: localization.t("obd.battery"), value: obdManager.liveData.batteryVoltage, unit: "V", maxVal: 16, color: voltageColor(obdManager.liveData.batteryVoltage), icon: "battery.75percent")
+                liveGauge(title: localization.t("obd.oil"), value: obdManager.liveData.oilTemp, unit: "C", maxVal: 150, color: tempColor(obdManager.liveData.oilTemp), icon: "drop.fill")
             }
             
             // Fuel consumption live
             VStack(spacing: 8) {
-                Text("CONSUM INSTANT")
+                Text(localization.t("fuel.instant").uppercased())
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(Theme.textMuted)
                     .tracking(1.2)
@@ -232,7 +233,7 @@ struct EnhancedOBDView: View {
         VStack(spacing: 12) {
             // Average consumption card
             VStack(spacing: 8) {
-                Text("CONSUM MEDIU SESIUNE")
+                Text(localization.t("fuel.average").uppercased())
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(Theme.textMuted)
                     .tracking(1.2)
@@ -247,9 +248,9 @@ struct EnhancedOBDView: View {
                 }
                 
                 HStack(spacing: 16) {
-                    fuelStat(label: "Minim", value: String(format: "%.1f", max(0, avgFuelConsumption - 1.5)), color: Theme.gaugeGreen)
-                    fuelStat(label: "Mediu", value: String(format: "%.1f", avgFuelConsumption), color: Theme.gaugeYellow)
-                    fuelStat(label: "Maxim", value: String(format: "%.1f", avgFuelConsumption + 2.5), color: Theme.gaugeRed)
+                    fuelStat(label: "Min", value: String(format: "%.1f", max(0, avgFuelConsumption - 1.5)), color: Theme.gaugeGreen)
+                    fuelStat(label: "Med", value: String(format: "%.1f", avgFuelConsumption), color: Theme.gaugeYellow)
+                    fuelStat(label: "Max", value: String(format: "%.1f", avgFuelConsumption + 2.5), color: Theme.gaugeRed)
                 }
             }
             .padding(14)
@@ -258,7 +259,7 @@ struct EnhancedOBDView: View {
             
             // Fuel tips
             VStack(alignment: .leading, spacing: 8) {
-                Text("SFATURI ECONOMISIRE")
+                Text(localization.t("fuel.unit").uppercased())
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(Theme.textMuted)
                     .tracking(1.2)
@@ -310,10 +311,10 @@ struct EnhancedOBDView: View {
                     Image(systemName: "chart.xyaxis.line")
                         .font(.system(size: 30))
                         .foregroundColor(Theme.textMuted.opacity(0.3))
-                    Text("Datele se inregistreaza in timp real")
+                    Text(localization.t("obd.live_indicator"))
                         .font(.system(size: 13))
                         .foregroundColor(Theme.textMuted)
-                    Text("Porneste modul demo sau conecteaza OBD2")
+                    Text(localization.t("obd.demo_live"))
                         .font(.system(size: 11))
                         .foregroundColor(Theme.textMuted.opacity(0.6))
                 }
@@ -363,7 +364,7 @@ struct EnhancedOBDView: View {
         VStack(spacing: 12) {
             // Trip summary
             VStack(spacing: 12) {
-                Text("CALATORIE CURENTA")
+                Text(localization.t("obd.live_indicator").uppercased())
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(Theme.textMuted)
                     .tracking(1.2)
@@ -373,12 +374,12 @@ struct EnhancedOBDView: View {
                 let minutes = (Int(elapsed) % 3600) / 60
                 
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                    tripStat(icon: "arrow.left.and.right", label: "Distanta", value: String(format: "%.1f km", tripDistance))
-                    tripStat(icon: "clock", label: "Durata", value: String(format: "%d:%02d", hours, minutes))
-                    tripStat(icon: "fuelpump.fill", label: "Combustibil", value: String(format: "%.2f L", tripFuelUsed))
-                    tripStat(icon: "speedometer", label: "Consum mediu", value: String(format: "%.1f L/100", avgFuelConsumption))
+                    tripStat(icon: "arrow.left.and.right", label: localization.t("obd.speed"), value: String(format: "%.1f km", tripDistance))
+                    tripStat(icon: "clock", label: localization.t("general.loading"), value: String(format: "%d:%02d", hours, minutes))
+                    tripStat(icon: "fuelpump.fill", label: localization.t("fuel.unit"), value: String(format: "%.2f L", tripFuelUsed))
+                    tripStat(icon: "speedometer", label: localization.t("fuel.average"), value: String(format: "%.1f L/100", avgFuelConsumption))
                     tripStat(icon: "speedometer", label: "Viteza medie", value: tripDistance > 0 && elapsed > 0 ? String(format: "%.0f km/h", tripDistance / (elapsed / 3600)) : "0 km/h")
-                    tripStat(icon: "thermometer.medium", label: "Temp. medie", value: String(format: "%.0f C", obdManager.liveData.engineTemp))
+                    tripStat(icon: "thermometer.medium", label: localization.t("obd.temp"), value: String(format: "%.0f C", obdManager.liveData.engineTemp))
                 }
             }
             .padding(14)
@@ -389,7 +390,7 @@ struct EnhancedOBDView: View {
             Button(action: resetTrip) {
                 HStack(spacing: 6) {
                     Image(systemName: "arrow.counterclockwise")
-                    Text("Reseteaza Calatorie")
+                    Text(localization.t("general.retry"))
                         .font(.system(size: 13, weight: .semibold))
                 }
                 .frame(maxWidth: .infinity)

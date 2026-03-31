@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Apple Watch Companion App Preview
 // Shows what the watch app would look like + setup instructions
 struct WatchPreviewView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var selectedComplication = 0
     @State private var animateScore = false

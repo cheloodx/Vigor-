@@ -2,6 +2,7 @@ import SwiftUI
 
 // MARK: - Recall Campaigns View
 struct RecallCampaignsView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var viewModel = RecallCampaignsViewModel()
     
@@ -36,7 +37,7 @@ struct RecallCampaignsView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "bell.badge.fill")
                             .foregroundColor(Theme.gaugeRed)
-                        Text("Campanii Rechemare")
+                        Text(localization.t("feature.recall_check"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

@@ -2,6 +2,7 @@ import SwiftUI
 import AVFoundation
 
 struct ScanView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var cameraManager = CameraSessionManager()
@@ -18,8 +19,8 @@ struct ScanView: View {
     @State private var arCameraActive = false
 
     enum ScanSubTab: String, CaseIterable {
-        case photo = "Foto Diagnostic"
-        case ar = "AR Live"
+        case photo = "photo"
+        case ar = "ar"
 
         var icon: String {
             switch self {
@@ -30,11 +31,11 @@ struct ScanView: View {
     }
 
     enum ResultTab: String, CaseIterable {
-        case diagnostic = "Diag"
-        case reparatie = "Rep."
-        case piese = "Piese"
-        case cost = "Cost"
-        case ar = "AR"
+        case diagnostic = "diagnostic"
+        case reparatie = "repair"
+        case piese = "parts"
+        case cost = "cost"
+        case ar = "ar"
 
         var icon: String {
             switch self {
@@ -68,7 +69,7 @@ struct ScanView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "camera.viewfinder")
                             .foregroundColor(Theme.primary)
-                        Text("Scan Diagnostic")
+                        Text(localization.t("scan.title"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }
@@ -124,7 +125,7 @@ struct ScanView: View {
                 Button(action: { showImagePicker = true }) {
                     HStack(spacing: 6) {
                         Image(systemName: "camera.fill")
-                        Text("Camera")
+                        Text(localization.t("general.camera"))
                             .font(.system(size: 13, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
@@ -137,7 +138,7 @@ struct ScanView: View {
                 Button(action: { showGalleryPicker = true }) {
                     HStack(spacing: 6) {
                         Image(systemName: "photo.fill")
-                        Text("Galerie")
+                        Text(localization.t("general.gallery"))
                             .font(.system(size: 13, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
@@ -189,7 +190,7 @@ struct ScanView: View {
                 Button(action: { loadDemoResult() }) {
                     HStack(spacing: 8) {
                         Image(systemName: "play.fill")
-                        Text("Demo Diagnostic")
+                        Text(localization.t("scan.demo"))
                             .font(.system(size: 13, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
@@ -229,7 +230,7 @@ struct ScanView: View {
                         .font(.system(size: 50))
                         .foregroundColor(Theme.textMuted.opacity(0.3))
 
-                    Text("Fotografiati componenta sau masina")
+                    Text(localization.t("scan.take_photo"))
                         .font(.system(size: 14))
                         .foregroundColor(Theme.textSecondary)
                         .multilineTextAlignment(.center)
@@ -454,7 +455,7 @@ struct ScanView: View {
                             .lineSpacing(3)
 
                         HStack(spacing: 4) {
-                            Text("Dificultate:")
+                            Text(localization.t("general.filter") + ":")
                                 .font(.system(size: 10))
                                 .foregroundColor(Theme.textMuted)
                             Text(step.difficulty.rawValue)
@@ -486,7 +487,7 @@ struct ScanView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 2) {
                             if index == 0 {
-                                Text("PIESA ORIGINALA OEM")
+                                Text("OEM")
                                     .font(.system(size: 9, weight: .bold))
                                     .foregroundColor(Theme.primary)
                                     .tracking(1.5)

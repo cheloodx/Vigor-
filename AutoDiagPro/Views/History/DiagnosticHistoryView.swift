@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct DiagnosticHistoryView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var history: [DiagnosticHistoryEntry] = DiagnosticHistoryEntry.sampleHistory
     @State private var selectedFilter: String = "Toate"
@@ -45,7 +46,7 @@ struct DiagnosticHistoryView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "clock.arrow.circlepath")
                             .foregroundColor(Theme.primary)
-                        Text("Istoric Diagnostic")
+                        Text(localization.t("feature.car_history"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

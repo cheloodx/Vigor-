@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - DTC Error Decoder View
 // Decode OBD2 DTC codes with full explanation in Romanian
 struct DTCDecoderView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var viewModel = DTCDecoderViewModel()
     

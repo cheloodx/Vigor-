@@ -4,6 +4,7 @@ import Intents
 // MARK: - Siri Shortcuts View
 // Configure Siri voice commands for car diagnostics
 struct SiriShortcutsView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var shortcuts: [SiriShortcut] = SiriShortcut.defaultShortcuts
     @State private var selectedShortcut: SiriShortcut?

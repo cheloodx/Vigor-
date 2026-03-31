@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CostComparatorView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var selectedOperations: Set<String> = []
     @State private var showResults = false
@@ -67,7 +68,7 @@ struct CostComparatorView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "arrow.left.arrow.right.circle.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Comparator Costuri")
+                        Text(localization.t("feature.cost_estimator"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

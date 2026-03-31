@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MoreMenuView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @EnvironmentObject var appState: AppState
     @StateObject private var nightModeManager = NightModeManager()
@@ -15,16 +16,16 @@ struct MoreMenuView: View {
                     vehicleCard
                     
                     // Main features grid
-                    featureSection(title: "DIAGNOSTIC", features: diagnosticFeatures)
-                    featureSection(title: "AI & PREDICTII", features: aiFeatures)
-                    featureSection(title: "VEHICUL", features: vehicleFeatures)
-                    featureSection(title: "SERVICE & COSTURI", features: serviceFeatures)
-                    featureSection(title: "INCREDERE & PARTAJARE", features: trustFeatures)
-                    featureSection(title: "LEGAL & SIGURANTA", features: legalFeatures)
-                    featureSection(title: "EUROPA & MARKETPLACE", features: europeFeatures)
-                    featureSection(title: "CONT & SINCRONIZARE", features: accountFeatures)
-                    featureSection(title: "DISPOZITIVE", features: deviceFeatures)
-                    featureSection(title: "SETARI", features: settingsFeatures)
+                    featureSection(title: localization.t("more.diagnostic").uppercased(), features: diagnosticFeatures)
+                    featureSection(title: localization.t("more.ai").uppercased(), features: aiFeatures)
+                    featureSection(title: localization.t("more.vehicle").uppercased(), features: vehicleFeatures)
+                    featureSection(title: localization.t("more.service").uppercased(), features: serviceFeatures)
+                    featureSection(title: localization.t("more.trust").uppercased(), features: trustFeatures)
+                    featureSection(title: localization.t("more.legal").uppercased(), features: legalFeatures)
+                    featureSection(title: localization.t("more.europe").uppercased(), features: europeFeatures)
+                    featureSection(title: localization.t("more.account").uppercased(), features: accountFeatures)
+                    featureSection(title: localization.t("more.devices").uppercased(), features: deviceFeatures)
+                    featureSection(title: localization.t("more.settings").uppercased(), features: settingsFeatures)
                     
                     // Export PDF button
                     exportPDFButton
@@ -52,7 +53,7 @@ struct MoreMenuView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "square.grid.2x2.fill")
                             .foregroundColor(Theme.primary)
-                        Text("Mai Multe")
+                        Text(localization.t("more.title"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }
@@ -98,7 +99,7 @@ struct MoreMenuView: View {
                 Text("78")
                     .font(.system(size: 20, weight: .black, design: .rounded))
                     .foregroundColor(Theme.gaugeGreen)
-                Text("Scor")
+                Text(localization.t("more.score"))
                     .font(.system(size: 9))
                     .foregroundColor(Theme.textMuted)
             }
@@ -160,10 +161,10 @@ struct MoreMenuView: View {
                     .foregroundColor(.white)
                 
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("Exporta Raport PDF")
+                    Text(localization.t("general.export"))
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.white)
-                    Text("Raport complet diagnostic + intretinere")
+                    Text(localization.t("health.share_report"))
                         .font(.system(size: 10))
                         .foregroundColor(.white.opacity(0.7))
                 }
@@ -182,97 +183,97 @@ struct MoreMenuView: View {
     // MARK: - Feature Lists
     private var diagnosticFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Scor Sanatate", subtitle: "Nota generala 0-100", icon: "heart.square.fill", color: Theme.gaugeGreen, destination: AnyView(HealthScoreView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Diagrama Auto", subtitle: "Componente vizuale", icon: "car.fill", color: Theme.primary, destination: AnyView(CarAnimationView().environmentObject(vehicleManager))),
-            MoreFeature(name: "AR Piese", subtitle: "Vizualizare AR daune", icon: "viewfinder", color: Color(red: 0.0, green: 0.85, blue: 0.75), destination: AnyView(ARDiagnosticView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Scanner Piese", subtitle: "QR cod + alternative", icon: "qrcode.viewfinder", color: Color(red: 0.85, green: 0.55, blue: 0.0), destination: AnyView(QRPartScannerView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Decodor DTC", subtitle: "Erori OBD2 explicate", icon: "exclamationmark.triangle.fill", color: Theme.gaugeYellow, destination: AnyView(DTCDecoderView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Analiza Sunet", subtitle: "Inregistrare motor", icon: "waveform.circle.fill", color: Color(red: 0.95, green: 0.5, blue: 0.2), destination: AnyView(EngineSoundAnalysisView())),
-            MoreFeature(name: "Diagnostic Rapid", subtitle: "Shake to diagnose", icon: "iphone.radiowaves.left.and.right", color: Color.purple, destination: AnyView(ShakeDiagnoseView().environmentObject(vehicleManager))),
-            MoreFeature(name: "AR Ghid Reparatie", subtitle: "Pasi AR interactivi", icon: "wrench.and.screwdriver.fill", color: Theme.gaugeGreen, destination: AnyView(ARRepairGuideView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.health_score"), subtitle: localization.t("feature.health_score_sub"), icon: "heart.square.fill", color: Theme.gaugeGreen, destination: AnyView(HealthScoreView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.car_diagram"), subtitle: localization.t("feature.car_diagram_sub"), icon: "car.fill", color: Theme.primary, destination: AnyView(CarAnimationView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.ar_repair"), subtitle: localization.t("feature.ar_repair_sub"), icon: "viewfinder", color: Color(red: 0.0, green: 0.85, blue: 0.75), destination: AnyView(ARDiagnosticView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Scanner", subtitle: localization.t("feature.ar_repair_sub"), icon: "qrcode.viewfinder", color: Color(red: 0.85, green: 0.55, blue: 0.0), destination: AnyView(QRPartScannerView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.dtc_decoder"), subtitle: localization.t("feature.dtc_decoder_sub"), icon: "exclamationmark.triangle.fill", color: Theme.gaugeYellow, destination: AnyView(DTCDecoderView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.sound_analysis"), subtitle: localization.t("feature.sound_analysis_sub"), icon: "waveform.circle.fill", color: Color(red: 0.95, green: 0.5, blue: 0.2), destination: AnyView(EngineSoundAnalysisView())),
+            MoreFeature(name: localization.t("feature.shake_diagnose"), subtitle: localization.t("feature.shake_diagnose_sub"), icon: "iphone.radiowaves.left.and.right", color: Color.purple, destination: AnyView(ShakeDiagnoseView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.ar_repair"), subtitle: localization.t("feature.ar_repair_sub"), icon: "wrench.and.screwdriver.fill", color: Theme.gaugeGreen, destination: AnyView(ARRepairGuideView().environmentObject(vehicleManager))),
             MoreFeature(name: "Widget iOS", subtitle: "Home screen widget", icon: "square.grid.2x2.fill", color: Color(red: 0.0, green: 0.75, blue: 0.85), destination: AnyView(HealthWidgetPreview().environmentObject(vehicleManager))),
         ]
     }
     
     private var aiFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Mecanic AI Pro", subtitle: "Chat AI context-aware", icon: "bubble.left.and.bubble.right.fill", color: Color(red: 0.0, green: 0.7, blue: 0.9), destination: AnyView(EnhancedAIChatView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Predictor AI", subtitle: "Ce se strica in 3-6 luni", icon: "brain", color: Color(red: 0.6, green: 0.2, blue: 0.9), destination: AnyView(FailurePredictorView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Radar ITP", subtitle: "Trece ITP-ul?", icon: "shield.fill", color: Theme.gaugeRed, destination: AnyView(ITPRadarView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Digital Twin", subtitle: "Twin digital complet", icon: "cube.fill", color: Theme.primary, destination: AnyView(CarDigitalTwinView().environmentObject(vehicleManager))),
-            MoreFeature(name: "AI European", subtitle: "Date per marca/tara", icon: "brain", color: Color(red: 0.0, green: 0.6, blue: 0.9), destination: AnyView(EuropeanAIDataView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("chat.ai_title"), subtitle: "Chat AI", icon: "bubble.left.and.bubble.right.fill", color: Color(red: 0.0, green: 0.7, blue: 0.9), destination: AnyView(EnhancedAIChatView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.predictor"), subtitle: localization.t("feature.predictor_sub"), icon: "brain", color: Color(red: 0.6, green: 0.2, blue: 0.9), destination: AnyView(FailurePredictorView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.itp_radar"), subtitle: localization.t("feature.itp_radar_sub"), icon: "shield.fill", color: Theme.gaugeRed, destination: AnyView(ITPRadarView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.digital_twin"), subtitle: localization.t("feature.digital_twin_sub"), icon: "cube.fill", color: Theme.primary, destination: AnyView(CarDigitalTwinView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.european_data"), subtitle: localization.t("feature.european_data_sub"), icon: "brain", color: Color(red: 0.0, green: 0.6, blue: 0.9), destination: AnyView(EuropeanAIDataView().environmentObject(vehicleManager))),
         ]
     }
     
     private var vehicleFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "CV Auto", subtitle: "Istoric complet vehicul", icon: "doc.text.fill", color: Color(red: 0.0, green: 0.7, blue: 0.5), destination: AnyView(CarCVView().environmentObject(vehicleManager))),
-            MoreFeature(name: "OBD2 Avansat", subtitle: "Live data + consum real", icon: "antenna.radiowaves.left.and.right", color: Theme.primary, destination: AnyView(EnhancedOBDView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Istoric", subtitle: "Scanari anterioare", icon: "clock.arrow.circlepath", color: Theme.primary, destination: AnyView(DiagnosticHistoryView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Jurnal", subtitle: "Log vehicul complet", icon: "book.fill", color: Color(red: 0.22, green: 0.78, blue: 0.35), destination: AnyView(VehicleJournalView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Alarme", subtitle: "Notificari intretinere", icon: "bell.badge.fill", color: Theme.gaugeYellow, destination: AnyView(MaintenanceAlarmsView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Harta Service", subtitle: "Service-uri aproape", icon: "map.fill", color: Color(red: 0.0, green: 0.75, blue: 0.85), destination: AnyView(ServiceMapView())),
-            MoreFeature(name: "VIN Auto Setup", subtitle: "Scan VIN → config auto", icon: "barcode.viewfinder", color: Color(red: 0.1, green: 0.7, blue: 0.4), destination: AnyView(VINAutoSetupView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Calculator Consum", subtitle: "Consum real L/100km", icon: "fuelpump.fill", color: Theme.gaugeYellow, destination: AnyView(FuelCalculatorView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Estimator Valoare", subtitle: "Pret masina pe piata", icon: "tag.fill", color: Theme.secondary, destination: AnyView(CarValuationView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Recall Service", subtitle: "Campanii rechemare", icon: "bell.badge.fill", color: Theme.gaugeRed, destination: AnyView(RecallCampaignsView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.car_history"), subtitle: localization.t("feature.car_history_sub"), icon: "doc.text.fill", color: Color(red: 0.0, green: 0.7, blue: 0.5), destination: AnyView(CarCVView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("obd.live_title"), subtitle: localization.t("obd.live_indicator"), icon: "antenna.radiowaves.left.and.right", color: Theme.primary, destination: AnyView(EnhancedOBDView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.car_history"), subtitle: localization.t("feature.car_history_sub"), icon: "clock.arrow.circlepath", color: Theme.primary, destination: AnyView(DiagnosticHistoryView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Jurnal", subtitle: localization.t("feature.car_history_sub"), icon: "book.fill", color: Color(red: 0.22, green: 0.78, blue: 0.35), destination: AnyView(VehicleJournalView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("service.calendar"), subtitle: localization.t("feature.service_calendar_sub"), icon: "bell.badge.fill", color: Theme.gaugeYellow, destination: AnyView(MaintenanceAlarmsView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("map.find_nearby"), subtitle: localization.t("marketplace.nearby"), icon: "map.fill", color: Color(red: 0.0, green: 0.75, blue: 0.85), destination: AnyView(ServiceMapView())),
+            MoreFeature(name: localization.t("vin.auto_setup"), subtitle: localization.t("feature.vin_scanner_sub"), icon: "barcode.viewfinder", color: Color(red: 0.1, green: 0.7, blue: 0.4), destination: AnyView(VINAutoSetupView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.fuel_calc"), subtitle: localization.t("feature.fuel_calc_sub"), icon: "fuelpump.fill", color: Theme.gaugeYellow, destination: AnyView(FuelCalculatorView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.cost_estimator"), subtitle: localization.t("feature.cost_estimator_sub"), icon: "tag.fill", color: Theme.secondary, destination: AnyView(CarValuationView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.recall_check"), subtitle: localization.t("feature.recall_check_sub"), icon: "bell.badge.fill", color: Theme.gaugeRed, destination: AnyView(RecallCampaignsView().environmentObject(vehicleManager))),
         ]
     }
     
     private var serviceFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Service", subtitle: "Calendar intretinere", icon: "calendar", color: Theme.primary, destination: AnyView(ServiceCalendarView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Costuri", subtitle: "Estimator costuri", icon: "creditcard.fill", color: Theme.secondary, destination: AnyView(CostEstimatorView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Voce", subtitle: "Diagnostic vocal", icon: "mic.fill", color: Color(red: 0.95, green: 0.3, blue: 0.5), destination: AnyView(VoiceDiagnosticView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Comparator", subtitle: "Autorizat vs Independent", icon: "arrow.left.arrow.right.circle.fill", color: Color.purple, destination: AnyView(CostComparatorView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Comparator RCA", subtitle: "Oferte asigurare", icon: "shield.fill", color: Color(red: 0.2, green: 0.5, blue: 0.9), destination: AnyView(RCAComparatorView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.service_calendar"), subtitle: localization.t("feature.service_calendar_sub"), icon: "calendar", color: Theme.primary, destination: AnyView(ServiceCalendarView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.cost_estimator"), subtitle: localization.t("feature.cost_estimator_sub"), icon: "creditcard.fill", color: Theme.secondary, destination: AnyView(CostEstimatorView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.sound_analysis"), subtitle: localization.t("feature.sound_analysis_sub"), icon: "mic.fill", color: Color(red: 0.95, green: 0.3, blue: 0.5), destination: AnyView(VoiceDiagnosticView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.cost_estimator"), subtitle: localization.t("feature.cost_estimator_sub"), icon: "arrow.left.arrow.right.circle.fill", color: Color.purple, destination: AnyView(CostComparatorView().environmentObject(vehicleManager))),
+            MoreFeature(name: "RCA", subtitle: localization.t("feature.cost_estimator_sub"), icon: "shield.fill", color: Color(red: 0.2, green: 0.5, blue: 0.9), destination: AnyView(RCAComparatorView().environmentObject(vehicleManager))),
         ]
     }
     
     private var trustFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Mecanici Verificati", subtitle: "Rating + garantie lucrare", icon: "checkmark.shield.fill", color: Theme.gaugeGreen, destination: AnyView(MechanicTrustView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Raport Vehicul", subtitle: "Trimite/primeste raport", icon: "square.and.arrow.up.fill", color: Color(red: 0.0, green: 0.6, blue: 0.85), destination: AnyView(ShareVehicleReportView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.mechanic_trust"), subtitle: localization.t("feature.mechanic_trust_sub"), icon: "checkmark.shield.fill", color: Theme.gaugeGreen, destination: AnyView(MechanicTrustView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("health.share_report"), subtitle: localization.t("general.share"), icon: "square.and.arrow.up.fill", color: Color(red: 0.0, green: 0.6, blue: 0.85), destination: AnyView(ShareVehicleReportView().environmentObject(vehicleManager))),
         ]
     }
     
     private var legalFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Legal & Amenzi", subtitle: "Camere, reguli, amenzi", icon: "exclamationmark.triangle.fill", color: Theme.gaugeYellow, destination: AnyView(LegalRadarView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("legal.fines"), subtitle: localization.t("legal.cameras"), icon: "exclamationmark.triangle.fill", color: Theme.gaugeYellow, destination: AnyView(LegalRadarView().environmentObject(vehicleManager))),
         ]
     }
     
     private var europeFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Configurare Tara", subtitle: "44 tari europene", icon: "globe.americas.fill", color: Color(red: 0.0, green: 0.5, blue: 0.9), destination: AnyView(MultiCountryConfigView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Marketplace", subtitle: "Mecanici & service-uri", icon: "building.2.fill", color: Theme.secondary, destination: AnyView(ServiceMarketplaceView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.country_config"), subtitle: localization.t("feature.country_config_sub"), icon: "globe.americas.fill", color: Color(red: 0.0, green: 0.5, blue: 0.9), destination: AnyView(MultiCountryConfigView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.marketplace"), subtitle: localization.t("feature.marketplace_sub"), icon: "building.2.fill", color: Theme.secondary, destination: AnyView(ServiceMarketplaceView().environmentObject(vehicleManager))),
         ]
     }
     
     private var accountFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Cont", subtitle: "Sign in with Apple", icon: "person.circle.fill", color: Theme.primary, destination: AnyView(SignInView())),
-            MoreFeature(name: "iCloud Sync", subtitle: "Sincronizare date", icon: "icloud.fill", color: Color(red: 0.0, green: 0.6, blue: 1.0), destination: AnyView(CloudSyncSettingsView())),
-            MoreFeature(name: "PRO", subtitle: "Upgrade premium", icon: "crown.fill", color: Theme.secondary, destination: AnyView(InAppPurchaseView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Notificari", subtitle: "Alarme push", icon: "bell.badge.fill", color: Theme.gaugeYellow, destination: AnyView(NotificationSettingsView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("more.account"), subtitle: "Sign in with Apple", icon: "person.circle.fill", color: Theme.primary, destination: AnyView(SignInView())),
+            MoreFeature(name: "iCloud Sync", subtitle: localization.t("general.save"), icon: "icloud.fill", color: Color(red: 0.0, green: 0.6, blue: 1.0), destination: AnyView(CloudSyncSettingsView())),
+            MoreFeature(name: localization.t("purchase.pro"), subtitle: localization.t("purchase.upgrade"), icon: "crown.fill", color: Theme.secondary, destination: AnyView(InAppPurchaseView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("service.calendar"), subtitle: "Push", icon: "bell.badge.fill", color: Theme.gaugeYellow, destination: AnyView(NotificationSettingsView().environmentObject(vehicleManager))),
         ]
     }
     
     private var deviceFeatures: [MoreFeature] {
         [
             MoreFeature(name: "Apple Watch", subtitle: "Companion app", icon: "applewatch", color: Color(red: 0.0, green: 0.75, blue: 0.85), destination: AnyView(WatchPreviewView().environmentObject(vehicleManager))),
-            MoreFeature(name: "CarPlay", subtitle: "Dashboard masina", icon: "car.fill", color: Theme.primary, destination: AnyView(CarPlayPreviewView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Siri Shortcuts", subtitle: "Comenzi vocale", icon: "waveform.circle.fill", color: Color(red: 0.0, green: 0.6, blue: 1.0), destination: AnyView(SiriShortcutsView().environmentObject(vehicleManager))),
+            MoreFeature(name: localization.t("feature.carplay"), subtitle: localization.t("feature.carplay_sub"), icon: "car.fill", color: Theme.primary, destination: AnyView(CarPlayPreviewView().environmentObject(vehicleManager))),
+            MoreFeature(name: "Siri Shortcuts", subtitle: localization.t("feature.carplay_sub"), icon: "waveform.circle.fill", color: Color(red: 0.0, green: 0.6, blue: 1.0), destination: AnyView(SiriShortcutsView().environmentObject(vehicleManager))),
         ]
     }
     
     private var settingsFeatures: [MoreFeature] {
         [
-            MoreFeature(name: "Mod Noapte", subtitle: nightModeManager.isAutoMode ? "Auto" : (nightModeManager.isNightMode ? "Activat" : "Dezactivat"), icon: nightModeManager.isNightMode ? "moon.fill" : "sun.max.fill", color: Theme.gaugeYellow, destination: AnyView(NightModeSettingsView(nightModeManager: nightModeManager))),
-            MoreFeature(name: "Statistici", subtitle: "Utilizare & crash", icon: "chart.bar.fill", color: Theme.gaugeGreen, destination: AnyView(AnalyticsDashboardView())),
+            MoreFeature(name: localization.t("settings.nightmode"), subtitle: nightModeManager.isAutoMode ? "Auto" : (nightModeManager.isNightMode ? "Activat" : "Dezactivat"), icon: nightModeManager.isNightMode ? "moon.fill" : "sun.max.fill", color: Theme.gaugeYellow, destination: AnyView(NightModeSettingsView(nightModeManager: nightModeManager))),
+            MoreFeature(name: localization.t("feature.statistics"), subtitle: localization.t("feature.statistics_sub"), icon: "chart.bar.fill", color: Theme.gaugeGreen, destination: AnyView(AnalyticsDashboardView())),
             MoreFeature(name: "App Store", subtitle: "Screenshots preview", icon: "rectangle.on.rectangle.angled", color: Color(red: 0.0, green: 0.5, blue: 0.9), destination: AnyView(AppStoreScreenshotsView().environmentObject(vehicleManager))),
-            MoreFeature(name: "Confidentialitate", subtitle: "Politica GDPR", icon: "lock.shield.fill", color: Theme.primary, destination: AnyView(PrivacyPolicyView())),
-            MoreFeature(name: "Termeni", subtitle: "Conditii utilizare", icon: "doc.text.fill", color: Theme.textMuted, destination: AnyView(TermsOfServiceView())),
+            MoreFeature(name: localization.t("privacy.title"), subtitle: "GDPR", icon: "lock.shield.fill", color: Theme.primary, destination: AnyView(PrivacyPolicyView())),
+            MoreFeature(name: localization.t("terms.title"), subtitle: localization.t("terms.title"), icon: "doc.text.fill", color: Theme.textMuted, destination: AnyView(TermsOfServiceView())),
         ]
     }
     
@@ -351,7 +352,7 @@ struct NightModeSettingsView: View {
                 // Auto mode toggle
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Mod Automat")
+                        Text(localization.t("settings.nightmode"))
                             .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(Theme.textPrimary)
                         Text("Se adapteaza la luminozitatea ambientala si ora")
@@ -393,7 +394,7 @@ struct NightModeSettingsView: View {
                 
                 // Info card
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("CUM FUNCTIONEAZA")
+                    Text(localization.t("general.loading").uppercased())
                         .font(.system(size: 11, weight: .bold))
                         .foregroundColor(Theme.textMuted)
                         .tracking(1.2)
@@ -413,7 +414,7 @@ struct NightModeSettingsView: View {
             .padding(.top, 8)
         }
         .background(Theme.background)
-        .navigationTitle("Mod Noapte")
+        .navigationTitle(localization.t("settings.nightmode"))
         .navigationBarTitleDisplayMode(.inline)
     }
     

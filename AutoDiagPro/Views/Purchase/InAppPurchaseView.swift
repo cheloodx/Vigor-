@@ -4,6 +4,7 @@ import StoreKit
 // MARK: - In-App Purchase View
 // Free vs PRO subscription comparison + purchase flow
 struct InAppPurchaseView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var selectedPlan: PurchasePlan = .yearly
     @State private var isPurchasing = false
@@ -79,7 +80,7 @@ struct InAppPurchaseView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "star.fill")
                         .foregroundColor(Theme.secondary)
-                    Text("PRO")
+                    Text(localization.t("purchase.pro"))
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(Theme.textPrimary)
                 }
@@ -181,7 +182,7 @@ struct InAppPurchaseView: View {
                     .font(.system(size: 9, weight: .bold))
                     .foregroundColor(Theme.textMuted)
                     .frame(width: 60)
-                Text("PRO")
+                Text(localization.t("purchase.pro"))
                     .font(.system(size: 9, weight: .bold))
                     .foregroundColor(Theme.secondary)
                     .frame(width: 60)

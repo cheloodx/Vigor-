@@ -3,6 +3,7 @@ import SwiftUI
 // MARK: - Legal Radar View
 // Speed cameras by country, different rules (UK vs Germany), possible fines
 struct LegalRadarView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var selectedCountry: String = "Romania"
     @State private var selectedTab: LegalTab = .cameras
@@ -46,7 +47,7 @@ struct LegalRadarView: View {
                     HStack(spacing: 8) {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .foregroundColor(Theme.gaugeYellow)
-                        Text("Legal & Amenzi")
+                        Text(localization.t("legal.fines"))
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(Theme.textPrimary)
                     }

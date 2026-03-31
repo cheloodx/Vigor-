@@ -2,6 +2,7 @@ import SwiftUI
 
 // MARK: - Car Valuation Estimator View
 struct CarValuationView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @State private var valuation: CarValuation?
     @State private var isCalculating = false

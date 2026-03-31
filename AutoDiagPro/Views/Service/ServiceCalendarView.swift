@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ServiceCalendarView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
 
     @State private var currentKmText: String = ""

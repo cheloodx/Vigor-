@@ -3,6 +3,7 @@ import Speech
 import AVFoundation
 
 struct VoiceDiagnosticView: View {
+    @EnvironmentObject var localization: LocalizationManager
     @EnvironmentObject var vehicleManager: VehicleManager
     @StateObject private var speechManager = SpeechRecognitionManager()
 
