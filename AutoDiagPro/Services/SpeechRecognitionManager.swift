@@ -109,6 +109,7 @@ class SpeechRecognitionManager: ObservableObject {
             errorMessage = nil
         } catch {
             errorMessage = "Nu pot porni inregistrarea: \(error.localizedDescription)"
+            stopListening()
             startDemoMode()
         }
     }

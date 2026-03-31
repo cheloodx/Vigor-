@@ -252,6 +252,8 @@ final class APIClient {
                 throw error
             } catch let error as APIError {
                 throw error
+            } catch let error as DecodingError {
+                throw APIError.decodingError(error)
             } catch {
                 lastError = error
                 if attempt < maxRetries { continue }
