@@ -790,22 +790,65 @@ struct ScanView: View {
         withAnimation { isLoading = true }
         errorMessage = nil
 
-        // Capture vehicle on main thread to avoid data race
         let vehicle = vehicleManager.currentVehicle
 
-        DispatchQueue.global(qos: .userInitiated).async {
-            let analysis = performImageAnalysis(for: vehicle)
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        Task {
+            do {
+                let response = try await ImageAnalysisService.shared.analyze(
+                    imageDescription: "Vehicle photo scan",
+                    vehicleMake: vehicle.make,
+                    vehicleModel: vehicle.model,
+                    symptom: "general inspection"
+                )
+                
+                var result = DiagnosticResult()
+                result.vehicleName = vehicle.displayName
+                
+                let diagStatus: DiagnosticStatus
+                switch response.severity {
+                case "critical": diagStatus = .critical
+                case "warning": diagStatus = .warning
+                default: diagStatus = .good
+                }
+                
+                result.items = [
+                    DiagnosticItem(name: response.affectedSystem, description: response.diagnosis, status: diagStatus, detail: "Incredere: \(response.confidence)%"),
+                ]
+                
+                for (i, cause) in response.possibleCauses.prefix(4).enumerated() {
+                    result.items.append(DiagnosticItem(name: "Cauza \(i+1)", description: cause, status: .warning, detail: ""))
+                }
+                
+                result.overallStatus = diagStatus
+                
+                result.repairSteps = response.recommendations.enumerated().map { i, rec in
+                    RepairStep(stepNumber: i + 1, title: rec, description: "", estimatedTime: "—", difficulty: .medium, tools: [])
+                }
+                
+                result.requiredParts = [
+                    RequiredPart(name: "Piese conform diagnostic", partNumber: "—", brand: "OEM", priceMin: 0, priceMax: 0, availability: .inStock),
+                ]
+                
+                result.estimatedCost = CostBreakdown(laborCost: 0, partsCost: 0, additionalCost: 0, laborHours: 0)
+                result.arSteps = []
+                
                 withAnimation {
-                    diagnosticResult = analysis
+                    diagnosticResult = result
                     isLoading = false
+                }
+            } catch {
+                // Fallback to local analysis
+                let result = performLocalImageAnalysis(for: vehicle)
+                withAnimation {
+                    diagnosticResult = result
+                    isLoading = false
+                    errorMessage = "Date locale (offline). \(error.localizedDescription)"
                 }
             }
         }
     }
 
-    private func performImageAnalysis(for vehicle: Vehicle) -> DiagnosticResult {
+    private func performLocalImageAnalysis(for vehicle: Vehicle) -> DiagnosticResult {
         var result = DiagnosticResult()
         result.vehicleName = vehicle.displayName
         let highMileage = vehicle.mileage > 100000

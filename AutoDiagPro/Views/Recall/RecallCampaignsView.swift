@@ -3,9 +3,7 @@ import SwiftUI
 // MARK: - Recall Campaigns View
 struct RecallCampaignsView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
-    @State private var recalls: [RecallCampaign] = []
-    @State private var isChecking = false
-    @State private var checkComplete = false
+    @StateObject private var viewModel = RecallCampaignsViewModel()
     
     var body: some View {
         NavigationView {
@@ -13,14 +11,14 @@ struct RecallCampaignsView: View {
                 VStack(spacing: 16) {
                     vehicleCard
                     
-                    if !checkComplete && !isChecking {
+                    if !viewModel.checkComplete && !viewModel.isChecking {
                         checkButton
                     }
-                    if isChecking { checkingCard }
+                    if viewModel.isChecking { checkingCard }
                     
-                    if checkComplete {
+                    if viewModel.checkComplete {
                         resultSummary
-                        ForEach(recalls) { recall in
+                        ForEach(viewModel.recalls) { recall in
                             recallCard(recall)
                         }
                         safetyNote
@@ -63,7 +61,7 @@ struct RecallCampaignsView: View {
     }
     
     private var checkButton: some View {
-        Button(action: { checkRecalls() }) {
+        Button(action: { viewModel.checkRecalls(vehicle: vehicleManager.currentVehicle) }) {
             HStack(spacing: 8) {
                 Image(systemName: "bell.badge.fill")
                 Text("Verifica Campanii Rechemare")
@@ -84,7 +82,7 @@ struct RecallCampaignsView: View {
     }
     
     private var resultSummary: some View {
-        let activeCount = recalls.filter { $0.status == .active }.count
+        let activeCount = viewModel.recalls.filter { $0.status == .active }.count
         let color: Color = activeCount > 0 ? Theme.gaugeRed : Theme.gaugeGreen
         let icon = activeCount > 0 ? "exclamationmark.triangle.fill" : "checkmark.seal.fill"
         let text = activeCount > 0 ? "\(activeCount) CAMPANII ACTIVE" : "NICIO CAMPANIE ACTIVA"
@@ -150,15 +148,6 @@ struct RecallCampaignsView: View {
         let f = DateFormatter(); f.dateFormat = "dd.MM.yyyy HH:mm"; return f
     }
     
-    private func checkRecalls() {
-        isChecking = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            withAnimation(.spring()) {
-                isChecking = false; checkComplete = true
-                recalls = RecallCampaign.sampleRecalls
-            }
-        }
-    }
 }
 
 struct RecallCampaign: Identifiable {

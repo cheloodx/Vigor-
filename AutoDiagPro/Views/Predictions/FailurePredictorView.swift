@@ -4,10 +4,7 @@ import SwiftUI
 // Predicts what will break in the next 3-6 months based on vehicle data
 struct FailurePredictorView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
-    @State private var predictions: [FailurePrediction] = []
-    @State private var isAnalyzing = false
-    @State private var analysisComplete = false
-    @State private var progress: CGFloat = 0
+    @StateObject private var viewModel = FailurePredictorViewModel()
     
     var body: some View {
         NavigationView {
@@ -17,8 +14,8 @@ struct FailurePredictorView: View {
                     vehicleHeader
                     
                     // Analysis button or progress
-                    if !analysisComplete {
-                        if isAnalyzing {
+                    if !viewModel.analysisComplete {
+                        if viewModel.isAnalyzing {
                             analysisProgressCard
                         } else {
                             startAnalysisButton
@@ -26,10 +23,10 @@ struct FailurePredictorView: View {
                     }
                     
                     // Predictions list
-                    if analysisComplete {
+                    if viewModel.analysisComplete {
                         riskSummaryCard
                         
-                        ForEach(predictions) { prediction in
+                        ForEach(viewModel.predictions) { prediction in
                             predictionCard(prediction)
                         }
                         
@@ -82,7 +79,7 @@ struct FailurePredictorView: View {
     }
     
     private var startAnalysisButton: some View {
-        Button(action: { startAnalysis() }) {
+        Button(action: { viewModel.startAnalysis(vehicle: vehicleManager.currentVehicle) }) {
             HStack(spacing: 10) {
                 Image(systemName: "brain")
                     .font(.system(size: 18))
@@ -113,17 +110,17 @@ struct FailurePredictorView: View {
                         .fill(Color(red: 0.1, green: 0.15, blue: 0.2))
                     RoundedRectangle(cornerRadius: 4)
                         .fill(Theme.primaryGradient)
-                        .frame(width: geo.size.width * progress)
+                        .frame(width: geo.size.width * viewModel.progress)
                 }
             }
             .frame(height: 6)
             
             VStack(spacing: 4) {
-                stepIndicator("Colectare date vehicul", done: progress > 0.2)
-                stepIndicator("Analiza pattern-uri uzura", done: progress > 0.4)
-                stepIndicator("Comparare cu flota similara", done: progress > 0.6)
-                stepIndicator("Calcul probabilitati", done: progress > 0.8)
-                stepIndicator("Generare predictii", done: progress >= 1.0)
+                stepIndicator("Colectare date vehicul", done: viewModel.progress > 0.2)
+                stepIndicator("Analiza pattern-uri uzura", done: viewModel.progress > 0.4)
+                stepIndicator("Comparare cu flota similara", done: viewModel.progress > 0.6)
+                stepIndicator("Calcul probabilitati", done: viewModel.progress > 0.8)
+                stepIndicator("Generare predictii", done: viewModel.progress >= 1.0)
             }
         }
         .padding(16)
@@ -144,9 +141,9 @@ struct FailurePredictorView: View {
     }
     
     private var riskSummaryCard: some View {
-        let highRisk = predictions.filter { $0.riskLevel == .high }.count
-        let medRisk = predictions.filter { $0.riskLevel == .medium }.count
-        let lowRisk = predictions.filter { $0.riskLevel == .low }.count
+        let highRisk = viewModel.predictions.filter { $0.riskLevel == .high }.count
+        let medRisk = viewModel.predictions.filter { $0.riskLevel == .medium }.count
+        let lowRisk = viewModel.predictions.filter { $0.riskLevel == .low }.count
         
         return HStack(spacing: 16) {
             riskBadge(count: highRisk, label: "Risc Ridicat", color: Theme.gaugeRed)
@@ -272,24 +269,6 @@ struct FailurePredictorView: View {
         .cornerRadius(8)
     }
     
-    private func startAnalysis() {
-        isAnalyzing = true
-        progress = 0
-        
-        for i in 1...20 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + Double(i) * 0.15) {
-                withAnimation { progress = CGFloat(i) / 20.0 }
-            }
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.2) {
-            withAnimation(.spring()) {
-                isAnalyzing = false
-                analysisComplete = true
-                predictions = FailurePrediction.samplePredictions
-            }
-        }
-    }
 }
 
 // MARK: - Models

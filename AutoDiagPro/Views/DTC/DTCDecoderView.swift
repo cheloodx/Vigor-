@@ -4,10 +4,7 @@ import SwiftUI
 // Decode OBD2 DTC codes with full explanation in Romanian
 struct DTCDecoderView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
-    @State private var dtcInput = ""
-    @State private var decodedError: DTCError?
-    @State private var isDecoding = false
-    @State private var recentCodes: [DTCError] = []
+    @StateObject private var viewModel = DTCDecoderViewModel()
     
     var body: some View {
         NavigationView {
@@ -17,21 +14,21 @@ struct DTCDecoderView: View {
                     inputCard
                     
                     // Decoded result
-                    if isDecoding {
+                    if viewModel.isDecoding {
                         decodingCard
                     }
                     
-                    if let error = decodedError {
+                    if let error = viewModel.decodedError {
                         decodedCard(error)
                     }
                     
                     // Recent codes
-                    if !recentCodes.isEmpty {
+                    if !viewModel.recentCodes.isEmpty {
                         recentCodesSection
                     }
                     
                     // Common codes reference
-                    if decodedError == nil && !isDecoding {
+                    if viewModel.decodedError == nil && !viewModel.isDecoding {
                         commonCodesCard
                     }
                     
@@ -63,7 +60,7 @@ struct DTCDecoderView: View {
                 .foregroundColor(Theme.textSecondary)
             
             HStack(spacing: 8) {
-                TextField("Ex: P0300", text: $dtcInput)
+                TextField("Ex: P0300", text: $viewModel.dtcInput)
                     .font(.system(size: 18, weight: .bold, design: .monospaced))
                     .foregroundColor(Theme.textPrimary)
                     .padding(12)
@@ -72,7 +69,7 @@ struct DTCDecoderView: View {
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(Theme.primary.opacity(0.3), lineWidth: 1))
                     .autocapitalization(.allCharacters)
                 
-                Button(action: { decodeDTC() }) {
+                Button(action: { viewModel.decodeDTC() }) {
                     Image(systemName: "magnifyingglass")
                         .font(.system(size: 18, weight: .bold))
                         .foregroundColor(.white)
@@ -80,8 +77,8 @@ struct DTCDecoderView: View {
                         .background(Theme.primary)
                         .cornerRadius(10)
                 }
-                .disabled(dtcInput.trimmingCharacters(in: .whitespaces).count < 5)
-                .opacity(dtcInput.trimmingCharacters(in: .whitespaces).count < 5 ? 0.5 : 1)
+                .disabled(viewModel.dtcInput.trimmingCharacters(in: .whitespaces).count < 5)
+                .opacity(viewModel.dtcInput.trimmingCharacters(in: .whitespaces).count < 5 ? 0.5 : 1)
             }
             
             // Quick access codes
@@ -90,7 +87,7 @@ struct DTCDecoderView: View {
                     .font(.system(size: 10))
                     .foregroundColor(Theme.textMuted)
                 ForEach(["P0300", "P0171", "P0420", "P0442"], id: \.self) { code in
-                    Button(action: { dtcInput = code; decodeDTC() }) {
+                    Button(action: { viewModel.selectCode(code) }) {
                         Text(code)
                             .font(.system(size: 10, weight: .bold, design: .monospaced))
                             .padding(.horizontal, 8)
@@ -111,7 +108,7 @@ struct DTCDecoderView: View {
         VStack(spacing: 10) {
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle(tint: Theme.primary))
-            Text("Decodare \(dtcInput.uppercased())...")
+            Text("Decodare \(viewModel.dtcInput.uppercased())...")
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundColor(Theme.textPrimary)
         }
@@ -252,8 +249,8 @@ struct DTCDecoderView: View {
                 .foregroundColor(Theme.textMuted)
                 .tracking(1.2)
             
-            ForEach(recentCodes) { code in
-                Button(action: { dtcInput = code.code; decodedError = code }) {
+            ForEach(viewModel.recentCodes) { code in
+                Button(action: { viewModel.selectRecentCode(code) }) {
                     HStack {
                         Text(code.code)
                             .font(.system(size: 13, weight: .bold, design: .monospaced))
@@ -286,7 +283,7 @@ struct DTCDecoderView: View {
                 .foregroundColor(Theme.textMuted)
             
             ForEach(DTCError.commonCodes, id: \.code) { dtc in
-                Button(action: { dtcInput = dtc.code; decodedError = dtc; if !recentCodes.contains(where: { $0.code == dtc.code }) { recentCodes.insert(dtc, at: 0) } }) {
+                Button(action: { viewModel.selectCode(dtc.code) }) {
                     HStack {
                         Text(dtc.code)
                             .font(.system(size: 12, weight: .bold, design: .monospaced))
@@ -322,24 +319,6 @@ struct DTCDecoderView: View {
         .cornerRadius(6)
     }
     
-    private func decodeDTC() {
-        let code = dtcInput.uppercased().trimmingCharacters(in: .whitespaces)
-        guard code.count >= 5 else { return }
-        isDecoding = true
-        decodedError = nil
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-            withAnimation(.spring()) {
-                isDecoding = false
-                let decoded = DTCError.decode(code)
-                decodedError = decoded
-                if !recentCodes.contains(where: { $0.code == decoded.code }) {
-                    recentCodes.insert(decoded, at: 0)
-                    if recentCodes.count > 5 { recentCodes.removeLast() }
-                }
-            }
-        }
-    }
 }
 
 // MARK: - DTC Error Model

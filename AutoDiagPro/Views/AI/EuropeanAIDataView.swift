@@ -4,14 +4,7 @@ import SwiftUI
 // AI diagnostics based on European-specific data per brand/country
 struct EuropeanAIDataView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
-    @State private var selectedBrand: EUBrand = .volkswagen
-    @State private var selectedCountry: String = "RO"
-    @State private var isAnalyzing = false
-    @State private var analysisComplete = false
-    @State private var insights: [AIInsight] = []
-    @State private var fiabilitate = 0
-    @State private var popularitate = 0
-    @State private var costMediu = 0
+    @StateObject private var viewModel = EuropeanAIDataViewModel()
     
     enum EUBrand: String, CaseIterable {
         case volkswagen = "Volkswagen"
@@ -72,14 +65,14 @@ struct EuropeanAIDataView: View {
                     brandSelector
                     countrySelector
                     
-                    if !analysisComplete && !isAnalyzing {
+                    if !viewModel.analysisComplete && !viewModel.isAnalyzing {
                         analyzeButton
                     }
-                    if isAnalyzing { analyzingCard }
+                    if viewModel.isAnalyzing { analyzingCard }
                     
-                    if analysisComplete {
+                    if viewModel.analysisComplete {
                         brandProfileCard
-                        ForEach(insights) { insight in
+                        ForEach(viewModel.insights) { insight in
                             insightCard(insight)
                         }
                         dataSourceCard
@@ -122,17 +115,17 @@ struct EuropeanAIDataView: View {
             
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 6) {
                 ForEach(EUBrand.allCases, id: \.self) { brand in
-                    Button(action: { withAnimation { selectedBrand = brand; if analysisComplete { startAnalysis() } } }) {
+                    Button(action: { withAnimation { viewModel.selectBrand(brand) } }) {
                         VStack(spacing: 2) {
                             Text(brand.flag).font(.system(size: 16))
-                            Text(brand.rawValue).font(.system(size: 8, weight: selectedBrand == brand ? .bold : .regular))
-                                .foregroundColor(selectedBrand == brand ? Theme.primary : Theme.textSecondary)
+                            Text(brand.rawValue).font(.system(size: 8, weight: viewModel.selectedBrand == brand ? .bold : .regular))
+                                .foregroundColor(viewModel.selectedBrand == brand ? Theme.primary : Theme.textSecondary)
                                 .lineLimit(1)
                         }
                         .frame(maxWidth: .infinity).padding(.vertical, 6)
-                        .background(selectedBrand == brand ? Theme.primary.opacity(0.15) : Theme.surfaceBackground)
+                        .background(viewModel.selectedBrand == brand ? Theme.primary.opacity(0.15) : Theme.surfaceBackground)
                         .cornerRadius(8)
-                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(selectedBrand == brand ? Theme.primary.opacity(0.5) : Color.clear, lineWidth: 1))
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(viewModel.selectedBrand == brand ? Theme.primary.opacity(0.5) : Color.clear, lineWidth: 1))
                     }
                 }
             }
@@ -147,16 +140,16 @@ struct EuropeanAIDataView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 6) {
                     ForEach(topCountries, id: \.0) { code, flag in
-                        Button(action: { withAnimation { selectedCountry = code; if analysisComplete { startAnalysis() } } }) {
+                        Button(action: { withAnimation { viewModel.selectCountry(code) } }) {
                             HStack(spacing: 3) {
                                 Text(flag).font(.system(size: 14))
-                                Text(code).font(.system(size: 10, weight: selectedCountry == code ? .bold : .regular))
-                                    .foregroundColor(selectedCountry == code ? Theme.primary : Theme.textSecondary)
+                                Text(code).font(.system(size: 10, weight: viewModel.selectedCountry == code ? .bold : .regular))
+                                    .foregroundColor(viewModel.selectedCountry == code ? Theme.primary : Theme.textSecondary)
                             }
                             .padding(.horizontal, 10).padding(.vertical, 6)
-                            .background(selectedCountry == code ? Theme.primary.opacity(0.15) : Theme.surfaceBackground)
+                            .background(viewModel.selectedCountry == code ? Theme.primary.opacity(0.15) : Theme.surfaceBackground)
                             .cornerRadius(6)
-                            .overlay(RoundedRectangle(cornerRadius: 6).stroke(selectedCountry == code ? Theme.primary.opacity(0.5) : Color.clear, lineWidth: 1))
+                            .overlay(RoundedRectangle(cornerRadius: 6).stroke(viewModel.selectedCountry == code ? Theme.primary.opacity(0.5) : Color.clear, lineWidth: 1))
                         }
                     }
                 }
@@ -166,10 +159,10 @@ struct EuropeanAIDataView: View {
     }
     
     private var analyzeButton: some View {
-        Button(action: { startAnalysis() }) {
+        Button(action: { viewModel.startAnalysis() }) {
             HStack(spacing: 8) {
                 Image(systemName: "brain").font(.system(size: 16))
-                Text("Analizeaza \(selectedBrand.rawValue) in \(EuropeanCountry.country(for: selectedCountry)?.name ?? selectedCountry)")
+                Text("Analizeaza \(viewModel.selectedBrand.rawValue) in \(EuropeanCountry.country(for: viewModel.selectedCountry)?.name ?? viewModel.selectedCountry)")
                     .font(.system(size: 14, weight: .bold))
             }
             .frame(maxWidth: .infinity).padding(.vertical, 14)
@@ -181,32 +174,32 @@ struct EuropeanAIDataView: View {
         VStack(spacing: 10) {
             ProgressView().progressViewStyle(CircularProgressViewStyle(tint: Theme.primary)).scaleEffect(1.2)
             Text("Analiza AI in curs...").font(.system(size: 13, weight: .semibold)).foregroundColor(Theme.textPrimary)
-            Text("Procesare date din \(EuropeanCountry.country(for: selectedCountry)?.name ?? selectedCountry) pentru \(selectedBrand.rawValue)")
+            Text("Procesare date din \(EuropeanCountry.country(for: viewModel.selectedCountry)?.name ?? viewModel.selectedCountry) pentru \(viewModel.selectedBrand.rawValue)")
                 .font(.system(size: 10)).foregroundColor(Theme.textSecondary).multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity).padding(16).background(Theme.cardBackground).cornerRadius(Theme.cornerRadius)
     }
     
     private var brandProfileCard: some View {
-        let country = EuropeanCountry.country(for: selectedCountry)
+        let country = EuropeanCountry.country(for: viewModel.selectedCountry)
         return VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text(selectedBrand.flag).font(.system(size: 28))
+                Text(viewModel.selectedBrand.flag).font(.system(size: 28))
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(selectedBrand.rawValue).font(.system(size: 16, weight: .black)).foregroundColor(Theme.textPrimary)
-                    Text("Origine: \(selectedBrand.origin)").font(.system(size: 11)).foregroundColor(Theme.textSecondary)
+                    Text(viewModel.selectedBrand.rawValue).font(.system(size: 16, weight: .black)).foregroundColor(Theme.textPrimary)
+                    Text("Origine: \(viewModel.selectedBrand.origin)").font(.system(size: 11)).foregroundColor(Theme.textSecondary)
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(country?.flag ?? "").font(.system(size: 20))
-                    Text(country?.name ?? selectedCountry).font(.system(size: 10)).foregroundColor(Theme.textMuted)
+                    Text(country?.name ?? viewModel.selectedCountry).font(.system(size: 10)).foregroundColor(Theme.textMuted)
                 }
             }
             
             HStack(spacing: 12) {
-                miniStat("Fiabilitate", value: "\(fiabilitate)%", color: Theme.gaugeGreen)
-                miniStat("Popularitate", value: "#\(popularitate)", color: Theme.primary)
-                miniStat("Cost mediu/an", value: "\(costMediu)\(country?.currencySymbol ?? "€")", color: Theme.secondary)
+                miniStat("Fiabilitate", value: "\(viewModel.fiabilitate)%", color: Theme.gaugeGreen)
+                miniStat("Popularitate", value: "#\(viewModel.popularitate)", color: Theme.primary)
+                miniStat("Cost mediu/an", value: "\(viewModel.costMediu)\(viewModel.currency)", color: Theme.secondary)
             }
         }
         .padding(14).background(Theme.cardBackground).cornerRadius(Theme.cornerRadius)
@@ -257,18 +250,6 @@ struct EuropeanAIDataView: View {
         .padding(10).background(Theme.primary.opacity(0.05)).cornerRadius(8)
     }
     
-    private func startAnalysis() {
-        isAnalyzing = true; analysisComplete = false; insights = []
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            withAnimation(.spring()) {
-                isAnalyzing = false; analysisComplete = true
-                insights = AIInsight.generate(brand: selectedBrand, country: selectedCountry)
-                fiabilitate = Int.random(in: 70...92)
-                popularitate = Int.random(in: 1...8)
-                costMediu = Int.random(in: 800...2500)
-            }
-        }
-    }
 }
 
 struct AIInsight: Identifiable {

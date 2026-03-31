@@ -2,17 +2,7 @@ import SwiftUI
 import AVFoundation
 
 struct EngineSoundAnalysisView: View {
-    @State private var isRecording = false
-    @State private var isAnalyzing = false
-    @State private var analysisResult: SoundAnalysisResult?
-    @State private var audioLevel: CGFloat = 0
-    @State private var recordingDuration: TimeInterval = 0
-    @State private var waveformData: [CGFloat] = Array(repeating: 0.3, count: 50)
-    @State private var timer: Timer?
-    @State private var audioRecorder: AVAudioRecorder?
-    @State private var errorMessage: String?
-    
-    private let maxDuration: TimeInterval = 10
+    @StateObject private var viewModel = EngineSoundAnalysisViewModel()
     
     var body: some View {
         NavigationView {
@@ -25,12 +15,12 @@ struct EngineSoundAnalysisView: View {
                     recordingControls
                     
                     // Analysis result
-                    if let result = analysisResult {
+                    if let result = viewModel.analysisResult {
                         analysisResultCard(result)
                     }
                     
                     // Tips
-                    if analysisResult == nil && !isRecording {
+                    if viewModel.analysisResult == nil && !viewModel.isRecording {
                         tipsCard
                     }
                     
@@ -52,7 +42,7 @@ struct EngineSoundAnalysisView: View {
                     }
                 }
             }
-            .onDisappear { stopRecording() }
+            .onDisappear { viewModel.cleanup() }
         }
     }
     
@@ -60,19 +50,19 @@ struct EngineSoundAnalysisView: View {
     private var waveformCard: some View {
         VStack(spacing: 12) {
             HStack {
-                Text(isRecording ? "INREGISTRARE..." : (isAnalyzing ? "ANALIZA IN CURS..." : "WAVEFORM"))
+                Text(viewModel.isRecording ? "INREGISTRARE..." : (viewModel.isAnalyzing ? "ANALIZA IN CURS..." : "WAVEFORM"))
                     .font(.system(size: 11, weight: .bold))
-                    .foregroundColor(isRecording ? Theme.gaugeRed : Theme.textMuted)
+                    .foregroundColor(viewModel.isRecording ? Theme.gaugeRed : Theme.textMuted)
                     .tracking(1.5)
                 
                 Spacer()
                 
-                if isRecording {
+                if viewModel.isRecording {
                     HStack(spacing: 4) {
                         Circle()
                             .fill(Theme.gaugeRed)
                             .frame(width: 8, height: 8)
-                        Text(String(format: "%.1fs", recordingDuration))
+                        Text(String(format: "%.1fs", viewModel.recordingDuration))
                             .font(.system(size: 12, weight: .bold, design: .monospaced))
                             .foregroundColor(Theme.gaugeRed)
                     }
@@ -83,25 +73,25 @@ struct EngineSoundAnalysisView: View {
             HStack(spacing: 2) {
                 ForEach(0..<50, id: \.self) { index in
                     RoundedRectangle(cornerRadius: 1)
-                        .fill(barColor(for: index))
-                        .frame(width: 4, height: max(4, waveformData[index] * 80))
-                        .animation(.easeInOut(duration: 0.1), value: waveformData[index])
+                        .fill(viewModel.barColor(index))
+                        .frame(width: 4, height: max(4, viewModel.waveformData[index] * 80))
+                        .animation(.easeInOut(duration: 0.1), value: viewModel.waveformData[index])
                 }
             }
             .frame(height: 80)
             .padding(.vertical, 8)
             
             // Audio level meter
-            if isRecording {
+            if viewModel.isRecording {
                 VStack(spacing: 4) {
                     GeometryReader { geo in
                         ZStack(alignment: .leading) {
                             RoundedRectangle(cornerRadius: 3)
                                 .fill(Color(red: 0.1, green: 0.15, blue: 0.2))
                             RoundedRectangle(cornerRadius: 3)
-                                .fill(levelColor)
-                                .frame(width: geo.size.width * audioLevel)
-                                .animation(.easeInOut(duration: 0.1), value: audioLevel)
+                                .fill(viewModel.levelColor)
+                                .frame(width: geo.size.width * viewModel.audioLevel)
+                                .animation(.easeInOut(duration: 0.1), value: viewModel.audioLevel)
                         }
                     }
                     .frame(height: 6)
@@ -111,9 +101,9 @@ struct EngineSoundAnalysisView: View {
                             .font(.system(size: 10))
                             .foregroundColor(Theme.textMuted)
                         Spacer()
-                        Text(String(format: "%.0f dB", audioLevel * 100))
+                        Text(String(format: "%.0f dB", viewModel.audioLevel * 100))
                             .font(.system(size: 10, weight: .bold, design: .monospaced))
-                            .foregroundColor(levelColor)
+                            .foregroundColor(viewModel.levelColor)
                     }
                 }
             }
@@ -121,13 +111,13 @@ struct EngineSoundAnalysisView: View {
         .padding(16)
         .background(Theme.cardBackground)
         .cornerRadius(Theme.cornerRadius)
-        .overlay(RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(isRecording ? Theme.gaugeRed.opacity(0.3) : Color(red: 0.12, green: 0.17, blue: 0.23), lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: Theme.cornerRadius).stroke(viewModel.isRecording ? Theme.gaugeRed.opacity(0.3) : Color(red: 0.12, green: 0.17, blue: 0.23), lineWidth: 1))
     }
     
     // MARK: - Recording Controls
     private var recordingControls: some View {
         VStack(spacing: 12) {
-            if let error = errorMessage {
+            if let error = viewModel.errorMessage {
                 HStack(spacing: 6) {
                     Image(systemName: "exclamationmark.triangle.fill")
                         .foregroundColor(Theme.danger)
@@ -142,13 +132,13 @@ struct EngineSoundAnalysisView: View {
             
             HStack(spacing: 20) {
                 // Record button
-                Button(action: { isRecording ? stopRecording() : startRecording() }) {
+                Button(action: { viewModel.isRecording ? viewModel.stopRecording() : viewModel.startRecording() }) {
                     ZStack {
                         Circle()
-                            .fill(isRecording ? Theme.gaugeRed.opacity(0.2) : Theme.primary.opacity(0.15))
+                            .fill(viewModel.isRecording ? Theme.gaugeRed.opacity(0.2) : Theme.primary.opacity(0.15))
                             .frame(width: 72, height: 72)
                         
-                        if isRecording {
+                        if viewModel.isRecording {
                             RoundedRectangle(cornerRadius: 6)
                                 .fill(Theme.gaugeRed)
                                 .frame(width: 24, height: 24)
@@ -162,22 +152,22 @@ struct EngineSoundAnalysisView: View {
                         }
                     }
                 }
-                .disabled(isAnalyzing)
+                .disabled(viewModel.isAnalyzing)
             }
             
-            Text(isRecording ? "Apasa pentru a opri" : "Apasa pentru a inregistra sunetul motorului")
+            Text(viewModel.isRecording ? "Apasa pentru a opri" : "Apasa pentru a inregistra sunetul motorului")
                 .font(.system(size: 12))
                 .foregroundColor(Theme.textMuted)
             
             // Progress bar
-            if isRecording {
+            if viewModel.isRecording {
                 GeometryReader { geo in
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 2)
                             .fill(Color(red: 0.1, green: 0.15, blue: 0.2))
                         RoundedRectangle(cornerRadius: 2)
                             .fill(Theme.primary)
-                            .frame(width: geo.size.width * CGFloat(recordingDuration / maxDuration))
+                            .frame(width: geo.size.width * CGFloat(viewModel.recordingDuration / viewModel.maxDuration))
                     }
                 }
                 .frame(height: 4)
@@ -310,179 +300,6 @@ struct EngineSoundAnalysisView: View {
         }
     }
     
-    // MARK: - Recording Functions
-    private func startRecording() {
-        errorMessage = nil
-        analysisResult = nil
-        recordingDuration = 0
-        
-        let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setCategory(.record, mode: .measurement)
-            try session.setActive(true)
-        } catch {
-            errorMessage = "Nu s-a putut activa microfonul. Verificati permisiunile."
-            return
-        }
-        
-        // Check microphone permission
-        switch AVAudioSession.sharedInstance().recordPermission {
-        case .granted:
-            beginRecording()
-        case .undetermined:
-            AVAudioSession.sharedInstance().requestRecordPermission { granted in
-                DispatchQueue.main.async {
-                    if granted {
-                        beginRecording()
-                    } else {
-                        errorMessage = "Permisiunea microfonului este necesara. Activati din Setari."
-                    }
-                }
-            }
-        case .denied:
-            errorMessage = "Permisiunea microfonului este dezactivata. Activati din Setari > Confidentialitate > Microfon."
-        @unknown default:
-            errorMessage = "Eroare la accesarea microfonului."
-        }
-    }
-    
-    private func beginRecording() {
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent("engine_sound.m4a")
-        
-        let settings: [String: Any] = [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 44100.0,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-        ]
-        
-        do {
-            audioRecorder = try AVAudioRecorder(url: url, settings: settings)
-            audioRecorder?.isMeteringEnabled = true
-            audioRecorder?.record()
-            isRecording = true
-            
-            timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
-                updateRecording()
-            }
-        } catch {
-            // Demo mode fallback
-            isRecording = true
-            timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
-                updateDemoRecording()
-            }
-        }
-    }
-    
-    private func updateRecording() {
-        recordingDuration += 0.05
-        
-        audioRecorder?.updateMeters()
-        let power = audioRecorder?.averagePower(forChannel: 0) ?? -50
-        let normalizedPower = max(0, (power + 50) / 50)
-        audioLevel = CGFloat(normalizedPower)
-        
-        // Update waveform
-        waveformData.removeFirst()
-        waveformData.append(CGFloat(normalizedPower) * 0.8 + CGFloat.random(in: 0.1...0.3))
-        
-        if recordingDuration >= maxDuration {
-            stopRecording()
-        }
-    }
-    
-    private func updateDemoRecording() {
-        recordingDuration += 0.05
-        
-        let time = recordingDuration
-        audioLevel = CGFloat(0.4 + sin(time * 3) * 0.2 + sin(time * 7) * 0.1)
-        
-        waveformData.removeFirst()
-        waveformData.append(CGFloat(0.3 + sin(time * 5) * 0.3 + Double.random(in: -0.1...0.1)))
-        
-        if recordingDuration >= maxDuration {
-            stopRecording()
-        }
-    }
-    
-    private func stopRecording() {
-        timer?.invalidate()
-        timer = nil
-        audioRecorder?.stop()
-        audioRecorder = nil
-        isRecording = false
-        isAnalyzing = true
-        
-        let audioSession = AVAudioSession.sharedInstance()
-        try? audioSession.setActive(false, options: .notifyOthersOnDeactivation)
-        
-        // Simulate analysis
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            withAnimation {
-                analysisResult = generateAnalysisResult()
-                isAnalyzing = false
-            }
-        }
-    }
-    
-    private func generateAnalysisResult() -> SoundAnalysisResult {
-        let scenarios: [SoundAnalysisResult] = [
-            SoundAnalysisResult(
-                overallStatus: "Motor Sanatos",
-                confidenceScore: 87,
-                statusIcon: "checkmark.circle.fill",
-                statusColor: Theme.gaugeGreen,
-                detectedSounds: [
-                    DetectedSound(name: "Ralanti normal", description: "Frecventa stabila, fara variatii anormale", frequency: "800 Hz", severity: "normal"),
-                    DetectedSound(name: "Pompa combustibil", description: "Zgomot normal de functionare", frequency: "2.4 kHz", severity: "normal"),
-                ],
-                recommendations: ["Motorul functioneaza in parametri normali", "Continuati intretinerea regulata"]
-            ),
-            SoundAnalysisResult(
-                overallStatus: "Atentie - Zgomote Detectate",
-                confidenceScore: 72,
-                statusIcon: "exclamationmark.triangle.fill",
-                statusColor: Theme.gaugeYellow,
-                detectedSounds: [
-                    DetectedSound(name: "Bataie motor", description: "Posibila bataie la accelerare — verificare bujii/injectoare", frequency: "1.2 kHz", severity: "warning"),
-                    DetectedSound(name: "Zgomot curele", description: "Scartait la pornire la rece", frequency: "3.8 kHz", severity: "warning"),
-                    DetectedSound(name: "Ralanti", description: "Frecventa stabila", frequency: "780 Hz", severity: "normal"),
-                ],
-                recommendations: ["Verificati tensiunea curelei de accesorii", "Inspectie bujii si bobine", "Programati vizita la service in 1-2 saptamani"]
-            ),
-            SoundAnalysisResult(
-                overallStatus: "Problema Detectata",
-                confidenceScore: 65,
-                statusIcon: "xmark.circle.fill",
-                statusColor: Theme.gaugeRed,
-                detectedSounds: [
-                    DetectedSound(name: "Zgomot metalic", description: "Bataie ritmica din zona inferioara motor — posibil rulment", frequency: "450 Hz", severity: "danger"),
-                    DetectedSound(name: "Vibratii anormale", description: "Vibratii la turatie joasa", frequency: "200 Hz", severity: "warning"),
-                    DetectedSound(name: "Zgomot turbo", description: "Suierat anormal la accelerare", frequency: "5.2 kHz", severity: "warning"),
-                ],
-                recommendations: ["Programati urgent vizita la service", "Evitati turatii mari pana la diagnosticare", "Posibil rulment palier sau bielle uzate", "Cost estimat inspectie: 150-300 RON"]
-            ),
-        ]
-        
-        return scenarios.randomElement() ?? scenarios[0]
-    }
-    
-    // MARK: - Helpers
-    private func barColor(for index: Int) -> Color {
-        if isRecording {
-            let value = waveformData[index]
-            if value > 0.7 { return Theme.gaugeRed }
-            if value > 0.5 { return Theme.gaugeYellow }
-            return Theme.primary
-        }
-        return Theme.primary.opacity(0.3)
-    }
-    
-    private var levelColor: Color {
-        if audioLevel > 0.8 { return Theme.gaugeRed }
-        if audioLevel > 0.5 { return Theme.gaugeYellow }
-        return Theme.gaugeGreen
-    }
 }
 
 // MARK: - Sound Analysis Models
