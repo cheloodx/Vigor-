@@ -11,7 +11,7 @@ enum APIEnvironment: String {
         case .development:
             return "http://localhost:8000"
         case .production:
-            return "https://app-ddkdjioq.fly.dev"
+            return "https://agenticmax.co.uk/autodiag"
         }
     }
 }
