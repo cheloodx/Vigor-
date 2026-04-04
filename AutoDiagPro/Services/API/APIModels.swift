@@ -163,3 +163,21 @@ struct ScanAnalysisAPIResponse: Decodable {
     let recommendations: [String]
     let estimatedCost: String
 }
+
+// MARK: - Mechanic AI Chat
+struct ChatMessageAPIRequest: Encodable {
+    let message: String
+    let make: String
+    let model: String
+    let year: Int
+    let mileage: Int
+    let engineType: String
+    let fuelType: String
+    let countryCode: String
+}
+
+struct ChatMessageAPIResponse: Decodable {
+    let response: String
+    let actions: [String]
+    let category: String
+}

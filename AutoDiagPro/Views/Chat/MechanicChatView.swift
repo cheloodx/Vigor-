@@ -230,18 +230,40 @@ struct MechanicChatView: View {
     }
 
     private func sendMessage(_ text: String) {
-        // Add user message
         let userMessage = ChatMessage(text: text, isUser: true)
         messages.append(userMessage)
         isLoading = true
 
-        // Generate AI response
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            let response = MechanicAI.generateResponse(for: text, vehicle: vehicleManager.currentVehicle)
-            let aiMessage = ChatMessage(text: response, isUser: false)
-            withAnimation {
-                messages.append(aiMessage)
-                isLoading = false
+        let vehicle = vehicleManager.currentVehicle
+        Task {
+            do {
+                let result = try await APIClient.shared.chatMessage(
+                    message: text,
+                    make: vehicle.make,
+                    model: vehicle.model,
+                    year: vehicle.year,
+                    mileage: vehicle.mileage,
+                    engineType: vehicle.engineType,
+                    fuelType: vehicle.fuelType,
+                    countryCode: "RO"
+                )
+                await MainActor.run {
+                    let aiMessage = ChatMessage(text: result.response, isUser: false)
+                    withAnimation {
+                        messages.append(aiMessage)
+                        isLoading = false
+                    }
+                }
+            } catch {
+                // Fallback to local MechanicAI if backend fails
+                await MainActor.run {
+                    let fallback = MechanicAI.generateResponse(for: text, vehicle: vehicle)
+                    let aiMessage = ChatMessage(text: fallback, isUser: false)
+                    withAnimation {
+                        messages.append(aiMessage)
+                        isLoading = false
+                    }
+                }
             }
         }
     }

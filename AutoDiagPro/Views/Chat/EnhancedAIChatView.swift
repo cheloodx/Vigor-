@@ -286,11 +286,35 @@ struct EnhancedAIChatView: View {
         isTyping = true
         
         let vehicle = vehicleManager.currentVehicle
-        let response = generateContextAwareResponse(for: trimmed, vehicle: vehicle)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            isTyping = false
-            messages.append(response)
+        Task {
+            do {
+                let result = try await APIClient.shared.chatMessage(
+                    message: trimmed,
+                    make: vehicle.make,
+                    model: vehicle.model,
+                    year: vehicle.year,
+                    mileage: vehicle.mileage,
+                    engineType: vehicle.engineType,
+                    fuelType: vehicle.fuelType.rawValue,
+                    countryCode: "RO"
+                )
+                await MainActor.run {
+                    isTyping = false
+                    let aiMsg = AIChatMessage(
+                        text: result.response,
+                        isUser: false,
+                        actions: result.actions
+                    )
+                    messages.append(aiMsg)
+                }
+            } catch {
+                // Fallback to local generation if backend fails
+                await MainActor.run {
+                    isTyping = false
+                    let fallback = generateContextAwareResponse(for: trimmed, vehicle: vehicle)
+                    messages.append(fallback)
+                }
+            }
         }
     }
     

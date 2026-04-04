@@ -288,6 +288,34 @@ final class APIClient {
         return try await execute(apiRequest, responseType: responseType)
     }
     
+    // MARK: - Mechanic AI Chat
+    func chatMessage(
+        message: String,
+        make: String = "",
+        model: String = "",
+        year: Int = 0,
+        mileage: Int = 0,
+        engineType: String = "",
+        fuelType: String = "",
+        countryCode: String = "RO"
+    ) async throws -> ChatMessageAPIResponse {
+        let body = ChatMessageAPIRequest(
+            message: message,
+            make: make,
+            model: model,
+            year: year,
+            mileage: mileage,
+            engineType: engineType,
+            fuelType: fuelType,
+            countryCode: countryCode
+        )
+        return try await post(
+            endpoint: "/chat/message",
+            body: body,
+            responseType: ChatMessageAPIResponse.self
+        )
+    }
+
     // MARK: - Health Check
     func healthCheck() async -> Bool {
         do {
