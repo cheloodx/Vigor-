@@ -12,12 +12,14 @@ struct AutoDiagProApp: App {
                 MainTabView()
                     .environmentObject(appState)
                     .environmentObject(vehicleManager)
+                    .environmentObject(LocalizationManager.shared)
                     .preferredColorScheme(.dark)
 
                 if showOnboarding {
                     OnboardingView(isPresented: $showOnboarding)
                         .environmentObject(vehicleManager)
                         .environmentObject(appState)
+                        .environmentObject(LocalizationManager.shared)
                         .transition(.opacity)
                         .zIndex(1)
                 }
