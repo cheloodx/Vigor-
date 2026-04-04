@@ -5,9 +5,7 @@ struct MechanicChatView: View {
     @EnvironmentObject var vehicleManager: VehicleManager
     @EnvironmentObject var appState: AppState
 
-    @State private var messages: [ChatMessage] = [
-        ChatMessage(text: localization.t("chat.initial_msg"), isUser: false)
-    ]
+    @State private var messages: [ChatMessage] = []
     @State private var inputText: String = ""
     @State private var isLoading = false
     @FocusState private var isInputFocused: Bool
@@ -53,6 +51,11 @@ struct MechanicChatView: View {
                 inputBar
             }
             .background(Theme.background)
+            .onAppear {
+                if messages.isEmpty {
+                    messages.append(ChatMessage(text: localization.t("chat.initial_msg"), isUser: false))
+                }
+            }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -244,7 +247,7 @@ struct MechanicChatView: View {
                     year: vehicle.year,
                     mileage: vehicle.mileage,
                     engineType: vehicle.engineType,
-                    fuelType: vehicle.fuelType,
+                    fuelType: vehicle.fuelType.rawValue,
                     countryCode: "RO"
                 )
                 await MainActor.run {
