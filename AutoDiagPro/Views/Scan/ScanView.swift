@@ -28,6 +28,13 @@ struct ScanView: View {
             case .ar: return "arkit"
             }
         }
+
+        var displayName: String {
+            switch self {
+            case .photo: return "Foto Scan"
+            case .ar: return "AR Live"
+            }
+        }
     }
 
     enum ResultTab: String, CaseIterable {
@@ -97,7 +104,7 @@ struct ScanView: View {
                     HStack(spacing: 6) {
                         Image(systemName: tab.icon)
                             .font(.system(size: 12))
-                        Text(tab.rawValue)
+                        Text(tab.displayName)
                             .font(.system(size: 13, weight: .semibold))
                     }
                     .frame(maxWidth: .infinity)
