@@ -25,6 +25,24 @@ import SoundTool from '@/pages/tools/SoundTool'
 import EuropeanTool from '@/pages/tools/EuropeanTool'
 import RecallTool from '@/pages/tools/RecallTool'
 import BlockchainTool from '@/pages/tools/BlockchainTool'
+import ScorSanatate from '@/pages/tools/ScorSanatate'
+import DiagramaAuto from '@/pages/tools/DiagramaAuto'
+import ScannerPiese from '@/pages/tools/ScannerPiese'
+import DiagnosticRapid from '@/pages/tools/DiagnosticRapid'
+import RadarITP from '@/pages/tools/RadarITP'
+import DigitalTwin from '@/pages/tools/DigitalTwin'
+import CVAuto from '@/pages/tools/CVAuto'
+import OBD2Tool from '@/pages/tools/OBD2Tool'
+import CalculatorConsum from '@/pages/tools/CalculatorConsum'
+import EstimatorValoare from '@/pages/tools/EstimatorValoare'
+import ServiceCalendar from '@/pages/tools/ServiceCalendar'
+import CosturiTool from '@/pages/tools/CosturiTool'
+import VoceTool from '@/pages/tools/VoceTool'
+import ComparatorTool from '@/pages/tools/ComparatorTool'
+import ComparatorRCA from '@/pages/tools/ComparatorRCA'
+import HartaService from '@/pages/tools/HartaService'
+import Marketplace from '@/pages/tools/Marketplace'
+import LegalAmenzi from '@/pages/tools/LegalAmenzi'
 
 export default function App() {
   return (
@@ -56,6 +74,24 @@ export default function App() {
             <Route path="/tools/european" element={<EuropeanTool />} />
             <Route path="/tools/recall" element={<RecallTool />} />
             <Route path="/tools/blockchain" element={<BlockchainTool />} />
+            <Route path="/tools/scor-sanatate" element={<ScorSanatate />} />
+            <Route path="/tools/diagrama" element={<DiagramaAuto />} />
+            <Route path="/tools/scanner-piese" element={<ScannerPiese />} />
+            <Route path="/tools/diagnostic-rapid" element={<DiagnosticRapid />} />
+            <Route path="/tools/radar-itp" element={<RadarITP />} />
+            <Route path="/tools/digital-twin" element={<DigitalTwin />} />
+            <Route path="/tools/cv-auto" element={<CVAuto />} />
+            <Route path="/tools/obd2" element={<OBD2Tool />} />
+            <Route path="/tools/calculator-consum" element={<CalculatorConsum />} />
+            <Route path="/tools/estimator-valoare" element={<EstimatorValoare />} />
+            <Route path="/tools/service-calendar" element={<ServiceCalendar />} />
+            <Route path="/tools/costuri" element={<CosturiTool />} />
+            <Route path="/tools/voce" element={<VoceTool />} />
+            <Route path="/tools/comparator" element={<ComparatorTool />} />
+            <Route path="/tools/comparator-rca" element={<ComparatorRCA />} />
+            <Route path="/tools/harta-service" element={<HartaService />} />
+            <Route path="/tools/marketplace" element={<Marketplace />} />
+            <Route path="/tools/legal-amenzi" element={<LegalAmenzi />} />
           </Routes>
           <Footer />
         </div>
