@@ -21,7 +21,7 @@ export default function ScannerPiese() {
         const parts = l.split('|').map(p => p.trim())
         return { name: query, brand: parts[0] || `Brand ${i+1}`, price: parts[1] || `${50 + i * 30}-${100 + i * 50} EUR`, compatibility: parts[2] || make || 'Universal', rating: 4.5 - i * 0.3 }
       }))
-      if (results.length === 0) {
+      if (lines.length === 0) {
         setResults([
           { name: query, brand: 'Bosch', price: '45-80 EUR', compatibility: make || 'Universal', rating: 4.8 },
           { name: query, brand: 'TRW', price: '35-65 EUR', compatibility: make || 'Universal', rating: 4.5 },
