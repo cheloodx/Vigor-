@@ -24,15 +24,34 @@ export default function CosturiTool() {
     setLoading(true)
     try {
       const ops = selected.join(', ')
-      const res = await api.chat(`Estimeaza costul total pentru urmatoarele operatiuni: ${ops} la un ${make || 'masina generica'}. Listeaza fiecare operatiune cu pret estimat in RON. Format: operatiune: pret`, make)
-      const items = selected.map(s => {
-        const op = OPERATIONS.find(o => o.name === s)
-        return { name: s, cost: op?.range || '100-300' }
-      })
-      const totalMin = items.reduce((a, i) => a + parseInt(i.cost.split('-')[0]), 0)
-      const totalMax = items.reduce((a, i) => a + parseInt(i.cost.split('-')[1] || i.cost.split('-')[0]), 0)
-      setEstimate({ total: `${totalMin}-${totalMax} RON`, items })
-      if (res.response) { /* use AI response for better estimates */ }
+      const res = await api.chat(
+        `Estimeaza costul pentru urmatoarele operatiuni la un ${make || 'masina generica'}: ${ops}. ` +
+        `Listeaza fiecare operatiune cu pret estimat in RON. Format strict per linie: operatiune|pret_min-pret_max. ` +
+        `La final, scrie TOTAL|suma_min-suma_max.`,
+        make
+      )
+      const lines = res.response.split('\n').filter(l => l.includes('|'))
+      const totalLine = lines.find(l => l.toUpperCase().includes('TOTAL'))
+      const itemLines = lines.filter(l => !l.toUpperCase().includes('TOTAL'))
+      if (itemLines.length >= 1) {
+        const items = itemLines.map(l => {
+          const p = l.split('|').map(s => s.trim())
+          return { name: p[0] || 'Operatiune', cost: p[1]?.replace(/[^\d\-]/g, '') || '100-300' }
+        })
+        const totalStr = totalLine ? totalLine.split('|')[1]?.trim() || '' : ''
+        const totalNums = totalStr.match(/\d+/g)
+        let total = ''
+        if (totalNums && totalNums.length >= 2) {
+          total = `${totalNums[0]}-${totalNums[1]} RON`
+        } else {
+          const tMin = items.reduce((a, i) => a + parseInt(i.cost.split('-')[0] || '0'), 0)
+          const tMax = items.reduce((a, i) => a + parseInt(i.cost.split('-')[1] || i.cost.split('-')[0] || '0'), 0)
+          total = `${tMin}-${tMax} RON`
+        }
+        setEstimate({ total, items })
+      } else {
+        throw new Error('parse')
+      }
     } catch {
       const items = selected.map(s => ({ name: s, cost: OPERATIONS.find(o => o.name === s)?.range || '100-300' }))
       const totalMin = items.reduce((a, i) => a + parseInt(i.cost.split('-')[0]), 0)

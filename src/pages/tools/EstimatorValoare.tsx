@@ -16,19 +16,32 @@ export default function EstimatorValoare() {
     if (!make || !model || !year) return
     setLoading(true)
     try {
-      const res = await api.chat(`Estimeaza pretul unei masini ${make} ${model} din ${year}, ${km || '100000'} km, ${fuel}. Raspunde DOAR cu: min|max|avg in EUR. Exemplu: 8000|12000|10000`, make, model)
+      const res = await api.chat(
+        `Estimeaza pretul de piata al unei masini ${make} ${model} din ${year}, ${km || '100000'} km, ${fuel} in Romania/Europa. ` +
+        `Raspunde cu format strict: pret_min_EUR|pret_max_EUR|pret_mediu_EUR|procent_depreciere|sfat_scurt. ` +
+        `Exemplu: 8000|12000|10000|45|Pret competitiv pentru piata actuala`,
+        make, model
+      )
+      const parts = res.response.split('|').map(s => s.trim())
       const nums = res.response.match(/\d+/g)
-      if (nums && nums.length >= 3) {
-        const [mn, mx, av] = [parseInt(nums[0]), parseInt(nums[1]), parseInt(nums[2])]
-        const age = 2024 - parseInt(year)
-        setVal({ min: mn, max: mx, avg: av, depreciation: Math.round(age * 8 + (parseInt(km) || 100000) / 5000), tip: age > 10 ? 'Masina necesita inspectie detaliata inainte de achizitie' : 'Pretul e competitiv pentru piata actuala' })
+      if (parts.length >= 4 && nums && nums.length >= 3) {
+        const mn = parseInt(nums[0])
+        const mx = parseInt(nums[1])
+        const av = parseInt(nums[2])
+        const dep = parseInt(nums[3]) || Math.round((2026 - parseInt(year)) * 7)
+        const tip = parts[4] || (av > 15000 ? 'Vehicul premium, verificati istoricul complet' : 'Pretul e competitiv pentru piata actuala')
+        if (mn > 0 && mx > 0 && av > 0) {
+          setVal({ min: mn, max: mx, avg: av, depreciation: dep, tip })
+        } else {
+          throw new Error('invalid values')
+        }
       } else {
         throw new Error('parse')
       }
     } catch {
-      const base = 25000 - (2024 - parseInt(year)) * 1500 - (parseInt(km) || 100000) / 20
+      const base = 25000 - (2026 - parseInt(year)) * 1500 - (parseInt(km) || 100000) / 20
       const avg = Math.max(1500, Math.round(base))
-      setVal({ min: Math.round(avg * 0.8), max: Math.round(avg * 1.2), avg, depreciation: Math.round((2024 - parseInt(year)) * 8), tip: 'Pretul variaza in functie de stare, dotari si locatie' })
+      setVal({ min: Math.round(avg * 0.8), max: Math.round(avg * 1.2), avg, depreciation: Math.round((2026 - parseInt(year)) * 8), tip: 'Estimare locala. Pretul variaza in functie de stare, dotari si locatie.' })
     }
     setLoading(false)
   }
